@@ -3,9 +3,9 @@ import { styled } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import clsx from 'clsx';
 import { memo } from 'react';
-import Logo from '../../../../shared-components/Logo';
-import NavbarToggleButton from '../../../../shared-components/NavbarToggleButton';
-import Navigation from '../../../../shared-components/Navigation';
+import Logo from '../../../shared-components/Logo';
+import NavbarToggleButton from '../../../shared-components/NavbarToggleButton';
+import Navigation from '../../../shared-components/Navigation';
 
 const Root = styled('div')(({ theme }) => ({
   backgroundColor: theme.palette.background.default,
@@ -34,9 +34,9 @@ const StyledContent = styled(FuseScrollbars)(({ theme }) => ({
   backgroundAttachment: 'local, scroll',
 }));
 
-function NavbarStyle2Content(props) {
+function NavbarStyleContent(props) {
   return (
-    <Root className={clsx('flex flex-auto flex-col overflow-hidden h-full', props.className)}>
+    <Root className={clsx('flex flex-auto flex-col overflow-hidden h-full border-r-[2px] border-r-[#202E3C]', props.className)}>
       <AppBar
         color="primary"
         position="static"
@@ -56,4 +56,4 @@ function NavbarStyle2Content(props) {
   );
 }
 
-export default memo(NavbarStyle2Content);
+export default memo(NavbarStyleContent);

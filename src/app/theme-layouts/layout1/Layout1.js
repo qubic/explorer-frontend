@@ -7,12 +7,11 @@ import { memo, useContext } from 'react';
 import { useSelector } from 'react-redux';
 import { useRoutes } from 'react-router-dom';
 import { selectFuseCurrentLayoutConfig } from 'app/store/fuse/settingsSlice';
-import FooterLayout1 from './components/FooterLayout1';
-import LeftSideLayout1 from './components/LeftSideLayout1';
-import NavbarWrapperLayout1 from './components/NavbarWrapperLayout1';
-import RightSideLayout1 from './components/RightSideLayout1';
-import ToolbarLayout1 from './components/ToolbarLayout1';
-import SettingsPanel from '../shared-components/SettingsPanel';
+import FooterLayout from './components/FooterLayout';
+import LeftSideLayout from './components/LeftSideLayout';
+import NavbarWrapperLayout from './components/NavbarWrapperLayout';
+import RightSideLayout from './components/RightSideLayout';
+import ToolbarLayout from './components/ToolbarLayout';
 
 const Root = styled('div')(({ theme, config }) => ({
   ...(config.mode === 'boxed' && {
@@ -37,14 +36,14 @@ function Layout1(props) {
 
   return (
     <Root id="fuse-layout" config={config} className="w-full flex">
-      {config.leftSidePanel.display && <LeftSideLayout1 />}
+      {config.leftSidePanel.display && <LeftSideLayout />}
 
       <div className="flex flex-auto min-w-0">
-        {config.navbar.display && config.navbar.position === 'left' && <NavbarWrapperLayout1 />}
+        {config.navbar.display && config.navbar.position === 'left' && <NavbarWrapperLayout />}
 
         <main id="fuse-main" className="flex flex-col flex-auto min-h-full min-w-0 relative z-10">
           {config.toolbar.display && (
-            <ToolbarLayout1 className={config.toolbar.style === 'fixed' && 'sticky top-0'} />
+            <ToolbarLayout className={config.toolbar.style === 'fixed' && 'sticky top-0'} />
           )}
 
           <div className="flex flex-col flex-auto min-h-0 relative z-10">
@@ -56,14 +55,14 @@ function Layout1(props) {
           </div>
 
           {config.footer.display && (
-            <FooterLayout1 className={config.footer.style === 'fixed' && 'sticky bottom-0'} />
+            <FooterLayout className={config.footer.style === 'fixed' && 'sticky bottom-0'} />
           )}
         </main>
 
-        {config.navbar.display && config.navbar.position === 'right' && <NavbarWrapperLayout1 />}
+        {config.navbar.display && config.navbar.position === 'right' && <NavbarWrapperLayout />}
       </div>
 
-      {config.rightSidePanel.display && <RightSideLayout1 />}
+      {config.rightSidePanel.display && <RightSideLayout />}
       <FuseMessage />
     </Root>
   );

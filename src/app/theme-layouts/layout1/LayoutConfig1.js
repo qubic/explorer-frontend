@@ -1,5 +1,5 @@
 const config = {
-  title: 'Layout 1 - Vertical',
+  title: 'Layout - Vertical',
   defaults: {
     mode: 'container',
     containerWidth: 1570,
