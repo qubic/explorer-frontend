@@ -12,12 +12,13 @@ import { selectUser } from 'app/store/userSlice';
 import themeLayouts from 'app/theme-layouts/themeLayouts';
 import { selectMainTheme } from 'app/store/fuse/settingsSlice';
 import withAppProviders from './withAppProviders';
+import { useEffect } from 'react';
+import axios from 'axios';
 
 // import axios from 'axios';
 /**
  * Axios HTTP Request defaults
  */
-// axios.defaults.baseURL = "";
 // axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
 // axios.defaults.headers.common['Content-Type'] = 'application/x-www-form-urlencoded';
 
@@ -35,8 +36,19 @@ const emotionCacheOptions = {
 };
 
 const App = () => {
+
   const langDirection = useSelector(selectCurrentLanguageDirection);
   const mainTheme = useSelector(selectMainTheme);
+
+  useEffect(() => {
+    axios.defaults.baseURL = "http://localhost:7003";
+    axios.get(`/Network/Tickoverview?epoch=0&offset=0`)
+      .then((response) =>
+        console.log(response.data))
+      .catch((error) => {
+        console.log(error)
+      })
+  }, [])
 
   return (
     <CacheProvider value={createCache(emotionCacheOptions[langDirection])}>
