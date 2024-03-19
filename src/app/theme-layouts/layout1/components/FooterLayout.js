@@ -21,6 +21,7 @@ function FooterLayout(props) {
               : footerTheme.palette.background.default,
         }}
       >
+        <p>Footer</p>
       </AppBar>
     </ThemeProvider>
   );

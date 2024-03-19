@@ -65,19 +65,8 @@ export const logoutUser = () => async (dispatch, getState) => {
 };
 
 export const updateUserData = (user) => async (dispatch, getState) => {
-  if (!user.role || user.role.length === 0) {
-    // is guest
-    return;
-  }
-
-  jwtService
-    .updateUserData(user)
-    .then(() => {
-      dispatch(showMessage({ message: 'User data saved with api' }));
-    })
-    .catch((error) => {
-      dispatch(showMessage({ message: error.message }));
-    });
+  
+  console.log("")
 };
 
 const initialState = {
