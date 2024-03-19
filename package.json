@@ -104,6 +104,7 @@
     },
     "scripts": {
         "start": "react-app-rewired  start",
+        "start-api-proxy":"node dev-proxy.js",
         "build": "cross-env GENERATE_SOURCEMAP=false react-app-rewired build",
         "test": "react-app-rewired test --env=node",
         "eject": "react-app-rewired eject",

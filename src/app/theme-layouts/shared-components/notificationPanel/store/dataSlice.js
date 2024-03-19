@@ -3,8 +3,6 @@ import axios from 'axios';
 
 export const getNotifications = createAsyncThunk('notificationPanel/getData', async () => {
   
-  return null;
-
   const response = await axios.get('/api/notifications');
   const data = await response.data;
 
