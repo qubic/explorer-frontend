@@ -9,7 +9,7 @@ import {
 } from 'app/store/fuse/navbarSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectFuseCurrentLayoutConfig } from 'app/store/fuse/settingsSlice';
-import NavbarStyle2Content from './NavbarStyle2Content';
+import NavbarStyleContent from './NavbarStyleContent';
 
 const navbarWidth = 280;
 
@@ -63,7 +63,7 @@ const StyledNavbar = styled('div')(
     }),
 
     ...(foldedandclosed && {
-      '& .NavbarStyle2-content': {
+      '& .NavbarStyle-content': {
         '& .logo-icon': {
           width: 44,
           height: 44,
@@ -112,7 +112,7 @@ const StyledNavbarMobile = styled(SwipeableDrawer)(({ theme, position }) => ({
   },
 }));
 
-function NavbarStyle2(props) {
+function NavbarStyle(props) {
   const dispatch = useDispatch();
   const config = useSelector(selectFuseCurrentLayoutConfig);
   const navbar = useSelector(selectFuseNavbar);
@@ -127,7 +127,7 @@ function NavbarStyle2(props) {
       folded={folded ? 1 : 0}
       open={navbar.open}
       id="fuse-navbar"
-      className="sticky top-0 h-screen shrink-0 z-20 shadow-5"
+      className="sticky top-0 h-screen shrink-0 z-20"
     >
       <Hidden lgDown>
         <StyledNavbar
@@ -139,7 +139,7 @@ function NavbarStyle2(props) {
           onMouseEnter={() => foldedandclosed && dispatch(navbarOpenFolded())}
           onMouseLeave={() => foldedandopened && dispatch(navbarCloseFolded())}
         >
-          <NavbarStyle2Content className="NavbarStyle2-content" />
+          <NavbarStyleContent className="NavbarStyle-content" />
         </StyledNavbar>
       </Hidden>
 
@@ -161,11 +161,11 @@ function NavbarStyle2(props) {
             keepMounted: true, // Better open performance on mobile.
           }}
         >
-          <NavbarStyle2Content className="NavbarStyle2-content" />
+          <NavbarStyleContent className="NavbarStyle-content" />
         </StyledNavbarMobile>
       </Hidden>
     </Root>
   );
 }
 
-export default NavbarStyle2;
+export default NavbarStyle;

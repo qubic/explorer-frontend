@@ -15,7 +15,7 @@ import NavbarToggleButton from '../../shared-components/NavbarToggleButton';
 import UserMenu from '../../shared-components/UserMenu';
 import QuickPanelToggleButton from '../../shared-components/quickPanel/QuickPanelToggleButton';
 
-function ToolbarLayout1(props) {
+function ToolbarLayout(props) {
   const config = useSelector(selectFuseCurrentLayoutConfig);
   const navbar = useSelector(selectFuseNavbar);
   const toolbarTheme = useSelector(selectToolbarTheme);
@@ -26,7 +26,7 @@ function ToolbarLayout1(props) {
     <ThemeProvider theme={toolbarTheme}>
       <AppBar
         id="fuse-toolbar"
-        className={clsx('flex relative z-20 border-[2px] border-[#202E3C]', props.className)}
+        className={clsx('flex relative z-20 border-b-[2px] border-b-[#202E3C]', props.className)}
         color="default"
         sx={{
           backgroundColor: (theme) =>
@@ -90,4 +90,4 @@ function ToolbarLayout1(props) {
   );
 }
 
-export default memo(ToolbarLayout1);
+export default memo(ToolbarLayout);

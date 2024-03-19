@@ -3,10 +3,10 @@ import { memo } from 'react';
 import { useSelector } from 'react-redux';
 import { selectFuseCurrentLayoutConfig, selectNavbarTheme } from 'app/store/fuse/settingsSlice';
 import { selectFuseNavbar } from 'app/store/fuse/navbarSlice';
-import NavbarStyle2 from './navbar/style-2/NavbarStyle2';
+import NavbarStyle from './navbar/NavbarStyle';
 import NavbarToggleFab from '../../shared-components/NavbarToggleFab';
 
-function NavbarWrapperLayout1(props) {
+function NavbarWrapperLayout(props) {
   const config = useSelector(selectFuseCurrentLayoutConfig);
   const navbar = useSelector(selectFuseNavbar);
 
@@ -15,7 +15,7 @@ function NavbarWrapperLayout1(props) {
   return (
     <>
       <ThemeProvider theme={navbarTheme}>
-        <NavbarStyle2 />
+        <NavbarStyle />
       </ThemeProvider>
 
       {config.navbar.display && !config.toolbar.display && !navbar.open && <NavbarToggleFab />}
@@ -23,4 +23,4 @@ function NavbarWrapperLayout1(props) {
   );
 }
 
-export default memo(NavbarWrapperLayout1);
+export default memo(NavbarWrapperLayout);

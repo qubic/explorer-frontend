@@ -2,7 +2,7 @@ import { memo } from 'react';
 import QuickPanel from '../../shared-components/quickPanel/QuickPanel';
 import NotificationPanel from '../../shared-components/notificationPanel/NotificationPanel';
 
-function RightSideLayout1(props) {
+function RightSideLayout(props) {
   return (
     <>
       <QuickPanel />
@@ -12,4 +12,4 @@ function RightSideLayout1(props) {
   );
 }
 
-export default memo(RightSideLayout1);
+export default memo(RightSideLayout);

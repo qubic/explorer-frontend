@@ -1,6 +1,3 @@
-import { fuseDark, skyBlue } from '@fuse/colors';
-import { blueGrey } from '@mui/material/colors';
-
 export const lightPaletteText = {
   primary: 'rgb(17, 24, 39)',
   secondary: 'rgb(107, 114, 128)',
@@ -36,8 +33,8 @@ const themesConfig = {
         contrastText: darkPaletteText.primary,
       },
       background: {
-        paper: '#1e293b',
-        default: '#111827',
+        paper: '#101820',
+        default: '#101820',
       },
       error: {
         light: '#ffcdd2',
@@ -49,42 +46,6 @@ const themesConfig = {
       },
     },
   },
-  default: {
-    palette: {
-      mode: 'light',
-      divider: '#e2e8f0',
-      text: lightPaletteText,
-      common: {
-        black: 'rgb(17, 24, 39)',
-        white: 'rgb(255, 255, 255)',
-      },
-      primary: {
-        light: '#64748b',
-        main: '#1e293b',
-        dark: '#0f172a',
-        contrastText: darkPaletteText.primary,
-      },
-      secondary: {
-        light: '#818cf8',
-        main: '#4f46e5',
-        dark: '#3730a3',
-        contrastText: darkPaletteText.primary,
-      },
-      background: {
-        paper: '#FFFFFF',
-        default: '#f1f5f9',
-      },
-      error: {
-        light: '#ffcdd2',
-        main: '#f44336',
-        dark: '#b71c1c',
-      },
-    },
-    status: {
-      danger: 'orange',
-    },
-  },
-
 };
 
 export default themesConfig;
