@@ -1,5 +1,6 @@
 import { Typography } from '@mui/material';
-import { useState } from 'react';
+import axios from 'axios';
+import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 function TickList() {
@@ -78,17 +79,27 @@ function TickList() {
             arbitrated: false,
         },
     ]
+
+    useEffect(()=>{
+        axios.get(`/Network/TickOverview?epoch=&offset=0`)
+        .then((response) => {
+            console.log(response)
+        }).catch((error) => {
+            console.log(error)
+        })
+    })
+    
     return (
         <div className='flex justify-between gap-12 flex-1 flex-wrap'>
             {
                 ticks.length > 0 &&
                 (
-                    ticks.map((item) => (
+                    ticks.map((item, id) => (
                         <Typography
                             component={Link}
                             className={`font-space font-500 ${item.arbitrated ? 'text-error-40' : 'text-gray-50'}`}
                             to={`/explorer/block/${item.tick}`}
-                            key={item.tick}
+                            key={id}
                             role='button'
                         >
                             {item.tick}
