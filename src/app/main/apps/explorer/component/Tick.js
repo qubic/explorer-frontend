@@ -1,17 +1,19 @@
 import FuseSvgIcon from '@fuse/core/FuseSvgIcon';
 import { Typography } from '@mui/material';
+import clsx from 'clsx';
 
-function CurrentTick() {
+function Tick(props) {
+    const { icon, title, value, className } = props;
     return (
         <div className='w-full border-gray-70 border-[1px] rounded-8 px-24 py-16'>
             <div className='flex flex-1 gap-10 items-center w-full'>
-                <FuseSvgIcon className="text-gray-50 text-24">heroicons-solid:view-grid-add</FuseSvgIcon>
+                <FuseSvgIcon className={clsx("text-24", className)}>{icon}</FuseSvgIcon>
                 <div className='flex flex-col gap-5'>
                     <Typography variant='h5' className='text-gray-50 font-space text-sm'>
-                        Current Tick
+                        {title}
                     </Typography>
                     <p className='text-22 font-space'>
-                        13,033,584
+                        {value}
                     </p>
                 </div>
             </div>
@@ -19,4 +21,4 @@ function CurrentTick() {
     )
 }
 
-export default CurrentTick;
+export default Tick;

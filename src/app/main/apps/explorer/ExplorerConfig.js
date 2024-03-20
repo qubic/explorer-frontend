@@ -1,4 +1,6 @@
 import { lazy } from 'react';
+import BlockPage from './block/BlockPage';
+import Overview from './overview/Overview';
 
 const ExplorerPage = lazy(() => import('./ExplorerPage'));
 
@@ -30,13 +32,17 @@ const OverviewConfig = {
       element: <ExplorerPage />,
       children: [
         {
+          path: '',
+          element: <Overview />,
+        },
+        {
           path: 'block',
-          element: <ExplorerPage />,
+          element: <BlockPage />,
           children: [
             {
-              path: ':blockId',
-              element: <ExplorerPage />
-            }
+              path: ':tick',
+              element: <BlockPage />,
+            },
           ]
         }
       ]
