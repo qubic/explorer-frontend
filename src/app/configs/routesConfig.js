@@ -3,15 +3,15 @@ import FuseLoading from '@fuse/core/FuseLoading';
 import { Navigate } from 'react-router-dom';
 import settingsConfig from 'app/configs/settingsConfig';
 import Error404Page from '../main/404/Error404Page';
-import ExamplePage from '../main/example/Example';
+import OverviewConfig from '../main/apps/overview/OverviewConfig';
 
-const routeConfigs = [];
+const routeConfigs = [OverviewConfig];
 
 const routes = [
   ...FuseUtils.generateRoutesFromConfigs(routeConfigs, settingsConfig.defaultAuth),
   {
     path: '/',
-    element: <ExamplePage />,
+    element: <Navigate to="overview" />,
   },
   {
     path: 'loading',
