@@ -1,6 +1,7 @@
 import { Typography } from '@mui/material';
 import axios from 'axios';
 import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 function TickList() {
@@ -79,16 +80,15 @@ function TickList() {
             arbitrated: false,
         },
     ]
-
-    useEffect(()=>{
+    useEffect(() => {
         axios.get(`/Network/TickOverview?epoch=&offset=0`)
-        .then((response) => {
-            console.log(response)
-        }).catch((error) => {
-            console.log(error)
-        })
-    })
-    
+            .then((response) => {
+                console.log(response)
+            }).catch((error) => {
+                console.log(error)
+            })
+    }, [])
+
     return (
         <div className='flex justify-between gap-12 flex-1 flex-wrap'>
             {

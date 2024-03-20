@@ -10,7 +10,6 @@ app.use(bodyParser.json({limit: myLimit}));
 
 app.all('*', function (req, res, next) {
 
-    console.log(req)
     // allow CORS
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Methods", "GET, PUT, PATCH, POST, DELETE");

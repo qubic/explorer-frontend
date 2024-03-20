@@ -11,7 +11,7 @@ import { selectCurrentLanguageDirection } from 'app/store/i18nSlice';
 import themeLayouts from 'app/theme-layouts/themeLayouts';
 import { selectMainTheme } from 'app/store/fuse/settingsSlice';
 import withAppProviders from './withAppProviders';
-import { AuthProvider } from './auth/AuthContext';
+import AuthProvider from './auth/AuthContext';
 
 // import axios from 'axios';
 /**

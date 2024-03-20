@@ -1,96 +1,44 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
-import FuseSplashScreen from '@fuse/core/FuseSplashScreen';
-import { showMessage } from 'app/store/fuse/messageSlice';
-import { logoutUser, setUser } from 'app/store/userSlice';
 import axios from 'axios';
-import jwtService from './services/jwtService';
+import FuseSplashScreen from '@fuse/core/FuseSplashScreen';
+import jwtServiceConfig from './jwtServiceConfig';
 
 const AuthContext = React.createContext();
 
 function AuthProvider({ children }) {
-  const [isAuthenticated, setIsAuthenticated] = useState(undefined);
-  const [waitAuthCheck, setWaitAuthCheck] = useState(true);
-  const dispatch = useDispatch();
+
+  const [waitAuthCheck, setWaitAuthCheck] = useState(false)
 
   useEffect(() => {
 
     axios.defaults.baseURL = "http://localhost:7003";
 
-    jwtService.on('onAutoLogin', () => {
-      console.log("AutoLogin")
-      /**
-       * Sign in and retrieve user data with stored token
-       */
-      jwtService
-        .signInWithToken()
-        .then((user) => {
-          success(user, 'Signed in with JWT');
-        })
-        .catch((error) => {
-          pass(error.message);
-        });
-    });
-
-    jwtService.on('onLogin', (user) => {
-      success(user, 'Signed in');
-    });
-
-    jwtService.on('onLogout', () => {
-      pass('Signed out');
-
-      dispatch(logoutUser());
-    });
-
-    jwtService.on('onAutoLogout', (message) => {
-      pass(message);
-
-      dispatch(logoutUser());
-    });
-
-    jwtService.on('onNoAccessToken', () => {
-      pass();
-    });
-
-    jwtService.init();
-
-    function success(user, message) {
-      if (message) {
-        console.log(message)
+    axios.post(`${jwtServiceConfig.login}`,
+      {
+        userName: "guest@qubic.li",
+        password: "guest13@Qubic.li",
+        twoFactorCode: "",
       }
-      Promise.all([
-        dispatch(setUser(user)),
-        // You can receive data in here before app initialization
-      ]).then((values) => {
-        setWaitAuthCheck(false);
-        setIsAuthenticated(true);
-      });
-    }
-
-    function pass(message) {
-      if (message) {
-        console.log(message)
+    ).then((response) => {
+      axios.defaults.headers.common.Authorization = `Bearer ${response.data.token}`;
+    })
+      .then(() => {
+        console.log(axios.defaults.headers.common.Authorization)
+        setWaitAuthCheck(true)
       }
+      )
+      .catch((error) => {
+        console.log(error)
+      })
 
-      setWaitAuthCheck(false);
-      setIsAuthenticated(false);
-    }
-  }, [dispatch]);
+  }, []);
 
   return waitAuthCheck ? (
-    <FuseSplashScreen />
+    <AuthContext.Provider value={{ waitAuthCheck }}>{children}</AuthContext.Provider>
   ) : (
-    <AuthContext.Provider value={{ isAuthenticated }}>{children}</AuthContext.Provider>
+    <FuseSplashScreen />
   );
 }
 
-function useAuth() {
-  const context = React.useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error('useAuth must be used within a AuthProvider');
-  }
-  return context;
-}
-
-export { AuthProvider, useAuth };
+export default AuthProvider;
