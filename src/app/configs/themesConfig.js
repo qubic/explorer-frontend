@@ -14,7 +14,7 @@ const themesConfig = {
   defaultDark: {
     palette: {
       mode: 'dark',
-      divider: 'rgba(241,245,249,.12)',
+      divider: '#202E3C',
       text: darkPaletteText,
       common: {
         black: 'rgb(17, 24, 39)',
