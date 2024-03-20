@@ -1,6 +1,6 @@
 import { lazy } from 'react';
 
-const OverviewPage = lazy(() => import('./OverviewPage'));
+const ExplorerPage = lazy(() => import('./ExplorerPage'));
 
 const OverviewConfig = {
   settings: {
@@ -26,8 +26,20 @@ const OverviewConfig = {
   },
   routes: [
     {
-      path: 'overview',
-      element: <OverviewPage />,
+      path: 'explorer',
+      element: <ExplorerPage />,
+      children: [
+        {
+          path: 'block',
+          element: <ExplorerPage />,
+          children: [
+            {
+              path: ':blockId',
+              element: <ExplorerPage />
+            }
+          ]
+        }
+      ]
     },
   ],
 };
