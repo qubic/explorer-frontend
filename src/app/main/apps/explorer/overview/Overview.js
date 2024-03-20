@@ -1,7 +1,7 @@
-import formatString from 'src/app/utils/functions';
+import { formatString } from 'src/app/utils/functions';
 
-import { useDispatch, useSelector } from 'react-redux';
-import { getNetwork, selectNetwork } from '../store/networkSlice';
+import { useSelector } from 'react-redux';
+import { selectNetwork } from '../store/networkSlice';
 
 import Tick from '../component/Tick';
 import PastTicks from '../past-ticks/PastTicks';

@@ -22,7 +22,7 @@ module.exports = {
       black: '#22292F',
       white: '#fff',
       primary: {
-        20: '#4B5565',
+        20: '#CCFCFF',
         30: '#202E3C',
         40: '#61F0FE',
         50: '#61F0FE',
@@ -55,7 +55,7 @@ module.exports = {
         40: "#F97066",
         90: "#381D1E",
       },
-      Success: {
+      success: {
         40: "#47CD89",
         90: "#11322D",
       },
@@ -1082,6 +1082,7 @@ module.exports = {
       normal: '1.5',
       relaxed: '1.625',
       loose: '2',
+      18: '1.8rem',
       20: '2.0rem',
       24: '2.4rem',
       26: '2.6rem',
