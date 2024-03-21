@@ -20,7 +20,7 @@ function TxPage() {
 
     useEffect(() => {
         dispatch(getTx(txId))
-    }, [txId, dispatch])
+    }, [routeParams, dispatch])
 
     const tx = useSelector(selectTx);
 
