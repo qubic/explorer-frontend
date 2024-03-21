@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
-export const getNetwork = createAsyncThunk(
+export const getOverview = createAsyncThunk(
     'network/overview',
     async (params, { getState }) => {
         const response = await axios.get(`/Network/TickOverview?epoch=&offset=0`);
@@ -19,10 +19,10 @@ const networkSlice = createSlice({
     initialState: null,
     reducers: {},
     extraReducers: {
-        [getNetwork.fulfilled]: (state, action) => action.payload,
+        [getOverview.fulfilled]: (state, action) => action.payload,
     },
 })
 
-export const selectNetwork = ({ network }) => network.network;
+export const selectOverview = ({ network }) => network.overview;
 
 export default networkSlice.reducer;

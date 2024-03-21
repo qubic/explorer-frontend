@@ -1,18 +1,17 @@
 import { useSelector } from 'react-redux';
-import { formatString } from 'src/app/utils/functions';
-import { selectNetwork } from '../store/networkSlice';
+import {  selectOverview } from '../store/overviewSlice';
 import TickLink from '../component/TickLink';
 
 function TickList() {
 
-    const network = useSelector(selectNetwork)
+    const network = useSelector(selectOverview);
     console.log(network)
     return (
         <div className='grid grid-cols-10 gap-12'>
             {
                 network &&
                 (
-                    network?.ticks?.map((item, id) => (
+                    network?.ticks?.map((item) => (
                         <TickLink
                             key={item.tick}
                             value={item.tick}

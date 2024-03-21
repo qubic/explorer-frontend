@@ -26,7 +26,7 @@ function BlockPage() {
     return (
         <div className='w-full '>
             <ErrorMessage />
-            <div className="py-36 max-w-[960px] mx-auto px-8">
+            <div className="pt-82 pb-40 max-w-[960px] mx-auto px-8">
                 <Typography
                     className="text-16 leading-20 mb-8">
                     Tick

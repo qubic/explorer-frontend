@@ -5,7 +5,7 @@ import { useDeepCompareEffect } from '@fuse/hooks';
 import { useDispatch } from 'react-redux';
 import { Outlet } from 'react-router-dom';
 
-import { getNetwork } from './store/networkSlice';
+import { getOverview } from './store/overviewSlice';
 import reducer from './store';
 
 
@@ -24,12 +24,6 @@ const Root = styled(FusePageSimple)(({ theme }) => ({
 }));
 
 function NetworkPage(props) {
-
-  const dispatch = useDispatch();
-
-  useDeepCompareEffect(() => {
-    dispatch(getNetwork())
-  }, [dispatch])
 
   return (
     <Root

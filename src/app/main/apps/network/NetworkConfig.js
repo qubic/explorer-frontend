@@ -51,7 +51,8 @@ const NetworkConfig = {
           element: <TxPage />,
           children: [
             {
-              path: ':tx',
+              path: ':txId',
+              element: <TxPage />,
             }
           ]
         }
