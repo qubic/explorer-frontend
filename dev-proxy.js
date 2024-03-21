@@ -10,7 +10,6 @@ app.use(bodyParser.json({limit: myLimit}));
 
 app.all('*', function (req, res, next) {
 
-    console.log(req)
     // allow CORS
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Methods", "GET, PUT, PATCH, POST, DELETE");
@@ -29,7 +28,7 @@ app.all('*', function (req, res, next) {
         request({ url: targetURL + req.url, method: req.method, json: req.body, headers: {'Authorization': req.header('Authorization')} },
             function (error, response, body) {
                 if (error) {
-                    console.error('error: ' + response.statusCode)
+                    console.error('error: ' + response)
                 }
             }).pipe(res);
     }

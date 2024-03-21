@@ -11,6 +11,7 @@ import { selectCurrentLanguageDirection } from 'app/store/i18nSlice';
 import themeLayouts from 'app/theme-layouts/themeLayouts';
 import { selectMainTheme } from 'app/store/fuse/settingsSlice';
 import withAppProviders from './withAppProviders';
+import AuthProvider from './auth/AuthContext';
 
 // import axios from 'axios';
 /**
@@ -42,18 +43,20 @@ const App = () => {
     <CacheProvider value={createCache(emotionCacheOptions[langDirection])}>
       <FuseTheme theme={mainTheme} direction={langDirection}>
         <BrowserRouter>
-          <SnackbarProvider
-            maxSnack={5}
-            anchorOrigin={{
-              vertical: 'bottom',
-              horizontal: 'right',
-            }}
-            classes={{
-              containerRoot: 'bottom-0 right-0 mb-52 md:mb-68 mr-8 lg:mr-80 z-99',
-            }}
-          >
-            <FuseLayout layouts={themeLayouts} />
-          </SnackbarProvider>
+          <AuthProvider>
+            <SnackbarProvider
+              maxSnack={5}
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'right',
+              }}
+              classes={{
+                containerRoot: 'bottom-0 right-0 mb-52 md:mb-68 mr-8 lg:mr-80 z-99',
+              }}
+            >
+              <FuseLayout layouts={themeLayouts} />
+            </SnackbarProvider>
+          </AuthProvider>
         </BrowserRouter>
       </FuseTheme>
     </CacheProvider>

@@ -1,7 +1,14 @@
 import { styled } from '@mui/material/styles';
 import FusePageSimple from '@fuse/core/FusePageSimple';
-import CurrentTick from './ticks/CurrentTick';
-import PastTicks from './past-ticks/PastTicks';
+import withReducer from 'app/store/withReducer';
+import { useDeepCompareEffect } from '@fuse/hooks';
+import { useDispatch } from 'react-redux';
+import { Outlet } from 'react-router-dom';
+
+import { getNetwork } from './store/networkSlice';
+import reducer from './store';
+
+
 
 const Root = styled(FusePageSimple)(({ theme }) => ({
   '& .FusePageSimple-header': {
@@ -18,6 +25,12 @@ const Root = styled(FusePageSimple)(({ theme }) => ({
 
 function ExplorerPage(props) {
 
+  const dispatch = useDispatch();
+
+  useDeepCompareEffect(() => {
+    dispatch(getNetwork())
+  }, [dispatch])
+
   return (
     <Root
       header={
@@ -28,26 +41,11 @@ function ExplorerPage(props) {
       }
 
       content={
-        <div className='container px-12 py-52 mx-auto'>
-          <div className='max-w-[853px] flex flex-1 flex-col gap-16 mx-auto'>
-            <div className='flex flex-auto gap-16'>
-              <CurrentTick />
-              <CurrentTick />
-              <CurrentTick />
-            </div>
-            <div className='grid xs:grid-cols-2 md:grid-cols-4 gap-16'>
-              <CurrentTick />
-              <CurrentTick />
-              <CurrentTick />
-              <CurrentTick />
-            </div>
-            <PastTicks />
-          </div>
-        </div>
+        <Outlet/>
       }
       scroll="content"
     />
   );
 }
 
-export default ExplorerPage;
+export default withReducer('network', reducer)(ExplorerPage);
