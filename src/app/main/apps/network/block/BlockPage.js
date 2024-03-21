@@ -1,21 +1,22 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Typography } from "@mui/material";
+import { IconButton, Typography } from "@mui/material";
 import FuseSvgIcon from "@fuse/core/FuseSvgIcon";
 import { formatDate, formatString } from "src/app/utils/functions";
-import { useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import { getBlock, selectBlock } from "../store/blockSlice";
 import ErrorMessage from "../component/ErrorMessage";
 import AddressLink from "../component/AddressLink";
 import TxLink from "../component/TxLink";
+import TxStatus from "../component/TxStatus";
 
 function BlockPage() {
 
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const routeParams = useParams();
 
     const { tick } = routeParams;
-
 
     useEffect(() => {
         dispatch(getBlock(tick));
@@ -35,24 +36,30 @@ function BlockPage() {
                 <div className="flex justify-between items-center mb-36">
                     <div className="flex flex-col gap-8">
                         <div className="flex items-center gap-8">
-                            <FuseSvgIcon
-                                className=" text-gray-50"
-                                size={24}
-                                role="button"
-                            >
-                                heroicons-solid:chevron-left
-                            </FuseSvgIcon>
+                            <IconButton
+                                onClick={() => navigate(`/network/block/${Number(tick) - 1}`)}>
+                                <FuseSvgIcon
+                                    className=" text-gray-50"
+                                    size={24}
+                                    role="button"
+                                >
+                                    heroicons-solid:chevron-left
+                                </FuseSvgIcon>
+                            </IconButton>
                             <Typography
                                 className="text-32 leading-40 font-500 font-space">
                                 {formatString(block?.tick)}
                             </Typography>
-                            <FuseSvgIcon
-                                className=" text-gray-50"
-                                size={24}
-                                role="button"
-                            >
-                                heroicons-solid:chevron-right
-                            </FuseSvgIcon>
+                            <IconButton
+                                onClick={() => navigate(`/network/block/${Number(tick) + 1}`)}>
+                                <FuseSvgIcon
+                                    className=" text-gray-50"
+                                    size={24}
+                                    role="button"
+                                >
+                                    heroicons-solid:chevron-right
+                                </FuseSvgIcon>
+                            </IconButton>
                         </div>
                         <Typography
                             className="text-14 leading-20 font-space text-gray-50">
@@ -134,13 +141,11 @@ function BlockPage() {
                     {
                         block &&
                         block?.transactions?.map((item) => (
+
                             <div className="flex flex-col p-12 border-[1px] rounded-8 border-gray-70" key={item.id}>
                                 <div className="flex items-center gap-16 mb-14">
-                                    <Typography
-                                        className="flex gap-4 tex-16 leading-20 text-gray-50 font-space py-2 px-8 bg-gray-70 rounded-full items-center">
-                                        TX
-                                        <FuseSvgIcon className="text-20 w-20 h-20 text-success-40">heroicons-solid:check</FuseSvgIcon>
-                                    </Typography>
+                                    <TxStatus
+                                        executed={item.executed} />
                                     <TxLink
                                         value={item.id} />
                                 </div>

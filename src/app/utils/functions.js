@@ -22,15 +22,15 @@ const formatDate = (dateString) => {
     return ''
 }
 
-function formatEllipsis(str, startLength = 5, endLength = 5) {
+function formatEllipsis(str) {
     if (str) {
-        if (str.length > startLength + endLength) {
-            return str.substr(0, startLength) + '...' + str.substr(-endLength);
+        if (str.length > 10) {
+            return `${str.substr(0, 5)}...${str.substr(5)}`;
         }
         return str;
     }
-
     return '';
 }
+
 
 export { formatString, formatDate, formatEllipsis };
