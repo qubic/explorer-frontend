@@ -1,14 +1,9 @@
 import { styled } from '@mui/material/styles';
 import FusePageSimple from '@fuse/core/FusePageSimple';
 import withReducer from 'app/store/withReducer';
-import { useDeepCompareEffect } from '@fuse/hooks';
-import { useDispatch } from 'react-redux';
 import { Outlet } from 'react-router-dom';
 
-import { getNetwork } from './store/networkSlice';
 import reducer from './store';
-
-
 
 const Root = styled(FusePageSimple)(({ theme }) => ({
   '& .FusePageSimple-header': {
@@ -23,13 +18,7 @@ const Root = styled(FusePageSimple)(({ theme }) => ({
   '& .FusePageSimple-sidebarContent': {},
 }));
 
-function ExplorerPage(props) {
-
-  const dispatch = useDispatch();
-
-  useDeepCompareEffect(() => {
-    dispatch(getNetwork())
-  }, [dispatch])
+function NetworkPage(props) {
 
   return (
     <Root
@@ -41,11 +30,11 @@ function ExplorerPage(props) {
       }
 
       content={
-        <Outlet/>
+        <Outlet />
       }
       scroll="content"
     />
   );
 }
 
-export default withReducer('network', reducer)(ExplorerPage);
+export default withReducer('network', reducer)(NetworkPage);

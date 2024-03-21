@@ -1,19 +1,22 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Typography } from "@mui/material";
+import { IconButton, Typography } from "@mui/material";
 import FuseSvgIcon from "@fuse/core/FuseSvgIcon";
 import { formatDate, formatString } from "src/app/utils/functions";
-import { useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import { getBlock, selectBlock } from "../store/blockSlice";
 import ErrorMessage from "../component/ErrorMessage";
+import AddressLink from "../component/AddressLink";
+import TxLink from "../component/TxLink";
+import TxStatus from "../component/TxStatus";
 
 function BlockPage() {
 
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const routeParams = useParams();
 
     const { tick } = routeParams;
-
 
     useEffect(() => {
         dispatch(getBlock(tick));
@@ -25,7 +28,7 @@ function BlockPage() {
     return (
         <div className='w-full '>
             <ErrorMessage />
-            <div className="py-36 max-w-[960px] mx-auto px-8">
+            <div className="pt-82 pb-40 max-w-[960px] mx-auto px-8">
                 <Typography
                     className="text-16 leading-20 mb-8">
                     Tick
@@ -33,24 +36,30 @@ function BlockPage() {
                 <div className="flex justify-between items-center mb-36">
                     <div className="flex flex-col gap-8">
                         <div className="flex items-center gap-8">
-                            <FuseSvgIcon
-                                className=" text-gray-50"
-                                size={24}
-                                role="button"
-                            >
-                                heroicons-solid:chevron-left
-                            </FuseSvgIcon>
+                            <IconButton
+                                onClick={() => navigate(`/network/block/${Number(tick) - 1}`)}>
+                                <FuseSvgIcon
+                                    className=" text-gray-50"
+                                    size={24}
+                                    role="button"
+                                >
+                                    heroicons-solid:chevron-left
+                                </FuseSvgIcon>
+                            </IconButton>
                             <Typography
                                 className="text-32 leading-40 font-500 font-space">
                                 {formatString(block?.tick)}
                             </Typography>
-                            <FuseSvgIcon
-                                className=" text-gray-50"
-                                size={24}
-                                role="button"
-                            >
-                                heroicons-solid:chevron-right
-                            </FuseSvgIcon>
+                            <IconButton
+                                onClick={() => navigate(`/network/block/${Number(tick) + 1}`)}>
+                                <FuseSvgIcon
+                                    className=" text-gray-50"
+                                    size={24}
+                                    role="button"
+                                >
+                                    heroicons-solid:chevron-right
+                                </FuseSvgIcon>
+                            </IconButton>
                         </div>
                         <Typography
                             className="text-14 leading-20 font-space text-gray-50">
@@ -64,11 +73,21 @@ function BlockPage() {
                             >
                                 Data Status
                             </Typography>
-                            <Typography
-                                className="text-16 leading-20 font-space text-success-40"
-                            >
-                                Complete
-                            </Typography>
+                            {
+                                block?.completed ?
+
+                                    <Typography
+                                        className="text-16 leading-20 font-space text-success-40"
+                                    >
+                                        Complete
+                                    </Typography>
+                                    :
+                                    <Typography
+                                        className="text-16 leading-20 font-space text-error-40"
+                                    >
+                                        Incomplete
+                                    </Typography>
+                            }
                         </div>
                         <div className="flex flex-col gap-8">
                             <Typography
@@ -96,7 +115,7 @@ function BlockPage() {
                         </div>
                     </div>
                 </div>
-                <div className="flex py-12 border-t-[1px] border-gray-70">
+                <div className="flex pt-12 mb-12 border-t-[1px] border-gray-70">
                     <Typography
                         className="w-120 text-14 leading-20 font-space text-gray-50">
                         Signature</Typography>
@@ -104,21 +123,15 @@ function BlockPage() {
                         className="text-14 leading-20 font-space text-gray-50">
                         {block?.signature}</Typography>
                 </div>
-                <div className="flex py-12 border-t-[1px] border-gray-70 mb-40">
+                <div className="flex pt-12 mb-12 border-t-[1px] border-gray-70">
                     <Typography
                         className="w-120 text-14 leading-20 font-space text-gray-50">
                         Block leader
                     </Typography>
-                    <div className="flex">
-                        <Typography
-                            className="text-14 leading-20 font-space text-primary-40">
-                            {block?.tickLeaderId}
-                        </Typography>
-                        <Typography
-                            className="text-14 leading-20 font-space text-gray-50">
-                            {` ( ${block?.tickLeaderShortCode} / ${block?.tickLeaderIndex} ) `}
-                        </Typography>
-                    </div>
+                    <AddressLink
+                        value={block?.tickLeaderId}
+                    />
+
                 </div>
                 <Typography
                     className="text-20 leading-26 font-500 font-space mb-16">
@@ -128,17 +141,13 @@ function BlockPage() {
                     {
                         block &&
                         block?.transactions?.map((item) => (
+
                             <div className="flex flex-col p-12 border-[1px] rounded-8 border-gray-70" key={item.id}>
                                 <div className="flex items-center gap-16 mb-14">
-                                    <Typography
-                                        className="flex gap-4 tex-16 leading-20 text-gray-50 font-space py-2 px-8 bg-gray-70 rounded-full items-center">
-                                        TX
-                                        <FuseSvgIcon className="text-20 w-20 h-20 text-success-40">heroicons-solid:check</FuseSvgIcon>
-                                    </Typography>
-                                    <Typography
-                                        className="text-16 leading-20 opacity-70 font-space">
-                                        {item.id}
-                                    </Typography>
+                                    <TxStatus
+                                        executed={item.executed} />
+                                    <TxLink
+                                        value={item.id} />
                                 </div>
                                 <div className="flex flex-col pt-14 border-t-[1px] border-gray-70">
                                     <div className="flex flex-col gap-12 pr-12">
@@ -154,13 +163,12 @@ function BlockPage() {
                                                 </Typography>
                                             </div>
                                             <div className="flex justify-between items-center">
-                                                <Typography
-                                                    className="text-14 leading-18 font-space text-primary-40">
-                                                    {item.sourceId}
-                                                </Typography>
+                                                <AddressLink
+                                                    value={item.sourceId}
+                                                />
                                                 <Typography
                                                     className="text-14 leading-18 font-space">
-                                                    0 Standard
+                                                    {item.type} Standard
                                                 </Typography>
                                             </div>
                                         </div>
@@ -176,13 +184,12 @@ function BlockPage() {
                                                 </Typography>
                                             </div>
                                             <div className="flex justify-between items-center">
-                                                <Typography
-                                                    className="text-14 leading-18 font-space text-primary-40">
-                                                    {item.destId}
-                                                </Typography>
+                                                <AddressLink
+                                                    value={item.destId}
+                                                />
                                                 <Typography
                                                     className="text-14 leading-18 font-space">
-                                                    0 qus
+                                                    {item.amount} qus
                                                 </Typography>
                                             </div>
                                         </div>

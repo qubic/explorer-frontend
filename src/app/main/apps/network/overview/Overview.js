@@ -1,13 +1,21 @@
+import { useEffect } from 'react';
 import { formatString } from 'src/app/utils/functions';
 
-import { useSelector } from 'react-redux';
-import { selectNetwork } from '../store/networkSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { getOverview, selectOverview } from '../store/overviewSlice';
 
 import Tick from '../component/Tick';
 import PastTicks from '../past-ticks/PastTicks';
 
 function Overview() {
-    const network = useSelector(selectNetwork)
+
+    const dispatch = useDispatch()
+
+    useEffect(() => {
+        dispatch(getOverview())
+    }, [dispatch])
+
+    const network = useSelector(selectOverview)
 
     return (
         <div className='w-full py-52'>

@@ -14,7 +14,7 @@ export const getBlock = createAsyncThunk(
     }
 )
 
-const networkSlice = createSlice({
+const blockSlice = createSlice({
     name: 'network/block',
     initialState: null,
     reducers: {},
@@ -25,4 +25,4 @@ const networkSlice = createSlice({
 
 export const selectBlock = ({ network }) => network.block;
 
-export default networkSlice.reducer;
+export default blockSlice.reducer;

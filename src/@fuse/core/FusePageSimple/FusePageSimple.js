@@ -244,7 +244,7 @@ const FusePageSimple = forwardRef((props, ref) => {
               {props.content && (
                 <FuseScrollbars
                   enable={props.scroll === 'content'}
-                  className={clsx('FusePageSimple-content container')}
+                  className={clsx('FusePageSimple-content')}
                 >
                   {props.content}
                 </FuseScrollbars>
