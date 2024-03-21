@@ -7,6 +7,7 @@ import { useParams } from "react-router-dom"
 import { getBlock, selectBlock } from "../store/blockSlice";
 import ErrorMessage from "../component/ErrorMessage";
 import AddressLink from "../component/AddressLink";
+import TxLink from "../component/TxLink";
 
 function BlockPage() {
 
@@ -140,10 +141,8 @@ function BlockPage() {
                                         TX
                                         <FuseSvgIcon className="text-20 w-20 h-20 text-success-40">heroicons-solid:check</FuseSvgIcon>
                                     </Typography>
-                                    <Typography
-                                        className="text-16 leading-20 opacity-70 font-space">
-                                        {item.id}
-                                    </Typography>
+                                    <TxLink
+                                        value={item.id} />
                                 </div>
                                 <div className="flex flex-col pt-14 border-t-[1px] border-gray-70">
                                     <div className="flex flex-col gap-12 pr-12">

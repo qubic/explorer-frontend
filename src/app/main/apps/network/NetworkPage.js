@@ -1,14 +1,9 @@
 import { styled } from '@mui/material/styles';
 import FusePageSimple from '@fuse/core/FusePageSimple';
 import withReducer from 'app/store/withReducer';
-import { useDeepCompareEffect } from '@fuse/hooks';
-import { useDispatch } from 'react-redux';
 import { Outlet } from 'react-router-dom';
 
-import { getOverview } from './store/overviewSlice';
 import reducer from './store';
-
-
 
 const Root = styled(FusePageSimple)(({ theme }) => ({
   '& .FusePageSimple-header': {
@@ -35,7 +30,7 @@ function NetworkPage(props) {
       }
 
       content={
-        <Outlet/>
+        <Outlet />
       }
       scroll="content"
     />
