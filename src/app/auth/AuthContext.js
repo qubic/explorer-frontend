@@ -13,24 +13,31 @@ function AuthProvider({ children }) {
   useEffect(() => {
 
     axios.defaults.baseURL = "http://localhost:7003";
-  
-    axios.post(`${jwtServiceConfig.login}`,
-      {
-        userName: "guest@qubic.li",
-        password: "guest13@Qubic.li",
-        twoFactorCode: "",
-      }
-    ).then((response) => {
-      axios.defaults.headers.common.Authorization = `Bearer ${response.data.token}`;
-    })
-      .then(() => {
-        console.log(axios.defaults.headers.common.Authorization)
-        setWaitAuthCheck(true)
-      }
-      )
-      .catch((error) => {
-        console.log(error)
+
+    const token = window.localStorage.getItem('jwt_access_token');
+
+    if (token) {
+      axios.defaults.headers.common.Authorization = `Bearer ${token}`;
+      setWaitAuthCheck(true)
+    } else {
+      axios.post(`${jwtServiceConfig.login}`,
+        {
+          userName: "guest@qubic.li",
+          password: "guest13@Qubic.li",
+          twoFactorCode: "",
+        }
+      ).then((response) => {
+        localStorage.setItem('jwt_access_token', response.data.token);
+        axios.defaults.headers.common.Authorization = `Bearer ${response.data.token}`;
       })
+        .then(() => {
+          console.log(axios.defaults.headers.common.Authorization)
+          setWaitAuthCheck(true)
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+    }
 
   }, []);
 
