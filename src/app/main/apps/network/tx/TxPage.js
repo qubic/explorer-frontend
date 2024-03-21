@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { Typography } from "@mui/material";
 
+import { formatEllipsis } from "src/app/utils/functions";
 import ErrorMessage from "../component/ErrorMessage";
 import TickLink from "../component/TickLink";
 import { getTx, selectTx } from "../store/txSlice";
@@ -31,7 +32,7 @@ function TxPage() {
                     className="text-primary-40" />
                 <Typography
                     className="text-16 leading-20 font-space text-gray-60 mb-8">
-                    {tx?.id}
+                    {formatEllipsis(tx?.id)}
                 </Typography>
             </div>
         </div>
