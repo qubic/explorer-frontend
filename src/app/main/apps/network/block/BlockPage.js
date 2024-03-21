@@ -6,6 +6,7 @@ import { formatDate, formatString } from "src/app/utils/functions";
 import { useParams } from "react-router-dom"
 import { getBlock, selectBlock } from "../store/blockSlice";
 import ErrorMessage from "../component/ErrorMessage";
+import AddressLink from "../component/AddressLink";
 
 function BlockPage() {
 
@@ -64,11 +65,21 @@ function BlockPage() {
                             >
                                 Data Status
                             </Typography>
-                            <Typography
-                                className="text-16 leading-20 font-space text-success-40"
-                            >
-                                Complete
-                            </Typography>
+                            {
+                                block?.completed ?
+
+                                    <Typography
+                                        className="text-16 leading-20 font-space text-success-40"
+                                    >
+                                        Complete
+                                    </Typography>
+                                    :
+                                    <Typography
+                                        className="text-16 leading-20 font-space text-error-40"
+                                    >
+                                        Incomplete
+                                    </Typography>
+                            }
                         </div>
                         <div className="flex flex-col gap-8">
                             <Typography
@@ -109,16 +120,10 @@ function BlockPage() {
                         className="w-120 text-14 leading-20 font-space text-gray-50">
                         Block leader
                     </Typography>
-                    <div className="flex">
-                        <Typography
-                            className="text-14 leading-20 font-space text-primary-40">
-                            {block?.tickLeaderId}
-                        </Typography>
-                        <Typography
-                            className="text-14 leading-20 font-space text-gray-50">
-                            {` ( ${block?.tickLeaderShortCode} / ${block?.tickLeaderIndex} ) `}
-                        </Typography>
-                    </div>
+                    <AddressLink
+                        value={block?.tickLeaderId}
+                    />
+
                 </div>
                 <Typography
                     className="text-20 leading-26 font-500 font-space mb-16">
@@ -154,13 +159,12 @@ function BlockPage() {
                                                 </Typography>
                                             </div>
                                             <div className="flex justify-between items-center">
-                                                <Typography
-                                                    className="text-14 leading-18 font-space text-primary-40">
-                                                    {item.sourceId}
-                                                </Typography>
+                                                <AddressLink
+                                                    value={item.sourceId}
+                                                />
                                                 <Typography
                                                     className="text-14 leading-18 font-space">
-                                                    0 Standard
+                                                    {item.type} Standard
                                                 </Typography>
                                             </div>
                                         </div>
@@ -176,13 +180,12 @@ function BlockPage() {
                                                 </Typography>
                                             </div>
                                             <div className="flex justify-between items-center">
-                                                <Typography
-                                                    className="text-14 leading-18 font-space text-primary-40">
-                                                    {item.destId}
-                                                </Typography>
+                                                <AddressLink
+                                                    value={item.destId}
+                                                />
                                                 <Typography
                                                     className="text-14 leading-18 font-space">
-                                                    0 qus
+                                                    {item.amount} qus
                                                 </Typography>
                                             </div>
                                         </div>

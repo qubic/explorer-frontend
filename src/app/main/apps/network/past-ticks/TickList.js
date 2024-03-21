@@ -1,7 +1,7 @@
-import { Typography } from '@mui/material';
-import { useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { formatString } from 'src/app/utils/functions';
 import { selectNetwork } from '../store/networkSlice';
+import TickLink from '../component/TickLink';
 
 function TickList() {
 
@@ -13,15 +13,10 @@ function TickList() {
                 network &&
                 (
                     network?.ticks?.map((item, id) => (
-                        <Typography
-                            component={Link}
-                            className={`font-space font-500 ${item.arbitrated ? 'text-error-40' : 'text-gray-50'}`}
-                            to={`/network/block/${item.tick}`}
-                            key={id}
-                            role='button'
-                        >
-                            {parseInt(item.tick, 10).toLocaleString('en-US')}
-                        </Typography>
+                        <TickLink
+                            key={item.tick}
+                            value={item.tick}
+                            className={item.arbitrated ? 'text-error-40' : 'text-gray-50'} />
                     ))
                 )
             }

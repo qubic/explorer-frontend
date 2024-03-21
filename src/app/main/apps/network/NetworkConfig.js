@@ -1,6 +1,7 @@
 import { lazy } from 'react';
 import BlockPage from './block/BlockPage';
 import Overview from './overview/Overview';
+import TxPage from './tx/TxPage';
 
 const NetworkPage = lazy(() => import('./NetworkPage'));
 
@@ -43,6 +44,15 @@ const NetworkConfig = {
               path: ':tick',
               element: <BlockPage />,
             },
+          ]
+        },
+        {
+          path: 'tx',
+          element: <TxPage />,
+          children: [
+            {
+              path: ':tx',
+            }
           ]
         }
       ]
