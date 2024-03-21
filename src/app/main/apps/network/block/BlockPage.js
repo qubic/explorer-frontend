@@ -115,7 +115,7 @@ function BlockPage() {
                         </div>
                     </div>
                 </div>
-                <div className="flex py-12 border-t-[1px] border-gray-70">
+                <div className="flex pt-12 mb-12 border-t-[1px] border-gray-70">
                     <Typography
                         className="w-120 text-14 leading-20 font-space text-gray-50">
                         Signature</Typography>
@@ -123,7 +123,7 @@ function BlockPage() {
                         className="text-14 leading-20 font-space text-gray-50">
                         {block?.signature}</Typography>
                 </div>
-                <div className="flex py-12 border-t-[1px] border-gray-70 mb-40">
+                <div className="flex pt-12 mb-12 border-t-[1px] border-gray-70">
                     <Typography
                         className="w-120 text-14 leading-20 font-space text-gray-50">
                         Block leader
