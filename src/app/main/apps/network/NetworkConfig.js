@@ -2,9 +2,9 @@ import { lazy } from 'react';
 import BlockPage from './block/BlockPage';
 import Overview from './overview/Overview';
 
-const ExplorerPage = lazy(() => import('./ExplorerPage'));
+const NetworkPage = lazy(() => import('./NetworkPage'));
 
-const OverviewConfig = {
+const NetworkConfig = {
   settings: {
     layout: {
       config: {
@@ -28,8 +28,8 @@ const OverviewConfig = {
   },
   routes: [
     {
-      path: 'explorer',
-      element: <ExplorerPage />,
+      path: 'network',
+      element: <NetworkPage />,
       children: [
         {
           path: '',
@@ -50,7 +50,7 @@ const OverviewConfig = {
   ],
 };
 
-export default OverviewConfig;
+export default NetworkConfig;
 
 /**
  * Lazy load Example

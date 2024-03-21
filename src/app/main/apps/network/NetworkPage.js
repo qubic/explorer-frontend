@@ -23,7 +23,7 @@ const Root = styled(FusePageSimple)(({ theme }) => ({
   '& .FusePageSimple-sidebarContent': {},
 }));
 
-function ExplorerPage(props) {
+function NetworkPage(props) {
 
   const dispatch = useDispatch();
 
@@ -48,4 +48,4 @@ function ExplorerPage(props) {
   );
 }
 
-export default withReducer('network', reducer)(ExplorerPage);
+export default withReducer('network', reducer)(NetworkPage);

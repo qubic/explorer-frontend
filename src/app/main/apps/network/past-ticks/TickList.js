@@ -16,7 +16,7 @@ function TickList() {
                         <Typography
                             component={Link}
                             className={`font-space font-500 ${item.arbitrated ? 'text-error-40' : 'text-gray-50'}`}
-                            to={`/explorer/block/${item.tick}`}
+                            to={`/network/block/${item.tick}`}
                             key={id}
                             role='button'
                         >
