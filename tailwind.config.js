@@ -10,9 +10,10 @@ module.exports = {
     screens: {
       xs: '375px',
       sm: '560px',
-      md: '860px',
+      md: '768px',
       lg: '1280px',
       xl: '1920px',
+      '827px': '827px',
       print: { raw: 'print' },
     },
     colors: ({ colors }) => ({

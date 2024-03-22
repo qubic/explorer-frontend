@@ -5,8 +5,9 @@ import { Typography, Input } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { getOverview, selectOverview } from '../store/overviewSlice';
 
-import Tick from '../component/Tick';
+import OverviewTick from '../component/OverviewTick';
 import TickLink from '../component/TickLink';
+import CardItem from '../component/CardItem';
 
 function Overview() {
 
@@ -19,57 +20,120 @@ function Overview() {
 
     const network = useSelector(selectOverview);
 
-
     return (
         <div className='w-full py-52'>
             <div className='max-w-[853px] px-16 flex flex-1 flex-col gap-16 mx-auto'>
-                <div className='flex flex-auto gap-16'>
-                    <Tick
-                        icon="heroicons-solid:view-grid-add"
-                        title="Circulating Supply"
-                        className="text-primary-40"
-                        value={formatString(network?.supply)}
-                    />
-                    <Tick
-                        icon="heroicons-solid:globe-alt"
-                        title="Market Cap"
-                        className="text-primary-40"
-                        value={formatString(network?.marketCapitalization)}
-                    />
-                    <Tick
-                        icon="heroicons-solid:view-grid-add"
-                        title="Circulating Entities"
-                        className="text-primary-40"
-                        value={formatString(network?.numberOfEntities)}
-                    />
+                <div className='flex flex-col 827px:flex-row gap-16'>
+                    <CardItem
+                        className="px-24 py-16"
+                    >
+                        <div className='flex items-center gap-24'>
+                            <img className="w-24 h-24" src="assets/icons/globe.svg" alt="icon" />
+                            <div className='flex flex-col gap-8'>
+                                <Typography className='text-14 leading-18 text-gray-50 font-space'>
+                                    Market Cap
+                                </Typography>
+                                <Typography className='text-18 xs:text-24 leading-20 sm:text-22 sm:leading-28 font-space'>
+                                    ${formatString(network?.marketCapitalization)}
+                                </Typography>
+                            </div>
+                        </div>
+                    </CardItem>
+                    <CardItem
+                        className="px-24 py-16"
+                    >
+                        <div className='flex items-center gap-24'>
+                            <img className="w-24 h-24" src="assets/icons/repeat.svg" alt="icon" />
+                            <div className='flex flex-col gap-8'>
+                                <Typography className='text-14 leading-18 text-gray-50 font-space'>
+                                    Circulating Supply
+                                </Typography>
+                                <Typography className='text-18 xs:text-24 leading-20 sm:text-22 sm:leading-28 font-space'>
+                                    ${formatString(network?.supply)}
+                                </Typography>
+                            </div>
+                        </div>
+                    </CardItem>
+                    <CardItem
+                        className="px-24 py-16"
+                    >
+                        <div className='flex items-center gap-24'>
+                            <img className="w-24 h-24" src="assets/icons/wallet.svg" alt="icon" />
+                            <div className='flex flex-col gap-8'>
+                                <Typography className='text-14 leading-18 text-gray-50 font-space'>
+                                    Circulating Entities
+                                </Typography>
+                                <Typography className='text-18 xs:text-24 leading-20 sm:text-22 sm:leading-28 font-space'>
+                                    ${formatString(network?.numberOfEntities)}
+                                </Typography>
+                            </div>
+                        </div>
+                    </CardItem>
                 </div>
-                <div className='grid xs:grid-cols-2 md:grid-cols-4 gap-16'>
-                    <Tick
-                        icon="heroicons-solid:view-grid-add"
-                        title="Current Tick"
-                        className="text-gray-50 "
-                        value={formatString(network?.currentTick)}
-                    />
-                    <Tick
-                        icon="heroicons-solid:view-grid"
-                        title="Amount of Ticks"
-                        className="text-gray-50 "
-                        value={formatString(network?.numberOfTicks)}
-                    />
-                    <Tick
-                        icon="heroicons-solid:dots-circle-horizontal"
-                        title="Empty"
-                        className="text-gray-50 "
-                        value={formatString(network?.numberOfEmptyTicks)}
-                    />
-                    <Tick
-                        icon="heroicons-solid:dots-circle-horizontal"
-                        title="Tick Quality"
-                        className="text-gray-50 "
-                        value={formatString(network?.numberOfEmptyTicks)}
-                    />
+                <div className='grid grid-cols-2 827px:grid-cols-4 gap-16'>
+                    <CardItem
+                        className="px-24 py-16"
+                    >
+                        <div className='flex flex-col sm:flex-row sm:items-center gap-16 w-full'>
+                            <img className="w-24 h-24" src="assets/icons/grid-add.svg" alt="icon" />
+                            <div className='flex flex-col gap-8'>
+                                <Typography className='text-14 leading-18 text-gray-50 font-space'>
+                                    Current Tick
+                                </Typography>
+                                <Typography className='text-16 leading-20 sm:text-22 sm:leading-28 font-space'>
+                                    {formatString(network?.currentTick)}
+                                </Typography>
+                            </div>
+                        </div>
+                    </CardItem>
+                    <CardItem
+                        className="px-24 py-16"
+                    >
+                        <div className='flex flex-col sm:flex-row sm:items-center gap-16 w-full'>
+                            <img className="w-24 h-24" src="assets/icons/grid-view.svg" alt="icon" />
+                            <div className='flex flex-col gap-5'>
+                                <Typography className='text-14 leading-18 text-gray-50 font-space'>
+                                    Amount of Tick
+                                </Typography>
+                                <Typography className='text-16 leading-20 sm:text-22 sm:leading-28 font-space'>
+                                    {formatString(network?.numberOfTicks)}
+                                </Typography>
+                            </div>
+                        </div>
+                    </CardItem>
+                    <CardItem
+                        className="px-24 py-16"
+                    >
+                        <div className='flex flex-col sm:flex-row sm:items-center gap-16 w-full'>
+                            <img className="w-24 h-24" src="assets/icons/circle-dashed.svg" alt="icon" />
+                            <div className='flex flex-col gap-5'>
+                                <Typography className='text-14 leading-18 text-gray-50 font-space'>
+                                    Empty
+                                </Typography>
+                                <Typography className='text-16 leading-20 sm:text-22 sm:leading-28 font-space'>
+                                    {formatString(network?.numberOfEmptyTicks)}
+                                </Typography>
+                            </div>
+                        </div>
+                    </CardItem>
+                    <CardItem
+                        className="px-24 py-16"
+                    >
+                        <div className='flex flex-col sm:flex-row sm:items-center gap-16 w-full'>
+                            <img className="w-24 h-24" src="assets/icons/stars.svg" alt="icon" />
+                            <div className='flex flex-col gap-5'>
+                                <Typography className='text-14 leading-18 text-gray-50 font-space'>
+                                    Tick Quality
+                                </Typography>
+                                <Typography className='text-16 leading-20 sm:text-22 sm:leading-28 font-space'>
+                                    {formatString((network?.numberOfTicks - network?.numberOfEmptyTicks) * 100 / network?.numberOfTicks)}%
+                                </Typography>
+                            </div>
+                        </div>
+                    </CardItem>
                 </div>
-                <div className='w-full border-gray-70 border-[1px] rounded-8 px-24 py-20'>
+                <CardItem
+                    className="px-24 py-20">
                     <div className='flex flex-col gap-20'>
                         <div className='flex justify-between items-center'>
                             <Typography variant='h5' className='text-22 font-space font-500'>
@@ -88,18 +152,16 @@ function Overview() {
                         <div className='grid grid-cols-3 xs:grid-cols-4 sm:grid-cols-6 md:grid-cols-10 gap-12'>
                             {
                                 network?.ticks &&
-                                (
-                                    network?.ticks?.splice(0, 100).map((item) => (
-                                        <TickLink
-                                            key={item.tick}
-                                            value={item.tick}
-                                            className={item.arbitrated ? 'text-error-40' : 'text-gray-50'} />
-                                    ))
-                                )
+                                network?.ticks?.slice(0, 100).map((item) => (
+                                    <TickLink
+                                        key={item.tick}
+                                        value={item.tick}
+                                        className={`text-12 ${item.arbitrated ? 'text-error-40' : 'text-gray-50'}`} />
+                                ))
                             }
                         </div>
                     </div>
-                </div>
+                </CardItem>
             </div>
         </div>
     )

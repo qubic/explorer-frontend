@@ -17,6 +17,7 @@ function AuthProvider({ children }) {
     const token = window.localStorage.getItem('jwt_access_token');
 
     if (token) {
+      
       axios.defaults.headers.common.Authorization = `Bearer ${token}`;
       setWaitAuthCheck(true)
     } else {

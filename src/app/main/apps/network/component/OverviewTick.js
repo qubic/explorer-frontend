@@ -1,13 +1,14 @@
-import FuseSvgIcon from '@fuse/core/FuseSvgIcon';
 import { Typography } from '@mui/material';
 import clsx from 'clsx';
+import CardItem from './CardItem';
 
-function Tick(props) {
+function OverviewTick(props) {
     const { icon, title, value, className } = props;
     return (
-        <div className='w-full border-gray-70 border-[1px] rounded-8 px-24 py-16'>
-            <div className='flex flex-1 gap-10 items-center w-full'>
-                <FuseSvgIcon className={clsx("text-24", className)}>{icon}</FuseSvgIcon>
+        <CardItem
+            className="px-24 py-16">
+            <div className={clsx('flex flex-auto items-center', className)}>
+                {icon}
                 <div className='flex flex-col gap-5'>
                     <Typography variant='h5' className='text-gray-50 font-space text-sm'>
                         {title}
@@ -17,8 +18,8 @@ function Tick(props) {
                     </p>
                 </div>
             </div>
-        </div>
+        </CardItem>
     )
 }
 
-export default Tick;
+export default OverviewTick;

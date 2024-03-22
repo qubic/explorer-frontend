@@ -10,7 +10,7 @@ function TickLink(props) {
     return (
         <Typography
             component={Link}
-            className={clsx(`text-12 font-space font-500`, className)}
+            className={clsx(`font-space font-500`, className)}
             to={`/network/block/${value}`}
             role='button'
         >
