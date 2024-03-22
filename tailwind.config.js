@@ -8,11 +8,13 @@ module.exports = {
   darkMode: 'class', // or 'class'
   theme: {
     screens: {
-      xs: '420px',
-      sm: '600px',
-      md: '840px',
+      xs: '375px',
+      sm: '560px',
+      md: '768px',
       lg: '1280px',
       xl: '1920px',
+      '827px': '827px',
+      '948px': '948px',
       print: { raw: 'print' },
     },
     colors: ({ colors }) => ({

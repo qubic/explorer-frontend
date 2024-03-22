@@ -18,7 +18,29 @@ function AuthProvider({ children }) {
 
     if (token) {
       axios.defaults.headers.common.Authorization = `Bearer ${token}`;
-      setWaitAuthCheck(true)
+      axios.get(`/Network/TickOverview?epoch=&offset=0`)
+        .then((resp) => {
+          setWaitAuthCheck(true)
+        })
+        .catch((error) => {
+          axios.post(`${jwtServiceConfig.login}`,
+            {
+              userName: "guest@qubic.li",
+              password: "guest13@Qubic.li",
+              twoFactorCode: "",
+            }
+          ).then((response) => {
+            localStorage.setItem('jwt_access_token', response.data.token);
+            axios.defaults.headers.common.Authorization = `Bearer ${response.data.token}`;
+          })
+            .then(() => {
+              console.log(axios.defaults.headers.common.Authorization)
+              setWaitAuthCheck(true)
+            })
+            .catch((err) => {
+              console.log(err)
+            })
+        })
     } else {
       axios.post(`${jwtServiceConfig.login}`,
         {

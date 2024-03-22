@@ -7,7 +7,7 @@ function AddressLink(props) {
 
     return (
         <Typography
-            className="text-14 leading-20 font-space text-primary-40"
+            className="text-14 leading-20 font-space text-primary-40 break-all"
             component={Link}
             to={`/network/address/${value}`}
             role='button'
