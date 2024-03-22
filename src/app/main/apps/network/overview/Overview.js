@@ -155,7 +155,6 @@ function Overview() {
                                 network.ticks.length > 0 &&
                                 network.ticks
                                     .filter(item => item.tick.toString().includes(searchTick))
-                                    .slice(0, 100)
                                     .map((item) => (
                                         <TickLink
                                             key={item.tick}
