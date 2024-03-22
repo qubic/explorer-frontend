@@ -1,25 +1,28 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { formatString } from 'src/app/utils/functions';
+import { Typography, Input } from '@mui/material';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { getOverview, selectOverview } from '../store/overviewSlice';
 
 import Tick from '../component/Tick';
-import PastTicks from '../past-ticks/PastTicks';
+import TickLink from '../component/TickLink';
 
 function Overview() {
 
     const dispatch = useDispatch()
+    const [searchTick, setSearchTick] = useState('')
 
     useEffect(() => {
         dispatch(getOverview())
     }, [dispatch])
 
-    const network = useSelector(selectOverview)
+    const network = useSelector(selectOverview);
+
 
     return (
         <div className='w-full py-52'>
-            <div className='max-w-[853px] px-12 flex flex-1 flex-col gap-16 mx-auto'>
+            <div className='max-w-[853px] px-16 flex flex-1 flex-col gap-16 mx-auto'>
                 <div className='flex flex-auto gap-16'>
                     <Tick
                         icon="heroicons-solid:view-grid-add"
@@ -66,7 +69,37 @@ function Overview() {
                         value={formatString(network?.numberOfEmptyTicks)}
                     />
                 </div>
-                <PastTicks />
+                <div className='w-full border-gray-70 border-[1px] rounded-8 px-24 py-20'>
+                    <div className='flex flex-col gap-20'>
+                        <div className='flex justify-between items-center'>
+                            <Typography variant='h5' className='text-22 font-space font-500'>
+                                Past Ticks
+                            </Typography>
+                            <Input
+                                placeholder='Search'
+                                className='bg-gray-80 border-gray-70 border-[1px] rounded-8 px-16 py-8'
+                                value={searchTick}
+                                disableUnderline
+                                inputProps={{
+                                    'aria-label': 'Search',
+                                }}
+                                onChange={(e) => { setSearchTick(e.target.value) }} />
+                        </div>
+                        <div className='grid grid-cols-3 xs:grid-cols-4 sm:grid-cols-6 md:grid-cols-10 gap-12'>
+                            {
+                                network?.ticks &&
+                                (
+                                    network?.ticks?.splice(0, 100).map((item) => (
+                                        <TickLink
+                                            key={item.tick}
+                                            value={item.tick}
+                                            className={item.arbitrated ? 'text-error-40' : 'text-gray-50'} />
+                                    ))
+                                )
+                            }
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     )
