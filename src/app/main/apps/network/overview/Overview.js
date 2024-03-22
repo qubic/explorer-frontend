@@ -151,13 +151,17 @@ function Overview() {
                         </div>
                         <div className='grid grid-cols-3 xs:grid-cols-4 sm:grid-cols-6 md:grid-cols-10 gap-12'>
                             {
-                                network?.ticks &&
-                                network?.ticks?.slice(0, 100).map((item) => (
-                                    <TickLink
-                                        key={item.tick}
-                                        value={item.tick}
-                                        className={`text-12 ${item.arbitrated ? 'text-error-40' : 'text-gray-50'}`} />
-                                ))
+                                network &&
+                                network.ticks.length > 0 &&
+                                network.ticks
+                                    .filter(item => item.tick.toString().includes(searchTick))
+                                    .slice(0, 100)
+                                    .map((item) => (
+                                        <TickLink
+                                            key={item.tick}
+                                            value={item.tick}
+                                            className={`text-12 ${item.arbitrated ? 'text-error-40' : 'text-gray-50'}`} />
+                                    ))
                             }
                         </div>
                     </div>
