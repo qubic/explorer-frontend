@@ -1,16 +1,16 @@
 import { useEffect, useState } from 'react';
 import { formatString } from 'src/app/utils/functions';
-import { Typography, Input } from '@mui/material';
+import { Typography, LinearProgress, Input } from '@mui/material';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { getOverview, selectOverview } from '../store/overviewSlice';
+import { getOverview, selectOverview, selectOverviewLoading } from '../store/overviewSlice';
 
-import OverviewTick from '../component/OverviewTick';
 import TickLink from '../component/TickLink';
 import CardItem from '../component/CardItem';
 
 function Overview() {
 
+    const isLoading = useSelector(selectOverviewLoading);
     const dispatch = useDispatch()
     const [searchTick, setSearchTick] = useState('')
 
@@ -20,6 +20,14 @@ function Overview() {
 
     const network = useSelector(selectOverview);
 
+    if (isLoading) {
+        return (
+            <div className="w-full absolute">
+                <LinearProgress />
+            </div>
+        )
+    }
+  
     return (
         <div className='w-full py-52'>
             <div className='max-w-[853px] px-16 flex flex-1 flex-col gap-16 mx-auto'>
@@ -155,7 +163,6 @@ function Overview() {
                                 network.ticks.length > 0 &&
                                 network.ticks
                                     .filter(item => item.tick.toString().includes(searchTick))
-                                    .slice(0, 100)
                                     .map((item) => (
                                         <TickLink
                                             key={item.tick}

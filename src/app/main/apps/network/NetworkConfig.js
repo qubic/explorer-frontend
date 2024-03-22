@@ -1,10 +1,8 @@
-import { lazy } from 'react';
+import NetworkPage from './NetworkPage';
 import BlockPage from './block/BlockPage';
 import Overview from './overview/Overview';
 import TxPage from './tx/TxPage';
 import AddressPage from './address/AddressPage';
-
-const NetworkPage = lazy(() => import('./NetworkPage'));
 
 const NetworkConfig = {
   settings: {
