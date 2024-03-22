@@ -1,10 +1,11 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Hidden, IconButton, Typography } from "@mui/material";
-import FuseSvgIcon from "@fuse/core/FuseSvgIcon";
+import { Hidden, IconButton, LinearProgress, Typography } from "@mui/material";
 import { formatDate, formatString } from "src/app/utils/functions";
-import { useNavigate, useParams } from "react-router-dom"
-import { getBlock, selectBlock } from "../store/blockSlice";
+import { Link, useNavigate, useParams } from "react-router-dom"
+import SplashScreen from "src/app/components/SplashScreen";
+
+import { getBlock, selectBlock, selectBlockLoading } from "../store/blockSlice";
 import ErrorMessage from "../component/ErrorMessage";
 import AddressLink from "../component/AddressLink";
 import TxLink from "../component/TxLink";
@@ -17,22 +18,33 @@ function BlockPage() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const routeParams = useParams();
-
+    
     const { tick } = routeParams;
-
+    
     useEffect(() => {
         dispatch(getBlock(tick));
     }, [routeParams, dispatch])
-
+    
     const block = useSelector(selectBlock)
-    console.log(block)
+    const isLoading = useSelector(selectBlockLoading);
+    
+    if (isLoading) {
+        return (
+            <div className="w-full absolute">
+                <LinearProgress />
+            </div>
+        )
+    }
 
     return (
         <div className='w-full '>
             <ErrorMessage />
             <div className="py-36 max-w-[960px] mx-auto px-12">
                 <Typography
-                    className="text-16 leading-20 mb-8 text-gray-50">
+                    component={Link}
+                    className="text-16 leading-20 mb-8 text-gray-50"
+                    to="/network"
+                    role="button">
                     Tick
                 </Typography>
                 <div className="flex justify-between gap-12 items-center mb-36">
@@ -72,11 +84,11 @@ function BlockPage() {
                         content={<AddressLink value={block?.tickLeaderId} />} />
                 </div>
                 <div className="mb-24 md:hidden">
-                        <TickStatus
-                            dataStatus={block?.completed}
-                            blockStatus={block?.isNonEmpty}
-                            numberOfTx={block?.numberOfTx} />
-                    </div>
+                    <TickStatus
+                        dataStatus={block?.completed}
+                        blockStatus={block?.isNonEmpty}
+                        numberOfTx={block?.numberOfTx} />
+                </div>
                 <Typography
                     className="text-20 leading-26 font-500 font-space mb-16">
                     Transactions

@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 
 function SplashScreen() {
     return (
-        <div id="splash-screen">
+        <div id="fusu-splash-screen">
             <div className="logo">
                 <img width="128" src="assets/images/logo/logo.svg" alt="logo" />
             </div>

@@ -1,14 +1,14 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { Typography } from "@mui/material";
+import { LinearProgress, Typography } from "@mui/material";
 
 import { formatEllipsis } from "src/app/utils/functions";
 import ErrorMessage from "../component/ErrorMessage";
 import TxStatus from "../component/TxStatus";
 import TxLink from "../component/TxLink";
 import TickLink from "../component/TickLink";
-import { getTx, selectTx } from "../store/txSlice";
+import { getTx, selectTx, selectTxLoading } from "../store/txSlice";
 import AddressLink from "../component/AddressLink";
 import SubCardItem from "../component/SubCardItem";
 
@@ -24,9 +24,16 @@ function TxPage() {
     }, [routeParams, dispatch])
 
     const tx = useSelector(selectTx);
+    const isLoading = useSelector(selectTxLoading);
 
-    console.log(tx)
-
+    if (isLoading) {
+        return (
+            <div className="w-full absolute">
+                <LinearProgress />
+            </div>
+        )
+    }
+    
     return (
         <div className="w-full">
             <ErrorMessage />

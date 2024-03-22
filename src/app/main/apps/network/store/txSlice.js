@@ -14,13 +14,32 @@ export const getTx = createAsyncThunk(
 
 const txSlice = createSlice({
     name: 'network/tx',
-    initialState: null,
-    reducers: {},
-    extraReducers: {
-        [getTx.fulfilled]: (state, action) => action.payload,
+    initialState: {
+        tx: null,
+        isLoading: false,
+        error: null,
     },
-})
+    reducers: {},
+    extraReducers: (builder) => {
+        builder
+            .addCase(getTx.pending, (state) => {
+                state.isLoading = true;
+                state.error = null;
+            })
+            .addCase(getTx.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.tx = action.payload;
+            })
+            .addCase(getTx.rejected, (state, action) => {
+                state.isLoading = false;
+                state.error = action.error.message;
+            });
+    },
+});
 
-export const selectTx = ({ network }) => network.tx;
+// Selector to access the state
+export const selectTx = ({ network }) => network.tx.tx;
+export const selectTxLoading = ({ network }) => network.tx.isLoading;
+export const selectTxError = ({ network }) => network.tx.error;
 
 export default txSlice.reducer;
