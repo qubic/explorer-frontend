@@ -10,6 +10,7 @@ import TxLink from "../component/TxLink";
 import TickLink from "../component/TickLink";
 import { getTx, selectTx } from "../store/txSlice";
 import AddressLink from "../component/AddressLink";
+import SubCardItem from "../component/SubCardItem";
 
 function TxPage() {
 
@@ -29,7 +30,7 @@ function TxPage() {
     return (
         <div className="w-full">
             <ErrorMessage />
-            <div className="pt-82 pb-32 max-w-[960px] mx-auto px-8">
+            <div className="py-36 max-w-[960px] mx-auto px-12">
                 <div className="flex mb-16">
                     <TickLink
                         value={tx?.tick}
@@ -47,42 +48,28 @@ function TxPage() {
                     className="text-24 leading-28 font-space mb-16">
                     Transaction preview
                 </Typography>
-                <div className="flex items-center gap-16 mb-32">
-                    <TxStatus
-                        executed={tx?.executed} />
+                <div className="flex flex-col md:flex-row md:items-center gap-10 md:gap-16 mb-24">
+                    <div className="">
+                        <TxStatus
+                            executed={tx?.executed} />
+                    </div>
                     <TxLink
                         value={tx?.id} />
                 </div>
-                <div className="flex pt-12 mb-12 border-t-[1px] border-gray-70">
-                    <Typography
-                        className="w-120 text-14 leading-20 font-space text-gray-50">
-                        Amount</Typography>
-                    <Typography
-                        className="text-14 leading-20 font-space ">
-                        {tx?.amount} qus</Typography>
-                </div>
-                <div className="flex pt-12 mb-12 border-t-[1px] border-gray-70">
-                    <Typography
-                        className="w-120 text-14 leading-20 font-space text-gray-50">
-                        Type</Typography>
-                    <Typography
-                        className="text-14 leading-20 font-space ">
-                        {tx?.type} Standard</Typography>
-                </div>
-                <div className="flex pt-12 mb-12 border-t-[1px] border-gray-70">
-                    <Typography
-                        className="w-120 text-14 leading-20 font-space text-gray-50">
-                        Source</Typography>
-                    <AddressLink
-                        value={tx?.sourceId} />
-                </div>
-                <div className="flex pt-12 mb-12 border-t-[1px] border-gray-70">
-                    <Typography
-                        className="w-120 text-14 leading-20 font-space text-gray-50">
-                        Destination</Typography>
-                    <AddressLink
-                        value={tx?.destId} />
-                </div>
+                <SubCardItem
+                    title="Amount"
+                    content={<Typography className="text-14 leading-20 font-space">{tx?.amount} qus</Typography>} />
+                <SubCardItem
+                    title="Type"
+                    content={<Typography className="text-14 leading-20 font-space">{tx?.type} Standard</Typography>} />
+                <SubCardItem
+                    title="Source"
+                    content={<AddressLink
+                        value={tx?.sourceId} />} />
+                <SubCardItem
+                    title="Destination"
+                    content={<AddressLink
+                        value={tx?.destId} />} />
             </div>
         </div>
     )

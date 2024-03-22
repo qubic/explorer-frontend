@@ -14,6 +14,7 @@ module.exports = {
       lg: '1280px',
       xl: '1920px',
       '827px': '827px',
+      '948px': '948px',
       print: { raw: 'print' },
     },
     colors: ({ colors }) => ({
