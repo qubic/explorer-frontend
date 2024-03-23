@@ -12,7 +12,8 @@ function AuthProvider({ children }) {
 
   useEffect(() => {
 
-    axios.defaults.baseURL = "http://localhost:7003";
+    // axios.defaults.baseURL = "http://localhost:7003";
+    axios.defaults.baseURL = "https://api.qubic.li";
 
     const token = window.localStorage.getItem('jwt_access_token');
 
