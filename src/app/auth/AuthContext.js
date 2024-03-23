@@ -12,6 +12,7 @@ function AuthProvider({ children }) {
 
   useEffect(() => {
 
+    // set env base url
     // axios.defaults.baseURL = "http://localhost:7003";
     axios.defaults.baseURL = "https://api.qubic.li";
 
