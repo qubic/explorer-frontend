@@ -7,8 +7,6 @@ i18next.addResourceBundle('en', 'navigation', en);
 i18next.addResourceBundle('tr', 'navigation', tr);
 i18next.addResourceBundle('ar', 'navigation', ar);
 
-const navigationConfig = [
-
-];
+const navigationConfig = [];
 
 export default navigationConfig;

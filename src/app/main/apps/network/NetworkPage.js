@@ -20,16 +20,7 @@ const Root = styled(FusePageSimple)(({ theme }) => ({
 }));
 
 function NetworkPage(props) {
-
-  return (
-    <Root
-      header={<NetworkHeader />}
-      content={
-        <Outlet />
-      }
-      scroll="content"
-    />
-  );
+  return <Root header={<NetworkHeader />} content={<Outlet />} scroll="content" />;
 }
 
 export default withReducer('network', reducer)(NetworkPage);

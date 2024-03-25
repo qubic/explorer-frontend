@@ -30,15 +30,12 @@ function LanguageSwitcher(props) {
 
   return (
     <>
-      <IconButton
-        className="w-40 h-40" onClick={langMenuClick}
-      >
+      <IconButton className="w-40 h-40" onClick={langMenuClick}>
         <img
           className="w-full h-full"
           src={`assets/images/flags/${currentLanguage.flag}.svg`}
           alt={currentLanguage.title}
         />
-
       </IconButton>
       <Popover
         open={Boolean(menu)}

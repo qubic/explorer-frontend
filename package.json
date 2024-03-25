@@ -20,11 +20,13 @@
         "autosuggest-highlight": "3.3.1",
         "axios": "0.27.2",
         "axios-mock-adapter": "1.21.1",
+        "body-parser": "^1.20.2",
         "clsx": "1.2.1",
         "crypto-js": "4.1.1",
         "date-fns": "2.28.0",
         "draft-js": "0.11.7",
         "draftjs-to-html": "0.9.1",
+        "express": "^4.19.1",
         "framer-motion": "6.5.0",
         "history": "5.3.0",
         "i18next": "21.8.14",
@@ -111,7 +113,7 @@
         "eject": "react-app-rewired eject",
         "build-docs": "babel-node --presets @babel/preset-env src/app/main/documentation/material-ui-components/build.js",
         "analyze": "react-app-rewired build && source-map-explorer 'build/static/js/*.js' --html analyze-result.html",
-        "lint": "eslint"
+        "lint": "eslint . --fix"
     },
     "engines": {
         "node": ">=14.0.0",

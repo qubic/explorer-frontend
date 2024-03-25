@@ -43,7 +43,7 @@ const NetworkConfig = {
               path: ':tick',
               element: <BlockPage />,
             },
-          ]
+          ],
         },
         {
           path: 'tx',
@@ -52,8 +52,8 @@ const NetworkConfig = {
             {
               path: ':txId',
               element: <TxPage />,
-            }
-          ]
+            },
+          ],
         },
         {
           path: 'address',
@@ -63,9 +63,9 @@ const NetworkConfig = {
               path: ':addressId',
               element: <AddressPage />,
             },
-          ]
-        }
-      ]
+          ],
+        },
+      ],
     },
   ],
 };

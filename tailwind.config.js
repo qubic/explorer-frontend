@@ -54,16 +54,16 @@ module.exports = {
         A700: '#616161',
       },
       error: {
-        40: "#F97066",
-        90: "#381D1E",
+        40: '#F97066',
+        90: '#381D1E',
       },
       success: {
-        40: "#47CD89",
-        90: "#11322D",
+        40: '#47CD89',
+        90: '#11322D',
       },
       warning: {
-        40: "#CDA747",
-        90: "#322D11",
+        40: '#CDA747',
+        90: '#322D11',
       },
       grey: {
         50: '#FAFAFA',
@@ -776,8 +776,7 @@ module.exports = {
       DEFAULT: '1',
     },
     fontFamily: {
-
-      "space": ["Space Grotesk", "sans-serif"],
+      space: ['Space Grotesk', 'sans-serif'],
       sans: [
         'Inter var',
         'Roboto',
