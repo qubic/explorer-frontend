@@ -3,7 +3,6 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import history from '@history';
 import _ from '@lodash';
 import { setInitialSettings } from 'app/store/fuse/settingsSlice';
-import { showMessage } from 'app/store/fuse/messageSlice';
 import settingsConfig from 'app/configs/settingsConfig';
 
 export const setUser = createAsyncThunk('user/setUser', async (user, { dispatch, getState }) => {
@@ -65,8 +64,7 @@ export const logoutUser = () => async (dispatch, getState) => {
 };
 
 export const updateUserData = (user) => async (dispatch, getState) => {
-  
-  console.log("")
+  console.log('');
 };
 
 const initialState = {

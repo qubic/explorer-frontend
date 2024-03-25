@@ -1,13 +1,5 @@
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import MenuItem from '@mui/material/MenuItem';
-import Popover from '@mui/material/Popover';
-import Typography from '@mui/material/Typography';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Link, NavLink } from 'react-router-dom';
 import FuseSvgIcon from '@fuse/core/FuseSvgIcon';
 import { selectUser } from 'app/store/userSlice';
 import { Badge, IconButton } from '@mui/material';
@@ -28,7 +20,13 @@ function UserMenu(props) {
   return (
     <>
       <IconButton>
-        <Badge color="secondary" variant="dot" anchorOrigin={{horizontal:'right', vertical:'bottom'}}><FuseSvgIcon>heroicons-outline:user-circle</FuseSvgIcon></Badge>
+        <Badge
+          color="secondary"
+          variant="dot"
+          anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+        >
+          <FuseSvgIcon>heroicons-outline:user-circle</FuseSvgIcon>
+        </Badge>
       </IconButton>
       {/* <Button
         className="min-h-40 min-w-40 px-0 md:px-16 py-0 md:py-6"

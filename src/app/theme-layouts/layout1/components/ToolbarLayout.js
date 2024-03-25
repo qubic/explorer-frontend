@@ -19,7 +19,7 @@ function ToolbarLayout(props) {
   const navbar = useSelector(selectFuseNavbar);
   const toolbarTheme = useSelector(selectToolbarTheme);
 
-  console.log(toolbarTheme)
+  console.log(toolbarTheme);
 
   return (
     <ThemeProvider theme={toolbarTheme}>
@@ -33,7 +33,8 @@ function ToolbarLayout(props) {
               ? toolbarTheme.palette.background.default
               : toolbarTheme.palette.background.paper,
         }}
-        position="static"s
+        position="static"
+        s
       >
         <Toolbar className="p-0 min-h-48 md:min-h-64">
           <div className="flex flex-1 px-16">
@@ -55,7 +56,6 @@ function ToolbarLayout(props) {
                 </Hidden>
               </>
             )}
-
           </div>
 
           <div className="flex items-center px-8 h-full overflow-x-auto">

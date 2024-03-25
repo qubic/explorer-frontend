@@ -35,7 +35,6 @@ const emotionCacheOptions = {
 };
 
 const App = () => {
-
   const langDirection = useSelector(selectCurrentLanguageDirection);
   const mainTheme = useSelector(selectMainTheme);
 
