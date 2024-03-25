@@ -8,7 +8,11 @@ function BrowserRouter({ basename, children, window }) {
     location: history.location,
   });
 
-  useLayoutEffect(() => history.listen(setState), [history]);
+  // Removed 'history' from the dependency array to address the warning
+  useLayoutEffect(() => {
+    const unlisten = history.listen(setState);
+    return unlisten; // Cleanup listener on component unmount
+  }, []); // Empty dependency array indicates this effect runs only once on mount
 
   return (
     <Router
