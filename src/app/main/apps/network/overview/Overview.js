@@ -30,7 +30,11 @@ function Overview() {
 
   const filteredTicks =
     network && network.ticks.length > 0
-      ? network.ticks.filter((item) => item.tick.toString().includes(searchTick))
+      ? network.ticks.filter((item) => {
+          const itemTickStr = item.tick.toString();
+          const sanitizedSearchTick = searchTick.replace(/\D/g, '');
+          return itemTickStr.includes(sanitizedSearchTick);
+        })
       : [];
 
   const pageCount = Math.ceil(filteredTicks.length / itemsPerPage);
@@ -38,6 +42,9 @@ function Overview() {
   const displayedTicks = filteredTicks.slice(startIndex, startIndex + itemsPerPage);
 
   const handlePageChange = (event, value) => {
+    if (searchTick) {
+      setPage(1);
+    }
     setPage(value);
   };
 
