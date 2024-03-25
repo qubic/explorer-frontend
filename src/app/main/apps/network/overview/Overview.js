@@ -31,7 +31,7 @@ function Overview() {
     return (
         <div className='w-full py-52'>
             <div className='max-w-[853px] px-16 flex flex-1 flex-col gap-16 mx-auto'>
-                <div className='flex flex-col 827px:flex-row gap-16'>
+                <div className='grid 827px:grid-flow-col gap-16'>
                     <CardItem
                         className="px-24 py-16"
                     >
@@ -57,7 +57,7 @@ function Overview() {
                                     Circulating Supply
                                 </Typography>
                                 <Typography className='text-18 xs:text-24 leading-20 sm:text-22 sm:leading-28 font-space'>
-                                    ${formatString(network?.supply)}
+                                    {formatString(network?.supply)}
                                 </Typography>
                             </div>
                         </div>
@@ -72,7 +72,7 @@ function Overview() {
                                     Circulating Entities
                                 </Typography>
                                 <Typography className='text-18 xs:text-24 leading-20 sm:text-22 sm:leading-28 font-space'>
-                                    ${formatString(network?.numberOfEntities)}
+                                    {formatString(network?.numberOfEntities)}
                                 </Typography>
                             </div>
                         </div>

@@ -12,9 +12,7 @@ function AuthProvider({ children }) {
 
   useEffect(() => {
 
-    // set env base url
-    // axios.defaults.baseURL = "http://localhost:7003";
-    axios.defaults.baseURL = "https://api.qubic.li";
+    axios.defaults.baseURL = process.env.REACT_APP_API_URL;
 
     const token = window.localStorage.getItem('jwt_access_token');
 
@@ -36,7 +34,6 @@ function AuthProvider({ children }) {
             axios.defaults.headers.common.Authorization = `Bearer ${response.data.token}`;
           })
             .then(() => {
-              console.log(axios.defaults.headers.common.Authorization)
               setWaitAuthCheck(true)
             })
             .catch((err) => {
