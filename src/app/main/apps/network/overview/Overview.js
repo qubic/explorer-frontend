@@ -1,10 +1,16 @@
 import { useEffect, useState } from 'react';
 import { formatString } from 'src/app/utils/functions';
-import { Typography, LinearProgress, Input, Tooltip } from '@mui/material';
-
+import {
+  Typography,
+  LinearProgress,
+  Input,
+  Tooltip,
+  Pagination,
+  PaginationItem,
+} from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
+import { PrevIcon, NextIcon } from 'src/assets/icons/svg';
 import { getOverview, selectOverview, selectOverviewLoading } from '../store/overviewSlice';
-
 import TickLink from '../component/TickLink';
 import CardItem from '../component/CardItem';
 
@@ -12,12 +18,28 @@ function Overview() {
   const isLoading = useSelector(selectOverviewLoading);
   const dispatch = useDispatch();
   const [searchTick, setSearchTick] = useState('');
+  const [page, setPage] = useState(1);
 
   useEffect(() => {
     dispatch(getOverview());
   }, [dispatch]);
 
   const network = useSelector(selectOverview);
+
+  const itemsPerPage = 120; // Adjust based on your preference
+
+  const filteredTicks =
+    network && network.ticks.length > 0
+      ? network.ticks.filter((item) => item.tick.toString().includes(searchTick))
+      : [];
+
+  const pageCount = Math.ceil(filteredTicks.length / itemsPerPage);
+  const startIndex = (page - 1) * itemsPerPage;
+  const displayedTicks = filteredTicks.slice(startIndex, startIndex + itemsPerPage);
+
+  const handlePageChange = (event, value) => {
+    setPage(value);
+  };
 
   if (isLoading) {
     return (
@@ -181,18 +203,46 @@ function Overview() {
               />
             </div>
             <div className="grid grid-cols-3 xs:grid-cols-4 sm:grid-cols-6 md:grid-cols-10 gap-12">
-              {network &&
-                network.ticks.length > 0 &&
-                network.ticks
-                  .filter((item) => item.tick.toString().includes(searchTick))
-                  .map((item) => (
-                    <TickLink
-                      key={item.tick}
-                      value={item.tick}
-                      className={`text-12 ${item.arbitrated ? 'text-error-40' : 'text-gray-50'}`}
-                    />
-                  ))}
+              {displayedTicks.map((item) => (
+                <TickLink
+                  key={item.tick}
+                  value={item.tick}
+                  className={`text-12 ${item.arbitrated ? 'text-error-40' : 'text-gray-50'}`}
+                />
+              ))}
             </div>
+            <Pagination
+              count={pageCount}
+              page={page}
+              onChange={handlePageChange}
+              variant="outlined"
+              shape="rounded"
+              sx={{
+                mt: 2,
+                justifyContent: 'center',
+                display: 'flex',
+                '& .MuiPaginationItem-root': {
+                  color: '#808B9B',
+                  border: 'none',
+                },
+                '& .MuiPaginationItem-root.Mui-selected': {
+                  backgroundColor: '#61F0FE',
+                  color: '#101820',
+                  '&:hover': {
+                    backgroundColor: '#03C1DB',
+                  },
+                },
+              }}
+              renderItem={(item) => (
+                <PaginationItem
+                  {...item}
+                  components={{
+                    previous: PrevIcon,
+                    next: NextIcon,
+                  }}
+                />
+              )}
+            />
           </div>
         </CardItem>
       </div>
