@@ -96,7 +96,7 @@ function Overview() {
                   Epoch
                 </Typography>
                 <Typography className="text-18 xs:text-24 leading-20 sm:text-22 sm:leading-28 font-space">
-                  ${formatString(network?.marketCapitalization)}
+                  {formatString(network?.currentEpoch)}
                 </Typography>
               </div>
             </div>
