@@ -56,7 +56,6 @@ function Overview() {
     );
   }
 
-  console.log(network);
   return (
     <div className="w-full py-52">
       <div className="max-w-[885px] px-16 flex flex-1 flex-col gap-16 mx-auto">
@@ -192,10 +191,17 @@ function Overview() {
         </div>
         <CardItem className="px-24 py-20">
           <div className="flex flex-col gap-20">
-            <div className="flex justify-between items-center">
-              <Typography variant="h5" className="text-22 font-space font-500">
-                Past Ticks
-              </Typography>
+            <div className="flex flex-col sm:flex-row gap-20 sm:gap-8 md:gap-10 justify-between">
+              <div className="flex justify-between sm:justify-start items-center gap-8">
+                <Typography variant="h5" className="text-22 font-space font-500">
+                  Ticks
+                </Typography>
+                <Typography className=" align-middle text-14 leading-18 font-space text-gray-50">
+                  ( {formatString(network && network.ticks[0].tick)} -{' '}
+                  {formatString(network && network.ticks[network.ticks.length - 1].tick)} )
+                </Typography>
+              </div>
+
               <Input
                 placeholder="Search"
                 className="bg-gray-80 border-gray-70 border-[1px] rounded-8 px-16 py-8"
