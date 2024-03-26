@@ -58,7 +58,7 @@ function Overview() {
 
   return (
     <div className="w-full py-52">
-      <div className="max-w-[885px] px-16 flex flex-1 flex-col gap-16 mx-auto">
+      <div className="max-w-[960px] px-16 flex flex-1 flex-col gap-16 mx-auto">
         <div className="grid md:grid-flow-col gap-16">
           <CardItem className="px-24 py-16">
             <div className="flex items-center gap-24">
@@ -191,7 +191,7 @@ function Overview() {
         </div>
         <CardItem className="px-24 py-20">
           <div className="flex flex-col gap-20">
-            <div className="flex flex-col sm:flex-row gap-20 sm:gap-8 md:gap-10 justify-between">
+            <div className="flex flex-col sm:flex-row gap-20 sm:gap-8 md:gap-10 lg:gap-20 justify-between">
               <div className="flex justify-between sm:justify-start items-center gap-8">
                 <Typography variant="h5" className="text-22 font-space font-500">
                   Ticks
