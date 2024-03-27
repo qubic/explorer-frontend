@@ -1,16 +1,17 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { IconButton, LinearProgress, Typography } from '@mui/material';
+import { Breadcrumbs, IconButton, LinearProgress, Typography } from '@mui/material';
 import { formatDate, formatString } from 'src/app/utils/functions';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import { getBlock, selectBlock, selectBlockLoading } from '../store/blockSlice';
-import ErrorMessage from '../component/ErrorMessage';
 import AddressLink from '../component/AddressLink';
 import TxLink from '../component/TxLink';
 import TxStatus from '../component/TxStatus';
 import SubCardItem from '../component/SubCardItem';
 import TickStatus from '../component/TickStatus';
+import HomeLink from '../component/HomeLink';
+import CardItem from '../component/CardItem';
 
 function BlockPage() {
   const dispatch = useDispatch();
@@ -36,17 +37,12 @@ function BlockPage() {
 
   return (
     <div className="w-full ">
-      <ErrorMessage />
-      <div className="py-36 max-w-[960px] mx-auto px-12">
-        <Typography
-          component={Link}
-          className="text-16 leading-20 mb-8 text-gray-50"
-          to="/network"
-          role="button"
-        >
-          Tick
-        </Typography>
-        <div className="flex justify-between gap-12 items-center mb-36">
+      <div className="py-32 max-w-[960px] mx-auto px-12">
+        <Breadcrumbs aria-label="breadcrumb">
+          <HomeLink />
+          <Typography className="text-12 text-primary-40">Tick {formatString(tick)}</Typography>
+        </Breadcrumbs>
+        <div className="flex justify-between gap-12 items-center mt-24 mb-36">
           <div className="flex flex-col gap-8">
             <div className="flex items-center gap-8">
               <IconButton onClick={() => navigate(`/network/block/${Number(tick) - 1}`)}>
@@ -80,7 +76,10 @@ function BlockPage() {
               </Typography>
             }
           />
-          <SubCardItem title="Block leader" content={<AddressLink value={block?.tickLeaderId} />} />
+          <SubCardItem
+            title="Block leader"
+            content={<AddressLink value={block?.tickLeaderId} tickValue={block?.tick} />}
+          />
         </div>
         <div className="mb-24 md:hidden">
           <TickStatus
@@ -95,10 +94,7 @@ function BlockPage() {
         <div className="flex flex-col gap-12">
           {block &&
             block?.transactions?.map((item) => (
-              <div
-                className="flex flex-col p-12 border-[1px] rounded-8 border-gray-70"
-                key={item.id}
-              >
+              <CardItem className="flex flex-col p-12" key={item.id}>
                 <div className="flex flex-col md:flex-row md:items-center gap-10 md:gap-16 mb-14">
                   <div className="">
                     <TxStatus executed={item.executed} />
@@ -112,13 +108,13 @@ function BlockPage() {
                         <Typography className="text-14 leading-18 font-space text-gray-50">
                           Source
                         </Typography>
-                        <AddressLink value={item.sourceId} />
+                        <AddressLink value={item.sourceId} tickValue={tick} />
                       </div>
                       <div className="flex flex-col gap-8">
                         <Typography className="text-14 leading-18 font-space text-gray-50">
                           Destination
                         </Typography>
-                        <AddressLink value={item.destId} />
+                        <AddressLink value={item.destId} tickValue={tick} />
                       </div>
                     </div>
                     <div className="flex flex-col sm:flex-row md:flex-col gap-24 pr-24">
@@ -141,7 +137,7 @@ function BlockPage() {
                     </div>
                   </div>
                 </div>
-              </div>
+              </CardItem>
             ))}
         </div>
       </div>

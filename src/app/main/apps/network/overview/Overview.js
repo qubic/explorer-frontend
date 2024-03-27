@@ -57,7 +57,7 @@ function Overview() {
   }
 
   return (
-    <div className="w-full py-52">
+    <div className="w-full py-32">
       <div className="max-w-[960px] px-16 flex flex-1 flex-col gap-16 mx-auto">
         <div className="grid md:grid-flow-col gap-16">
           <CardItem className="px-24 py-16">
@@ -96,7 +96,7 @@ function Overview() {
                   Epoch
                 </Typography>
                 <Typography className="text-18 xs:text-24 leading-20 sm:text-22 sm:leading-28 font-space">
-                  ${formatString(network?.marketCapitalization)}
+                  {formatString(network?.currentEpoch)}
                 </Typography>
               </div>
             </div>
