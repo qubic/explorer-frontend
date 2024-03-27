@@ -1,7 +1,8 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
-import { LinearProgress, Typography } from '@mui/material';
+import { useParams, useSearchParams } from 'react-router-dom';
+import { Breadcrumbs, LinearProgress, Typography } from '@mui/material';
+import { formatEllipsis } from 'src/app/utils/functions';
 import AddressLink from '../component/AddressLink';
 import TxLink from '../component/TxLink';
 import TxStatus from '../component/TxStatus';
@@ -9,11 +10,14 @@ import CardItem from '../component/CardItem';
 import TickLink from '../component/TickLink';
 
 import { getAddress, selectAddress, selectAddressLoading } from '../store/addressSlice';
+import HomeLink from '../component/HomeLink';
 
 function AddressPage() {
   const routeParams = useParams();
   const { addressId } = routeParams;
 
+  const [searchParams] = useSearchParams();
+  const tick = searchParams.get('tick');
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -33,8 +37,19 @@ function AddressPage() {
 
   return (
     <div className="w-full">
-      <div className="pt-82 pb-40 max-w-[960px] mx-auto px-12">
-        <Typography className="font-space text-16 leading-20 mb-12 text-gray-50">ID</Typography>
+      <div className="py-32 max-w-[960px] mx-auto px-12">
+        <Breadcrumbs aria-label="breadcrumbs">
+          <HomeLink />
+          <Typography className="text-12 font-space text-gray-50">
+            Tick <TickLink value={tick} className="text-12" />
+          </Typography>
+          <Typography className="text-12 font-space text-primary-40 ">
+            {formatEllipsis(address?.id)}
+          </Typography>
+        </Breadcrumbs>
+        <Typography className="font-space text-16 leading-20 mt-32 mb-12 text-gray-50">
+          ID
+        </Typography>
         <Typography className="font-space text-24 leading-30 mb-32 break-all">
           {address?.id}
         </Typography>
@@ -103,13 +118,13 @@ function AddressPage() {
                         <Typography className="text-14 leading-18 font-space text-gray-50">
                           Source
                         </Typography>
-                        <AddressLink value={item.sourceId} />
+                        <AddressLink value={item.sourceId} tickValue={tick} />
                       </div>
                       <div className="flex flex-col gap-8">
                         <Typography className="text-14 leading-18 font-space text-gray-50">
                           Destination
                         </Typography>
-                        <AddressLink value={item.destId} />
+                        <AddressLink value={item.destId} tickValue={tick} />
                       </div>
                     </div>
                     <div className="flex flex-col sm:flex-row md:flex-col gap-24 pr-24">

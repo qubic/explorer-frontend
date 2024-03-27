@@ -76,7 +76,10 @@ function BlockPage() {
               </Typography>
             }
           />
-          <SubCardItem title="Block leader" content={<AddressLink value={block?.tickLeaderId} />} />
+          <SubCardItem
+            title="Block leader"
+            content={<AddressLink value={block?.tickLeaderId} tickValue={block?.tick} />}
+          />
         </div>
         <div className="mb-24 md:hidden">
           <TickStatus
@@ -105,13 +108,13 @@ function BlockPage() {
                         <Typography className="text-14 leading-18 font-space text-gray-50">
                           Source
                         </Typography>
-                        <AddressLink value={item.sourceId} />
+                        <AddressLink value={item.sourceId} tickValue={tick} />
                       </div>
                       <div className="flex flex-col gap-8">
                         <Typography className="text-14 leading-18 font-space text-gray-50">
                           Destination
                         </Typography>
-                        <AddressLink value={item.destId} />
+                        <AddressLink value={item.destId} tickValue={tick} />
                       </div>
                     </div>
                     <div className="flex flex-col sm:flex-row md:flex-col gap-24 pr-24">
