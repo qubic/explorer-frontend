@@ -8,6 +8,8 @@ import {
   Pagination,
   PaginationItem,
 } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { useDispatch, useSelector } from 'react-redux';
 import { PrevIcon, NextIcon } from 'src/assets/icons/svg';
 import { getOverview, selectOverview, selectOverviewLoading } from '../store/overviewSlice';
@@ -16,17 +18,21 @@ import CardItem from '../component/CardItem';
 
 function Overview() {
   const isLoading = useSelector(selectOverviewLoading);
+  const network = useSelector(selectOverview);
+
+  const theme = useTheme();
   const dispatch = useDispatch();
   const [searchTick, setSearchTick] = useState('');
   const [page, setPage] = useState(1);
 
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('xs'));
+  const isMediumScreen = useMediaQuery(theme.breakpoints.down('sm'));
+
+  const itemsPerPage = 120; // Adjust based on your preference
+
   useEffect(() => {
     dispatch(getOverview());
   }, [dispatch]);
-
-  const network = useSelector(selectOverview);
-
-  const itemsPerPage = 120; // Adjust based on your preference
 
   const filteredTicks =
     network && network.ticks.length > 0
@@ -40,6 +46,8 @@ function Overview() {
   const pageCount = Math.ceil(filteredTicks.length / itemsPerPage);
   const startIndex = (page - 1) * itemsPerPage;
   const displayedTicks = filteredTicks.slice(startIndex, startIndex + itemsPerPage);
+  const siblingCount = isMediumScreen ? 0 : 1;
+  const boundaryCount = isSmallScreen ? 0 : 1;
 
   const handlePageChange = (event, value) => {
     if (searchTick) {
@@ -159,7 +167,7 @@ function Overview() {
             <div className="flex flex-col sm:flex-row sm:items-center gap-16 w-full">
               <img className="w-24 h-24" src="assets/icons/circle-dashed.svg" alt="icon" />
               <div className="flex flex-col gap-5">
-                <Typography className="text-14 leading-18 text-gray-50 font-space flex justify-between items-center">
+                <Typography className="text-14 leading-18 text-gray-50 font-space flex items-center gap-10">
                   Empty
                   <Tooltip title="Empty is a tick that is empty" arrow placement="bottom-start">
                     <img src="assets/icons/information.svg" alt="icon" />
@@ -230,6 +238,8 @@ function Overview() {
               onChange={handlePageChange}
               variant="outlined"
               shape="rounded"
+              siblingCount={siblingCount}
+              boundaryCount={boundaryCount}
               sx={{
                 mt: 2,
                 justifyContent: 'center',
