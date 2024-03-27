@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 
 export const getOverview = createAsyncThunk('network/overview', async (params, { getState }) => {
-  const response = await axios.get(`/Network/TickOverview?epoch=&offset=0`);
+  const response = await axios.get(`/Network/TickOverview`);
   const data = await response.data;
   return data;
 });
