@@ -1,11 +1,10 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { IconButton, LinearProgress, Typography } from '@mui/material';
+import { Breadcrumbs, IconButton, LinearProgress, Typography } from '@mui/material';
 import { formatDate, formatString } from 'src/app/utils/functions';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 
 import { getBlock, selectBlock, selectBlockLoading } from '../store/blockSlice';
-import ErrorMessage from '../component/ErrorMessage';
 import AddressLink from '../component/AddressLink';
 import TxLink from '../component/TxLink';
 import TxStatus from '../component/TxStatus';
@@ -36,17 +35,19 @@ function BlockPage() {
 
   return (
     <div className="w-full ">
-      <ErrorMessage />
-      <div className="py-36 max-w-[960px] mx-auto px-12">
-        <Typography
-          component={Link}
-          className="text-16 leading-20 mb-8 text-gray-50"
-          to="/network"
-          role="button"
-        >
-          Tick
-        </Typography>
-        <div className="flex justify-between gap-12 items-center mb-36">
+      <div className="py-32 max-w-[960px] mx-auto px-12">
+        <Breadcrumbs aria-label="breadcrumb">
+          <Typography
+            component={Link}
+            className="text-16 leading-20 mb-8 text-gray-50"
+            to="/network"
+            role="button"
+          >
+            <img src="assets/icons/home.svg" alt="home" />
+          </Typography>
+          <Typography className="text-12 text-primary-40">Tick {formatString(tick)}</Typography>
+        </Breadcrumbs>
+        <div className="flex justify-between gap-12 items-center mt-24 mb-36">
           <div className="flex flex-col gap-8">
             <div className="flex items-center gap-8">
               <IconButton onClick={() => navigate(`/network/block/${Number(tick) - 1}`)}>
