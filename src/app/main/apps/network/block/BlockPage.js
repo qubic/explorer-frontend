@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Breadcrumbs, IconButton, LinearProgress, Typography } from '@mui/material';
 import { formatDate, formatString } from 'src/app/utils/functions';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import { getBlock, selectBlock, selectBlockLoading } from '../store/blockSlice';
 import AddressLink from '../component/AddressLink';
@@ -10,6 +10,8 @@ import TxLink from '../component/TxLink';
 import TxStatus from '../component/TxStatus';
 import SubCardItem from '../component/SubCardItem';
 import TickStatus from '../component/TickStatus';
+import HomeLink from '../component/HomeLink';
+import CardItem from '../component/CardItem';
 
 function BlockPage() {
   const dispatch = useDispatch();
@@ -37,14 +39,7 @@ function BlockPage() {
     <div className="w-full ">
       <div className="py-32 max-w-[960px] mx-auto px-12">
         <Breadcrumbs aria-label="breadcrumb">
-          <Typography
-            component={Link}
-            className="text-16 leading-20 mb-8 text-gray-50"
-            to="/network"
-            role="button"
-          >
-            <img src="assets/icons/home.svg" alt="home" />
-          </Typography>
+          <HomeLink />
           <Typography className="text-12 text-primary-40">Tick {formatString(tick)}</Typography>
         </Breadcrumbs>
         <div className="flex justify-between gap-12 items-center mt-24 mb-36">
@@ -96,10 +91,7 @@ function BlockPage() {
         <div className="flex flex-col gap-12">
           {block &&
             block?.transactions?.map((item) => (
-              <div
-                className="flex flex-col p-12 border-[1px] rounded-8 border-gray-70"
-                key={item.id}
-              >
+              <CardItem className="flex flex-col p-12" key={item.id}>
                 <div className="flex flex-col md:flex-row md:items-center gap-10 md:gap-16 mb-14">
                   <div className="">
                     <TxStatus executed={item.executed} />
@@ -142,7 +134,7 @@ function BlockPage() {
                     </div>
                   </div>
                 </div>
-              </div>
+              </CardItem>
             ))}
         </div>
       </div>
