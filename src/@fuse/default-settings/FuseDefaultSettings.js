@@ -77,6 +77,12 @@ export const defaultThemeOptions = {
     fontWeightRegular: 400,
     fontWeightMedium: 500,
   },
+  breakpoints: {
+    values: {
+      xs: 375,
+      sm: 560,
+    },
+  },
   components: {
     MuiAppBar: {
       defaultProps: {
