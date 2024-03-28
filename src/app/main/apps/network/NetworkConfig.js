@@ -1,9 +1,14 @@
+import i18next from 'i18next';
+import en from './i18n/en';
+import de from './i18n/de';
 import NetworkPage from './NetworkPage';
 import BlockPage from './block/BlockPage';
 import Overview from './overview/Overview';
 import TxPage from './tx/TxPage';
 import AddressPage from './address/AddressPage';
 
+i18next.addResourceBundle('en', 'networkPage', en);
+i18next.addResourceBundle('de', 'networkPage', de);
 const NetworkConfig = {
   settings: {
     layout: {

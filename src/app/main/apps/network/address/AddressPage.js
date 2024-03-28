@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { Breadcrumbs, LinearProgress, Typography } from '@mui/material';
 import { formatEllipsis } from 'src/app/utils/functions';
+import { useTranslation } from 'react-i18next';
 import AddressLink from '../component/AddressLink';
 import TxLink from '../component/TxLink';
 import TxStatus from '../component/TxStatus';
@@ -13,6 +14,7 @@ import { getAddress, selectAddress, selectAddressLoading } from '../store/addres
 import HomeLink from '../component/HomeLink';
 
 function AddressPage() {
+  const { t } = useTranslation('networkPage');
   const routeParams = useParams();
   const { addressId } = routeParams;
 
@@ -41,20 +43,20 @@ function AddressPage() {
         <Breadcrumbs aria-label="breadcrumbs">
           <HomeLink />
           <Typography className="text-12 font-space text-gray-50">
-            Tick <TickLink value={tick} className="text-12" />
+            {t('tick')} <TickLink value={tick} className="text-12" />
           </Typography>
           <Typography className="text-12 font-space text-primary-40 ">
             {formatEllipsis(address?.id)}
           </Typography>
         </Breadcrumbs>
         <Typography className="font-space text-16 leading-20 mt-32 mb-12 text-gray-50">
-          ID
+          {t('id')}
         </Typography>
         <Typography className="font-space text-24 leading-30 mb-32 break-all">
           {address?.id}
         </Typography>
         <Typography className="font-space text-14 leading-18 mb-12">
-          Entity Reports from random peers
+          {t('entityReportsFromRandomPeers')}
         </Typography>
         <div className="grid 948px:grid-cols-3 gap-16 mb-32">
           {address &&
@@ -63,7 +65,7 @@ function AddressPage() {
                 <div className="flex justify-between mb-16">
                   <div className="">
                     <Typography className="text-14 leading-18 font-space text-gray-50">
-                      Value
+                      {t('value')}
                     </Typography>
                     <Typography className="text-16 leading-20 font-space font-500">
                       1 QUBIC
@@ -75,9 +77,9 @@ function AddressPage() {
                 </div>
                 <div className="flex flex-col items-center 948px:items-start gap-8">
                   <Typography className="text-14 leading-18 font-space text-gray-50">
-                    Incoming:
-                    <span className="text-white"> {details.numberOfIncomingTransfers} </span>
-                    (Latest:{' '}
+                    {t('incoming')}:
+                    <span className="text-white"> {details.numberOfIncomingTransfers} </span>(
+                    {t('latest')}:{' '}
                     <TickLink
                       value={details.latestIncomingTransferTick}
                       className="text-primary-40 break-all"
@@ -85,9 +87,9 @@ function AddressPage() {
                     )
                   </Typography>
                   <Typography className="text-14 leading-18 font-space text-gray-50">
-                    Outgoing:
-                    <span className="text-white"> {details.numberOfOutgoingTransfers} </span>
-                    (Latest:{' '}
+                    {t('outgoing')}:
+                    <span className="text-white"> {details.numberOfOutgoingTransfers} </span>(
+                    {t('latest')}:{' '}
                     <TickLink
                       value={details.latestOutgoingTransferTick}
                       className="text-primary-40 break-all"
@@ -99,7 +101,7 @@ function AddressPage() {
             ))}
         </div>
         <Typography className="text-20 leading-26 font-500 font-space mb-16">
-          Latest transfers
+          {t('latestTransfers')}
         </Typography>
         <div className="flex flex-col gap-12">
           {address &&
@@ -116,13 +118,13 @@ function AddressPage() {
                     <div className="flex flex-col gap-16">
                       <div className="flex flex-col gap-8">
                         <Typography className="text-14 leading-18 font-space text-gray-50">
-                          Source
+                          {t('source')}
                         </Typography>
                         <AddressLink value={item.sourceId} tickValue={tick} />
                       </div>
                       <div className="flex flex-col gap-8">
                         <Typography className="text-14 leading-18 font-space text-gray-50">
-                          Destination
+                          {t('destination')}
                         </Typography>
                         <AddressLink value={item.destId} tickValue={tick} />
                       </div>
@@ -130,15 +132,15 @@ function AddressPage() {
                     <div className="flex flex-col sm:flex-row md:flex-col gap-24 pr-24">
                       <div className="flex flex-col gap-5 md:items-end">
                         <Typography className="text-14 leading-18 font-space text-gray-50">
-                          Type
+                          {t('type')}
                         </Typography>
                         <Typography className="text-14 leading-18 font-space">
-                          {item.type} Standard
+                          {item.type} {t('standard')}
                         </Typography>
                       </div>
                       <div className="flex flex-col gap-5 md:items-end">
                         <Typography className="text-14 leading-18 font-space text-gray-50">
-                          Amount
+                          {t('amount')}
                         </Typography>
                         <Typography className="text-14 leading-18 font-space">
                           {item.amount} qus

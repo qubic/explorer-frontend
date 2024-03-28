@@ -12,6 +12,7 @@ import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useDispatch, useSelector } from 'react-redux';
 import { PrevIcon, NextIcon } from 'src/assets/icons/svg';
+import { useTranslation } from 'react-i18next';
 import { getOverview, selectOverview, selectOverviewLoading } from '../store/overviewSlice';
 import TickLink from '../component/TickLink';
 import CardItem from '../component/CardItem';
@@ -19,7 +20,7 @@ import CardItem from '../component/CardItem';
 function Overview() {
   const isLoading = useSelector(selectOverviewLoading);
   const network = useSelector(selectOverview);
-
+  const { t } = useTranslation('networkPage');
   const theme = useTheme();
   const dispatch = useDispatch();
   const [searchTick, setSearchTick] = useState('');
@@ -73,7 +74,7 @@ function Overview() {
               <img className="w-24 h-24" src="assets/icons/dollar-sign.svg" alt="icon" />
               <div className="flex flex-col gap-8">
                 <Typography className="text-14 leading-18 text-gray-50 font-space">
-                  Price
+                  {t('price')}
                 </Typography>
                 <Typography className="text-18 xs:text-24 leading-20 sm:text-22 sm:leading-28 font-space">
                   ${network?.price}
@@ -86,7 +87,7 @@ function Overview() {
               <img className="w-24 h-24" src="assets/icons/globe.svg" alt="icon" />
               <div className="flex flex-col gap-8">
                 <Typography className="text-14 leading-18 text-gray-50 font-space">
-                  Market Cap
+                  {t('marketCap')}
                 </Typography>
                 <Typography className="text-18 xs:text-24 leading-20 sm:text-22 sm:leading-28 font-space">
                   ${formatString(network?.marketCapitalization)}
@@ -101,7 +102,7 @@ function Overview() {
               <img className="w-24 h-24" src="assets/icons/hourglass.svg" alt="icon" />
               <div className="flex flex-col gap-8">
                 <Typography className="text-14 leading-18 text-gray-50 font-space">
-                  Epoch
+                  {t('epoch')}
                 </Typography>
                 <Typography className="text-18 xs:text-24 leading-20 sm:text-22 sm:leading-28 font-space">
                   {formatString(network?.currentEpoch)}
@@ -114,7 +115,7 @@ function Overview() {
               <img className="w-24 h-24" src="assets/icons/repeat.svg" alt="icon" />
               <div className="flex flex-col gap-8">
                 <Typography className="text-14 leading-18 text-gray-50 font-space">
-                  Circulating Supply
+                  {t('circulatingSupply')}
                 </Typography>
                 <Typography className="text-18 xs:text-24 leading-20 sm:text-22 sm:leading-28 font-space">
                   {formatString(network?.supply)}
@@ -127,7 +128,7 @@ function Overview() {
               <img className="w-24 h-24" src="assets/icons/wallet.svg" alt="icon" />
               <div className="flex flex-col gap-8">
                 <Typography className="text-14 leading-18 text-gray-50 font-space">
-                  Active Addresses
+                  {t('activeAddresses')}
                 </Typography>
                 <Typography className="text-18 xs:text-24 leading-20 sm:text-22 sm:leading-28 font-space">
                   {formatString(network?.numberOfEntities)}
@@ -142,7 +143,7 @@ function Overview() {
               <img className="w-24 h-24" src="assets/icons/grid-add.svg" alt="icon" />
               <div className="flex flex-col gap-8">
                 <Typography className="text-14 leading-18 text-gray-50 font-space">
-                  Current Tick
+                  {t('currentTick')}
                 </Typography>
                 <Typography className="text-16 leading-20 sm:text-22 sm:leading-28 font-space">
                   {formatString(network?.currentTick)}
@@ -155,7 +156,7 @@ function Overview() {
               <img className="w-24 h-24" src="assets/icons/grid-view.svg" alt="icon" />
               <div className="flex flex-col gap-5">
                 <Typography className="text-14 leading-18 text-gray-50 font-space">
-                  Ticks this epoch
+                  {t('ticksThisEpoch')}
                 </Typography>
                 <Typography className="text-16 leading-20 sm:text-22 sm:leading-28 font-space">
                   {formatString(network?.numberOfTicks)}
@@ -168,8 +169,8 @@ function Overview() {
               <img className="w-24 h-24" src="assets/icons/circle-dashed.svg" alt="icon" />
               <div className="flex flex-col gap-5">
                 <Typography className="text-14 leading-18 text-gray-50 font-space flex items-center gap-10">
-                  Empty
-                  <Tooltip title="Empty is a tick that is empty" arrow placement="bottom-start">
+                  {t('empty')}
+                  <Tooltip title={t('emptyTooltip')} arrow placement="bottom-start">
                     <img src="assets/icons/information.svg" alt="icon" />
                   </Tooltip>
                 </Typography>
@@ -184,7 +185,7 @@ function Overview() {
               <img className="w-24 h-24" src="assets/icons/stars.svg" alt="icon" />
               <div className="flex flex-col gap-5">
                 <Typography className="text-14 leading-18 text-gray-50 font-space">
-                  Tick Quality
+                  {t('tickQuality')}
                 </Typography>
                 <Typography className="text-16 leading-20 sm:text-22 sm:leading-28 font-space">
                   {formatString(
@@ -202,7 +203,7 @@ function Overview() {
             <div className="flex flex-col sm:flex-row gap-20 sm:gap-8 md:gap-10 lg:gap-20 justify-between">
               <div className="flex justify-between sm:justify-start items-center gap-8">
                 <Typography variant="h5" className="text-22 font-space font-500">
-                  Ticks
+                  {t('ticks')}
                 </Typography>
                 <Typography className=" align-middle text-14 leading-18 font-space text-gray-50">
                   ( {formatString(network && network.ticks[0].tick)} -{' '}
@@ -211,7 +212,7 @@ function Overview() {
               </div>
 
               <Input
-                placeholder="Search"
+                placeholder={t('search')}
                 className="bg-gray-80 border-gray-70 border-[1px] rounded-8 px-16 py-8"
                 value={searchTick}
                 disableUnderline
