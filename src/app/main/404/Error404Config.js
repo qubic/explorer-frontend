@@ -1,4 +1,8 @@
+import i18next from 'i18next';
+import en from './i18n/en';
 import Error404Page from './Error404Page';
+
+i18next.addResourceBundle('en', 'error404Page', en);
 
 const Error404Config = {
   settings: {
