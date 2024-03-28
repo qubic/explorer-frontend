@@ -2,10 +2,10 @@ import FuseUtils from '@fuse/utils';
 import FuseLoading from '@fuse/core/FuseLoading';
 import { Navigate } from 'react-router-dom';
 import settingsConfig from 'app/configs/settingsConfig';
-import Error404Page from '../main/404/Error404Page';
 import NetworkConfig from '../main/apps/network/NetworkConfig';
+import Error404Config from '../main/404/Error404Config';
 
-const routeConfigs = [NetworkConfig];
+const routeConfigs = [NetworkConfig, Error404Config];
 
 const routes = [
   ...FuseUtils.generateRoutesFromConfigs(routeConfigs, settingsConfig.defaultAuth),
@@ -16,10 +16,6 @@ const routes = [
   {
     path: 'loading',
     element: <FuseLoading />,
-  },
-  {
-    path: '404',
-    element: <Error404Page />,
   },
   {
     path: '*',
