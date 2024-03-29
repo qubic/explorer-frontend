@@ -1,7 +1,7 @@
 const locale = {
   pageNotFound: 'Seite nicht gefunden',
-  error404Message:
-    'Herzlichen Glückwunsch! Sie gehören zu den Auserwählten, die unsere 404-Seite gefunden haben.',
   backToHomePage: 'Zurück zur Startseite',
+  error404Message:
+    'Glückwunsch! Sie gehören zu der Elite, die es geschafft hat, unsere 404-Seite zu finden.',
 };
 export default locale;

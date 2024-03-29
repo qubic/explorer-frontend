@@ -6,7 +6,7 @@ import CardItem from './CardItem';
 
 function TickStatus(props) {
   const { t } = useTranslation('networkPage');
-  const { dataStatus, blockStatus, numberOfTx } = props;
+  const { dataStatus, tickStatus, numberOfTx } = props;
 
   return (
     <CardItem className="px-24 py-16">
@@ -28,9 +28,9 @@ function TickStatus(props) {
           </div>
           <div className="flex flex-col gap-8">
             <Typography className="text-14 leading-20 font-space text-gray-50">
-              {t('blockStatus')}
+              {t('tickStatus')}
             </Typography>
-            {blockStatus ? (
+            {tickStatus ? (
               <Typography className="text-16 leading-20 font-space text-success-40">
                 {t('nonEmpty')} / {t('executed')}
               </Typography>

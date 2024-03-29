@@ -66,7 +66,7 @@ function BlockPage() {
           <div className="hidden md:block">
             <TickStatus
               dataStatus={block?.completed}
-              blockStatus={block?.isNonEmpty}
+              tickStatus={block?.isNonEmpty}
               numberOfTx={block?.numberOfTx}
             />
           </div>
@@ -81,14 +81,14 @@ function BlockPage() {
             }
           />
           <SubCardItem
-            title={t('blockLeader')}
+            title={t('tickLeader')}
             content={<AddressLink value={block?.tickLeaderId} tickValue={block?.tick} />}
           />
         </div>
         <div className="mb-24 md:hidden">
           <TickStatus
             dataStatus={block?.completed}
-            blockStatus={block?.isNonEmpty}
+            tickStatus={block?.isNonEmpty}
             numberOfTx={block?.numberOfTx}
           />
         </div>
@@ -135,7 +135,7 @@ function BlockPage() {
                           {t('amount')}
                         </Typography>
                         <Typography className="text-14 leading-18 font-space">
-                          {item.amount} qus
+                          {item.amount} QUBIC
                         </Typography>
                       </div>
                     </div>
