@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { Breadcrumbs, LinearProgress, Typography } from '@mui/material';
-import { formatEllipsis } from 'src/app/utils/functions';
+import { formatEllipsis, formatString } from 'src/app/utils/functions';
 import { useTranslation } from 'react-i18next';
 import AddressLink from '../component/AddressLink';
 import TxLink from '../component/TxLink';
@@ -37,6 +37,8 @@ function AddressPage() {
     );
   }
 
+  console.log(address);
+
   return (
     <div className="w-full">
       <div className="py-32 max-w-[960px] mx-auto px-12">
@@ -68,7 +70,7 @@ function AddressPage() {
                       {t('value')}
                     </Typography>
                     <Typography className="text-16 leading-20 font-space font-500">
-                      1 QUBIC
+                      {formatString(details.incomingAmount - details.outgoingAmount)} QUBIC
                     </Typography>
                   </div>
                   <Typography className="text-14 leading-18 font-space text-gray-50">

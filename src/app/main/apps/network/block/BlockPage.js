@@ -42,7 +42,9 @@ function BlockPage() {
       <div className="py-32 max-w-[960px] mx-auto px-12">
         <Breadcrumbs aria-label="breadcrumb">
           <HomeLink />
-          <Typography className="text-12 text-primary-40">Tick {formatString(tick)}</Typography>
+          <Typography className="text-12 text-primary-40">
+            {t('tick')} {formatString(tick)}
+          </Typography>
         </Breadcrumbs>
         <div className="flex justify-between gap-12 items-center mt-24 mb-36">
           <div className="flex flex-col gap-8">

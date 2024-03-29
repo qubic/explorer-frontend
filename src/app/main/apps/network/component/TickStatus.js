@@ -43,7 +43,7 @@ function TickStatus(props) {
         </div>
         <div className="flex flex-col gap-8">
           <Typography className="text-14 leading-20 font-space text-gray-50">
-            Number of transactions
+            {t('numberOfTransactions')}
           </Typography>
           <Typography className="text-16 leading-20 font-space text-primary-20">
             {formatString(numberOfTx)}
