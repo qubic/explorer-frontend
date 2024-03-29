@@ -37,8 +37,6 @@ function AddressPage() {
     );
   }
 
-  console.log(address);
-
   return (
     <div className="w-full">
       <div className="py-32 max-w-[960px] mx-auto px-12">
@@ -145,7 +143,7 @@ function AddressPage() {
                           {t('amount')}
                         </Typography>
                         <Typography className="text-14 leading-18 font-space">
-                          {item.amount} qus
+                          {item.amount} QUBIC
                         </Typography>
                       </div>
                     </div>

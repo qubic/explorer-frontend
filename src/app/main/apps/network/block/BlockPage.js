@@ -135,7 +135,7 @@ function BlockPage() {
                           {t('amount')}
                         </Typography>
                         <Typography className="text-14 leading-18 font-space">
-                          {item.amount} qus
+                          {item.amount} QUBIC
                         </Typography>
                       </div>
                     </div>

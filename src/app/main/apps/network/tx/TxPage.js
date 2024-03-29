@@ -61,7 +61,7 @@ function TxPage() {
         <SubCardItem
           title={t('amount')}
           content={
-            <Typography className="text-14 leading-20 font-space">{tx?.amount} qus</Typography>
+            <Typography className="text-14 leading-20 font-space">{tx?.amount} QUBIC</Typography>
           }
         />
         <SubCardItem
