@@ -1,5 +1,5 @@
 const formatString = (string) => {
-  return string ? Number(string).toLocaleString('en-US') : '';
+  return string ? Number(string).toLocaleString('en-US') : '0';
 };
 
 const formatDate = (dateString) => {

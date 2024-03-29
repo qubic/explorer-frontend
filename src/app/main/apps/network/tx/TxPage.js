@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { Breadcrumbs, LinearProgress, Typography } from '@mui/material';
 
-import { formatEllipsis } from 'src/app/utils/functions';
+import { formatEllipsis, formatString } from 'src/app/utils/functions';
 import { useTranslation } from 'react-i18next';
 import ErrorMessage from '../component/ErrorMessage';
 import TxStatus from '../component/TxStatus';
@@ -61,14 +61,16 @@ function TxPage() {
         <SubCardItem
           title={t('amount')}
           content={
-            <Typography className="text-14 leading-20 font-space">{tx?.amount} QUBIC</Typography>
+            <Typography className="text-14 leading-20 font-space">
+              {formatString(tx?.amount)} QUBIC
+            </Typography>
           }
         />
         <SubCardItem
           title={t('type')}
           content={
             <Typography className="text-14 leading-20 font-space">
-              {tx?.type} {t('standard')}
+              {formatString(tx?.type)} {t('standard')}
             </Typography>
           }
         />

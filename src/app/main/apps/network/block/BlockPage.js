@@ -127,7 +127,7 @@ function BlockPage() {
                           {t('type')}
                         </Typography>
                         <Typography className="text-14 leading-18 font-space">
-                          {item.type} {t('standard')}
+                          {formatString(item.type)} {t('standard')}
                         </Typography>
                       </div>
                       <div className="flex flex-col gap-5 md:items-end">
@@ -135,7 +135,7 @@ function BlockPage() {
                           {t('amount')}
                         </Typography>
                         <Typography className="text-14 leading-18 font-space">
-                          {item.amount} QUBIC
+                          {formatString(item.amount)} QUBIC
                         </Typography>
                       </div>
                     </div>
