@@ -7,6 +7,7 @@ import {
   Tooltip,
   Pagination,
   PaginationItem,
+  Link,
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
@@ -66,7 +67,7 @@ function Overview() {
   }
 
   return (
-    <div className="w-full py-32">
+    <div className="w-full pt-32">
       <div className="max-w-[960px] px-16 flex flex-1 flex-col gap-16 mx-auto">
         <div className="grid md:grid-flow-col gap-16">
           <CardItem className="px-24 py-16">
@@ -269,6 +270,34 @@ function Overview() {
             />
           </div>
         </CardItem>
+      </div>
+      <div className="container px-12 py-40 flex flex-col sm:flex-row justify-center items-center gap-10 sm:gap-32 ">
+        <div className="flex items-center gap-10">
+          <img className="h-16" src="assets/images/logo/logo-text-short.svg" alt="logo-short" />
+          <Typography className="text-12 font-space text-gray-50">
+            {'\u00A9'} {new Date().getFullYear()} Qubic.
+          </Typography>
+        </div>
+        <div className="flex items-center gap-10">
+          <Link
+            href="https://qubic.org/Terms-of-service"
+            className="text-12 font-space text-white"
+            target="_blank"
+            role="button"
+          >
+            Terms of service
+          </Link>
+          <span className="text-gray-50">•</span>
+          <Link
+            href="https://qubic.org/Privacy-policy"
+            className="text-12 font-space text-white"
+            target="_blank"
+            role="button"
+          >
+            Privacy Policy
+          </Link>
+        </div>
+        <Typography className="text-12 font-space text-gray-50">Version 1.1</Typography>
       </div>
     </div>
   );
