@@ -35,7 +35,7 @@ const NetworkConfig = {
           display: false,
         },
         footer: {
-          display: true,
+          display: false,
         },
         leftSidePanel: {
           display: false,
