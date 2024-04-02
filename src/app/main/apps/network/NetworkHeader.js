@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import LanguagePicker from 'src/app/components/LanguagePicker/LanguagePicker';
+import SearchBar from 'src/app/components/SearchBar/SearchBar';
 
 function NetworkHeader() {
   return (
@@ -7,7 +8,8 @@ function NetworkHeader() {
       <Link to="/network">
         <img src="assets/images/logo/logo-text-on-dark.svg" alt="logo" />
       </Link>
-      <div className="absolute right-24">
+      <div className="absolute flex right-24">
+        <SearchBar />
         <LanguagePicker />
       </div>
     </div>
