@@ -6,6 +6,7 @@ import fr from './i18n/fr';
 import nl from './i18n/nl';
 import ru from './i18n/ru';
 import pt from './i18n/pt';
+import tr from './i18n/tr';
 import cn from './i18n/cn';
 import jp from './i18n/jp';
 import NetworkPage from './NetworkPage';
@@ -21,6 +22,7 @@ i18next.addResourceBundle('fr', 'networkPage', fr);
 i18next.addResourceBundle('nl', 'networkPage', nl);
 i18next.addResourceBundle('ru', 'networkPage', ru);
 i18next.addResourceBundle('pt', 'networkPage', pt);
+i18next.addResourceBundle('tr', 'networkPage', tr);
 i18next.addResourceBundle('cn', 'networkPage', cn);
 i18next.addResourceBundle('jp', 'networkPage', jp);
 

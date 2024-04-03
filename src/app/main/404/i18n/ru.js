@@ -1,6 +1,6 @@
 const locale = {
-  pageNotFound: 'Page not found',
-  error404Message: 'Congratulations! You are one of the elite who managed to find our 404 page.',
-  backToHomePage: 'Back to homepage',
+  pageNotFound: 'Страница не найдена',
+  backToHomePage: 'Обратно домой',
+  error404Message: '404, у нас не хватило денег на игру с динозавром.',
 };
 export default locale;
