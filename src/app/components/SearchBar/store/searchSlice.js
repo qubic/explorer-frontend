@@ -17,7 +17,13 @@ const searchSlice = createSlice({
     isLoading: false,
     error: null,
   },
-  reducers: {},
+  reducers: {
+    resetSearch: (state) => {
+      state.result = null; // or [] depending on your initial state
+      state.isLoading = false;
+      state.error = null;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(getSearch.pending, (state) => {
@@ -36,8 +42,9 @@ const searchSlice = createSlice({
 });
 
 // Selector to access the state
-export const selectSearch = ({ search }) => search.result;
-export const selectSearchLoading = ({ search }) => search.isLoading;
-export const selectSearchError = ({ search }) => search.error;
+export const selectSearch = ({ search }) => search.search.result;
+export const selectSearchLoading = ({ search }) => search.search.isLoading;
+export const selectSearchError = ({ search }) => search.search.error;
+export const { resetSearch } = searchSlice.actions;
 
 export default searchSlice.reducer;
