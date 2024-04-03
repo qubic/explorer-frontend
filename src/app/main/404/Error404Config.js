@@ -6,6 +6,7 @@ import fr from './i18n/fr';
 import nl from './i18n/nl';
 import ru from './i18n/ru';
 import pt from './i18n/pt';
+import tr from './i18n/tr';
 import cn from './i18n/cn';
 import jp from './i18n/jp';
 import Error404Page from './Error404Page';
@@ -17,6 +18,7 @@ i18next.addResourceBundle('fr', 'error404Page', fr);
 i18next.addResourceBundle('nl', 'error404Page', nl);
 i18next.addResourceBundle('ru', 'error404Page', ru);
 i18next.addResourceBundle('pt', 'error404Page', pt);
+i18next.addResourceBundle('tr', 'error404Page', tr);
 i18next.addResourceBundle('cn', 'error404Page', cn);
 i18next.addResourceBundle('jp', 'error404Page', jp);
 

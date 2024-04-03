@@ -28,6 +28,7 @@ const i18nSlice = createSlice({
       { id: 'nl', title: 'Nederlands' },
       { id: 'ru', title: 'Русский' },
       { id: 'pt', title: 'Português' },
+      { id: 'tr', title: 'Türkçe' },
       { id: 'cn', title: '中文' },
       { id: 'jp', title: '日本語' },
     ],
