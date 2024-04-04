@@ -3,7 +3,6 @@ import { formatString } from 'src/app/utils/functions';
 import {
   Typography,
   LinearProgress,
-  Input,
   Tooltip,
   Pagination,
   PaginationItem,
@@ -211,19 +210,6 @@ function Overview() {
                   {formatString(network && network.ticks[network.ticks.length - 1].tick)} )
                 </Typography>
               </div>
-
-              <Input
-                placeholder={t('search')}
-                className="bg-gray-80 border-gray-70 border-[1px] rounded-8 px-16 py-8"
-                value={searchTick}
-                disableUnderline
-                inputProps={{
-                  'aria-label': 'Search',
-                }}
-                onChange={(e) => {
-                  setSearchTick(e.target.value);
-                }}
-              />
             </div>
             <div className="grid grid-cols-3 xs:grid-cols-4 sm:grid-cols-6 md:grid-cols-10 gap-12">
               {displayedTicks.map((item) => (
