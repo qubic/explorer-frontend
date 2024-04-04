@@ -63,7 +63,7 @@ function SearchBar() {
             </div>
           )}
           <motion.div
-            className="border-b-[1px] border-gray-70 flex justify-center items-center"
+            className="border-b-[1px] relative mx-auto max-w-[1440px] border-gray-70 flex justify-center items-center"
             variants={{
               hidden: {
                 y: -20,
@@ -76,10 +76,11 @@ function SearchBar() {
             animate="show"
           >
             <Input
-              className="max-w-[820px] mx-auto w-full p-12"
+              className="max-w-[820px] mx-auto w-full py-12 px-20"
               placeholder="Search TX, blocks, IDs..."
               value={keyword}
               disableUnderline
+              autoFocus
               startAdornment={
                 <img className="w-16 h-16 mr-10" src="assets/icons/magnify.svg" alt="search" />
               }
@@ -87,12 +88,12 @@ function SearchBar() {
                 setKeyword(e.target.value);
               }}
             />
-            <IconButton className="absolute right-24" onClick={handleClose}>
+            <IconButton className="absolute right-12 sm:right-24" onClick={handleClose}>
               <img className="w-24 h-24" src="assets/icons/xmark.svg" alt="xmark" />
             </IconButton>
           </motion.div>
           {sortedByType && (
-            <div className="max-h-[320px] overflow-auto max-w-[700px] mx-auto">
+            <div className="max-h-[320px] overflow-auto max-w-[800px] mx-auto">
               {sortedByType?.[0]?.length > 0 && (
                 <ResultItem
                   icon={
