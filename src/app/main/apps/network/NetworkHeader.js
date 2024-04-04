@@ -9,8 +9,13 @@ function NetworkHeader() {
         <img src="assets/images/logo/logo-text-on-dark.svg" alt="logo" />
       </Link>
       <div className="absolute right-24">
-        <SearchBar />
+        <div className="hidden sm:inline">
+          <SearchBar />
+        </div>
         <LanguagePicker />
+      </div>
+      <div className="absolute left-24 sm:hidden">
+        <SearchBar />
       </div>
     </div>
   );
