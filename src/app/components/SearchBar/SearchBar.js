@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Input, IconButton, LinearProgress, Modal } from '@mui/material';
 import withReducer from 'app/store/withReducer';
 import { useDispatch, useSelector } from 'react-redux';
+import { motion } from 'framer-motion';
 import reducer from './store';
 import { getSearch, resetSearch, selectSearch, selectSearchLoading } from './store/searchSlice';
 import ResultItem from './ResultItem';
@@ -61,7 +62,19 @@ function SearchBar() {
               <LinearProgress />
             </div>
           )}
-          <div className="border-b-[1px] border-gray-70 flex justify-center items-center">
+          <motion.div
+            className="border-b-[1px] border-gray-70 flex justify-center items-center"
+            variants={{
+              hidden: {
+                y: -20,
+              },
+              show: {
+                y: 0,
+              },
+            }}
+            initial="hidden"
+            animate="show"
+          >
             <Input
               className="max-w-[820px] mx-auto w-full p-12"
               placeholder="Search TX, blocks, IDs..."
@@ -77,7 +90,7 @@ function SearchBar() {
             <IconButton className="absolute right-24" onClick={handleClose}>
               <img className="w-24 h-24" src="assets/icons/xmark.svg" alt="xmark" />
             </IconButton>
-          </div>
+          </motion.div>
           {sortedByType && (
             <div className="max-h-[320px] overflow-auto max-w-[700px] mx-auto">
               {sortedByType?.[0]?.length > 0 && (
