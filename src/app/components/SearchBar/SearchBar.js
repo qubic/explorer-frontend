@@ -115,7 +115,7 @@ function SearchBar() {
                     />
                   }
                   title="Tick/Block"
-                  link="/network/block/"
+                  link="/network/tick/"
                   items={sortedByType[2]}
                   handleClose={handleClose}
                 />

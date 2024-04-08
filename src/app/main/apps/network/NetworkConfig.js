@@ -10,7 +10,7 @@ import tr from './i18n/tr';
 import cn from './i18n/cn';
 import jp from './i18n/jp';
 import NetworkPage from './NetworkPage';
-import BlockPage from './block/BlockPage';
+import TickPage from './tick/TickPage';
 import Overview from './overview/Overview';
 import TxPage from './tx/TxPage';
 import AddressPage from './address/AddressPage';
@@ -58,12 +58,12 @@ const NetworkConfig = {
           element: <Overview />,
         },
         {
-          path: 'block',
-          element: <BlockPage />,
+          path: 'tick',
+          element: <TickPage />,
           children: [
             {
               path: ':tick',
-              element: <BlockPage />,
+              element: <TickPage />,
             },
           ],
         },

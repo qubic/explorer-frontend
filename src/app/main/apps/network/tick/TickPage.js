@@ -14,7 +14,7 @@ import TickStatus from '../component/TickStatus';
 import HomeLink from '../component/HomeLink';
 import CardItem from '../component/CardItem';
 
-function BlockPage() {
+function TickPage() {
   const { t } = useTranslation('networkPage');
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -49,13 +49,13 @@ function BlockPage() {
         <div className="flex justify-between gap-12 items-center mt-24 mb-36">
           <div className="flex flex-col gap-8">
             <div className="flex items-center gap-8">
-              <IconButton onClick={() => navigate(`/network/block/${Number(tick) - 1}`)}>
+              <IconButton onClick={() => navigate(`/network/tick/${Number(tick) - 1}`)}>
                 <img className="w-24 h-24" src="assets/icons/arrow-left.svg" alt="icon" />
               </IconButton>
               <Typography className="text-32 leading-40 font-500 font-space">
                 {formatString(block?.tick)}
               </Typography>
-              <IconButton onClick={() => navigate(`/network/block/${Number(tick) + 1}`)}>
+              <IconButton onClick={() => navigate(`/network/tick/${Number(tick) + 1}`)}>
                 <img className="w-24 h-24" src="assets/icons/arrow-right.svg" alt="icon" />
               </IconButton>
             </div>
@@ -149,4 +149,4 @@ function BlockPage() {
   );
 }
 
-export default BlockPage;
+export default TickPage;
