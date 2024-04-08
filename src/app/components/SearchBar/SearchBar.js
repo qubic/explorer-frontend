@@ -24,11 +24,11 @@ function SearchBar() {
   useEffect(() => {
     const timerId = setTimeout(() => {
       if (keyword && keyword.length > 1) {
-        dispatch(getSearch(keyword));
+        dispatch(getSearch(keyword.trim()));
       }
     }, 1000);
     return () => clearTimeout(timerId);
-  }, [keyword]);
+  }, [keyword, dispatch]);
 
   const handleClose = () => {
     setOpen(false);
