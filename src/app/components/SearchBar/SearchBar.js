@@ -77,7 +77,7 @@ function SearchBar() {
           >
             <Input
               className="max-w-[820px] mx-auto w-full py-12 px-20"
-              placeholder="Search TX, blocks, IDs..."
+              placeholder="Search TX, ticks, IDs..."
               value={keyword}
               disableUnderline
               autoFocus
