@@ -24,11 +24,11 @@ function SearchBar() {
   useEffect(() => {
     const timerId = setTimeout(() => {
       if (keyword && keyword.length > 1) {
-        dispatch(getSearch(keyword));
+        dispatch(getSearch(keyword.trim()));
       }
     }, 1000);
     return () => clearTimeout(timerId);
-  }, [keyword]);
+  }, [keyword, dispatch]);
 
   const handleClose = () => {
     setOpen(false);
@@ -77,7 +77,7 @@ function SearchBar() {
           >
             <Input
               className="max-w-[820px] mx-auto w-full py-12 px-20"
-              placeholder="Search TX, blocks, IDs..."
+              placeholder="Search TX, ticks, IDs..."
               value={keyword}
               disableUnderline
               autoFocus
@@ -115,7 +115,7 @@ function SearchBar() {
                     />
                   }
                   title="Tick/Block"
-                  link="/network/block/"
+                  link="/network/tick/"
                   items={sortedByType[2]}
                   handleClose={handleClose}
                 />
