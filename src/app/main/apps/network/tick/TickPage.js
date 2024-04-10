@@ -1,10 +1,10 @@
-import { useEffect } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import InfiniteScroll from 'react-infinite-scroll-component';
 import { Breadcrumbs, IconButton, LinearProgress, Typography } from '@mui/material';
-import { formatDate, formatString } from 'src/app/utils/functions';
 import { useNavigate, useParams } from 'react-router-dom';
-
 import { useTranslation } from 'react-i18next';
+import { formatDate, formatString } from 'src/app/utils/functions';
 import { getBlock, selectBlock, selectBlockLoading } from '../store/blockSlice';
 import AddressLink from '../component/AddressLink';
 import TxLink from '../component/TxLink';
@@ -18,16 +18,49 @@ function TickPage() {
   const { t } = useTranslation('networkPage');
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const routeParams = useParams();
-
-  const { tick } = routeParams;
+  const { tick } = useParams();
+  const block = useSelector(selectBlock);
+  const isLoading = useSelector(selectBlockLoading);
+  const [displayTransactions, setDisplayTransactions] = useState([]);
+  const [hasMore, setHasMore] = useState(true);
+  const batchSize = 5;
+  const scrollRef = useRef(null);
 
   useEffect(() => {
     dispatch(getBlock(tick));
   }, [tick, dispatch]);
 
-  const block = useSelector(selectBlock);
-  const isLoading = useSelector(selectBlockLoading);
+  useEffect(() => {
+    if (block && block.transactions) {
+      setDisplayTransactions(block.transactions.slice(0, batchSize));
+      setHasMore(block.transactions.length > batchSize);
+    }
+  }, [block]);
+
+  const loadMoreTransactions = () => {
+    if (displayTransactions.length < block.transactions.length) {
+      const nextTransactions = block.transactions.slice(
+        displayTransactions.length,
+        displayTransactions.length + batchSize
+      );
+      setDisplayTransactions((prevTransactions) => [...prevTransactions, ...nextTransactions]);
+      setHasMore(displayTransactions.length + batchSize < block.transactions.length);
+    } else {
+      setHasMore(false);
+    }
+  };
+
+  useEffect(() => {
+    const scrollElement = scrollRef.current;
+    const handleScroll = () => {
+      if (scrollElement.scrollTop + scrollElement.clientHeight >= scrollElement.scrollHeight) {
+        console.log('Reached the bottom!');
+      }
+    };
+
+    scrollElement.addEventListener('scroll', handleScroll);
+    return () => scrollElement.removeEventListener('scroll', handleScroll);
+  }, []);
 
   if (isLoading) {
     return (
@@ -38,7 +71,11 @@ function TickPage() {
   }
 
   return (
-    <div className="w-full ">
+    <div
+      className="w-full max-h-[calc(100vh-76px)] overflow-y-auto"
+      id="scrollableDiv"
+      ref={scrollRef}
+    >
       <div className="py-32 max-w-[960px] mx-auto px-12">
         <Breadcrumbs aria-label="breadcrumb">
           <HomeLink />
@@ -95,10 +132,25 @@ function TickPage() {
         <Typography className="text-20 leading-26 font-500 font-space mb-16">
           {t('transactions')}
         </Typography>
-        <div className="flex flex-col gap-12">
-          {block &&
-            block?.transactions?.map((item) => (
-              <CardItem className="flex flex-col p-12" key={item.id}>
+        <InfiniteScroll
+          dataLength={displayTransactions.length}
+          next={loadMoreTransactions}
+          hasMore={hasMore}
+          scrollableTarget="scrollableDiv"
+          loader={
+            <Typography className="text-14 text-primary-50 font-bold py-10 text-center">
+              Loading...
+            </Typography>
+          }
+          endMessage={
+            <Typography className="text-14 font-bold py-10 text-center">
+              You have seen all transactions
+            </Typography>
+          }
+        >
+          <div className="flex flex-col gap-12">
+            {displayTransactions.map((item, index) => (
+              <CardItem className="flex flex-col p-12" key={index}>
                 <div className="flex flex-col md:flex-row md:items-center gap-10 md:gap-16 mb-14">
                   <div className="">
                     <TxStatus executed={item.executed} />
@@ -143,7 +195,8 @@ function TickPage() {
                 </div>
               </CardItem>
             ))}
-        </div>
+          </div>
+        </InfiniteScroll>
       </div>
     </div>
   );
