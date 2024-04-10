@@ -2,7 +2,7 @@ import { Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
 function ResultItem(props) {
-  const { icon, title, link, items, handleClose } = props;
+  const { icon, title, link, items, handleClose, address } = props;
   const navigate = useNavigate();
   function getItemLink(item) {
     if (item.type === 0) {
@@ -20,7 +20,18 @@ function ResultItem(props) {
   return (
     <div className="mt-20 px-12 ">
       <Typography className="text-12 text-gray-50 font-space ">{title}</Typography>
-      {items.map((item, key) => (
+      {link?.includes('address') && (
+        <Typography
+          className="flex items-center gap-5 py-8 hover:bg-gray-70 break-all"
+          component="div"
+          role="button"
+          onClick={() => handleItemClick(address)}
+        >
+          {icon}
+          {address}
+        </Typography>
+      )}
+      {items?.map((item, key) => (
         <Typography
           className="flex items-center gap-5 py-8 hover:bg-gray-70 break-all"
           component="div"
