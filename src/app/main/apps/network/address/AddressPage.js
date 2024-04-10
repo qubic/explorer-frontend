@@ -1,5 +1,6 @@
-import { useEffect } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import InfiniteScroll from 'react-infinite-scroll-component';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { Breadcrumbs, LinearProgress, Typography } from '@mui/material';
 import { formatEllipsis, formatString } from 'src/app/utils/functions';
@@ -17,17 +18,51 @@ function AddressPage() {
   const { t } = useTranslation('networkPage');
   const routeParams = useParams();
   const { addressId } = routeParams;
-
   const [searchParams] = useSearchParams();
   const tick = searchParams.get('tick');
+  const address = useSelector(selectAddress);
+  const isLoading = useSelector(selectAddressLoading);
+  const [displayTransactions, setDisplayTransactions] = useState([]);
+  const [hasMore, setHasMore] = useState(true);
+  const batchSize = 5;
+  const scrollRef = useRef(null);
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(getAddress(addressId));
   }, [addressId, dispatch]);
 
-  const address = useSelector(selectAddress);
-  const isLoading = useSelector(selectAddressLoading);
+  useEffect(() => {
+    if (address && address.latestTransfers) {
+      setDisplayTransactions(address.latestTransfers.slice(0, batchSize));
+      setHasMore(address.latestTransfers.length > batchSize);
+    }
+  }, [address]);
+
+  const loadMoreTransactions = () => {
+    if (displayTransactions.length < address.latestTransfers.length) {
+      const nextTransactions = address.latestTransfers.slice(
+        displayTransactions.length,
+        displayTransactions.length + batchSize
+      );
+      setDisplayTransactions((prevTransactions) => [...prevTransactions, ...nextTransactions]);
+      setHasMore(displayTransactions.length + batchSize < address.latestTransfers.length);
+    } else {
+      setHasMore(false);
+    }
+  };
+
+  useEffect(() => {
+    const scrollElement = scrollRef.current;
+    const handleScroll = () => {
+      if (scrollElement.scrollTop + scrollElement.clientHeight >= scrollElement.scrollHeight) {
+        console.log('Reached the bottom!');
+      }
+    };
+
+    scrollElement.addEventListener('scroll', handleScroll);
+    return () => scrollElement.removeEventListener('scroll', handleScroll);
+  }, []);
 
   if (isLoading) {
     return (
@@ -38,7 +73,11 @@ function AddressPage() {
   }
 
   return (
-    <div className="w-full">
+    <div
+      className="w-full max-h-[calc(100vh-76px)] overflow-y-auto"
+      id="scrollableDiv"
+      ref={scrollRef}
+    >
       <div className="py-32 max-w-[960px] mx-auto px-12">
         <Breadcrumbs aria-label="breadcrumbs">
           <HomeLink />
@@ -103,9 +142,24 @@ function AddressPage() {
         <Typography className="text-20 leading-26 font-500 font-space mb-16">
           {t('latestTransfers')}
         </Typography>
-        <div className="flex flex-col gap-12">
-          {address &&
-            address?.latestTransfers?.map((item) => (
+        <InfiniteScroll
+          dataLength={displayTransactions.length}
+          next={loadMoreTransactions}
+          hasMore={hasMore}
+          scrollableTarget="scrollableDiv"
+          loader={
+            <Typography className="text-14 text-primary-50 font-bold py-10 text-center">
+              Loading...
+            </Typography>
+          }
+          endMessage={
+            <Typography className="text-14 font-bold py-10 text-center">
+              You have seen all transactions
+            </Typography>
+          }
+        >
+          <div className="flex flex-col gap-12">
+            {displayTransactions.map((item) => (
               <CardItem className="flex flex-col p-12" key={item.id}>
                 <div className="flex flex-col md:flex-row md:items-center gap-10 md:gap-16 mb-14">
                   <div className="">
@@ -151,7 +205,8 @@ function AddressPage() {
                 </div>
               </CardItem>
             ))}
-        </div>
+          </div>
+        </InfiniteScroll>
       </div>
     </div>
   );
