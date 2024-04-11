@@ -7,12 +7,10 @@ import { useTranslation } from 'react-i18next';
 import { formatDate, formatString } from 'src/app/utils/functions';
 import { getBlock, selectBlock, selectBlockLoading } from '../store/blockSlice';
 import AddressLink from '../component/AddressLink';
-import TxLink from '../component/TxLink';
-import TxStatus from '../component/TxStatus';
+import TxItem from '../component/TxItem';
 import SubCardItem from '../component/SubCardItem';
 import TickStatus from '../component/TickStatus';
 import HomeLink from '../component/HomeLink';
-import CardItem from '../component/CardItem';
 
 function TickPage() {
   const { t } = useTranslation('networkPage');
@@ -70,6 +68,8 @@ function TickPage() {
       </div>
     );
   }
+
+  console.log(block);
 
   return (
     <div
@@ -157,50 +157,17 @@ function TickPage() {
         >
           <div className="flex flex-col gap-12">
             {displayTransactions.map((item, index) => (
-              <CardItem className="flex flex-col p-12" key={index}>
-                <div className="flex flex-col md:flex-row md:items-center gap-10 md:gap-16 mb-14">
-                  <div className="">
-                    <TxStatus executed={item.executed} />
-                  </div>
-                  <TxLink value={item.id} />
-                </div>
-                <div className="flex flex-col pt-14 border-t-[1px] border-gray-70">
-                  <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-16">
-                    <div className="flex flex-col gap-16">
-                      <div className="flex flex-col gap-8">
-                        <Typography className="text-14 leading-18 font-space text-gray-50">
-                          {t('source')}
-                        </Typography>
-                        <AddressLink value={item.sourceId} tickValue={tick} />
-                      </div>
-                      <div className="flex flex-col gap-8">
-                        <Typography className="text-14 leading-18 font-space text-gray-50">
-                          {t('destination')}
-                        </Typography>
-                        <AddressLink value={item.destId} tickValue={tick} />
-                      </div>
-                    </div>
-                    <div className="flex flex-col sm:flex-row md:flex-col gap-24 pr-24">
-                      <div className="flex flex-col gap-5 md:items-end">
-                        <Typography className="text-14 leading-18 font-space text-gray-50">
-                          {t('type')}
-                        </Typography>
-                        <Typography className="text-14 leading-18 font-space">
-                          {formatString(item.type)} {item.type === 0 ? 'Standard' : 'SC'}
-                        </Typography>
-                      </div>
-                      <div className="flex flex-col gap-5 md:items-end">
-                        <Typography className="text-14 leading-18 font-space text-gray-50">
-                          {t('amount')}
-                        </Typography>
-                        <Typography className="text-14 leading-18 font-space">
-                          {formatString(item.amount)} QUBIC
-                        </Typography>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </CardItem>
+              <TxItem
+                key={index}
+                executed={item.executed}
+                id={item.id}
+                sourceId={item.sourceId}
+                tick={tick}
+                destId={item.destId}
+                type={item.type}
+                amount={item.amount}
+                data={item.data}
+              />
             ))}
           </div>
         </InfiniteScroll>
