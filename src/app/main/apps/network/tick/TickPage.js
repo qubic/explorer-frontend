@@ -186,7 +186,7 @@ function TickPage() {
                           {t('type')}
                         </Typography>
                         <Typography className="text-14 leading-18 font-space">
-                          {formatString(item.type)} {t('standard')}
+                          {formatString(item.type)} {item.type === 0 ? 'Standard' : 'SC'}
                         </Typography>
                       </div>
                       <div className="flex flex-col gap-5 md:items-end">
