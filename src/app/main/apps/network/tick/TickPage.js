@@ -32,6 +32,7 @@ function TickPage() {
 
   useEffect(() => {
     if (block && block.transactions) {
+      setDisplayTransactions([]);
       setDisplayTransactions(block.transactions.slice(0, batchSize));
       setHasMore(block.transactions.length > batchSize);
     }
@@ -143,9 +144,15 @@ function TickPage() {
             </Typography>
           }
           endMessage={
-            <Typography className="text-14 font-bold py-10 text-center">
-              You have seen all transactions
-            </Typography>
+            displayTransactions.length === 0 ? (
+              <Typography className="text-14 font-bold py-10 text-center">
+                There are no transactions.
+              </Typography>
+            ) : (
+              <Typography className="text-14 font-bold py-10 text-center">
+                You have seen all transactions
+              </Typography>
+            )
           }
         >
           <div className="flex flex-col gap-12">

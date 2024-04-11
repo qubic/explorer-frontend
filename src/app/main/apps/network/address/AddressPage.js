@@ -10,9 +10,8 @@ import TxLink from '../component/TxLink';
 import TxStatus from '../component/TxStatus';
 import CardItem from '../component/CardItem';
 import TickLink from '../component/TickLink';
-
-import { getAddress, selectAddress, selectAddressLoading } from '../store/addressSlice';
 import HomeLink from '../component/HomeLink';
+import { getAddress, selectAddress, selectAddressLoading } from '../store/addressSlice';
 
 function AddressPage() {
   const { t } = useTranslation('networkPage');
@@ -153,9 +152,15 @@ function AddressPage() {
             </Typography>
           }
           endMessage={
-            <Typography className="text-14 font-bold py-10 text-center">
-              You have seen all transactions
-            </Typography>
+            displayTransactions.length === 0 ? (
+              <Typography className="text-14 font-bold py-10 text-center">
+                There are no transactions
+              </Typography>
+            ) : (
+              <Typography className="text-14 font-bold py-10 text-center">
+                You have seen all transactions
+              </Typography>
+            )
           }
         >
           <div className="flex flex-col gap-12">
