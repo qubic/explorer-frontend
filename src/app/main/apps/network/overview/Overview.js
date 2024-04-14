@@ -283,7 +283,7 @@ function Overview() {
             Privacy Policy
           </Link>
         </div>
-        <Typography className="text-12 font-space text-gray-50">Version 1.1</Typography>
+        <Typography className="text-12 font-space text-gray-50">Version 1.2</Typography>
       </div>
     </div>
   );
