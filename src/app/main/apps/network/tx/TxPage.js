@@ -71,7 +71,7 @@ function TxPage() {
           title={t('type')}
           content={
             <Typography className="text-14 leading-20 font-space">
-              {formatString(tx?.type)} {t('standard')}
+              {formatString(tx?.type)} {tx?.type === 0 ? 'Standard' : 'SC'}
             </Typography>
           }
         />

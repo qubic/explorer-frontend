@@ -9,6 +9,7 @@ import pt from './i18n/pt';
 import tr from './i18n/tr';
 import cn from './i18n/cn';
 import jp from './i18n/jp';
+import ar from './i18n/ar';
 import NetworkPage from './NetworkPage';
 import TickPage from './tick/TickPage';
 import Overview from './overview/Overview';
@@ -25,6 +26,7 @@ i18next.addResourceBundle('pt', 'networkPage', pt);
 i18next.addResourceBundle('tr', 'networkPage', tr);
 i18next.addResourceBundle('cn', 'networkPage', cn);
 i18next.addResourceBundle('jp', 'networkPage', jp);
+i18next.addResourceBundle('ar', 'networkPage', ar);
 
 const NetworkConfig = {
   settings: {

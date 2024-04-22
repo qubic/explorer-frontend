@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import { useTheme } from '@mui/material/styles';
 import { Breadcrumbs, IconButton, LinearProgress, Typography } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -13,6 +14,7 @@ import TickStatus from '../component/TickStatus';
 import HomeLink from '../component/HomeLink';
 
 function TickPage() {
+  const theme = useTheme();
   const { t } = useTranslation('networkPage');
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -88,13 +90,21 @@ function TickPage() {
           <div className="flex flex-col gap-8">
             <div className="flex items-center gap-8">
               <IconButton onClick={() => navigate(`/network/tick/${Number(tick) - 1}`)}>
-                <img className="w-24 h-24" src="assets/icons/arrow-left.svg" alt="icon" />
+                <img
+                  className="w-24 h-24"
+                  src={`assets/icons/arrow-${theme.direction === 'rtl' ? 'right' : 'left'}.svg`}
+                  alt="icon"
+                />
               </IconButton>
               <Typography className="text-32 leading-40 font-500 font-space">
                 {formatString(block?.tick)}
               </Typography>
               <IconButton onClick={() => navigate(`/network/tick/${Number(tick) + 1}`)}>
-                <img className="w-24 h-24" src="assets/icons/arrow-right.svg" alt="icon" />
+                <img
+                  className="w-24 h-24"
+                  src={`assets/icons/arrow-${theme.direction === 'rtl' ? 'left' : 'right'}.svg`}
+                  alt="icon"
+                />
               </IconButton>
             </div>
             <Typography className="text-14 leading-20 font-space text-gray-50">
@@ -146,7 +156,7 @@ function TickPage() {
           endMessage={
             displayTransactions.length === 0 ? (
               <Typography className="text-14 font-bold py-10 text-center">
-                There are no transactions.
+                There are no transactions
               </Typography>
             ) : (
               <Typography className="text-14 font-bold py-10 text-center">

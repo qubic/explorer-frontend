@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Input, IconButton, LinearProgress, Modal } from '@mui/material';
+import { Input, IconButton, LinearProgress, Modal, useTheme } from '@mui/material';
 import withReducer from 'app/store/withReducer';
 import { useDispatch, useSelector } from 'react-redux';
 import { motion } from 'framer-motion';
@@ -8,6 +8,7 @@ import { getSearch, resetSearch, selectSearch, selectSearchLoading } from './sto
 import ResultItem from './ResultItem';
 
 function SearchBar() {
+  const theme = useTheme();
   const dispatch = useDispatch();
   const searchResult = useSelector(selectSearch);
   const isLoading = useSelector(selectSearchLoading);
@@ -89,7 +90,11 @@ function SearchBar() {
               disableUnderline
               autoFocus
               startAdornment={
-                <img className="w-16 h-16 mr-10" src="assets/icons/magnify.svg" alt="search" />
+                <img
+                  className={`w-16 h-16 ${theme.direction === 'rtl' ? 'ml-10' : 'mr-10'}`}
+                  src="assets/icons/magnify.svg"
+                  alt="search"
+                />
               }
               onChange={(e) => {
                 setKeyword(e.target.value);
