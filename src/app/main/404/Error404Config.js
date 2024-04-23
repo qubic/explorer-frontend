@@ -9,6 +9,7 @@ import pt from './i18n/pt';
 import tr from './i18n/tr';
 import cn from './i18n/cn';
 import jp from './i18n/jp';
+import ar from './i18n/ar';
 import Error404Page from './Error404Page';
 
 i18next.addResourceBundle('en', 'error404Page', en);
@@ -21,6 +22,7 @@ i18next.addResourceBundle('pt', 'error404Page', pt);
 i18next.addResourceBundle('tr', 'error404Page', tr);
 i18next.addResourceBundle('cn', 'error404Page', cn);
 i18next.addResourceBundle('jp', 'error404Page', jp);
+i18next.addResourceBundle('ar', 'error404Page', ar);
 
 const Error404Config = {
   settings: {
