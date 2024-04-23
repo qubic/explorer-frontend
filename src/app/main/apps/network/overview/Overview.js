@@ -282,6 +282,15 @@ function Overview() {
           >
             Privacy Policy
           </Link>
+          <span className="text-gray-50">•</span>
+          <Link
+            href="https://status.qubic.li"
+            className="text-12 font-space text-white"
+            target="_blank"
+            role="button"
+          >
+            Network Status
+          </Link>
         </div>
         <Typography className="text-12 font-space text-gray-50">Version 1.3</Typography>
       </div>
