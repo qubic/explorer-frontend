@@ -5,7 +5,6 @@ import { Breadcrumbs, LinearProgress, Typography } from '@mui/material';
 
 import { formatEllipsis, formatString } from 'src/app/utils/functions';
 import { useTranslation } from 'react-i18next';
-import ErrorMessage from '../component/ErrorMessage';
 import TxStatus from '../component/TxStatus';
 import TxLink from '../component/TxLink';
 import TickLink from '../component/TickLink';
@@ -38,8 +37,7 @@ function TxPage() {
 
   return (
     <div className="w-full">
-      <ErrorMessage />
-      <div className="py-24 max-w-[960px] mx-auto px-12">
+      <div className="py-32 max-w-[960px] mx-auto px-12">
         <Breadcrumbs aria-label="breadcrumb">
           <HomeLink />
           <Typography className="text-12 font-space text-gray-50">
