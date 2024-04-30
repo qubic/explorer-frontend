@@ -30,15 +30,16 @@ function TickStatus(props) {
             <Typography className="text-14 leading-20 font-space text-gray-50">
               {t('tickStatus')}
             </Typography>
-            {tickStatus ? (
-              <Typography className="text-16 leading-20 font-space text-success-40">
-                {t('nonEmpty')} / {t('executed')}
-              </Typography>
-            ) : (
-              <Typography className="text-16 leading-20 font-space text-error-40">
-                {t('empty')} / {t('unexecuted')}
-              </Typography>
-            )}
+            {dataStatus &&
+              (tickStatus ? (
+                <Typography className="text-16 leading-20 font-space text-success-40">
+                  {t('nonEmpty')} / {t('executed')}
+                </Typography>
+              ) : (
+                <Typography className="text-16 leading-20 font-space text-error-40">
+                  {t('empty')} / {t('unexecuted')}
+                </Typography>
+              ))}
           </div>
         </div>
         <div className="flex flex-col gap-8">

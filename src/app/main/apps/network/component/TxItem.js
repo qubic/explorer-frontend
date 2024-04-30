@@ -51,7 +51,7 @@ function TxItem(props) {
         <div className="">
           <TxStatus executed={executed} />
         </div>
-        <TxLink value={id} />
+        <TxLink value={id} className="text-primary-40" />
       </div>
       <div className="flex flex-col pt-14 pb-8 border-t-[1px] border-gray-70">
         <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-16">
