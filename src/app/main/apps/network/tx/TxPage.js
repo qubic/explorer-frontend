@@ -54,7 +54,7 @@ function TxPage() {
           <div className="">
             <TxStatus executed={tx?.executed} />
           </div>
-          <TxLink value={tx?.id} />
+          <TxLink value={tx?.id} className="opacity-70" />
         </div>
         <SubCardItem
           title={t('amount')}
