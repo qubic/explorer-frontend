@@ -55,7 +55,7 @@ function TickPage() {
     const scrollElement = scrollRef.current;
     const handleScroll = () => {
       if (scrollElement.scrollTop + scrollElement.clientHeight >= scrollElement.scrollHeight) {
-        console.log('Reached the bottom!');
+        console.log('');
       }
     };
 
@@ -70,8 +70,6 @@ function TickPage() {
       </div>
     );
   }
-
-  console.log(block);
 
   return (
     <div

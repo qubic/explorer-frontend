@@ -51,7 +51,6 @@ function AuthProvider({ children }) {
           axios.defaults.headers.common.Authorization = `Bearer ${response.data.token}`;
         })
         .then(() => {
-          console.log(axios.defaults.headers.common.Authorization);
           setWaitAuthCheck(true);
         })
         .catch((error) => {

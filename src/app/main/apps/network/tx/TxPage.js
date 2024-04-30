@@ -36,7 +36,6 @@ function TxPage() {
     );
   }
 
-  console.log(tx);
   return (
     <div className="w-full">
       <ErrorMessage />
