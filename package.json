@@ -83,6 +83,7 @@
     "@typescript-eslint/eslint-plugin": "^4.33.0",
     "@typescript-eslint/parser": "^4.33.0",
     "autoprefixer": "9.8.8",
+    "concurrently": "^8.2.2",
     "cross-env": "7.0.3",
     "eslint": "7.32.0",
     "eslint-config-airbnb": "^18.2.1",
@@ -110,7 +111,7 @@
   },
   "scripts": {
     "start": "react-app-rewired  start",
-    "start-api-proxy": "node dev-proxy.js",
+    "start-api-proxy": "concurrently \"node dev-proxy-qli.js\" \"node dev-proxy-arc.js\"",
     "build": "cross-env GENERATE_SOURCEMAP=false react-app-rewired build",
     "test": "react-app-rewired test --env=node",
     "eject": "react-app-rewired eject",

@@ -2,7 +2,6 @@ import * as React from 'react';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import FuseSplashScreen from '@fuse/core/FuseSplashScreen';
-import jwtServiceConfig from './jwtServiceConfig';
 
 const AuthContext = React.createContext();
 
@@ -10,27 +9,35 @@ function AuthProvider({ children }) {
   const [waitAuthCheck, setWaitAuthCheck] = useState(false);
 
   useEffect(() => {
-    axios.defaults.baseURL = process.env.REACT_APP_API_URL;
-
     const token = window.localStorage.getItem('jwt_access_token');
 
     if (token) {
-      axios.defaults.headers.common.Authorization = `Bearer ${token}`;
       axios
-        .get(`/Network/TickOverview?epoch=&offset=0`)
+        .get(`${process.env.REACT_APP_QLI_URL}/Network/TickOverview?epoch=&offset=0`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
         .then((resp) => {
           setWaitAuthCheck(true);
         })
         .catch((error) => {
           axios
-            .post(`${jwtServiceConfig.login}`, {
-              userName: 'guest@qubic.li',
-              password: 'guest13@Qubic.li',
-              twoFactorCode: '',
-            })
+            .post(
+              `${process.env.REACT_APP_QLI_URL}/Auth/Login`,
+              {
+                userName: 'guest@qubic.li',
+                password: 'guest13@Qubic.li',
+                twoFactorCode: '',
+              },
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              }
+            )
             .then((response) => {
               localStorage.setItem('jwt_access_token', response.data.token);
-              axios.defaults.headers.common.Authorization = `Bearer ${response.data.token}`;
             })
             .then(() => {
               setWaitAuthCheck(true);
@@ -41,14 +48,13 @@ function AuthProvider({ children }) {
         });
     } else {
       axios
-        .post(`${jwtServiceConfig.login}`, {
+        .post(`${process.env.REACT_APP_QLI_URL}/Auth/Login`, {
           userName: 'guest@qubic.li',
           password: 'guest13@Qubic.li',
           twoFactorCode: '',
         })
         .then((response) => {
           localStorage.setItem('jwt_access_token', response.data.token);
-          axios.defaults.headers.common.Authorization = `Bearer ${response.data.token}`;
         })
         .then(() => {
           setWaitAuthCheck(true);
