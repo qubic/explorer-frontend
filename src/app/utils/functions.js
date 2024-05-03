@@ -31,4 +31,13 @@ function formatEllipsis(str) {
   return '';
 }
 
-export { formatString, formatDate, formatEllipsis };
+function copyText(textToCopy) {
+  const input = document.createElement('input');
+  input.value = textToCopy;
+  document.body.appendChild(input);
+  input.select();
+  document.execCommand('copy');
+  document.body.removeChild(input);
+}
+
+export { formatString, formatDate, formatEllipsis, copyText };
