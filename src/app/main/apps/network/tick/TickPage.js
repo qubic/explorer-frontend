@@ -128,7 +128,7 @@ function TickPage() {
           />
           <SubCardItem
             title={t('tickLeader')}
-            content={<AddressLink value={block?.tickLeaderId} tickValue={block?.tick} />}
+            content={<AddressLink value={block?.tickLeaderId} tickValue={block?.tick} copy />}
           />
         </div>
         <div className="mb-24 md:hidden">

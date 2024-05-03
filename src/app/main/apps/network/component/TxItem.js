@@ -51,7 +51,7 @@ function TxItem(props) {
         <div className="">
           <TxStatus executed={executed} />
         </div>
-        <TxLink value={id} className="text-primary-40" />
+        <TxLink value={id} className="text-primary-40" copy />
       </div>
       <div className="flex flex-col pt-14 pb-8 border-t-[1px] border-gray-70">
         <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-16">
@@ -60,13 +60,13 @@ function TxItem(props) {
               <Typography className="text-14 leading-18 font-space text-gray-50">
                 {t('source')}
               </Typography>
-              <AddressLink value={sourceId} tickValue={tick} />
+              <AddressLink value={sourceId} tickValue={tick} copy />
             </div>
             <div className="flex flex-col gap-8">
               <Typography className="text-14 leading-18 font-space text-gray-50">
                 {t('destination')}
               </Typography>
-              <AddressLink value={destId} tickValue={tick} />
+              <AddressLink value={destId} tickValue={tick} copy />
             </div>
           </div>
           <div className="flex flex-col sm:flex-row md:flex-col gap-24 pr-12">

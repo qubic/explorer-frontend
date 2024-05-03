@@ -3,7 +3,12 @@ import axios from 'axios';
 
 // Async thunk
 export const getBlock = createAsyncThunk('network/block', async (tick, { getState }) => {
-  const response = await axios.get(`/Network/Block?tick=${tick}`);
+  const token = window.localStorage.getItem('jwt_access_token');
+  const response = await axios.get(`${process.env.REACT_APP_QLI_URL}/Network/Block?tick=${tick}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
   const data = await response.data;
   return data;
 });
