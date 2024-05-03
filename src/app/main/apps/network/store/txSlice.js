@@ -2,9 +2,9 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 
 export const getTx = createAsyncThunk('network/tx', async (txId, { getState }) => {
-  const response = await axios.get(`/Network/tx/${txId}`);
+  const response = await axios.get(`${process.env.REACT_APP_ARCHIEVER}/transactions/${txId}`);
 
-  const data = await response.data;
+  const data = await response.data.transaction;
 
   return data;
 });
