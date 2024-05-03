@@ -54,7 +54,7 @@ function TxPage() {
           <div className="">
             <TxStatus executed={tx?.executed || true} />
           </div>
-          <TxLink value={tx?.txId} className="opacity-70" />
+          <TxLink value={tx?.txId} className="opacity-70" copy />
         </div>
         <SubCardItem
           title={t('amount')}
@@ -74,11 +74,11 @@ function TxPage() {
         />
         <SubCardItem
           title={t('source')}
-          content={<AddressLink value={tx?.sourceId} tickValue={tx?.tick} />}
+          content={<AddressLink value={tx?.sourceId} tickValue={tx?.tick} copy />}
         />
         <SubCardItem
           title={t('destination')}
-          content={<AddressLink value={tx?.destId} tickValue={tx?.tick} />}
+          content={<AddressLink value={tx?.destId} tickValue={tx?.tick} copy />}
         />
       </div>
     </div>
