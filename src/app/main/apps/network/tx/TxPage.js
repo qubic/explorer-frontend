@@ -80,6 +80,10 @@ function TxPage() {
           title={t('destination')}
           content={<AddressLink value={tx?.destId} tickValue={tx?.tick} copy />}
         />
+        <SubCardItem
+          title={t('tick')}
+          content={<TickLink value={tx?.tickNumber} className="text-primary-40" />}
+        />
       </div>
     </div>
   );
