@@ -3,6 +3,7 @@ import { Input, IconButton, LinearProgress, Modal, useTheme } from '@mui/materia
 import withReducer from 'app/store/withReducer';
 import { useDispatch, useSelector } from 'react-redux';
 import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import reducer from './store';
 import { getSearch, resetSearch, selectSearch, selectSearchLoading } from './store/searchSlice';
 import ResultItem from './ResultItem';
@@ -10,6 +11,7 @@ import ResultItem from './ResultItem';
 function SearchBar() {
   const theme = useTheme();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const searchResult = useSelector(selectSearch);
   const isLoading = useSelector(selectSearchLoading);
   const [open, setOpen] = useState(false);
@@ -22,6 +24,22 @@ function SearchBar() {
     acc[item.type].push(item);
     return acc;
   }, {});
+
+  const handleKeyPress = (event) => {
+    if (event.key === 'Enter' && keyword !== '') {
+      if (keyword.trim().length === 60) {
+        if (/^[A-Z\s]+$/.test(keyword.trim())) {
+          navigate(`/network/address/${keyword.trim()}`);
+        } else if (/^[a-z]+$/.test(keyword)) {
+          navigate(`/network/tx/${keyword.trim()}`);
+        }
+      }
+      if (parseInt(keyword.replace(/,/g, ''), 10).toString().length === 8) {
+        navigate(`/network/tick/${parseInt(keyword.replace(/,/g, ''), 10)}`);
+      }
+      handleClose();
+    }
+  };
 
   useEffect(() => {
     const timerId = setTimeout(() => {
@@ -99,6 +117,7 @@ function SearchBar() {
               onChange={(e) => {
                 setKeyword(e.target.value);
               }}
+              onKeyDown={handleKeyPress}
             />
             <IconButton className="absolute right-12 sm:right-24" onClick={handleClose}>
               <img className="w-24 h-24" src="assets/icons/xmark.svg" alt="xmark" />

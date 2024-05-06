@@ -3,7 +3,15 @@ import axios from 'axios';
 
 // Async thunk
 export const getSearch = createAsyncThunk('search', async (query, { getState }) => {
-  const response = await axios.get(`/Search/Query?searchTerm=${query}`);
+  const token = window.localStorage.getItem('jwt_access_token');
+  const response = await axios.get(
+    `${process.env.REACT_APP_QLI_URL}/Search/Query?searchTerm=${query}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
   const data = await response.data;
   return data;
 });

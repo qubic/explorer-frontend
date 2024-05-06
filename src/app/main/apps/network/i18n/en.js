@@ -32,7 +32,7 @@ const locale = {
   ticks: 'Ticks',
   tickStatus: 'Tick Status',
   ticksThisEpoch: 'Ticks this epoch',
-  transactionPreview: 'Transaction preview',
+  transactionPreview: 'Transaction details',
   transactions: 'Transactions',
   type: 'Type',
   unexecuted: 'unexecuted',
