@@ -1,5 +1,6 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
+import suggestedLanguages from './app/utils/constants';
 
 // the translations
 // (tip move them in a JSON file and import them)
@@ -11,29 +12,31 @@ const resources = {
   },
 };
 
-// const getInitialLanguage = () => {
-//   // Check for a stored language in localStorage
-//   const storedLang = localStorage.getItem('lng');
-//   if (storedLang) {
-//     return storedLang;
-//   }
+const getInitialLanguage = () => {
+  // Check for a stored language in localStorage
+  const storedLang = localStorage.getItem('lng');
+  if (storedLang) {
+    return storedLang;
+  }
 
-//   // Get browser language
-//   const browserLang = navigator.language.split('-')[0]; // Extract base language, e.g., 'en' from 'en-US'
-//   if (browserLang) {
-//     return browserLang;
-//   }
+  // Get browser language
+  const browserLang = navigator.language.split('-')[0]; // Extract base language, e.g., 'en' from 'en-US'
 
-//   // Default to English if the browser language is not supported
-//   return 'en';
-// };
+  if (browserLang) {
+    const foundLang = suggestedLanguages.find((lng) => browserLang === lng.id);
+    if (foundLang) {
+      return browserLang;
+    }
+  }
+  // Default to English if the browser language is not supported
+  return 'en';
+};
 
 i18n
   .use(initReactI18next) // passes i18n down to react-i18next
   .init({
     resources,
-    lng: localStorage.getItem('lng') || 'en',
-    // lng: getInitialLanguage(),
+    lng: getInitialLanguage(),
 
     keySeparator: false, // we do not use keys in form messages.welcome
 

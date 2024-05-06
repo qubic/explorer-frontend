@@ -7,8 +7,8 @@ import nl from './i18n/nl';
 import ru from './i18n/ru';
 import pt from './i18n/pt';
 import tr from './i18n/tr';
-import cn from './i18n/cn';
-import jp from './i18n/jp';
+import zh from './i18n/zh';
+import ja from './i18n/ja';
 import ar from './i18n/ar';
 import Error404Page from './Error404Page';
 
@@ -20,8 +20,8 @@ i18next.addResourceBundle('nl', 'error404Page', nl);
 i18next.addResourceBundle('ru', 'error404Page', ru);
 i18next.addResourceBundle('pt', 'error404Page', pt);
 i18next.addResourceBundle('tr', 'error404Page', tr);
-i18next.addResourceBundle('cn', 'error404Page', cn);
-i18next.addResourceBundle('jp', 'error404Page', jp);
+i18next.addResourceBundle('zh', 'error404Page', zh);
+i18next.addResourceBundle('ja', 'error404Page', ja);
 i18next.addResourceBundle('ar', 'error404Page', ar);
 
 const Error404Config = {
