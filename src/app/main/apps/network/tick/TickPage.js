@@ -71,8 +71,6 @@ function TickPage() {
     );
   }
 
-  console.log(block);
-
   return (
     <div
       className="w-full max-h-[calc(100vh-76px)] overflow-y-auto"
