@@ -8,7 +8,6 @@ import { useSelector } from 'react-redux';
 import { selectFuseCurrentLayoutConfig, selectToolbarTheme } from 'app/store/fuse/settingsSlice';
 import { selectFuseNavbar } from 'app/store/fuse/navbarSlice';
 import FullScreenToggle from '../../shared-components/FullScreenToggle';
-import LanguageSwitcher from '../../shared-components/LanguageSwitcher';
 import NavigationSearch from '../../shared-components/NavigationSearch';
 import NavbarToggleButton from '../../shared-components/NavbarToggleButton';
 import UserMenu from '../../shared-components/UserMenu';
@@ -57,8 +56,6 @@ function ToolbarLayout(props) {
           </div>
 
           <div className="flex items-center px-8 h-full overflow-x-auto">
-            <LanguageSwitcher />
-
             <FullScreenToggle />
 
             <NavigationSearch />

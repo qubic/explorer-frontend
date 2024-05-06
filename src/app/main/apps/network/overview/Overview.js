@@ -292,7 +292,7 @@ function Overview() {
             Network Status
           </Link>
         </div>
-        <Typography className="text-12 font-space text-gray-50">Version 1.4</Typography>
+        <Typography className="text-12 font-space text-gray-50">Version 1.3</Typography>
       </div>
     </div>
   );
