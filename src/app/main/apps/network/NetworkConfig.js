@@ -7,8 +7,8 @@ import nl from './i18n/nl';
 import ru from './i18n/ru';
 import pt from './i18n/pt';
 import tr from './i18n/tr';
-import cn from './i18n/cn';
-import jp from './i18n/jp';
+import zh from './i18n/zh';
+import ja from './i18n/ja';
 import ar from './i18n/ar';
 import NetworkPage from './NetworkPage';
 import TickPage from './tick/TickPage';
@@ -24,8 +24,8 @@ i18next.addResourceBundle('nl', 'networkPage', nl);
 i18next.addResourceBundle('ru', 'networkPage', ru);
 i18next.addResourceBundle('pt', 'networkPage', pt);
 i18next.addResourceBundle('tr', 'networkPage', tr);
-i18next.addResourceBundle('cn', 'networkPage', cn);
-i18next.addResourceBundle('jp', 'networkPage', jp);
+i18next.addResourceBundle('zh', 'networkPage', zh);
+i18next.addResourceBundle('ja', 'networkPage', ja);
 i18next.addResourceBundle('ar', 'networkPage', ar);
 
 const NetworkConfig = {

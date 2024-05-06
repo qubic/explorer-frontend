@@ -5,7 +5,6 @@ import axios from 'axios';
 export const getSearch = createAsyncThunk('search', async (query, { getState }) => {
   const response = await axios.get(`/Search/Query?searchTerm=${query}`);
   const data = await response.data;
-  console.log(data);
   return data;
 });
 
