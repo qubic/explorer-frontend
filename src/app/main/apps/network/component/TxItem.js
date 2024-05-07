@@ -13,7 +13,7 @@ function TxItem(props) {
   const [entries, setEntries] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
 
-  const { executed, id, sourceId, tick, destId, type, amount, data } = props;
+  const { executed, id, sourceId, tick, destId, type, amount, data, moneyFlew } = props;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -49,7 +49,7 @@ function TxItem(props) {
     <CardItem className="flex flex-col pt-12 px-12 transition-all duration-300">
       <div className="flex flex-col md:flex-row md:items-center gap-10 md:gap-16 mb-14">
         <div className="">
-          <TxStatus executed={executed} />
+          <TxStatus executed={executed && moneyFlew} />
         </div>
         <TxLink value={id} />
       </div>
