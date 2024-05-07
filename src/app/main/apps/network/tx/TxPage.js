@@ -52,7 +52,7 @@ function TxPage() {
         </Typography>
         <div className="flex flex-col md:flex-row md:items-center gap-10 md:gap-16 mb-24">
           <div className="">
-            <TxStatus executed={tx?.executed || true} />
+            <TxStatus executed={tx?.executed && tx?.moneyFlew} />
           </div>
           <TxLink value={tx?.txId} className="opacity-70" copy />
         </div>
