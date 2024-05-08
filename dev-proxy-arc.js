@@ -19,7 +19,7 @@ app.all('*', function (req, res, next) {
     // CORS Preflight
     res.send();
   } else {
-    const targetURL = 'https://testapi.qubic.org/v1'; // target API to send request to
+    const targetURL = 'https://rpc-staging.qubic.org/v1'; // target API to send request to
     if (!targetURL) {
       res.send(500, { error: 'There is no Target-Endpoint header in the request' });
       return;
