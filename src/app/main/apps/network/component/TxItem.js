@@ -12,8 +12,8 @@ function TxItem(props) {
   const { t } = useTranslation('networkPage');
   const [entries, setEntries] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
-
-  const { executed, id, sourceId, tick, destId, type, amount, data, moneyFlew } = props;
+  const { txId, sourceId, tickNumber, destId, type, amount, data, nonExecutedTxIds } = props;
+  console.log(nonExecutedTxIds);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -49,9 +49,9 @@ function TxItem(props) {
     <CardItem className="flex flex-col pt-12 px-12 transition-all duration-300">
       <div className="flex flex-col md:flex-row md:items-center gap-10 md:gap-16 mb-14">
         <div className="">
-          <TxStatus executed={executed && moneyFlew} />
+          <TxStatus executed={!(nonExecutedTxIds || []).includes(txId)} />
         </div>
-        <TxLink value={id} className="text-primary-40" copy />
+        <TxLink value={txId} className="text-primary-40" copy />
       </div>
       <div className="flex flex-col pt-14 pb-8 border-t-[1px] border-gray-70">
         <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-16">
@@ -60,13 +60,13 @@ function TxItem(props) {
               <Typography className="text-14 leading-18 font-space text-gray-50">
                 {t('source')}
               </Typography>
-              <AddressLink value={sourceId} tickValue={tick} copy />
+              <AddressLink value={sourceId} tickValue={tickNumber} copy />
             </div>
             <div className="flex flex-col gap-8">
               <Typography className="text-14 leading-18 font-space text-gray-50">
                 {t('destination')}
               </Typography>
-              <AddressLink value={destId} tickValue={tick} copy />
+              <AddressLink value={destId} tickValue={tickNumber} copy />
             </div>
           </div>
           <div className="flex flex-col sm:flex-row md:flex-col gap-24 pr-12">
@@ -105,7 +105,7 @@ function TxItem(props) {
           </div>
           {entries.map((item, index) => (
             <div className="flex justify-between flex-col md:flex-row" key={index}>
-              <AddressLink value={item.destId} tickValue={tick} />
+              <AddressLink value={item.destId} tickValue={tickNumber} />
               <Typography className="text-14 leading-18 font-space">
                 {formatString(item.amount)} QUBIC
               </Typography>
@@ -115,8 +115,14 @@ function TxItem(props) {
       )}
       {entries.length !== 0 && (
         <div className="py-16 text-center">
-          <IconButton className="" onClick={() => setIsOpen((prev) => !prev)}>
-            <Typography className="text-center font-space text-14 mr-12" role="button">
+          <IconButton
+            className="flex gap-10 items-center mx-auto"
+            sx={{
+              borderRadius: 2,
+            }}
+            onClick={() => setIsOpen((prev) => !prev)}
+          >
+            <Typography className="text-center font-space text-14" role="button">
               {isOpen ? 'Hide' : 'Show'} {entries.length} entries
             </Typography>
             <img

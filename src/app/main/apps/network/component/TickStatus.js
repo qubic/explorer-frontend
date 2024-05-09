@@ -6,7 +6,7 @@ import CardItem from './CardItem';
 
 function TickStatus(props) {
   const { t } = useTranslation('networkPage');
-  const { dataStatus, tickStatus, numberOfTx } = props;
+  const { dataStatus } = props;
 
   return (
     <CardItem className="px-24 py-16">
@@ -26,12 +26,12 @@ function TickStatus(props) {
               </Typography>
             )}
           </div>
-          <div className="flex flex-col gap-8">
-            <Typography className="text-14 leading-20 font-space text-gray-50">
-              {t('tickStatus')}
-            </Typography>
-            {dataStatus &&
-              (tickStatus ? (
+          {dataStatus && (
+            <div className="flex flex-col gap-8">
+              <Typography className="text-14 leading-20 font-space text-gray-50">
+                {t('tickStatus')}
+              </Typography>
+              {dataStatus.transactionIds.length !== 0 ? (
                 <Typography className="text-16 leading-20 font-space text-success-40">
                   {t('nonEmpty')} / {t('executed')}
                 </Typography>
@@ -39,17 +39,20 @@ function TickStatus(props) {
                 <Typography className="text-16 leading-20 font-space text-error-40">
                   {t('empty')} / {t('unexecuted')}
                 </Typography>
-              ))}
+              )}
+            </div>
+          )}
+        </div>
+        {dataStatus && (
+          <div className="flex flex-col gap-8">
+            <Typography className="text-14 leading-20 font-space text-gray-50">
+              {t('numberOfTransactions')}
+            </Typography>
+            <Typography className="text-16 leading-20 font-space text-primary-20">
+              {formatString(dataStatus.transactionIds?.length)}
+            </Typography>
           </div>
-        </div>
-        <div className="flex flex-col gap-8">
-          <Typography className="text-14 leading-20 font-space text-gray-50">
-            {t('numberOfTransactions')}
-          </Typography>
-          <Typography className="text-16 leading-20 font-space text-primary-20">
-            {formatString(numberOfTx)}
-          </Typography>
-        </div>
+        )}
       </div>
     </CardItem>
   );
