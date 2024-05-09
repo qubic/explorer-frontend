@@ -9,16 +9,17 @@ import axios from 'axios';
 
 export const getTx = createAsyncThunk('network/tx', async (txId, { getState }) => {
   try {
-    // First request
-    const infoResponse = await axios.get(`${process.env.REACT_APP_ARCHIEVER}/transactions/${txId}`);
-    const txInfo = infoResponse.data.transaction;
+    const [infoResponse, statusResponse] = await Promise.all([
+      axios.get(`${process.env.REACT_APP_ARCHIEVER}/transactions/${txId}`).catch(() => null),
+      axios.get(`${process.env.REACT_APP_ARCHIEVER}/tx-status/${txId}`).catch(() => null),
+    ]);
 
-    // Second request
-    const statusResponse = await axios.get(`${process.env.REACT_APP_ARCHIEVER}/tx-status/${txId}`);
-    const txStatus = statusResponse.data.transactionStatus;
+    const txInfo = infoResponse ? infoResponse.data.transaction : null;
+    const txStatus = statusResponse ? statusResponse.data.transactionStatus : null;
 
-    // Combine data from both requests if needed
     const data = { tx: txInfo, status: txStatus };
+
+    console.log(data);
 
     return data;
   } catch (error) {
