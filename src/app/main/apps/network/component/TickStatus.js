@@ -6,7 +6,7 @@ import CardItem from './CardItem';
 
 function TickStatus(props) {
   const { t } = useTranslation('networkPage');
-  const { dataStatus } = props;
+  const { dataStatus, tickStatus, transactions, option } = props;
 
   return (
     <CardItem className="px-24 py-16">
@@ -31,7 +31,7 @@ function TickStatus(props) {
               <Typography className="text-14 leading-20 font-space text-gray-50">
                 {t('tickStatus')}
               </Typography>
-              {dataStatus.transactionIds.length !== 0 ? (
+              {tickStatus ? (
                 <Typography className="text-16 leading-20 font-space text-success-40">
                   {t('nonEmpty')} / {t('executed')}
                 </Typography>
@@ -49,7 +49,7 @@ function TickStatus(props) {
               {t('numberOfTransactions')}
             </Typography>
             <Typography className="text-16 leading-20 font-space text-primary-20">
-              {formatString(dataStatus.transactionIds?.length)}
+              {formatString(transactions)}
             </Typography>
           </div>
         )}

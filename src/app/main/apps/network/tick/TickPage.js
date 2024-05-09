@@ -147,7 +147,12 @@ function TickPage() {
             )}
           </div>
           <div className="hidden md:block">
-            <TickStatus dataStatus={!error ? block?.tick : null} />
+            <TickStatus
+              dataStatus={!error}
+              tickStatus={Boolean(block?.tick?.transactionIds?.length)}
+              transactions={selectedTx?.length}
+              option={option}
+            />
           </div>
         </div>
         {!error && (
@@ -173,7 +178,12 @@ function TickPage() {
           </div>
         )}
         <div className="mb-24 md:hidden">
-          <TickStatus dataStatus={!error ? block?.tick : null} />
+          <TickStatus
+            dataStatus={!error}
+            tickStatus={Boolean(block?.tick?.transactionIds?.length)}
+            transactions={selectedTx?.length}
+            option={option}
+          />
         </div>
         {!error && (
           <div className="flex flex-col gap-16">

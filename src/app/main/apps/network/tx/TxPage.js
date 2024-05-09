@@ -35,56 +35,63 @@ function TxPage() {
     );
   }
 
-  console.log(tx);
   return (
     <div className="w-full">
       <div className="py-32 max-w-[960px] mx-auto px-12">
-        <Breadcrumbs aria-label="breadcrumb">
-          <HomeLink />
-          <Typography className="text-12 font-space text-gray-50">
-            {t('tick')} <TickLink value={tx?.tx.tickNumber} className="text-12" />
-          </Typography>
-          <Typography className="text-12 font-space text-primary-40 ">
-            {formatEllipsis(tx?.tx.txId)}
-          </Typography>
-        </Breadcrumbs>
-        <Typography className="text-24 leading-28 font-space my-16">
-          {t('transactionPreview')}
-        </Typography>
-        <div className="flex flex-col md:flex-row md:items-center gap-10 md:gap-16 mb-24">
-          <div className="">
-            <TxStatus executed={!(tx?.status?.moneyFlew === false)} />
-          </div>
-          <TxLink value={tx?.tx.txId} className="opacity-70" copy />
-        </div>
-        <SubCardItem
-          title={t('amount')}
-          content={
-            <Typography className="text-14 leading-20 font-space">
-              {formatString(tx?.tx.amount)} QUBIC
+        {tx?.tx ? (
+          <>
+            <Breadcrumbs aria-label="breadcrumb">
+              <HomeLink />
+              <Typography className="text-12 font-space text-gray-50">
+                {t('tick')} <TickLink value={tx?.tx?.tickNumber} className="text-12" />
+              </Typography>
+              <Typography className="text-12 font-space text-primary-40 ">
+                {formatEllipsis(tx?.tx?.txId)}
+              </Typography>
+            </Breadcrumbs>
+            <Typography className="text-24 leading-28 font-space my-16">
+              {t('transactionPreview')}
             </Typography>
-          }
-        />
-        <SubCardItem
-          title={t('type')}
-          content={
-            <Typography className="text-14 leading-20 font-space">
-              {formatString(tx?.tx.inputType)} {tx?.tx.inputType === 0 ? 'Standard' : 'SC'}
-            </Typography>
-          }
-        />
-        <SubCardItem
-          title={t('source')}
-          content={<AddressLink value={tx?.tx.sourceId} tickValue={tx?.tx.tick} copy />}
-        />
-        <SubCardItem
-          title={t('destination')}
-          content={<AddressLink value={tx?.tx.destId} tickValue={tx?.tx.tick} copy />}
-        />
-        <SubCardItem
-          title={t('tick')}
-          content={<TickLink value={tx?.tx.tickNumber} className="text-primary-40" />}
-        />
+            <div className="flex flex-col md:flex-row md:items-center gap-10 md:gap-16 mb-24">
+              <div className="">
+                <TxStatus executed={!(tx?.status?.moneyFlew === false)} />
+              </div>
+              <TxLink value={tx?.tx?.txId} className="opacity-70" copy />
+            </div>
+            <SubCardItem
+              title={t('amount')}
+              content={
+                <Typography className="text-14 leading-20 font-space">
+                  {formatString(tx?.tx?.amount)} QUBIC
+                </Typography>
+              }
+            />
+            <SubCardItem
+              title={t('type')}
+              content={
+                <Typography className="text-14 leading-20 font-space">
+                  {formatString(tx?.tx?.inputType)} {tx?.tx?.inputType === 0 ? 'Standard' : 'SC'}
+                </Typography>
+              }
+            />
+            <SubCardItem
+              title={t('source')}
+              content={<AddressLink value={tx?.tx?.sourceId} tickValue={tx?.tx.tick} copy />}
+            />
+            <SubCardItem
+              title={t('destination')}
+              content={<AddressLink value={tx?.tx?.destId} tickValue={tx?.tx.tick} copy />}
+            />
+            <SubCardItem
+              title={t('tick')}
+              content={<TickLink value={tx?.tx?.tickNumber} className="text-primary-40" />}
+            />
+          </>
+        ) : (
+          <Typography className="text-24 leading-28 font-space my-16 text-center">
+            Transaction not found
+          </Typography>
+        )}
       </div>
     </div>
   );
