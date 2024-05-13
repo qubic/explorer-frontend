@@ -169,7 +169,7 @@ function TxItem(props) {
           <Typography className="text-18 leading-20 font-space py-12">
             {entries.length} transactions
           </Typography>
-          <CardItem className="p-12 flex flex-col gap-8">
+          <CardItem className="p-12 md:p-16 flex flex-col gap-8">
             <div className="flex justify-between">
               <Typography className="text-14 leading-18 font-space text-gray-50">
                 {t('destination')}
@@ -181,7 +181,9 @@ function TxItem(props) {
             <div className="">
               {entries.map((item, index) => (
                 <div
-                  className="flex justify-between flex-col md:flex-row gap-8 border-b-[1px] py-12"
+                  className={`flex justify-between flex-col md:flex-row gap-8 ${
+                    index !== entries.length - 1 ? 'border-b-[1px] py-12 ' : 'pt-12'
+                  }`}
                   key={index}
                 >
                   <AddressLink value={item.destId} tickValue={tick} />
