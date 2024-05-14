@@ -1,50 +1,38 @@
 import { Typography, IconButton } from '@mui/material';
-import { formatString } from 'src/app/utils/functions';
+import { fetchEntries, formatString } from 'src/app/utils/functions';
 import { useTranslation } from 'react-i18next';
-import { QubicTransferSendManyPayload } from 'qubic-ts-library/dist/qubic-types/transacion-payloads/QubicTransferSendManyPayload';
 import { useEffect, useState } from 'react';
 import CardItem from './CardItem';
 import TxLink from './TxLink';
 import TxStatus from './TxStatus';
 import AddressLink from './AddressLink';
+import SubCardItem from './SubCardItem';
 
 function TxItem(props) {
   const { t } = useTranslation('networkPage');
   const [entries, setEntries] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
+
   const { txId, sourceId, tickNumber, destId, type, amount, data, nonExecutedTxIds } = props;
   console.log(nonExecutedTxIds);
 
   useEffect(() => {
-    const fetchData = async () => {
-      const binaryData = new Uint8Array(
-        atob(data)
-          .split('')
-          .map(function (c) {
-            return c.charCodeAt(0);
-          })
-      );
-      const sendManyPayload = binaryData.slice(binaryData.length - 1064, binaryData.length - 64);
-
-      const parsedSendManyPayload = await new QubicTransferSendManyPayload().parse(sendManyPayload);
-
-      const transfers = parsedSendManyPayload.getTransfers();
-
-      const standardizedData = transfers.map((item) => ({
-        amount: item.amount.value.toString(),
-        destId: item.destId.identity,
-      }));
-      setEntries(standardizedData);
-    };
     if (
       destId === 'EAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAVWRF' &&
       type === 1 &&
       data
     ) {
-      fetchData();
+      fetchEntries(data)
+        .then((resp) => {
+          setEntries(resp);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     }
   }, []);
 
+  if (variant === 'primary') {
   return (
     <CardItem className="flex flex-col pt-12 px-12 transition-all duration-300">
       <div className="flex flex-col md:flex-row md:items-center gap-10 md:gap-16 mb-14">
@@ -69,73 +57,117 @@ function TxItem(props) {
               <AddressLink value={destId} tickValue={tickNumber} copy />
             </div>
           </div>
-          <div className="flex flex-col sm:flex-row md:flex-col gap-24 pr-12">
-            <div className="flex flex-col gap-5 md:items-end">
+        </div>
+        {entries.length !== 0 && isOpen && (
+          <div
+            className={`p-12 bg-gray-70 flex flex-col gap-8 rounded-8 transition-all duration-300 ${
+              isOpen ? 'h-auto' : 'h-0'
+            }`}
+          >
+            <div className="flex justify-between">
               <Typography className="text-14 leading-18 font-space text-gray-50">
-                {t('type')}
+                {t('destination')}
               </Typography>
-              <Typography className="text-14 leading-18 font-space">
-                {formatString(type)} {type === 0 ? 'Standard' : 'SC'}
-              </Typography>
-            </div>
-            <div className="flex flex-col gap-5 md:items-end">
-              <Typography className="text-14 leading-18 font-space text-gray-50">
+              <Typography className="text-14 leading-18 font-space text-gray-50 hidden md:block">
                 {t('amount')}
               </Typography>
-              <Typography className="text-14 leading-18 font-space">
-                {formatString(amount)} QUBIC
-              </Typography>
+            </div>
+            <div className="">
+              {entries.map((item, index) => (
+                <div className="flex justify-between flex-col md:flex-row gap-8 py-8" key={index}>
+                  <AddressLink value={item.destId} tickValue={tick} />
+                  <Typography className="text-14 leading-18 font-space">
+                    {formatString(item.amount)} QUBIC
+                  </Typography>
+                </div>
+              ))}
             </div>
           </div>
+        )}
+        {entries.length !== 0 && (
+          <div className="py-16 text-center">
+            <IconButton className="rounded-8" onClick={() => setIsOpen((prev) => !prev)}>
+              <Typography className="text-center font-space text-14 mr-12 " role="button">
+                {isOpen ? 'Hide' : 'Show'} {entries.length} transactions
+              </Typography>
+              <img
+                className={`w-16 transition-transform duration-300 ${
+                  isOpen ? 'rotate-180' : 'rotate-0'
+                }`}
+                src="assets/icons/arrow-gray.svg"
+                alt="arrow"
+              />
+            </IconButton>
+          </div>
+        )}
+      </CardItem>
+    );
+  }
+  return (
+    <>
+      <div className="flex flex-col md:flex-row md:items-center gap-10 md:gap-16 mb-24">
+        <div className="">
+           <TxStatus executed={!(nonExecutedTxIds || []).includes(txId)} />
         </div>
+        <TxLink value={id} />
       </div>
-      {entries.length !== 0 && isOpen && (
-        <div
-          className={`p-12 bg-gray-70 flex flex-col gap-8 rounded-8 transition-all duration-300 ${
-            isOpen ? 'h-auto' : 'h-0'
-          }`}
-        >
-          <div className="flex justify-between">
-            <Typography className="text-14 leading-18 font-space text-gray-50">
-              {t('destination')}
-            </Typography>
-            <Typography className="text-14 leading-18 font-space text-gray-50">
-              {t('amount')}
-            </Typography>
-          </div>
-          {entries.map((item, index) => (
-            <div className="flex justify-between flex-col md:flex-row" key={index}>
-              <AddressLink value={item.destId} tickValue={tickNumber} />
-              <Typography className="text-14 leading-18 font-space">
-                {formatString(item.amount)} QUBIC
+      <SubCardItem
+        title={t('amount')}
+        content={
+          <Typography className="text-14 leading-20 font-space">
+            {formatString(amount)} QUBIC
+          </Typography>
+        }
+      />
+      <SubCardItem
+        title={t('type')}
+        content={
+          <Typography className="text-14 leading-20 font-space">
+            {formatString(type)} {type === 0 ? 'Standard' : 'SC'}
+          </Typography>
+        }
+      />
+      <SubCardItem
+        title={t('source')}
+        content={<AddressLink value={sourceId} tickValue={tick} />}
+      />
+      <SubCardItem
+        title={t('destination')}
+        content={<AddressLink value={destId} tickValue={tick} />}
+      />
+      {entries.length !== 0 && (
+        <>
+          <Typography className="text-18 leading-20 font-space py-12">
+            {entries.length} transactions
+          </Typography>
+          <CardItem className="p-12 md:p-16 flex flex-col gap-8">
+            <div className="flex justify-between">
+              <Typography className="text-14 leading-18 font-space text-gray-50">
+                {t('destination')}
+              </Typography>
+              <Typography className="text-14 leading-18 font-space text-gray-50 hidden md:block">
+                {t('amount')}
               </Typography>
             </div>
-          ))}
-        </div>
+            <div className="">
+              {entries.map((item, index) => (
+                <div
+                  className={`flex justify-between flex-col md:flex-row gap-8 ${
+                    index !== entries.length - 1 ? 'border-b-[1px] py-12 ' : 'pt-12'
+                  }`}
+                  key={index}
+                >
+                  <AddressLink value={item.destId} tickValue={tick} />
+                  <Typography className="text-14 leading-18 font-space">
+                    {formatString(item.amount)} QUBIC
+                  </Typography>
+                </div>
+              ))}
+            </div>
+          </CardItem>
+        </>
       )}
-      {entries.length !== 0 && (
-        <div className="py-16 text-center">
-          <IconButton
-            className="flex gap-10 items-center mx-auto"
-            sx={{
-              borderRadius: 2,
-            }}
-            onClick={() => setIsOpen((prev) => !prev)}
-          >
-            <Typography className="text-center font-space text-14" role="button">
-              {isOpen ? 'Hide' : 'Show'} {entries.length} entries
-            </Typography>
-            <img
-              className={`w-16 transition-transform duration-300 ${
-                isOpen ? 'rotate-180' : 'rotate-0'
-              }`}
-              src="assets/icons/arrow-gray.svg"
-              alt="arrow"
-            />
-          </IconButton>
-        </div>
-      )}
-    </CardItem>
+    </>
   );
 }
 
