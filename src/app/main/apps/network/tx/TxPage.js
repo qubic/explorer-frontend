@@ -5,7 +5,6 @@ import { Breadcrumbs, LinearProgress, Typography } from '@mui/material';
 
 import { formatEllipsis } from 'src/app/utils/functions';
 import { useTranslation } from 'react-i18next';
-import ErrorMessage from '../component/ErrorMessage';
 import TickLink from '../component/TickLink';
 import { getTx, selectTx, selectTxLoading } from '../store/txSlice';
 import HomeLink from '../component/HomeLink';
@@ -35,21 +34,28 @@ function TxPage() {
 
   return (
     <div className="w-full">
-      <ErrorMessage />
-      <div className="py-24 max-w-[960px] mx-auto px-12">
-        <Breadcrumbs aria-label="breadcrumb">
-          <HomeLink />
-          <Typography className="text-12 font-space text-gray-50">
-            {t('tick')} <TickLink value={tx?.tick} className="text-12" />
+      <div className="py-32 max-w-[960px] mx-auto px-12">
+        {tx?.tx ? (
+          <>
+            <Breadcrumbs aria-label="breadcrumb">
+              <HomeLink />
+              <Typography className="text-12 font-space text-gray-50">
+                {t('tick')} <TickLink value={tx?.tx?.tickNumber} className="text-12" />
+              </Typography>
+              <Typography className="text-12 font-space text-primary-40 ">
+                {formatEllipsis(tx?.tx?.txId)}
+              </Typography>
+            </Breadcrumbs>
+            <Typography className="text-24 leading-28 font-space my-16">
+              {t('transactionPreview')}
+            </Typography>
+            {tx?.tx && <TxItem {...tx?.tx} variant="secondary" />}
+          </>
+        ) : (
+          <Typography className="text-24 leading-28 font-space my-16 text-center">
+            Transaction not found
           </Typography>
-          <Typography className="text-12 font-space text-primary-40 ">
-            {formatEllipsis(tx?.id)}
-          </Typography>
-        </Breadcrumbs>
-        <Typography className="text-24 leading-28 font-space my-16">
-          {t('transactionPreview')}
-        </Typography>
-        {tx && <TxItem {...tx} variant="secondary" />}
+        )}
       </div>
     </div>
   );

@@ -1,12 +1,31 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 
+/**
+ * Fetch transaction information and status from the server.
+ * @param {string} txId - The ID of the transaction to fetch.
+ * @returns {Promise<Object>} A promise that resolves with the transaction information and status.
+ */
+
 export const getTx = createAsyncThunk('network/tx', async (txId, { getState }) => {
-  const response = await axios.get(`/Network/tx/${txId}`);
+  try {
+    const [infoResponse, statusResponse] = await Promise.all([
+      axios.get(`${process.env.REACT_APP_ARCHIEVER}/transactions/${txId}`).catch(() => null),
+      axios.get(`${process.env.REACT_APP_ARCHIEVER}/tx-status/${txId}`).catch(() => null),
+    ]);
 
-  const data = await response.data;
+    const txInfo = infoResponse ? infoResponse.data.transaction : null;
+    const txStatus = statusResponse ? statusResponse.data.transactionStatus : null;
 
-  return data;
+    const data = { tx: txInfo, status: txStatus };
+
+    console.log(data);
+
+    return data;
+  } catch (error) {
+    // Handle errors
+    throw new Error('Failed to fetch transaction data');
+  }
 });
 
 const txSlice = createSlice({

@@ -12,4 +12,10 @@ const suggestedLanguages = [
   { id: 'ar', title: 'العربية' },
 ];
 
-export default suggestedLanguages;
+const transactionOptions = [
+  { id: 'all', title: 'All transactions' },
+  { id: 'transfer', title: 'Transfer transactions' },
+  { id: 'approved', title: 'Approved transactions' },
+];
+
+export { suggestedLanguages, transactionOptions };

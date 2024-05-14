@@ -28,7 +28,8 @@ Before running the project, you must configure environment-specific variables fo
   Open this file and add the development API URL:
   
   ```
-  REACT_APP_API_URL=http://localhost:7003
+  REACT_APP_QLI_URL=http://localhost:7002
+  REACT_APP_ARCHIEVER=http://localhost:7003
   ```
 
 - **Production Environment**:
@@ -42,7 +43,8 @@ Before running the project, you must configure environment-specific variables fo
   Then, set the production API URL:
   
   ```
-  REACT_APP_API_URL=https://api.qubic.li
+  REACT_APP_QLI_URL=https://api.qubic.li
+  REACT_APP_ARCHIEVER=https://testapi.qubic.org/v1
   ```
 
 Ensure these files are not committed to the repository to protect sensitive information.

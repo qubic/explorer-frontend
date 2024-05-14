@@ -2,7 +2,12 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 
 export const getAddress = createAsyncThunk('network/address', async (addressId, { getState }) => {
-  const response = await axios.get(`/Network/Id/${addressId}`);
+  const token = window.localStorage.getItem('jwt_access_token');
+  const response = await axios.get(`${process.env.REACT_APP_QLI_URL}/Network/Id/${addressId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
 
   const data = await response.data;
 

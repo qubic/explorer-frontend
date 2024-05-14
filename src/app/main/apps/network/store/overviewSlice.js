@@ -2,7 +2,12 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 
 export const getOverview = createAsyncThunk('network/overview', async (params, { getState }) => {
-  const response = await axios.get(`/Network/TickOverview`);
+  const token = window.localStorage.getItem('jwt_access_token');
+  const response = await axios.get(`${process.env.REACT_APP_QLI_URL}/Network/TickOverview`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
   const data = await response.data;
   return data;
 });

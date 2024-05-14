@@ -3,9 +3,39 @@ import axios from 'axios';
 
 // Async thunk
 export const getBlock = createAsyncThunk('network/block', async (tick, { getState }) => {
-  const response = await axios.get(`/Network/Block?tick=${tick}`);
-  const data = await response.data;
-  return data;
+  try {
+    const tickDataResponse = await axios.get(
+      `${process.env.REACT_APP_ARCHIEVER}/ticks/${tick}/tick-data`
+    );
+    const { tickData } = tickDataResponse.data;
+
+    if (tickData?.epoch) {
+      const [txResponse, transferResponse, approvedResponse, epochResponse] = await Promise.all([
+        axios.get(`${process.env.REACT_APP_ARCHIEVER}/ticks/${tick}/transactions`),
+        axios.get(`${process.env.REACT_APP_ARCHIEVER}/ticks/${tick}/transfer-transactions`),
+        axios.get(`${process.env.REACT_APP_ARCHIEVER}/ticks/${tick}/approved-transactions`),
+        axios.get(`${process.env.REACT_APP_ARCHIEVER}/epochs/${tickData?.epoch}/computors`),
+      ]);
+      const txData = txResponse.data.transactions;
+      const transferData = transferResponse.data.transactions;
+      const approvedData = approvedResponse.data.approvedTransactions;
+      const epochData = epochResponse.data.computors;
+      const data = {
+        tick: tickData,
+        tx: txData,
+        transferTx: transferData,
+        approvedTx: approvedData,
+        epoch: epochData,
+      };
+
+      return data;
+    }
+
+    throw new Error('Failed to fetch transaction data');
+  } catch (error) {
+    // Handle errors
+    throw new Error('Failed to fetch transaction data');
+  }
 });
 
 // Slice with loading and error state

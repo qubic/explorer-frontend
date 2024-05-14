@@ -41,7 +41,7 @@ app.all('*', function (req, res, next) {
   }
 });
 
-app.set('port', 7003);
+app.set('port', 7002);
 
 app.listen(app.get('port'), function () {
   console.log(`Proxy server listening on port ${app.get('port')}`);
