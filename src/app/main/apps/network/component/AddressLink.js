@@ -1,22 +1,9 @@
-import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Typography } from '@mui/material';
-import { copyText } from 'src/app/utils/functions';
+import CopyText from './CopyText';
 
 function AddressLink(props) {
   const { value, tickValue, copy } = props;
-
-  const [isCopy, setIsCopy] = useState(false);
-
-  useEffect(() => {
-    if (isCopy) {
-      setTimeout(() => setIsCopy(false), 1000);
-    }
-  }, [isCopy]);
-  const handleCopy = () => {
-    copyText(value);
-    setIsCopy(true);
-  };
 
   return (
     <div className="flex gap-10 items-center">
@@ -28,19 +15,7 @@ function AddressLink(props) {
       >
         {value}
       </Typography>
-      {copy && (
-        <button
-          type="button"
-          className="w-14 h-14" // Adjust the button size for smaller screens
-          onClick={handleCopy}
-        >
-          {isCopy ? (
-            <img className="w-full" src="assets/icons/check.svg" alt="" />
-          ) : (
-            <img className="w-full" src="assets/icons/copy-text.svg" alt="" />
-          )}
-        </button>
-      )}
+      {copy && <CopyText text={value} />}
     </div>
   );
 }

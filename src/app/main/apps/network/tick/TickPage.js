@@ -234,7 +234,12 @@ function TickPage() {
             >
               <div className="flex flex-col gap-12">
                 {displayTransactions.map((item, index) => (
-                  <TxItem key={index} {...item} nonExecutedTxIds={nonExecutedTxIds} />
+                  <TxItem
+                    key={index}
+                    variant="primary"
+                    {...item}
+                    nonExecutedTxIds={nonExecutedTxIds}
+                  />
                 ))}
               </div>
             </InfiniteScroll>

@@ -2,16 +2,37 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 
 export const getAddress = createAsyncThunk('network/address', async (addressId, { getState }) => {
-  const token = window.localStorage.getItem('jwt_access_token');
-  const response = await axios.get(`${process.env.REACT_APP_QLI_URL}/Network/Id/${addressId}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+  try {
+    const token = window.localStorage.getItem('jwt_access_token');
+    const [qliAddressResponse, archStatusResponse] = await Promise.all([
+      axios.get(`${process.env.REACT_APP_QLI_URL}/Network/Id/${addressId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }),
+      axios.get(`${process.env.REACT_APP_ARCHIEVER}/status`),
+    ]);
+    const reportedData = qliAddressResponse.data?.reportedValues;
+    const endTick = archStatusResponse.data?.lastProcessedTick?.tickNumber;
+    if (endTick) {
+      console.log(endTick);
+      const archAddressResponse = await axios.get(
+        `${process.env.REACT_APP_ARCHIEVER}/identities/${addressId}/transfer-transactions?startTick=0&endTick=${endTick}`
+      );
+      const transferData = archAddressResponse.data.transferTransactionsPerTick;
 
-  const data = await response.data;
+      const data = {
+        reportedValues: reportedData,
+        transferTx: transferData,
+      };
 
-  return data;
+      console.log(data);
+      return data;
+    }
+    throw new Error('Failed to fetch address data');
+  } catch {
+    throw new Error('Failed to fetch address data');
+  }
 });
 
 const addressSlice = createSlice({

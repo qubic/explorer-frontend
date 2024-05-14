@@ -30,7 +30,7 @@ function TxLink(props) {
       {copy && (
         <button
           type="button"
-          className="w-14 h-14" // Adjust the button size for smaller screens
+          className="w-14 h-14 " // Adjust the button size for smaller screens
           onClick={handleCopy}
         >
           {isCopy ? (
