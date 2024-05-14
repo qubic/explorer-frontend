@@ -1,16 +1,9 @@
 import { QubicTransferSendManyPayload } from 'qubic-ts-library/dist/qubic-types/transacion-payloads/QubicTransferSendManyPayload';
 
 const fetchEntries = async (data) => {
-  const binaryData = new Uint8Array(
-    atob(data)
-      .split('')
-      .map(function (c) {
-        return c.charCodeAt(0);
-      })
-  );
-  const sendManyPayload = binaryData.slice(binaryData.length - 1064, binaryData.length - 64);
+  const binaryData = new Uint8Array(data.match(/.{1,2}/g).map((pair) => parseInt(pair, 16)));
 
-  const parsedSendManyPayload = await new QubicTransferSendManyPayload().parse(sendManyPayload);
+  const parsedSendManyPayload = await new QubicTransferSendManyPayload().parse(binaryData);
 
   const transfers = parsedSendManyPayload.getTransfers();
 
@@ -81,4 +74,4 @@ function copyText(textToCopy) {
   document.body.removeChild(input);
 }
 
-export { fetchEntries,formatString, formatDate, formatEllipsis, formatBase64, copyText };
+export { fetchEntries, formatString, formatDate, formatEllipsis, formatBase64, copyText };

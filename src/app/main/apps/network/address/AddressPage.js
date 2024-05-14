@@ -1,10 +1,12 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { useParams, useSearchParams } from 'react-router-dom';
-import { Breadcrumbs, LinearProgress, Typography } from '@mui/material';
+import { useParams } from 'react-router-dom';
+import { Breadcrumbs, LinearProgress, MenuItem, Select, Typography } from '@mui/material';
 import { formatEllipsis, formatString } from 'src/app/utils/functions';
 import { useTranslation } from 'react-i18next';
+import { transactionOptions } from 'src/app/utils/constants';
+import { ArrowIcon } from 'src/assets/icons/svg';
 import TxItem from '../component/TxItem';
 
 import CardItem from '../component/CardItem';
@@ -16,35 +18,40 @@ function AddressPage() {
   const { t } = useTranslation('networkPage');
   const routeParams = useParams();
   const { addressId } = routeParams;
-  const [searchParams] = useSearchParams();
-  const tick = searchParams.get('tick');
   const address = useSelector(selectAddress);
   const isLoading = useSelector(selectAddressLoading);
   const [displayTransactions, setDisplayTransactions] = useState([]);
   const [hasMore, setHasMore] = useState(true);
+  const [option, setOption] = useState('transfer');
   const batchSize = 5;
   const scrollRef = useRef(null);
   const dispatch = useDispatch();
+
+  const latestTransfers = useMemo(() => {
+    return (address?.transferTx || [])
+      .flatMap((item) => item.transactions)
+      .sort((a, b) => b.tickNumber - a.tickNumber);
+  }, [address]);
 
   useEffect(() => {
     dispatch(getAddress(addressId));
   }, [addressId, dispatch]);
 
   useEffect(() => {
-    if (address && address.latestTransfers) {
-      setDisplayTransactions(address.latestTransfers.slice(0, batchSize));
-      setHasMore(address.latestTransfers.length > batchSize);
+    if (latestTransfers) {
+      setDisplayTransactions(latestTransfers.slice(0, batchSize));
+      setHasMore(latestTransfers.length > batchSize);
     }
   }, [address]);
 
   const loadMoreTransactions = () => {
-    if (displayTransactions.length < address.latestTransfers.length) {
-      const nextTransactions = address.latestTransfers.slice(
+    if (displayTransactions.length < latestTransfers.length) {
+      const nextTransactions = latestTransfers.slice(
         displayTransactions.length,
         displayTransactions.length + batchSize
       );
       setDisplayTransactions((prevTransactions) => [...prevTransactions, ...nextTransactions]);
-      setHasMore(displayTransactions.length + batchSize < address.latestTransfers.length);
+      setHasMore(displayTransactions.length + batchSize < latestTransfers.length);
     } else {
       setHasMore(false);
     }
@@ -61,6 +68,10 @@ function AddressPage() {
     scrollElement.addEventListener('scroll', handleScroll);
     return () => scrollElement.removeEventListener('scroll', handleScroll);
   }, []);
+
+  const handleChange = (event) => {
+    setOption(event.target.value);
+  };
 
   if (isLoading) {
     return (
@@ -79,18 +90,12 @@ function AddressPage() {
       <div className="py-32 max-w-[960px] mx-auto px-12">
         <Breadcrumbs aria-label="breadcrumbs">
           <HomeLink />
-          <Typography className="text-12 font-space text-gray-50">
-            {t('tick')} <TickLink value={tick} className="text-12" />
-          </Typography>
           <Typography className="text-12 font-space text-primary-40 ">
-            {formatEllipsis(address?.id)}
+            {t('id')} {formatEllipsis(addressId)}
           </Typography>
         </Breadcrumbs>
-        <Typography className="font-space text-16 leading-20 mt-32 mb-12 text-gray-50">
-          {t('id')}
-        </Typography>
-        <Typography className="font-space text-24 leading-30 mb-32 break-all">
-          {address?.id}
+        <Typography className="font-space text-24 leading-30 my-32 break-all">
+          {addressId}
         </Typography>
         <Typography className="font-space text-14 leading-18 mb-12">
           {t('entityReportsFromRandomPeers')}
@@ -137,9 +142,31 @@ function AddressPage() {
               </CardItem>
             ))}
         </div>
-        <Typography className="text-20 leading-26 font-500 font-space mb-16">
-          {t('latestTransfers')}
-        </Typography>
+        <div className="flex justify-between items-center mb-10">
+          <Typography className="text-20 leading-26 font-500 font-space mb-16">
+            {t('latestTransfers')}
+          </Typography>
+          <Select
+            value={option}
+            onChange={handleChange}
+            className="border-gray-70 bg-gray-80 rounded-8 focus:border-gray-60"
+            IconComponent={ArrowIcon}
+            sx={{
+              minWidth: 225,
+              '&.Mui-focused fieldset': {
+                borderColor: '#4B5565 !important', // Your desired border color
+              },
+            }}
+          >
+            {transactionOptions
+              .filter((item) => item.id === 'transfer')
+              .map((item) => (
+                <MenuItem className="py-10 min-w-[164px]" key={item.id} value={item.id}>
+                  <Typography className="text-16 leading-20 font-space">{item.title}</Typography>
+                </MenuItem>
+              ))}
+          </Select>
+        </div>
         <InfiniteScroll
           dataLength={displayTransactions.length}
           next={loadMoreTransactions}
@@ -164,7 +191,7 @@ function AddressPage() {
         >
           <div className="flex flex-col gap-12">
             {displayTransactions.map((item, index) => (
-              <TxItem key={index} {...item} />
+              <TxItem key={index} {...item} variant="primary" />
             ))}
           </div>
         </InfiniteScroll>

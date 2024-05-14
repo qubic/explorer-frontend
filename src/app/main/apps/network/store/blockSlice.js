@@ -31,10 +31,10 @@ export const getBlock = createAsyncThunk('network/block', async (tick, { getStat
       return data;
     }
 
-    throw new Error('Failed to fetch transaction data');
+    throw new Error('Failed to fetch tick data');
   } catch (error) {
     // Handle errors
-    throw new Error('Failed to fetch transaction data');
+    throw new Error('Failed to fetch tick data');
   }
 });
 
