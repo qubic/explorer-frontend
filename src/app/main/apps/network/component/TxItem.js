@@ -57,7 +57,7 @@ function TxItem(props) {
               />
             )}
             {identify ? (
-              <TxLink
+              <AddressLink
                 value={identify === sourceId ? destId : sourceId}
                 className="text-primary-40"
                 ellipsis

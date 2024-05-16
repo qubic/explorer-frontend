@@ -1,9 +1,10 @@
 import { Link } from 'react-router-dom';
 import { Typography } from '@mui/material';
+import { formatEllipsis } from 'src/app/utils/functions';
 import CopyText from './CopyText';
 
 function AddressLink(props) {
-  const { value, tickValue, copy } = props;
+  const { value, tickValue, copy, ellipsis } = props;
 
   return (
     <div className="flex gap-10 items-center">
@@ -13,7 +14,7 @@ function AddressLink(props) {
         to={`/network/address/${value}?tick=${tickValue}`}
         role="button"
       >
-        {value}
+        {ellipsis ? formatEllipsis(value) : value}
       </Typography>
       {copy && <CopyText text={value} />}
     </div>
