@@ -7,13 +7,16 @@ import TxLink from './TxLink';
 import TxStatus from './TxStatus';
 import AddressLink from './AddressLink';
 import SubCardItem from './SubCardItem';
+import TickLink from './TickLink';
 
 function TxItem(props) {
   const { t } = useTranslation('networkPage');
   const [entries, setEntries] = useState([]);
-  const [isOpen, setIsOpen] = useState(false);
+  const [entriesOpen, setEntriesOpen] = useState(false);
+  const [detailsOpen, setDetailsOpen] = useState(false);
 
   const {
+    identify,
     txId,
     sourceId,
     tickNumber,
@@ -44,90 +47,117 @@ function TxItem(props) {
   if (variant === 'primary') {
     return (
       <CardItem className="flex flex-col p-12 transition-all duration-300">
-        <div className="flex flex-col md:flex-row md:items-center gap-10 md:gap-16 mb-14">
-          <div className="">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-8">
+          <div className="flex gap-8">
             <TxStatus executed={!(nonExecutedTxIds || []).includes(txId)} />
+            {identify && (
+              <img
+                src={`assets/icons/arrow-${identify === sourceId ? 'down' : 'up'}.svg`}
+                alt="arrow"
+              />
+            )}
+            {identify ? (
+              <TxLink
+                value={identify === sourceId ? destId : sourceId}
+                className="text-primary-40"
+                ellipsis
+                copy
+              />
+            ) : (
+              <TxLink value={txId} className="text-primary-40" ellipsis copy />
+            )}
           </div>
-          <TxLink value={txId} className="text-primary-40" copy />
+          <IconButton className="rounded-8 p-0" onClick={() => setDetailsOpen((prev) => !prev)}>
+            <Typography className="text-center font-space text-14 mr-12 " role="button">
+              {formatString(amount)} QUBIC
+            </Typography>
+            <img
+              className={`w-16 transition-transform duration-300 ${
+                detailsOpen ? 'rotate-180' : 'rotate-0'
+              }`}
+              src="assets/icons/arrow-gray.svg"
+              alt="arrow"
+            />
+          </IconButton>
         </div>
-        <div className="flex flex-col pt-12 border-t-[1px] border-gray-70">
-          <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-16 pb-12">
-            <div className="flex flex-col gap-16">
-              <div className="flex flex-col gap-8">
-                <Typography className="text-14 leading-18 font-space text-gray-50">
-                  {t('source')}
-                </Typography>
-                <AddressLink value={sourceId} tickValue={tickNumber} copy />
-              </div>
-              <div className="flex flex-col gap-8">
-                <Typography className="text-14 leading-18 font-space text-gray-50">
-                  {t('destination')}
-                </Typography>
-                <AddressLink value={destId} tickValue={tickNumber} copy />
-              </div>
-            </div>
-            <div className="flex flex-col sm:flex-row md:flex-col gap-24 pr-12">
-              <div className="flex flex-col gap-5 md:items-end">
-                <Typography className="text-14 leading-18 font-space text-gray-50">
-                  {t('type')}
-                </Typography>
+        {detailsOpen && (
+          <div className="flex flex-col gap-12 pt-12 mt-14 border-t-[1px] border-gray-70">
+            <SubCardItem
+              title={`TX ${t('id')}`}
+              variant="primary"
+              content={<TxLink className="text-primary-40 text-14" value={txId} copy />}
+            />
+            <SubCardItem
+              title={t('source')}
+              variant="primary"
+              content={<AddressLink value={sourceId} tickValue={tickNumber} copy />}
+            />
+            <SubCardItem
+              title={t('destination')}
+              variant="primary"
+              content={<AddressLink value={destId} tickValue={tickNumber} copy />}
+            />
+            <SubCardItem
+              title={t('tick')}
+              variant="primary"
+              content={<TickLink className="text-primary-40" value={tickNumber} />}
+            />
+            <SubCardItem
+              title={t('type')}
+              variant="primary"
+              content={
                 <Typography className="text-14 leading-18 font-space">
                   {formatString(inputType)} {inputType === 0 ? 'Standard' : 'SC'}
                 </Typography>
+              }
+            />
+            {entries.length !== 0 && entriesOpen && (
+              <div
+                className={`my-8 p-12 bg-gray-70 flex flex-col gap-8 rounded-8 transition-all duration-300 ${
+                  entriesOpen ? 'h-auto' : 'h-0'
+                }`}
+              >
+                <div className="flex justify-between">
+                  <Typography className="text-14 leading-18 font-space text-gray-50">
+                    {t('destination')}
+                  </Typography>
+                  <Typography className="text-14 leading-18 font-space text-gray-50 hidden md:block">
+                    {t('amount')}
+                  </Typography>
+                </div>
+                <div className="">
+                  {entries.map((item, index) => (
+                    <div
+                      className="flex justify-between flex-col md:flex-row gap-8 py-8"
+                      key={index}
+                    >
+                      <AddressLink value={item.destId} tickValue={tickNumber} />
+                      <Typography className="text-14 leading-18 font-space">
+                        {formatString(item.amount)} QUBIC
+                      </Typography>
+                    </div>
+                  ))}
+                </div>
               </div>
-              <div className="flex flex-col gap-5 md:items-end">
-                <Typography className="text-14 leading-18 font-space text-gray-50">
-                  {t('amount')}
-                </Typography>
-                <Typography className="text-14 leading-18 font-space">
-                  {formatString(amount)} QUBIC
-                </Typography>
+            )}
+            {entries.length !== 0 && (
+              <div className="text-center">
+                <IconButton className="rounded-8" onClick={() => setEntriesOpen((prev) => !prev)}>
+                  <Typography className="text-center font-space text-14 mr-12 " role="button">
+                    {entriesOpen ? 'Hide' : 'Show'} {entries.length} transactions
+                  </Typography>
+                  <img
+                    className={`w-16 transition-transform duration-300 ${
+                      entriesOpen ? 'rotate-180' : 'rotate-0'
+                    }`}
+                    src="assets/icons/arrow-gray.svg"
+                    alt="arrow"
+                  />
+                </IconButton>
               </div>
-            </div>
+            )}
           </div>
-          {entries.length !== 0 && isOpen && (
-            <div
-              className={`my-8 p-12 bg-gray-70 flex flex-col gap-8 rounded-8 transition-all duration-300 ${
-                isOpen ? 'h-auto' : 'h-0'
-              }`}
-            >
-              <div className="flex justify-between">
-                <Typography className="text-14 leading-18 font-space text-gray-50">
-                  {t('destination')}
-                </Typography>
-                <Typography className="text-14 leading-18 font-space text-gray-50 hidden md:block">
-                  {t('amount')}
-                </Typography>
-              </div>
-              <div className="">
-                {entries.map((item, index) => (
-                  <div className="flex justify-between flex-col md:flex-row gap-8 py-8" key={index}>
-                    <AddressLink value={item.destId} tickValue={tickNumber} />
-                    <Typography className="text-14 leading-18 font-space">
-                      {formatString(item.amount)} QUBIC
-                    </Typography>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-          {entries.length !== 0 && (
-            <div className="text-center">
-              <IconButton className="rounded-8" onClick={() => setIsOpen((prev) => !prev)}>
-                <Typography className="text-center font-space text-14 mr-12 " role="button">
-                  {isOpen ? 'Hide' : 'Show'} {entries.length} transactions
-                </Typography>
-                <img
-                  className={`w-16 transition-transform duration-300 ${
-                    isOpen ? 'rotate-180' : 'rotate-0'
-                  }`}
-                  src="assets/icons/arrow-gray.svg"
-                  alt="arrow"
-                />
-              </IconButton>
-            </div>
-          )}
-        </div>
+        )}
       </CardItem>
     );
   }
@@ -138,7 +168,7 @@ function TxItem(props) {
         <div className="">
           <TxStatus executed={!(nonExecutedTxIds || []).includes(txId)} />
         </div>
-        <TxLink value={txId} />
+        <TxLink className="text-16 text-gray-50" value={txId} />
       </div>
       <SubCardItem
         title={t('amount')}
@@ -163,6 +193,10 @@ function TxItem(props) {
       <SubCardItem
         title={t('destination')}
         content={<AddressLink value={destId} tickValue={tickNumber} />}
+      />
+      <SubCardItem
+        title={t('tick')}
+        content={<TickLink className="text-primary-40" value={tickNumber} />}
       />
       {entries.length !== 0 && (
         <>

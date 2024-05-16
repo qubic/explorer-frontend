@@ -4,15 +4,18 @@ import axios from 'axios';
 export const getAddress = createAsyncThunk('network/address', async (addressId, { getState }) => {
   try {
     const token = window.localStorage.getItem('jwt_access_token');
-    const [qliAddressResponse, archStatusResponse] = await Promise.all([
+    const [qliAddressResponse, archStatusResponse, archBalanceResponse] = await Promise.all([
       axios.get(`${process.env.REACT_APP_QLI_URL}/Network/Id/${addressId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       }),
       axios.get(`${process.env.REACT_APP_ARCHIEVER}/status`),
+      axios.get(`${process.env.REACT_APP_ARCHIEVER}/balances/${addressId}`),
     ]);
+
     const reportedData = qliAddressResponse.data?.reportedValues;
+    const balanceData = archBalanceResponse.data?.balance;
     const endTick = archStatusResponse.data?.lastProcessedTick?.tickNumber;
     if (endTick) {
       console.log(endTick);
@@ -24,6 +27,7 @@ export const getAddress = createAsyncThunk('network/address', async (addressId, 
       const data = {
         reportedValues: reportedData,
         transferTx: transferData,
+        balance: balanceData,
       };
 
       console.log(data);
