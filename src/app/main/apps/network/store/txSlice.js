@@ -19,8 +19,6 @@ export const getTx = createAsyncThunk('network/tx', async (txId, { getState }) =
 
     const data = { tx: txInfo, status: txStatus };
 
-    console.log(data);
-
     return data;
   } catch (error) {
     // Handle errors

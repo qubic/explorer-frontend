@@ -10,6 +10,7 @@ import {
   Typography,
   MenuItem,
   Select,
+  useMediaQuery,
 } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -38,6 +39,8 @@ function TickPage() {
   const batchSize = 15;
   const scrollRef = useRef(null);
   const [option, setOption] = useState('all');
+  const isMobile = useMediaQuery('(max-width:500px)');
+
   const nonExecutedTxIds = useMemo(() => {
     return _.differenceBy(block?.transferTx || [], block?.approvedTx || [], 'txId').map(
       (item) => item.txId
@@ -166,11 +169,7 @@ function TickPage() {
             <SubCardItem
               title={t('tickLeader')}
               content={
-                <AddressLink
-                  value={block?.epoch.identities[+block?.tick.computorIndex]}
-                  tickValue={tick}
-                  copy
-                />
+                <AddressLink value={block?.epoch.identities[+block?.tick.computorIndex]} copy />
               }
             />
           </div>
@@ -195,7 +194,7 @@ function TickPage() {
                 className="border-gray-70 bg-gray-80 rounded-8 focus:border-gray-60"
                 IconComponent={ArrowIcon}
                 sx={{
-                  minWidth: 225,
+                  minWidth: isMobile ? 120 : 225,
                   '&.Mui-focused fieldset': {
                     borderColor: '#4B5565 !important', // Your desired border color
                   },
@@ -203,7 +202,9 @@ function TickPage() {
               >
                 {transactionOptions.map((item) => (
                   <MenuItem className="py-10 min-w-[164px]" key={item.id} value={item.id}>
-                    <Typography className="text-16 leading-20 font-space">{item.title}</Typography>
+                    <Typography className="text-16 leading-20 font-space">
+                      {isMobile ? item.title.split(' ')[0] : item.title}
+                    </Typography>
                   </MenuItem>
                 ))}
               </Select>
