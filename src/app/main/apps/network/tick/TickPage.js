@@ -35,7 +35,7 @@ function TickPage() {
   const [selectedTx, setSelectedTx] = useState([]);
   const [displayTransactions, setDisplayTransactions] = useState([]);
   const [hasMore, setHasMore] = useState(true);
-  const batchSize = 5;
+  const batchSize = 15;
   const scrollRef = useRef(null);
   const [option, setOption] = useState('all');
   const nonExecutedTxIds = useMemo(() => {
@@ -103,8 +103,6 @@ function TickPage() {
       </div>
     );
   }
-
-  console.log(block);
 
   return (
     <div
