@@ -1,11 +1,18 @@
 import { useEffect, useState } from 'react';
-import { Input, IconButton, LinearProgress, Modal, useTheme } from '@mui/material';
+import { Input, IconButton, LinearProgress, Modal, useTheme, Typography } from '@mui/material';
 import withReducer from 'app/store/withReducer';
 import { useDispatch, useSelector } from 'react-redux';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
+import { formatBase64, formatDate, formatString } from 'src/app/utils/functions';
 import reducer from './store';
-import { getSearch, resetSearch, selectSearch, selectSearchLoading } from './store/searchSlice';
+import {
+  getSearch,
+  resetSearch,
+  selectSearch,
+  selectSearchError,
+  selectSearchLoading,
+} from './store/searchSlice';
 import ResultItem from './ResultItem';
 
 function SearchBar() {
@@ -16,40 +23,43 @@ function SearchBar() {
   const isLoading = useSelector(selectSearchLoading);
   const [open, setOpen] = useState(false);
   const [keyword, setKeyword] = useState('');
-  const [addressSearch, setAddressSearch] = useState('');
-  const sortedByType = searchResult?.reduce((acc, item) => {
-    if (!acc[item.type]) {
-      acc[item.type] = [];
+  const error = useSelector(selectSearchError);
+
+  const evaluateType = () => {
+    if (keyword.trim().length === 60) {
+      if (/^[A-Z\s]+$/.test(keyword.trim())) {
+        return 'address';
+      }
+      if (/^[a-z]+$/.test(keyword.trim())) {
+        return 'tx';
+      }
+    } else if (parseInt(keyword.replace(/,/g, ''), 10).toString().length === 8) {
+      return 'tick';
     }
-    acc[item.type].push(item);
-    return acc;
-  }, {});
+    return '';
+  };
 
   const handleKeyPress = (event) => {
     if (event.key === 'Enter' && keyword !== '') {
-      if (keyword.trim().length === 60) {
-        if (/^[A-Z\s]+$/.test(keyword.trim())) {
-          navigate(`/network/address/${keyword.trim()}`);
-        } else if (/^[a-z]+$/.test(keyword)) {
-          navigate(`/network/tx/${keyword.trim()}`);
-        }
-      }
-      if (parseInt(keyword.replace(/,/g, ''), 10).toString().length === 8) {
+      const type = evaluateType();
+      event.preventDefault();
+      if (type === 'address') {
+        navigate(`/network/address/${keyword.trim()}`);
+      } else if (type === 'tx') {
+        navigate(`/network/tx/${keyword.trim()}`);
+      } else if (type === 'tick') {
         navigate(`/network/tick/${parseInt(keyword.replace(/,/g, ''), 10)}`);
+      } else {
+        navigate('/404');
       }
       handleClose();
     }
   };
-
   useEffect(() => {
     const timerId = setTimeout(() => {
-      if (keyword.trim().length === 60 && /^[A-Z\s]+$/.test(keyword.trim())) {
-        setAddressSearch(keyword.trim());
-        return;
-      }
-
+      const type = evaluateType();
       if (keyword && keyword.length > 1) {
-        dispatch(getSearch(keyword.trim()));
+        dispatch(getSearch({ query: keyword.trim(), type }));
       }
     }, 1000);
     return () => clearTimeout(timerId);
@@ -59,7 +69,6 @@ function SearchBar() {
     setOpen(false);
     dispatch(resetSearch());
     setKeyword('');
-    setAddressSearch('');
   };
 
   return (
@@ -123,45 +132,60 @@ function SearchBar() {
               <img className="w-24 h-24" src="assets/icons/xmark.svg" alt="xmark" />
             </IconButton>
           </motion.div>
-          {addressSearch && (
-            <div className="max-h-[320px] overflow-auto max-w-[800px] mx-auto">
-              <ResultItem
-                icon={
-                  <img className="w-16 h-16 mr-6" src="assets/icons/grid-add.svg" alt="address" />
-                }
-                title="Qubic Address"
-                link="/network/address/"
-                address={addressSearch}
-                handleClose={handleClose}
-              />
+          {error && (
+            <div className="mt-12 max-w-[800px] mx-auto">
+              <Typography className="text-center font-space ">No result</Typography>
             </div>
           )}
-          {sortedByType && (
+          {searchResult && (
             <div className="max-h-[320px] overflow-auto max-w-[800px] mx-auto">
-              {sortedByType?.[2]?.length > 0 && (
+              {searchResult?.balance && (
+                <ResultItem
+                  icon={
+                    <img className="w-16 h-16 mr-6" src="assets/icons/grid-add.svg" alt="address" />
+                  }
+                  title="Qubic Address"
+                  link={`/network/address/${searchResult?.balance?.id}`}
+                  content={
+                    <p>
+                      {searchResult?.balance?.id} <span className="text-gray-50">Balance:</span>{' '}
+                      {formatString(searchResult?.balance?.balance)}
+                    </p>
+                  }
+                />
+              )}
+              {searchResult?.transaction && (
                 <ResultItem
                   icon={
                     <img
                       className="w-16 h-16 mr-6"
-                      src="assets/icons/grid-view.svg"
-                      alt="address"
+                      src="assets/icons/camera.svg"
+                      alt="transaction"
                     />
                   }
-                  title="Tick/Block"
-                  link="/network/tick/"
-                  items={sortedByType[2]}
-                  handleClose={handleClose}
+                  title="Transaction"
+                  content={
+                    <p>
+                      {searchResult?.transaction?.txId} <span className="text-gray-50">Tick:</span>{' '}
+                      {formatString(searchResult?.transaction?.tickNumber)}
+                    </p>
+                  }
+                  link={`/network/tx/${searchResult?.transaction?.txId}`}
                 />
               )}
-              {sortedByType?.[1]?.length > 0 && (
+              {searchResult?.tickData && (
                 <ResultItem
-                  icon={
-                    <img className="w-16 h-16 mr-6" src="assets/icons/camera.svg" alt="address" />
+                  icon={<img className="w-16 h-16 mr-6" src="assets/icons/camera.svg" alt="tick" />}
+                  title="Tick"
+                  content={
+                    <p>
+                      {formatBase64(searchResult?.tickData?.signatureHex)}{' '}
+                      <span className="text-gray-50">from</span>{' '}
+                      {formatDate(searchResult?.tickData?.timestamp)}
+                    </p>
                   }
-                  title="Transaction"
-                  link="/network/tx/"
-                  items={sortedByType[1]}
-                  handleClose={handleClose}
+                  link={`/network/tick/${searchResult?.tickData?.tickNumber}`}
+                  items={searchResult?.tickData?.transactionIds}
                 />
               )}
             </div>

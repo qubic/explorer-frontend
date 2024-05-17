@@ -2,16 +2,24 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 
 // Async thunk
-export const getSearch = createAsyncThunk('search', async (query, { getState }) => {
-  const token = window.localStorage.getItem('jwt_access_token');
-  const response = await axios.get(
-    `${process.env.REACT_APP_QLI_URL}/Search/Query?searchTerm=${query}`,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+export const getSearch = createAsyncThunk('search', async ({ query, type }, { getState }) => {
+  const getRequestUrl = () => {
+    switch (type) {
+      case 'address':
+        return `${process.env.REACT_APP_ARCHIEVER}/balances/${query}`;
+      case 'tx':
+        return `${process.env.REACT_APP_ARCHIEVER}/transactions/${query}`;
+      case 'tick':
+        return `${process.env.REACT_APP_ARCHIEVER}/ticks/${parseInt(
+          query.replace(/,/g, ''),
+          10
+        )}/tick-data`;
+      default:
+        throw new Error('Invalid search type');
     }
-  );
+  };
+
+  const response = await axios.get(getRequestUrl());
   const data = await response.data;
   return data;
 });

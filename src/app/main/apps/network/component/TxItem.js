@@ -90,12 +90,12 @@ function TxItem(props) {
             <SubCardItem
               title={t('source')}
               variant="primary"
-              content={<AddressLink value={sourceId} tickValue={tickNumber} copy />}
+              content={<AddressLink value={sourceId} copy />}
             />
             <SubCardItem
               title={t('destination')}
               variant="primary"
-              content={<AddressLink value={destId} tickValue={tickNumber} copy />}
+              content={<AddressLink value={destId} copy />}
             />
             <SubCardItem
               title={t('tick')}
@@ -131,7 +131,7 @@ function TxItem(props) {
                       className="flex justify-between flex-col md:flex-row gap-8 py-8"
                       key={index}
                     >
-                      <AddressLink value={item.destId} tickValue={tickNumber} />
+                      <AddressLink value={item.destId} />
                       <Typography className="text-14 leading-18 font-space">
                         {formatString(item.amount)} QUBIC
                       </Typography>
@@ -186,14 +186,8 @@ function TxItem(props) {
           </Typography>
         }
       />
-      <SubCardItem
-        title={t('source')}
-        content={<AddressLink value={sourceId} tickValue={tickNumber} />}
-      />
-      <SubCardItem
-        title={t('destination')}
-        content={<AddressLink value={destId} tickValue={tickNumber} />}
-      />
+      <SubCardItem title={t('source')} content={<AddressLink value={sourceId} />} />
+      <SubCardItem title={t('destination')} content={<AddressLink value={destId} />} />
       <SubCardItem
         title={t('tick')}
         content={<TickLink className="text-primary-40" value={tickNumber} />}
@@ -220,7 +214,7 @@ function TxItem(props) {
                   }`}
                   key={index}
                 >
-                  <AddressLink value={item.destId} tickValue={tickNumber} />
+                  <AddressLink value={item.destId} />
                   <Typography className="text-14 leading-18 font-space">
                     {formatString(item.amount)} QUBIC
                   </Typography>

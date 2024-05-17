@@ -3,7 +3,6 @@ import { Typography } from '@mui/material';
 function SubCardItem(props) {
   const { title, content, variant } = props;
 
-  console.log(variant);
   if (variant === 'primary') {
     return (
       <div className="flex flex-col md:flex-row md:justify-between gap-8">

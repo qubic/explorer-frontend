@@ -18,7 +18,6 @@ export const getAddress = createAsyncThunk('network/address', async (addressId, 
     const balanceData = archBalanceResponse.data?.balance;
     const endTick = archStatusResponse.data?.lastProcessedTick?.tickNumber;
     if (endTick) {
-      console.log(endTick);
       const archAddressResponse = await axios.get(
         `${process.env.REACT_APP_ARCHIEVER}/identities/${addressId}/transfer-transactions?startTick=0&endTick=${endTick}`
       );
@@ -30,7 +29,6 @@ export const getAddress = createAsyncThunk('network/address', async (addressId, 
         balance: balanceData,
       };
 
-      console.log(data);
       return data;
     }
     throw new Error('Failed to fetch address data');
