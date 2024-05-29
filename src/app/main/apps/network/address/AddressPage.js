@@ -1,11 +1,11 @@
-import { useEffect, useState, useRef, useMemo, useCallback } from 'react';
+import { useEffect, useState, useMemo, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Breadcrumbs, LinearProgress, Typography, IconButton } from '@mui/material';
 import { formatEllipsis, formatString } from 'src/app/utils/functions';
-
+import axios from 'axios';
 import TxItem from '../component/TxItem';
 import CardItem from '../component/CardItem';
 import TickLink from '../component/TickLink';
@@ -20,35 +20,70 @@ function AddressPage() {
   const address = useSelector(selectAddress);
   const isLoading = useSelector(selectAddressLoading);
   const [displayTransactions, setDisplayTransactions] = useState([]);
+  const [transferTx, setTransferTx] = useState([]);
+  const [tick, setTick] = useState(0);
   const [hasMore, setHasMore] = useState(true);
   const [entityOpen, setEntityOpen] = useState(false);
-  const [option, setOption] = useState('transfer');
   const batchSize = 15;
-  const scrollRef = useRef(null);
+  const tickSize = 100000;
   const dispatch = useDispatch();
+  const [load, setLoad] = useState(false);
 
   const latestTransfers = useMemo(() => {
-    return (address?.transferTx || [])
+    return (transferTx || [])
       .flatMap((item) => item.transactions)
       .sort((a, b) => b.tickNumber - a.tickNumber);
+  }, [transferTx]);
+
+  const endTick = useMemo(() => {
+    return address?.endTick;
   }, [address]);
+
+  useEffect(() => {
+    fetchMoreTransactions();
+  }, [tick]);
+
+  useEffect(() => {
+    console.log('endTick', endTick);
+    setTick(+endTick);
+  }, [endTick]);
+
+  const fetchMoreTransactions = () => {
+    if (!load && tick) {
+      console.log('fetch -->', tick);
+      const newTick = tick - tickSize;
+      setTick(newTick);
+      if (newTick && newTick - tickSize > tickSize) {
+        setLoad(true);
+        console.log('req', newTick);
+        axios
+          .get(
+            `${
+              process.env.REACT_APP_ARCHIEVER
+            }/identities/${addressId}/transfer-transactions?startTick=${
+              +newTick - tickSize + 1
+            }&endTick=${newTick}`
+          )
+          .then((response) => {
+            if (response.data?.transferTransactionsPerTick?.length === 0) {
+              fetchMoreTransactions();
+            } else {
+              setTransferTx((prev) => [...prev, ...response.data?.transferTransactionsPerTick]);
+              setLoad(false);
+            }
+          })
+          .catch((error) => {
+            setLoad(false);
+            console.log(error);
+          });
+      }
+    }
+  };
 
   const renderTxItem = useCallback(
     (item, index) => <TxItem key={index} {...item} identify={addressId} variant="primary" />,
     [displayTransactions]
   );
-
-  useEffect(() => {
-    dispatch(getAddress(addressId));
-  }, [addressId, dispatch]);
-
-  useEffect(() => {
-    if (latestTransfers) {
-      setDisplayTransactions(latestTransfers.slice(0, batchSize));
-      setHasMore(latestTransfers.length > batchSize);
-    }
-  }, [address]);
-
   const loadMoreTransactions = () => {
     if (displayTransactions.length < latestTransfers.length) {
       const nextTransactions = latestTransfers.slice(
@@ -63,19 +98,25 @@ function AddressPage() {
   };
 
   useEffect(() => {
-    const scrollElement = scrollRef.current;
-    const handleScroll = () => {
-      if (scrollElement.scrollTop + scrollElement.clientHeight >= scrollElement.scrollHeight) {
-        console.log('');
+    dispatch(getAddress(addressId));
+  }, [addressId, dispatch]);
+
+  useEffect(() => {
+    if (latestTransfers) {
+      setDisplayTransactions(latestTransfers.slice(0, batchSize));
+      setHasMore(latestTransfers.length > batchSize);
+    }
+  }, [latestTransfers]);
+
+  const handleScroll = (scrollElement) => {
+    const { scrollTop, clientHeight, scrollHeight } = scrollElement.currentTarget;
+    if (scrollHeight - scrollTop === clientHeight) {
+      console.log('tick ______>', tick, tickSize, load);
+      if (tick > tickSize) {
+        fetchMoreTransactions();
       }
-    };
-
-    scrollElement.addEventListener('scroll', handleScroll);
-    return () => scrollElement.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  const handleChange = (event) => {
-    setOption(event.target.value);
+      console.log('');
+    }
   };
 
   if (isLoading) {
@@ -90,7 +131,7 @@ function AddressPage() {
     <div
       className="w-full max-h-[calc(100vh-76px)] overflow-y-auto"
       id="scrollableDiv"
-      ref={scrollRef}
+      onScroll={handleScroll}
     >
       <div className="py-16 max-w-[960px] mx-auto px-12">
         <Breadcrumbs aria-label="breadcrumbs" className="py-16">
@@ -170,26 +211,6 @@ function AddressPage() {
           <Typography className="text-20 leading-26 font-500 font-space mb-16">
             {t('latestTransfers')}
           </Typography>
-          {/* <Select
-            value={option}
-            onChange={handleChange}
-            className="border-gray-70 bg-gray-80 rounded-8 focus:border-gray-60"
-            IconComponent={ArrowIcon}
-            sx={{
-              minWidth: 225,
-              '&.Mui-focused fieldset': {
-                borderColor: '#4B5565 !important', // Your desired border color
-              },
-            }}
-          >
-            {transactionOptions
-              .filter((item) => item.id === 'transfer')
-              .map((item) => (
-                <MenuItem className="py-10 min-w-[164px]" key={item.id} value={item.id}>
-                  <Typography className="text-16 leading-20 font-space">{item.title}</Typography>
-                </MenuItem>
-              ))}
-          </Select> */}
         </div>
         <InfiniteScroll
           dataLength={displayTransactions.length}
@@ -202,15 +223,11 @@ function AddressPage() {
             </Typography>
           }
           endMessage={
-            displayTransactions.length === 0 ? (
-              <Typography className="text-14 font-bold py-10 text-center">
-                There are no transactions
-              </Typography>
-            ) : (
-              <Typography className="text-14 font-bold py-10 text-center">
-                You have seen all transactions
-              </Typography>
-            )
+            <Typography className="text-14 font-bold py-10 text-center">
+              {displayTransactions.length === 0
+                ? 'There are no transactions'
+                : 'You have seen all transactions'}
+            </Typography>
           }
         >
           <div className="flex flex-col gap-12">

@@ -17,21 +17,22 @@ export const getAddress = createAsyncThunk('network/address', async (addressId, 
     const reportedData = qliAddressResponse.data?.reportedValues;
     const balanceData = archBalanceResponse.data?.balance;
     const endTick = archStatusResponse.data?.lastProcessedTick?.tickNumber;
-    if (endTick) {
-      const archAddressResponse = await axios.get(
-        `${process.env.REACT_APP_ARCHIEVER}/identities/${addressId}/transfer-transactions?startTick=0&endTick=${endTick}`
-      );
-      const transferData = archAddressResponse.data.transferTransactionsPerTick;
+    const data = {
+      reportedValues: reportedData,
+      endTick,
+      // transferTx: transferData,
+      balance: balanceData,
+    };
 
-      const data = {
-        reportedValues: reportedData,
-        transferTx: transferData,
-        balance: balanceData,
-      };
+    return data;
+    // if (endTick) {
+    //   const archAddressResponse = await axios.get(
+    //     `${process.env.REACT_APP_ARCHIEVER}/identities/${addressId}/transfer-transactions?startTick=${0}&endTick=${endTick}`
+    //   );
+    //   const transferData = archAddressResponse.data.transferTransactionsPerTick;
 
-      return data;
-    }
-    throw new Error('Failed to fetch address data');
+    // }
+    // throw new Error('Failed to fetch address data');
   } catch {
     throw new Error('Failed to fetch address data');
   }
