@@ -151,8 +151,11 @@ function AddressPage() {
         </Typography>
         <div className="py-24">
           <IconButton className="rounded-8 p-0" onClick={() => setEntityOpen((prev) => !prev)}>
-            <Typography className="text-center font-space text-14 mr-12 " role="button">
-              {entityOpen ? 'Hide' : 'Show'} {t('entityReportsFromRandomPeers')}
+            <Typography
+              className="text-center text-gray-50 font-space text-14 mr-12 "
+              role="button"
+            >
+              {entityOpen ? 'Hide' : 'Show'} Entity Reports
             </Typography>
             <img
               className={`w-16 transition-transform duration-300 ${
