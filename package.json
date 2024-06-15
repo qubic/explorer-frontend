@@ -32,6 +32,7 @@
     "i18next": "21.8.14",
     "jwt-decode": "3.1.2",
     "keycode": "2.2.1",
+    "lint-staged": "^15.2.7",
     "lodash": "4.17.21",
     "mobile-detect": "1.4.5",
     "moment": "2.29.4",
@@ -118,6 +119,7 @@
     "build-docs": "babel-node --presets @babel/preset-env src/app/main/documentation/material-ui-components/build.js",
     "analyze": "react-app-rewired build && source-map-explorer 'build/static/js/*.js' --html analyze-result.html",
     "lint": "eslint . --fix",
+    "format": "prettier --write .",
     "prepare": "husky"
   },
   "engines": {
@@ -134,6 +136,12 @@
       "last 1 chrome version",
       "last 1 firefox version",
       "last 3 safari version"
+    ]
+  },
+  "lint-staged": {
+    "*.js": [
+      "prettier --write",
+      "eslint --fix"
     ]
   }
 }
