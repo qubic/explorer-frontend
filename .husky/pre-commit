@@ -1,2 +1,2 @@
-npm run lint
-git add .
+#!/bin/bash
+npx --no-install lint-staged
