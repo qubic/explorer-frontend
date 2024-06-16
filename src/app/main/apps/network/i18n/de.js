@@ -37,6 +37,11 @@ const locale = {
   type: 'Typ',
   unexecuted: 'nicht ausgeführt',
   value: 'Wert',
+  loadMore: 'Mehr laden',
+  noTransactions: 'Keine Transaktionen',
+  allTransactionsLoaded: 'Alle Transaktionen wurden angezeigt',
+  historical: 'Historisch',
+  loading: 'Laden',
 };
 
 export default locale;
