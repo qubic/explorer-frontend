@@ -1,32 +1,30 @@
-import { Typography, IconButton } from '@mui/material';
-import { fetchEntries, formatString } from 'src/app/utils/functions';
+import { IconButton, Typography } from '@mui/material';
+import { memo, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useEffect, useState } from 'react';
-import CardItem from './CardItem';
-import TxLink from './TxLink';
-import TxStatus from './TxStatus';
+import { fetchEntries, formatString } from 'src/app/utils/functions';
 import AddressLink from './AddressLink';
+import CardItem from './CardItem';
 import SubCardItem from './SubCardItem';
 import TickLink from './TickLink';
+import TxLink from './TxLink';
+import TxStatus from './TxStatus';
 
-function TxItem(props) {
+function TxItem({
+  identify,
+  txId,
+  sourceId,
+  tickNumber,
+  destId,
+  inputType,
+  amount,
+  inputHex,
+  nonExecutedTxIds,
+  variant,
+}) {
   const { t } = useTranslation('networkPage');
   const [entries, setEntries] = useState([]);
   const [entriesOpen, setEntriesOpen] = useState(false);
   const [detailsOpen, setDetailsOpen] = useState(false);
-
-  const {
-    identify,
-    txId,
-    sourceId,
-    tickNumber,
-    destId,
-    inputType,
-    amount,
-    inputHex,
-    nonExecutedTxIds,
-    variant,
-  } = props;
 
   useEffect(() => {
     if (
@@ -46,31 +44,33 @@ function TxItem(props) {
 
   if (variant === 'primary') {
     return (
-      <CardItem className="flex flex-col p-12 transition-all duration-300">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-8">
-          <div className="flex gap-8">
-            <TxStatus executed={!(nonExecutedTxIds || []).includes(txId)} />
-            {identify && (
-              <img
-                src={`assets/icons/arrow-${identify === sourceId ? 'down' : 'up'}.svg`}
-                alt="arrow"
-              />
-            )}
+      <CardItem className="flex flex-col p-12 transition-all duration-300 rounded-12">
+        <div className="flex items-center justify-between gap-8">
+          <TxStatus executed={!(nonExecutedTxIds || []).includes(txId)} />
+          <div className="flex flex-grow flex-col sm:flex-row items-start sm:justify-between gap-8">
             {identify ? (
-              <AddressLink
-                value={identify === sourceId ? destId : sourceId}
-                className="text-primary-40"
-                ellipsis
-                copy
-              />
+              <div className="flex gap-8">
+                <img
+                  src={`assets/icons/arrow-${identify === sourceId ? 'down' : 'up'}.svg`}
+                  alt="arrow"
+                  width={9}
+                  height={12}
+                />
+                <AddressLink
+                  className="text-16"
+                  value={identify === sourceId ? destId : sourceId}
+                  copy
+                  ellipsis
+                />
+              </div>
             ) : (
               <TxLink value={txId} className="text-primary-40" ellipsis copy />
             )}
-          </div>
-          <IconButton className="rounded-8 p-0" onClick={() => setDetailsOpen((prev) => !prev)}>
-            <Typography className="text-center font-space text-14 mr-12 " role="button">
-              {formatString(amount)} QUBIC
+            <Typography className="text-center font-space text-14" role="button">
+              {formatString(amount)} <span className="text-gray-50">QUBIC</span>
             </Typography>
+          </div>
+          <IconButton className="rounded-8 p-8" onClick={() => setDetailsOpen((prev) => !prev)}>
             <img
               className={`w-16 transition-transform duration-300 ${
                 detailsOpen ? 'rotate-180' : 'rotate-0'
@@ -228,4 +228,4 @@ function TxItem(props) {
   );
 }
 
-export default TxItem;
+export default memo(TxItem);
