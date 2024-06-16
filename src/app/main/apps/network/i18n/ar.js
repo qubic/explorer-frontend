@@ -37,6 +37,11 @@ const locale = {
   type: 'النوع',
   unexecuted: 'غير منفذ',
   value: 'القيمة',
+  loadMore: 'تحميل المزيد',
+  noTransactions: 'لا توجد معاملات',
+  allTransactionsLoaded: 'لقد شاهدت جميع المعاملات',
+  historical: 'تاريخي',
+  loading: 'جار التحميل',
 };
 
 export default locale;

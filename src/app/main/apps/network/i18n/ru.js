@@ -37,6 +37,11 @@ const locale = {
   type: 'Тип',
   unexecuted: 'Невыполнен',
   value: 'Значение',
+  loadMore: 'Загрузить больше',
+  noTransactions: 'Нет транзакций',
+  allTransactionsLoaded: 'Вы просмотрели все транзакции',
+  historical: 'Исторический',
+  loading: 'Загрузка',
 };
 
 export default locale;

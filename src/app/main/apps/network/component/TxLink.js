@@ -1,12 +1,10 @@
+import { Typography } from '@mui/material';
 import clsx from 'clsx';
 import { Link } from 'react-router-dom';
-import { Typography } from '@mui/material';
 import { formatEllipsis } from 'src/app/utils/functions';
 import CopyText from './CopyText';
 
-function TxLink(props) {
-  const { value, className, copy, ellipsis } = props;
-
+function TxLink({ value, className, copy, ellipsis }) {
   return (
     <div className="flex gap-10 items-center">
       <Typography

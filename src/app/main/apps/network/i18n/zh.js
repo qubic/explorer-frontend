@@ -37,6 +37,11 @@ const locale = {
   type: '类型',
   unexecuted: '未执行',
   value: '价值',
+  loadMore: '加载更多',
+  noTransactions: '没有交易',
+  allTransactionsLoaded: '您已查看所有交易',
+  historical: '历史',
+  loading: '加载中',
 };
 
 export default locale;

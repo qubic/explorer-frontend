@@ -37,6 +37,11 @@ const locale = {
   type: 'Tip',
   unexecuted: 'Gerçekleşmemiş',
   value: 'Değer',
+  loadMore: 'Daha fazla yükle',
+  noTransactions: 'İşlem yok',
+  allTransactionsLoaded: 'Tüm işlemleri gördünüz',
+  historical: 'Tarihi',
+  loading: 'Yükleniyor',
 };
 
 export default locale;

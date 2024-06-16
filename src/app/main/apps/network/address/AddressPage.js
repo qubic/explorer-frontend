@@ -1,82 +1,39 @@
-import { useEffect, useState, useRef, useMemo, useCallback } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import InfiniteScroll from 'react-infinite-scroll-component';
-import { useParams } from 'react-router-dom';
+import { TabContext, TabList, TabPanel } from '@mui/lab';
+import { Breadcrumbs, IconButton, LinearProgress, Tab, Typography } from '@mui/material';
+import { Box } from '@mui/system';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Breadcrumbs, LinearProgress, Typography, IconButton } from '@mui/material';
+import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import { formatEllipsis, formatString } from 'src/app/utils/functions';
-
-import TxItem from '../component/TxItem';
-import CardItem from '../component/CardItem';
-import TickLink from '../component/TickLink';
-import HomeLink from '../component/HomeLink';
-import CopyText from '../component/CopyText';
-import { getAddress, selectAddress, selectAddressLoading } from '../store/addressSlice';
+import { CardItem, CopyText, HomeLink, TickLink } from '../component';
+import { getAddress, selectAddress, selectAddressLoading } from '../store/address/addressSlice';
+import { getOverview, selectOverview } from '../store/overviewSlice';
+import HistoricalTxs from './HistoricalTxs';
+import Transactions from './Transactions';
 
 function AddressPage() {
   const { t } = useTranslation('networkPage');
-  const routeParams = useParams();
-  const { addressId } = routeParams;
-  const address = useSelector(selectAddress);
-  const isLoading = useSelector(selectAddressLoading);
-  const [displayTransactions, setDisplayTransactions] = useState([]);
-  const [hasMore, setHasMore] = useState(true);
-  const [entityOpen, setEntityOpen] = useState(false);
-  const [option, setOption] = useState('transfer');
-  const batchSize = 15;
-  const scrollRef = useRef(null);
   const dispatch = useDispatch();
+  const { addressId } = useParams();
 
-  const latestTransfers = useMemo(() => {
-    return (address?.transferTx || [])
-      .flatMap((item) => item.transactions)
-      .sort((a, b) => b.tickNumber - a.tickNumber);
-  }, [address]);
+  const address = useSelector(selectAddress);
+  const overview = useSelector(selectOverview);
+  const isLoading = useSelector(selectAddressLoading);
 
-  const renderTxItem = useCallback(
-    (item, index) => <TxItem key={index} {...item} identify={addressId} variant="primary" />,
-    [displayTransactions]
-  );
+  const [entityOpen, setEntityOpen] = useState(false);
+  const [value, setValue] = useState('1');
+
+  const handleTabChange = (_event, newValue) => {
+    setValue(newValue);
+  };
 
   useEffect(() => {
     dispatch(getAddress(addressId));
-  }, [addressId, dispatch]);
-
-  useEffect(() => {
-    if (latestTransfers) {
-      setDisplayTransactions(latestTransfers.slice(0, batchSize));
-      setHasMore(latestTransfers.length > batchSize);
+    if (!overview) {
+      dispatch(getOverview());
     }
-  }, [address]);
-
-  const loadMoreTransactions = () => {
-    if (displayTransactions.length < latestTransfers.length) {
-      const nextTransactions = latestTransfers.slice(
-        displayTransactions.length,
-        displayTransactions.length + batchSize
-      );
-      setDisplayTransactions((prevTransactions) => [...prevTransactions, ...nextTransactions]);
-      setHasMore(displayTransactions.length + batchSize < latestTransfers.length);
-    } else {
-      setHasMore(false);
-    }
-  };
-
-  useEffect(() => {
-    const scrollElement = scrollRef.current;
-    const handleScroll = () => {
-      if (scrollElement.scrollTop + scrollElement.clientHeight >= scrollElement.scrollHeight) {
-        console.log('');
-      }
-    };
-
-    scrollElement.addEventListener('scroll', handleScroll);
-    return () => scrollElement.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  const handleChange = (event) => {
-    setOption(event.target.value);
-  };
+  }, [addressId, dispatch, overview]);
 
   if (isLoading) {
     return (
@@ -87,11 +44,7 @@ function AddressPage() {
   }
 
   return (
-    <div
-      className="w-full max-h-[calc(100vh-76px)] overflow-y-auto"
-      id="scrollableDiv"
-      ref={scrollRef}
-    >
+    <div className="w-full max-h-[calc(100vh-76px)] overflow-y-auto">
       <div className="py-16 max-w-[960px] mx-auto px-12">
         <Breadcrumbs aria-label="breadcrumbs" className="py-16">
           <HomeLink />
@@ -99,28 +52,33 @@ function AddressPage() {
             {t('id')} {formatEllipsis(addressId)}
           </Typography>
         </Breadcrumbs>
-        <div className="flex items-center gap-12 pt-16 ">
-          <Typography className="font-space text-18 text-gray-50 leading-20 break-all">
+        <div className="flex items-center gap-12 pt-16 pb-8">
+          <Typography className="font-space text-16 text-gray-50 leading-20 break-all">
             {addressId}
           </Typography>
           <CopyText text={addressId} />
         </div>
-        <Typography className="font-space text-24 leading-30 pt-12 break-all">
-          {formatString(address?.balance?.balance)} QUBIC
-        </Typography>
-        <div className="py-24">
-          <IconButton className="rounded-8 p-0" onClick={() => setEntityOpen((prev) => !prev)}>
-            <Typography className="text-center font-space text-14 mr-12 " role="button">
-              {entityOpen ? 'Hide' : 'Show'} {t('entityReportsFromRandomPeers')}
+        <div>
+          <div className="flex flex-col">
+            <div className="flex gap-10">
+              <Typography className="font-space text-36 leading-30 break-all w-fit">
+                {formatString(address?.balance?.balance)}{' '}
+                <span className="text-gray-50">QUBIC</span>
+              </Typography>
+              <IconButton className="rounded-8 p-0" onClick={() => setEntityOpen((prev) => !prev)}>
+                <img
+                  className={`w-16 transition-transform duration-300 ${
+                    entityOpen ? 'rotate-180' : 'rotate-0'
+                  }`}
+                  src="assets/icons/arrow-gray.svg"
+                  alt="arrow"
+                />
+              </IconButton>
+            </div>
+            <Typography className="text-16 leading-18 font-space text-gray-50 my-5">
+              ${formatString((address?.balance?.balance * overview?.price).toFixed(2))}
             </Typography>
-            <img
-              className={`w-16 transition-transform duration-300 ${
-                entityOpen ? 'rotate-180' : 'rotate-0'
-              }`}
-              src="assets/icons/arrow-gray.svg"
-              alt="arrow"
-            />
-          </IconButton>
+          </div>
           {entityOpen && (
             <div className="grid 948px:grid-cols-3 gap-16 pt-12">
               {address &&
@@ -132,7 +90,8 @@ function AddressPage() {
                           {t('value')}
                         </Typography>
                         <Typography className="text-16 leading-20 font-space font-500">
-                          {formatString(details.incomingAmount - details.outgoingAmount)} QUBIC
+                          {formatString(details.incomingAmount - details.outgoingAmount)}{' '}
+                          <span className="text-gray-50">QUBIC</span>
                         </Typography>
                       </div>
                       <Typography className="text-14 leading-18 font-space text-gray-50">
@@ -166,57 +125,25 @@ function AddressPage() {
             </div>
           )}
         </div>
-        <div className="flex justify-between items-center mb-10">
-          <Typography className="text-20 leading-26 font-500 font-space mb-16">
-            {t('latestTransfers')}
+        <div className="mt-40">
+          <Typography className="text-20 leading-26 font-500 font-space my-10">
+            {t('transactions')}
           </Typography>
-          {/* <Select
-            value={option}
-            onChange={handleChange}
-            className="border-gray-70 bg-gray-80 rounded-8 focus:border-gray-60"
-            IconComponent={ArrowIcon}
-            sx={{
-              minWidth: 225,
-              '&.Mui-focused fieldset': {
-                borderColor: '#4B5565 !important', // Your desired border color
-              },
-            }}
-          >
-            {transactionOptions
-              .filter((item) => item.id === 'transfer')
-              .map((item) => (
-                <MenuItem className="py-10 min-w-[164px]" key={item.id} value={item.id}>
-                  <Typography className="text-16 leading-20 font-space">{item.title}</Typography>
-                </MenuItem>
-              ))}
-          </Select> */}
+          <TabContext value={value}>
+            <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+              <TabList onChange={handleTabChange} textColor="secondary" indicatorColor="secondary">
+                <Tab label={t('latest')} value="1" />
+                <Tab label={t('historical')} value="2" />
+              </TabList>
+            </Box>
+            <TabPanel value="1">
+              <Transactions addressId={addressId} address={address} />
+            </TabPanel>
+            <TabPanel value="2">
+              <HistoricalTxs addressId={addressId} />
+            </TabPanel>
+          </TabContext>
         </div>
-        <InfiniteScroll
-          dataLength={displayTransactions.length}
-          next={loadMoreTransactions}
-          hasMore={hasMore}
-          scrollableTarget="scrollableDiv"
-          loader={
-            <Typography className="text-14 text-primary-50 font-bold py-10 text-center">
-              Loading...
-            </Typography>
-          }
-          endMessage={
-            displayTransactions.length === 0 ? (
-              <Typography className="text-14 font-bold py-10 text-center">
-                There are no transactions
-              </Typography>
-            ) : (
-              <Typography className="text-14 font-bold py-10 text-center">
-                You have seen all transactions
-              </Typography>
-            )
-          }
-        >
-          <div className="flex flex-col gap-12">
-            {displayTransactions.map((item, index) => renderTxItem(item, index))}
-          </div>
-        </InfiniteScroll>
       </div>
     </div>
   );

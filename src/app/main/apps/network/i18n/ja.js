@@ -37,6 +37,11 @@ const locale = {
   type: 'タイプ',
   unexecuted: '未実行',
   value: '価値',
+  loadMore: 'もっと読み込む',
+  noTransactions: '取引はありません',
+  allTransactionsLoaded: 'すべての取引を表示しました',
+  historical: '履歴',
+  loading: '読み込み中',
 };
 
 export default locale;

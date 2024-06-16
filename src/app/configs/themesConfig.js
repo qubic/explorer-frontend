@@ -27,9 +27,9 @@ const themesConfig = {
         contrastText: darkPaletteText.primary,
       },
       secondary: {
-        light: '#818cf8',
-        main: '#4f46e5',
-        dark: '#3730a3',
+        light: '#9DF9FF',
+        main: '#61F0FE',
+        dark: '#3FB8CC',
         contrastText: darkPaletteText.primary,
       },
       background: {
