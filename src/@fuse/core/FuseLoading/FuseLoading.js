@@ -1,16 +1,16 @@
 import { useTimeout } from '@fuse/hooks';
+import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
+import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
-import clsx from 'clsx';
-import Box from '@mui/material/Box';
 
-function FuseLoading(props) {
-  const [showLoading, setShowLoading] = useState(!props.delay);
+function FuseLoading({ delay, className }) {
+  const [showLoading, setShowLoading] = useState(!delay);
 
   useTimeout(() => {
     setShowLoading(true);
-  }, props.delay);
+  }, delay);
 
   return (
     <div
@@ -19,7 +19,10 @@ function FuseLoading(props) {
         !showLoading && 'hidden'
       )}
     >
-      <Typography className="text-13 sm:text-20 font-medium -mb-16" color="text.secondary">
+      <Typography
+        className={clsx('text-13 sm:text-20 font-medium -mb-16', className)}
+        color="text.secondary"
+      >
         Loading
       </Typography>
       <Box
@@ -40,10 +43,12 @@ function FuseLoading(props) {
 
 FuseLoading.propTypes = {
   delay: PropTypes.oneOfType([PropTypes.number, PropTypes.bool]),
+  className: PropTypes.string,
 };
 
 FuseLoading.defaultProps = {
   delay: false,
+  className: '',
 };
 
 export default FuseLoading;
