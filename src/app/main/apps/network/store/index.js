@@ -1,8 +1,8 @@
 import { combineReducers } from '@reduxjs/toolkit';
-import overview from './overviewSlice';
+import address from './address/addressSlice';
 import block from './blockSlice';
+import overview from './overviewSlice';
 import tx from './txSlice';
-import address from './addressSlice';
 
 const reducer = combineReducers({
   overview,
