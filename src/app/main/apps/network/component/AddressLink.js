@@ -1,15 +1,14 @@
-import { Link } from 'react-router-dom';
 import { Typography } from '@mui/material';
+import clsx from 'clsx';
+import { Link } from 'react-router-dom';
 import { formatEllipsis } from 'src/app/utils/functions';
 import CopyText from './CopyText';
 
-function AddressLink(props) {
-  const { value, copy, ellipsis } = props;
-
+function AddressLink({ value, copy, ellipsis, className }) {
   return (
     <div className="flex gap-10 items-center">
       <Typography
-        className="text-14 leading-20 font-space text-primary-40 break-all"
+        className={clsx('text-14 leading-20 font-space text-primary-40 break-all', className)}
         component={Link}
         to={`/network/address/${value}`}
         role="button"
