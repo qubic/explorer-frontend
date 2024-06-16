@@ -1,28 +1,29 @@
-import _ from 'lodash';
-import { useEffect, useState, useRef, useMemo } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import InfiniteScroll from 'react-infinite-scroll-component';
-import { useTheme } from '@mui/material/styles';
+import FuseLoading from '@fuse/core/FuseLoading';
 import {
   Breadcrumbs,
   IconButton,
   LinearProgress,
-  Typography,
   MenuItem,
   Select,
+  Typography,
   useMediaQuery,
 } from '@mui/material';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useTheme } from '@mui/material/styles';
+import _ from 'lodash';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { formatBase64, formatDate, formatString } from 'src/app/utils/functions';
+import InfiniteScroll from 'react-infinite-scroll-component';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate, useParams } from 'react-router-dom';
 import { transactionOptions } from 'src/app/utils/constants';
+import { formatBase64, formatDate, formatString } from 'src/app/utils/functions';
 import { ArrowIcon } from 'src/assets/icons/svg';
-import { getBlock, selectBlock, selectBlockError, selectBlockLoading } from '../store/blockSlice';
 import AddressLink from '../component/AddressLink';
-import TxItem from '../component/TxItem';
+import HomeLink from '../component/HomeLink';
 import SubCardItem from '../component/SubCardItem';
 import TickStatus from '../component/TickStatus';
-import HomeLink from '../component/HomeLink';
+import TxItem from '../component/TxItem';
+import { getBlock, selectBlock, selectBlockError, selectBlockLoading } from '../store/blockSlice';
 
 function TickPage() {
   const theme = useTheme();
@@ -214,21 +215,13 @@ function TickPage() {
               next={loadMoreTransactions}
               hasMore={hasMore}
               scrollableTarget="scrollableDiv"
-              loader={
-                <Typography className="text-14 text-primary-50 font-bold py-10 text-center">
-                  Loading...
-                </Typography>
-              }
+              loader={<FuseLoading className="sm:text-16" />}
               endMessage={
-                displayTransactions.length === 0 ? (
-                  <Typography className="text-14 font-bold py-10 text-center">
-                    There are no transactions
-                  </Typography>
-                ) : (
-                  <Typography className="text-14 font-bold py-10 text-center">
-                    You have seen all transactions
-                  </Typography>
-                )
+                <Typography className="text-14 py-32 text-center text-gray-50">
+                  {displayTransactions.length === 0
+                    ? t('noTransactions')
+                    : t('allTransactionsLoaded')}
+                </Typography>
               }
             >
               <div className="flex flex-col gap-12">
