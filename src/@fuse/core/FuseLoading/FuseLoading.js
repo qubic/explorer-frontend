@@ -4,8 +4,11 @@ import Typography from '@mui/material/Typography';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 function FuseLoading({ delay, className }) {
+  const { t } = useTranslation('networkPage');
+
   const [showLoading, setShowLoading] = useState(!delay);
 
   useTimeout(() => {
@@ -23,7 +26,7 @@ function FuseLoading({ delay, className }) {
         className={clsx('text-13 sm:text-20 font-medium -mb-16', className)}
         color="text.secondary"
       >
-        Loading
+        {t('loading')}
       </Typography>
       <Box
         id="spinner"
