@@ -61,7 +61,7 @@ function AddressPage() {
         <div>
           <div className="flex flex-col">
             <div className="flex gap-10">
-              <Typography className="font-space text-36 leading-30 break-all w-fit">
+              <Typography className="font-space text-24 sm:text-36 leading-30 break-all w-fit">
                 {formatString(address?.balance?.balance)}{' '}
                 <span className="text-gray-50">QUBIC</span>
               </Typography>
@@ -132,14 +132,14 @@ function AddressPage() {
           <TabContext value={value}>
             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
               <TabList onChange={handleTabChange} textColor="secondary" indicatorColor="secondary">
-                <Tab label={t('latest')} value="1" />
-                <Tab label={t('historical')} value="2" />
+                <Tab label={t('latest')} value="1" className="font-space" />
+                <Tab label={t('historical')} value="2" className="font-space" />
               </TabList>
             </Box>
-            <TabPanel value="1">
+            <TabPanel value="1" sx={{ paddingX: 0 }}>
               <Transactions addressId={addressId} address={address} />
             </TabPanel>
-            <TabPanel value="2">
+            <TabPanel value="2" sx={{ paddingX: 0 }}>
               <HistoricalTxs addressId={addressId} />
             </TabPanel>
           </TabContext>
