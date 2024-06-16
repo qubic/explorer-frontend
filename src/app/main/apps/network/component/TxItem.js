@@ -66,7 +66,7 @@ function TxItem({
             ) : (
               <TxLink value={txId} className="text-primary-40" ellipsis copy />
             )}
-            <Typography className="text-center font-space text-14" role="button">
+            <Typography className="text-center font-space text-16" role="button">
               {formatString(amount)} <span className="text-gray-50">QUBIC</span>
             </Typography>
           </div>
