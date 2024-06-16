@@ -83,6 +83,7 @@
     "@tailwindcss/typography": "^0.5.4",
     "@typescript-eslint/eslint-plugin": "^4.33.0",
     "@typescript-eslint/parser": "^4.33.0",
+    "ajv": "^8.16.0",
     "autoprefixer": "^10.4.19",
     "concurrently": "^8.2.2",
     "cross-env": "7.0.3",
