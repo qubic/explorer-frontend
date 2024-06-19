@@ -71,7 +71,7 @@ function Overview() {
         <div className="grid md:grid-flow-col gap-16">
           <CardItem className="px-24 py-16">
             <div className="flex items-center gap-24">
-              <img className="w-24 h-24" src="assets/icons/dollar-sign.svg" alt="icon" />
+              <img className="w-24 h-24" src="assets/icons/dollar-coin.svg" alt="icon" />
               <div className="flex flex-col gap-8">
                 <Typography className="text-14 leading-18 text-gray-50 font-space">
                   {t('price')}
@@ -84,7 +84,7 @@ function Overview() {
           </CardItem>
           <CardItem className="px-24 py-16">
             <div className="flex items-center gap-24">
-              <img className="w-24 h-24" src="assets/icons/globe.svg" alt="icon" />
+              <img className="w-24 h-24" src="assets/icons/coins-stack.svg" alt="icon" />
               <div className="flex flex-col gap-8">
                 <Typography className="text-14 leading-18 text-gray-50 font-space">
                   {t('marketCap')}
@@ -99,7 +99,7 @@ function Overview() {
         <div className="grid 827px:grid-flow-col gap-16">
           <CardItem className="px-24 py-16">
             <div className="flex items-center gap-24">
-              <img className="w-24 h-24" src="assets/icons/hourglass.svg" alt="icon" />
+              <img className="w-24 h-24" src="assets/icons/sand-clock.svg" alt="icon" />
               <div className="flex flex-col gap-8">
                 <Typography className="text-14 leading-18 text-gray-50 font-space">
                   {t('epoch')}
@@ -112,7 +112,7 @@ function Overview() {
           </CardItem>
           <CardItem className="px-24 py-16">
             <div className="flex items-center gap-24">
-              <img className="w-24 h-24" src="assets/icons/repeat.svg" alt="icon" />
+              <img className="w-24 h-24" src="assets/icons/circulating-coins.svg" alt="icon" />
               <div className="flex flex-col gap-8">
                 <Typography className="text-14 leading-18 text-gray-50 font-space">
                   {t('circulatingSupply')}
@@ -140,7 +140,7 @@ function Overview() {
         <div className="grid grid-cols-2 827px:grid-cols-4 gap-16">
           <CardItem className="px-24 py-16">
             <div className="flex flex-col sm:flex-row sm:items-center gap-16 w-full">
-              <img className="w-24 h-24" src="assets/icons/grid-add.svg" alt="icon" />
+              <img className="w-24 h-24" src="assets/icons/current-tick.svg" alt="icon" />
               <div className="flex flex-col gap-8">
                 <Typography className="text-14 leading-18 text-gray-50 font-space">
                   {t('currentTick')}
@@ -153,7 +153,7 @@ function Overview() {
           </CardItem>
           <CardItem className="px-24 py-16">
             <div className="flex flex-col sm:flex-row sm:items-center gap-16 w-full">
-              <img className="w-24 h-24" src="assets/icons/grid-view.svg" alt="icon" />
+              <img className="w-24 h-24" src="assets/icons/epoch-ticks.svg" alt="icon" />
               <div className="flex flex-col gap-5">
                 <Typography className="text-14 leading-18 text-gray-50 font-space">
                   {t('ticksThisEpoch')}
@@ -166,7 +166,7 @@ function Overview() {
           </CardItem>
           <CardItem className="px-24 py-16">
             <div className="flex flex-col sm:flex-row sm:items-center gap-16 w-full">
-              <img className="w-24 h-24" src="assets/icons/circle-dashed.svg" alt="icon" />
+              <img className="w-24 h-24" src="assets/icons/empty-ticks.svg" alt="icon" />
               <div className="flex flex-col gap-5">
                 <Typography className="text-14 leading-18 text-gray-50 font-space flex items-center gap-10">
                   {t('empty')}
