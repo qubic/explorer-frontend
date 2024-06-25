@@ -1,10 +1,11 @@
-import { useEffect, useState } from 'react';
-import { Input, IconButton, LinearProgress, Modal, useTheme, Typography } from '@mui/material';
+import { IconButton, Input, LinearProgress, Modal, Typography, useTheme } from '@mui/material';
 import withReducer from 'app/store/withReducer';
-import { useDispatch, useSelector } from 'react-redux';
 import { motion } from 'framer-motion';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { formatBase64, formatDate, formatString } from 'src/app/utils/functions';
+import ResultItem from './ResultItem';
 import reducer from './store';
 import {
   getSearch,
@@ -13,7 +14,6 @@ import {
   selectSearchError,
   selectSearchLoading,
 } from './store/searchSlice';
-import ResultItem from './ResultItem';
 
 function SearchBar() {
   const theme = useTheme();
@@ -138,20 +138,21 @@ function SearchBar() {
             </div>
           )}
           {searchResult && (
-            <div className="max-h-[320px] overflow-auto max-w-[800px] mx-auto">
+            <div className="max-h-[320px] overflow-auto max-w-[800px] mx-auto pb-20">
               {searchResult?.balance && (
                 <ResultItem
                   icon={
                     <img className="w-16 h-16 mr-6" src="assets/icons/grid-add.svg" alt="address" />
                   }
                   title="Qubic Address"
-                  link={`/network/address/${searchResult?.balance?.id}`}
                   content={
                     <p>
                       {searchResult?.balance?.id} <span className="text-gray-50">Balance:</span>{' '}
                       {formatString(searchResult?.balance?.balance)}
                     </p>
                   }
+                  onClick={handleClose}
+                  link={`/network/address/${searchResult?.balance?.id}`}
                 />
               )}
               {searchResult?.transaction && (
@@ -171,6 +172,7 @@ function SearchBar() {
                     </p>
                   }
                   link={`/network/tx/${searchResult?.transaction?.txId}`}
+                  onClick={handleClose}
                 />
               )}
               {searchResult?.tickData && (
@@ -185,6 +187,7 @@ function SearchBar() {
                     </p>
                   }
                   link={`/network/tick/${searchResult?.tickData?.tickNumber}`}
+                  onClick={handleClose}
                   items={searchResult?.tickData?.transactionIds}
                 />
               )}
