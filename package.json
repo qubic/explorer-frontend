@@ -34,6 +34,7 @@
     "keycode": "2.2.1",
     "lint-staged": "^15.2.7",
     "lodash": "4.17.21",
+    "lottie-react": "^2.4.0",
     "mobile-detect": "1.4.5",
     "moment": "2.29.4",
     "notistack": "1.0.6-next.3",

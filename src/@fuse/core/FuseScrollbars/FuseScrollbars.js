@@ -47,7 +47,7 @@ const FuseScrollbars = forwardRef((props, ref) => {
       }
     });
     // eslint-disable-next-line
-    }, [ref]);
+  }, [ref]);
 
   const unHookUpEvents = useCallback(() => {
     handlerByEvent.current.forEach((value, key) => {

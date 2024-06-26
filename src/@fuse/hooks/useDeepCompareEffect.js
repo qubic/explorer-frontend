@@ -36,12 +36,12 @@ function useDeepCompareEffect(callback, dependencies) {
     checkDeps(dependencies);
   }
   // eslint-disable-next-line
-	useEffect(callback, useDeepCompareMemoize(dependencies));
+  useEffect(callback, useDeepCompareMemoize(dependencies));
 }
 
 export function useDeepCompareEffectNoCheck(callback, dependencies) {
   // eslint-disable-next-line
-	useEffect(callback, useDeepCompareMemoize(dependencies));
+  useEffect(callback, useDeepCompareMemoize(dependencies));
 }
 
 export default useDeepCompareEffect;
