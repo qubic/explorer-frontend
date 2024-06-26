@@ -74,7 +74,7 @@ function FuseNavVerticalCollapse(props) {
       }
     }
     // eslint-disable-next-line
-	}, [location, props.item]);
+  }, [location, props.item]);
 
   return useMemo(
     () => (
