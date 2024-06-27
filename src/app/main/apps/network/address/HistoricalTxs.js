@@ -3,7 +3,7 @@ import { Alert, Button, Typography } from '@mui/material';
 import { useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
-import { TxItem } from '../component';
+import { TxItem } from '../components';
 import { getHistoricalTxs, selectHistoricalTxs } from '../store/address/addressSlice';
 
 export default function HistoricalTxs({ addressId }) {

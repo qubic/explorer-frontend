@@ -3,7 +3,7 @@ import { Alert, Button, Typography } from '@mui/material';
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
-import { TxItem } from '../component';
+import { TxItem } from '../components';
 import { getTransferTxs, selectTransferTxs, setLastEndTick } from '../store/address/addressSlice';
 import { BATCH_SIZE, TICK_SIZE } from './constants';
 

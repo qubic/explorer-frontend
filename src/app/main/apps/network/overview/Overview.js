@@ -1,21 +1,21 @@
-import { useEffect, useState } from 'react';
-import { formatString } from 'src/app/utils/functions';
 import {
-  Typography,
   LinearProgress,
-  Tooltip,
+  Link,
   Pagination,
   PaginationItem,
-  Link,
+  Tooltip,
+  Typography,
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { useDispatch, useSelector } from 'react-redux';
-import { PrevIcon, NextIcon } from 'src/assets/icons/svg';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useDispatch, useSelector } from 'react-redux';
+import { formatString } from 'src/app/utils/functions';
+import { NextIcon, PrevIcon } from 'src/assets/icons/svg';
+import CardItem from '../components/CardItem';
+import TickLink from '../components/TickLink';
 import { getOverview, selectOverview, selectOverviewLoading } from '../store/overviewSlice';
-import TickLink from '../component/TickLink';
-import CardItem from '../component/CardItem';
 
 function Overview() {
   const isLoading = useSelector(selectOverviewLoading);

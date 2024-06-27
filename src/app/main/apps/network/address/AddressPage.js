@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { formatEllipsis, formatString } from 'src/app/utils/functions';
-import { CardItem, CopyText, HomeLink, TickLink } from '../component';
+import { CardItem, CopyText, HomeLink, TickLink } from '../components';
 import { getAddress, selectAddress, selectAddressLoading } from '../store/address/addressSlice';
 import { getOverview, selectOverview } from '../store/overviewSlice';
 import HistoricalTxs from './HistoricalTxs';
