@@ -1,10 +1,11 @@
-import { styled } from '@mui/material/styles';
 import FusePageSimple from '@fuse/core/FusePageSimple';
+import { styled } from '@mui/material/styles';
 import withReducer from 'app/store/withReducer';
 import { Outlet } from 'react-router-dom';
 
-import reducer from './store';
+import PagesLayout from 'src/app/components/ui/layouts/PagesLayout';
 import NetworkHeader from './NetworkHeader';
+import reducer from './store';
 
 const Root = styled(FusePageSimple)(({ theme }) => ({
   '& .FusePageSimple-header': {
@@ -20,7 +21,11 @@ const Root = styled(FusePageSimple)(({ theme }) => ({
 }));
 
 function NetworkPage(props) {
-  return <Root header={<NetworkHeader />} content={<Outlet />} scroll="content" />;
+  return (
+    <PagesLayout>
+      <Root header={<NetworkHeader />} content={<Outlet />} scroll="content" />
+    </PagesLayout>
+  );
 }
 
 export default withReducer('network', reducer)(NetworkPage);

@@ -1,14 +1,14 @@
+import { Breadcrumbs, LinearProgress, Typography } from '@mui/material';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { Breadcrumbs, LinearProgress, Typography } from '@mui/material';
 
-import { formatEllipsis } from 'src/app/utils/functions';
 import { useTranslation } from 'react-i18next';
-import TickLink from '../component/TickLink';
+import { formatEllipsis } from 'src/app/utils/functions';
+import HomeLink from '../components/HomeLink';
+import TickLink from '../components/TickLink';
+import TxItem from '../components/TxItem';
 import { getTx, selectTx, selectTxLoading } from '../store/txSlice';
-import HomeLink from '../component/HomeLink';
-import TxItem from '../component/TxItem';
 
 function TxPage() {
   const { t } = useTranslation('networkPage');

@@ -18,11 +18,11 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { transactionOptions } from 'src/app/utils/constants';
 import { formatBase64, formatDate, formatString } from 'src/app/utils/functions';
 import { ArrowIcon } from 'src/assets/icons/svg';
-import AddressLink from '../component/AddressLink';
-import HomeLink from '../component/HomeLink';
-import SubCardItem from '../component/SubCardItem';
-import TickStatus from '../component/TickStatus';
-import TxItem from '../component/TxItem';
+import AddressLink from '../components/AddressLink';
+import HomeLink from '../components/HomeLink';
+import SubCardItem from '../components/SubCardItem';
+import TickStatus from '../components/TickStatus';
+import TxItem from '../components/TxItem';
 import { getBlock, selectBlock, selectBlockError, selectBlockLoading } from '../store/blockSlice';
 
 function TickPage() {
