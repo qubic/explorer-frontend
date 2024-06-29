@@ -3,7 +3,7 @@ import { memo } from 'react';
 
 function Footer() {
   return (
-    <footer className="container px-12 py-40 flex flex-col sm:flex-row justify-center items-center gap-10 sm:gap-32 ">
+    <footer className="container px-12 py-20 sm:py-40 flex flex-col sm:flex-row justify-center items-center gap-10 sm:gap-32">
       <div className="flex items-center gap-10">
         <img className="h-16" src="assets/images/logo/logo-text-short.svg" alt="logo-short" />
         <Typography className="text-12 font-space text-gray-50">
