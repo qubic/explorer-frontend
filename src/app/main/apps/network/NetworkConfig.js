@@ -1,20 +1,20 @@
 import i18next from 'i18next';
-import en from './i18n/en';
+import AddressPage from './address/AddressPage';
+import ar from './i18n/ar';
 import de from './i18n/de';
+import en from './i18n/en';
 import es from './i18n/es';
 import fr from './i18n/fr';
+import ja from './i18n/ja';
 import nl from './i18n/nl';
-import ru from './i18n/ru';
 import pt from './i18n/pt';
+import ru from './i18n/ru';
 import tr from './i18n/tr';
 import zh from './i18n/zh';
-import ja from './i18n/ja';
-import ar from './i18n/ar';
 import NetworkPage from './NetworkPage';
-import TickPage from './tick/TickPage';
 import Overview from './overview/Overview';
+import TickPage from './tick/TickPage';
 import TxPage from './tx/TxPage';
-import AddressPage from './address/AddressPage';
 
 i18next.addResourceBundle('en', 'networkPage', en);
 i18next.addResourceBundle('de', 'networkPage', de);
@@ -39,7 +39,7 @@ const NetworkConfig = {
           display: false,
         },
         footer: {
-          display: false,
+          display: true,
         },
         leftSidePanel: {
           display: false,
