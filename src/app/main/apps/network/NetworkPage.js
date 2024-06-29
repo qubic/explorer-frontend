@@ -3,7 +3,6 @@ import { styled } from '@mui/material/styles';
 import withReducer from 'app/store/withReducer';
 import { Outlet } from 'react-router-dom';
 
-import PagesLayout from 'src/app/components/ui/layouts/PagesLayout';
 import NetworkHeader from './NetworkHeader';
 import reducer from './store';
 
@@ -21,11 +20,7 @@ const Root = styled(FusePageSimple)(({ theme }) => ({
 }));
 
 function NetworkPage(props) {
-  return (
-    <PagesLayout>
-      <Root header={<NetworkHeader />} content={<Outlet />} scroll="content" />
-    </PagesLayout>
-  );
+  return <Root header={<NetworkHeader />} content={<Outlet />} scroll="normal" />;
 }
 
 export default withReducer('network', reducer)(NetworkPage);
