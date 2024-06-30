@@ -16,13 +16,16 @@ function TxPage() {
 
   const routeParams = useParams();
   const { txId } = routeParams;
+  const isLoading = useSelector(selectTxLoading);
+  const tx = useSelector(selectTx);
+
+  const getNonExecutedTxIds = (status) => {
+    return status.moneyFlew ? [] : [status.txId];
+  };
 
   useEffect(() => {
     dispatch(getTx(txId));
   }, [txId, dispatch]);
-
-  const tx = useSelector(selectTx);
-  const isLoading = useSelector(selectTxLoading);
 
   if (isLoading) {
     return (
@@ -49,7 +52,13 @@ function TxPage() {
             <Typography className="text-24 leading-28 font-space my-16">
               {t('transactionPreview')}
             </Typography>
-            {tx?.tx && <TxItem {...tx?.tx} variant="secondary" />}
+            {tx?.tx && (
+              <TxItem
+                {...tx?.tx}
+                nonExecutedTxIds={getNonExecutedTxIds(tx?.status)}
+                variant="secondary"
+              />
+            )}
           </>
         ) : (
           <Typography className="text-24 leading-28 font-space my-16 text-center">
