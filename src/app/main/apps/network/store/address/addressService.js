@@ -44,7 +44,7 @@ export const fetchTransferTxs = async (
     data = [...new Set(data.concat(transfers))];
 
     if (start === 0 && transfers.length === 0) {
-      return { data: data.sort((a, b) => b.tickNumber - a.tickNumber), lastStartTick, lastEndTick };
+      return { data: data.sort((a, b) => b.tickNumber - a.tickNumber) };
     }
 
     if (data.length < batchSize) {
@@ -53,12 +53,24 @@ export const fetchTransferTxs = async (
 
       return fetchRecursive(lastStartTick, lastEndTick);
     }
-    return { data: data.sort((a, b) => b.tickNumber - a.tickNumber), lastStartTick, lastEndTick };
+    return { data: data.sort((a, b) => b.tickNumber - a.tickNumber) };
   };
 
   const finalResult = await fetchRecursive(initialStartTick, initialEndTick);
 
-  return finalResult;
+  const txsWithMoneyFlew = await Promise.all(
+    finalResult.data.map(async (tx) => {
+      try {
+        const txStatus = await axios.get(`${envConfig.ARCHIVER_API_URL}/tx-status/${tx.txId}`);
+        tx.moneyFlew = txStatus.data.transactionStatus.moneyFlew;
+      } catch (error) {
+        tx.moneyFlew = null;
+      }
+      return tx;
+    })
+  );
+
+  return { data: txsWithMoneyFlew, lastStartTick, lastEndTick };
 };
 
 export const fetchHistoricalTxs = async (addressId, page) => {
