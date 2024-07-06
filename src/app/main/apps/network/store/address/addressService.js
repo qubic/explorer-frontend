@@ -41,10 +41,10 @@ export const fetchTransferTxs = async (
 
   const fetchRecursive = async (start, end) => {
     const transfers = await getTransfers(start, end);
-    data = data.concat(transfers);
+    data = [...new Set(data.concat(transfers))];
 
     if (start === 0 && transfers.length === 0) {
-      return { data, lastStartTick, lastEndTick };
+      return { data: data.sort((a, b) => b.tickNumber - a.tickNumber), lastStartTick, lastEndTick };
     }
 
     if (data.length < batchSize) {
@@ -61,12 +61,11 @@ export const fetchTransferTxs = async (
   return finalResult;
 };
 
-// TODO: This is a draft impl since backend need to impl pagination
-export const fetchHistoricalTxs = async (addressId, offset) => {
+export const fetchHistoricalTxs = async (addressId, page) => {
   const token = window.localStorage.getItem('jwt_access_token');
 
-  const response = await axios.get(
-    `${envConfig.QLI_API_URL}/Network/Id/${addressId}?offset=${offset}`,
+  const { data } = await axios.get(
+    `${envConfig.QLI_API_URL}/Network/IdHistory/${addressId}?page=${page}&pageSize=50`,
     {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -74,7 +73,7 @@ export const fetchHistoricalTxs = async (addressId, offset) => {
     }
   );
 
-  const data = await response.data.latestTransfers;
+  const historicalTxs = data.sort((a, b) => b.tick - a.tick);
 
-  return data;
+  return historicalTxs;
 };
