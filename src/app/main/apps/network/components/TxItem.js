@@ -20,6 +20,7 @@ function TxItem({
   inputHex,
   nonExecutedTxIds,
   variant,
+  isHistoricalTx,
 }) {
   const { t } = useTranslation('networkPage');
   const [entries, setEntries] = useState([]);
@@ -64,7 +65,13 @@ function TxItem({
                 />
               </div>
             ) : (
-              <TxLink value={txId} className="text-primary-40" ellipsis copy />
+              <TxLink
+                isHistoricalTx={isHistoricalTx}
+                value={txId}
+                className="text-primary-40"
+                ellipsis
+                copy
+              />
             )}
             <Typography className="text-center font-space text-16" role="button">
               {formatString(amount)} <span className="text-gray-50">QUBIC</span>
@@ -85,7 +92,14 @@ function TxItem({
             <SubCardItem
               title={`TX ${t('id')}`}
               variant="primary"
-              content={<TxLink className="text-primary-40 text-14" value={txId} copy />}
+              content={
+                <TxLink
+                  isHistoricalTx={isHistoricalTx}
+                  className="text-primary-40 text-14"
+                  value={txId}
+                  copy
+                />
+              }
             />
             <SubCardItem
               title={t('source')}
@@ -168,7 +182,7 @@ function TxItem({
         <div className="">
           <TxStatus executed={!(nonExecutedTxIds || []).includes(txId)} />
         </div>
-        <TxLink className="text-16 text-gray-50" value={txId} />
+        <TxLink isHistoricalTx={isHistoricalTx} className="text-16 text-gray-50" value={txId} />
       </div>
       <SubCardItem
         title={t('amount')}
@@ -229,3 +243,7 @@ function TxItem({
 }
 
 export default memo(TxItem);
+
+TxItem.defaultProps = {
+  isHistoricalTx: false,
+};
