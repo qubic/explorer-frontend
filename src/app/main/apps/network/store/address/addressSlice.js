@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { BATCH_SIZE, TICK_SIZE } from '../../address/constants';
+import mapHistoricalTxToArchiverTx from '../adapters/mapHistoricalTxToLatestTx';
 import { fetchAddress, fetchHistoricalTxs, fetchTransferTxs } from './addressService';
 
 export const getAddress = createAsyncThunk('network/address', async (addressId) => {
@@ -31,10 +32,11 @@ export const getTransferTxs = createAsyncThunk(
 
 export const getHistoricalTxs = createAsyncThunk(
   'network/getHistoricalTxs',
-  async ({ addressId, offset }) => {
+  async ({ addressId }, { getState }) => {
+    const { page } = getState().network.address.historicalTxs;
     try {
-      const historicalTxs = await fetchHistoricalTxs(addressId, offset);
-      return historicalTxs;
+      const historicalTxs = await fetchHistoricalTxs(addressId, page);
+      return historicalTxs.map((tx) => mapHistoricalTxToArchiverTx(tx));
     } catch {
       throw new Error('Failed to fetch historical transactions');
     }
@@ -60,7 +62,7 @@ const addressSlice = createSlice({
       isLoading: false,
       error: null,
       hasMore: true,
-      offset: 0,
+      page: 0,
     },
   },
   reducers: {
@@ -121,7 +123,7 @@ const addressSlice = createSlice({
           state.historicalTxs.hasMore = false;
         } else {
           state.historicalTxs.data.push(...newTxs);
-          state.historicalTxs.offset += 1;
+          state.historicalTxs.page += 1;
         }
       })
       .addCase(getHistoricalTxs.rejected, (state, action) => {
