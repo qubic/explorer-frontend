@@ -42,6 +42,8 @@ const locale = {
   allTransactionsLoaded: 'Tüm işlemleri gördünüz',
   historical: 'Tarihi',
   loading: 'Yükleniyor',
+  historicalDataWarning:
+    'Tarihî verileri görüntülüyorsunuz. Bazı veriler tamamen doğru veya eksiksiz olmayabilir.',
 };
 
 export default locale;

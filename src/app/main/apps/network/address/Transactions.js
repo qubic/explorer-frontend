@@ -47,7 +47,15 @@ export default function Transactions({ addressId, address }) {
   }, [transferTxs, displayTransferTxs.length, hasMore, isLoading, fetchMoreTxs]);
 
   const renderTxItem = useCallback(
-    (item) => <TxItem key={item.txId} {...item} identify={addressId} variant="primary" />,
+    (item) => (
+      <TxItem
+        key={item.txId}
+        {...item}
+        identify={addressId}
+        variant="primary"
+        nonExecutedTxIds={item?.moneyFlew ? [] : [item?.txId]}
+      />
+    ),
     [addressId]
   );
 

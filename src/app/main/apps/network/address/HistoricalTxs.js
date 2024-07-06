@@ -12,29 +12,40 @@ export default function HistoricalTxs({ addressId }) {
   const { data: historicalTxs, isLoading, error, hasMore } = useSelector(selectHistoricalTxs);
 
   useEffect(() => {
-    // TODO: This is a draft impl since backend need to impl pagination
     if (historicalTxs.length === 0) {
-      dispatch(getHistoricalTxs({ addressId, offset: 0 }));
+      dispatch(getHistoricalTxs({ addressId }));
     }
   }, [dispatch, addressId, historicalTxs]);
 
   const fetchMoreTxs = () => {
-    // TODO: This is a draft impl since backend need to impl pagination
-    dispatch(getHistoricalTxs({ addressId, offset: historicalTxs.length / 20 }));
+    dispatch(getHistoricalTxs({ addressId }));
   };
 
   const renderTxItem = useCallback(
-    (item) => <TxItem key={item.id} {...item} identify={addressId} variant="primary" />,
+    (item) => (
+      <TxItem
+        key={item.txId}
+        {...item}
+        identify={addressId}
+        variant="primary"
+        isHistoricalTx
+        nonExecutedTxIds={item?.moneyFlew ? [] : [item?.txId]}
+      />
+    ),
     [addressId]
   );
 
   return (
     <div className="w-full grid gap-10">
-      <div className="flex flex-col gap-12">
-        {historicalTxs.map((item) =>
-          renderTxItem({ ...item, txId: item.id, tickNumber: item.tick, inputType: item.type })
-        )}
-      </div>
+      {(!isLoading || historicalTxs.length > 0) && (
+        <div className="flex items-center gap-4 pb-14">
+          <img src="assets/icons/information.svg" alt="info-icon" className="h-16 w-16" />
+          <Typography className="text-14 text-left text-gray-50">
+            {t('historicalDataWarning')}
+          </Typography>
+        </div>
+      )}
+      <div className="flex flex-col gap-12">{historicalTxs.map((item) => renderTxItem(item))}</div>
       {(() => {
         if (isLoading) return <FuseLoading className="sm:text-16" />;
         if (error) return <Alert severity="error">{error}</Alert>;
