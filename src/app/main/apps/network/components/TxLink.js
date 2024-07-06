@@ -4,13 +4,13 @@ import { Link } from 'react-router-dom';
 import { formatEllipsis } from 'src/app/utils/functions';
 import CopyText from './CopyText';
 
-function TxLink({ value, className, copy, ellipsis }) {
+export default function TxLink({ value, className, copy, ellipsis, isHistoricalTx }) {
   return (
     <div className="flex gap-10 items-center">
       <Typography
         component={Link}
         className={clsx('font-space break-all', className)}
-        to={`/network/tx/${value}`}
+        to={`/network/tx/${value}?type=${isHistoricalTx ? 'historical' : 'latest'}`}
         role="button"
       >
         {ellipsis ? formatEllipsis(value) : value}
@@ -19,4 +19,7 @@ function TxLink({ value, className, copy, ellipsis }) {
     </div>
   );
 }
-export default TxLink;
+
+TxLink.defaultProps = {
+  isHistoricalTx: false,
+};

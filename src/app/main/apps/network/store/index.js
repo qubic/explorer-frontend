@@ -2,7 +2,7 @@ import { combineReducers } from '@reduxjs/toolkit';
 import address from './address/addressSlice';
 import block from './blockSlice';
 import overview from './overviewSlice';
-import tx from './txSlice';
+import tx from './tx/txSlice';
 
 const reducer = combineReducers({
   overview,

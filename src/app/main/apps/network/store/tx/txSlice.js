@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import axios from 'axios';
+import mapHistoricalTxToArchiverTx from '../adapters/mapHistoricalTxToLatestTx';
+import { fetchHistoricalTx, fetchTransferTxWithStatus } from './txService';
 
 /**
  * Fetch transaction information and status from the server.
@@ -7,21 +8,29 @@ import axios from 'axios';
  * @returns {Promise<Object>} A promise that resolves with the transaction information and status.
  */
 
-export const getTx = createAsyncThunk('network/tx', async (txId, { getState }) => {
+export const getTx = createAsyncThunk('network/tx', async ({ txId, txType }, { getState }) => {
   try {
-    const [infoResponse, statusResponse] = await Promise.all([
-      axios.get(`${process.env.REACT_APP_ARCHIEVER}/transactions/${txId}`).catch(() => null),
-      axios.get(`${process.env.REACT_APP_ARCHIEVER}/tx-status/${txId}`).catch(() => null),
-    ]);
+    if (txType === 'historical') {
+      const historicalTx = getState().network.address.historicalTxs.data.find(
+        (tx) => tx.id === txId
+      );
 
-    const txInfo = infoResponse ? infoResponse.data.transaction : null;
-    const txStatus = statusResponse ? statusResponse.data.transactionStatus : null;
+      if (!historicalTx) {
+        const data = await fetchHistoricalTx(txId);
+        return {
+          tx: mapHistoricalTxToArchiverTx(data),
+          status: { txId: data.id, moneyFlew: data.moneyFlew },
+        };
+      }
 
-    const data = { tx: txInfo, status: txStatus };
+      return {
+        tx: mapHistoricalTxToArchiverTx(historicalTx),
+        status: { txId: historicalTx.id, moneyFlew: historicalTx.moneyFlew },
+      };
+    }
 
-    return data;
+    return await fetchTransferTxWithStatus(txId);
   } catch (error) {
-    // Handle errors
     throw new Error('Failed to fetch transaction data');
   }
 });

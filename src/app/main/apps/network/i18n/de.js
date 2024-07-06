@@ -42,6 +42,8 @@ const locale = {
   allTransactionsLoaded: 'Alle Transaktionen wurden angezeigt',
   historical: 'Historisch',
   loading: 'Laden',
+  historicalDataWarning:
+    'Sie betrachten historische Daten. Einige Daten sind möglicherweise nicht vollständig genau oder vollständig.',
 };
 
 export default locale;

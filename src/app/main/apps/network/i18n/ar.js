@@ -42,6 +42,7 @@ const locale = {
   allTransactionsLoaded: 'لقد شاهدت جميع المعاملات',
   historical: 'تاريخي',
   loading: 'جار التحميل',
+  historicalDataWarning: 'أنت تشاهد بيانات تاريخية. قد لا تكون بعض البيانات دقيقة تمامًا أو كاملة.',
 };
 
 export default locale;
