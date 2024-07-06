@@ -1,14 +1,15 @@
+import InfoIcon from '@mui/icons-material/InfoOutlined';
 import { Breadcrumbs, LinearProgress, Typography } from '@mui/material';
 import { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
-import { useTranslation } from 'react-i18next';
 import { formatEllipsis } from 'src/app/utils/functions';
 import HomeLink from '../components/HomeLink';
 import TickLink from '../components/TickLink';
 import TxItem from '../components/TxItem';
-import { getTx, selectTx, selectTxLoading } from '../store/txSlice';
+import { getTx, selectTx, selectTxLoading } from '../store/tx/txSlice';
 
 function TxPage() {
   const { t } = useTranslation('networkPage');
@@ -19,13 +20,16 @@ function TxPage() {
   const isLoading = useSelector(selectTxLoading);
   const tx = useSelector(selectTx);
 
+  const urlSearchParams = new URLSearchParams(window.location.search);
+  const txType = urlSearchParams.get('type');
+
   const getNonExecutedTxIds = (status) => {
-    return status.moneyFlew ? [] : [status.txId];
+    return status?.moneyFlew ? [] : [status?.txId];
   };
 
   useEffect(() => {
-    dispatch(getTx(txId));
-  }, [txId, dispatch]);
+    dispatch(getTx({ txId, txType }));
+  }, [txId, txType, dispatch]);
 
   if (isLoading) {
     return (
@@ -40,6 +44,14 @@ function TxPage() {
       <div className="py-32 max-w-[960px] mx-auto px-12">
         {tx?.tx ? (
           <>
+            {txType === 'historical' && (
+              <div className="flex items-start sm:items-center justify-center gap-4 bg-[#122B35] p-12 mb-24 rounded-12">
+                <InfoIcon className="h-16 w-16 text-primary-50" />
+                <Typography className="text-12  text-primary-40 w-fit">
+                  {t('historicalDataWarning')}
+                </Typography>
+              </div>
+            )}
             <Breadcrumbs aria-label="breadcrumb">
               <HomeLink />
               <Typography className="text-12 font-space text-gray-50">
