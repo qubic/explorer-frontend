@@ -1,4 +1,5 @@
-import { fetchEntries, formatString } from '@app/utils'
+import { formatString } from '@app/utils'
+// import { fetchEntries, formatString } from '@app/utils'
 // import { IconButton } from '@mui/material'
 import { memo, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -52,13 +53,14 @@ function TxItem({
       inputType === 1 &&
       inputHex
     ) {
-      fetchEntries(inputHex)
-        .then((resp) => {
-          setEntries(resp)
-        })
-        .catch((error) => {
-          console.log(error)
-        })
+      // TODO: Implement properly fetchEntries function on app utils
+      // fetchEntries(inputHex)
+      //   .then((resp) => {
+      //     setEntries(resp)
+      //   })
+      //   .catch((error) => {
+      //     console.log(error)
+      //   })
     }
   }, [])
 
@@ -146,9 +148,8 @@ function TxItem({
             />
             {entries.length !== 0 && entriesOpen && (
               <div
-                className={`my-8 p-12 bg-gray-70 flex flex-col gap-8 rounded-8 transition-all duration-300 ${
-                  entriesOpen ? 'h-auto' : 'h-0'
-                }`}
+                className={`my-8 p-12 bg-gray-70 flex flex-col gap-8 rounded-8 transition-all duration-300 ${entriesOpen ? 'h-auto' : 'h-0'
+                  }`}
               >
                 <div className="flex justify-between">
                   <Typography className="text-14 leading-18 font-space text-gray-50">
@@ -180,9 +181,8 @@ function TxItem({
                     {entriesOpen ? 'Hide' : 'Show'} {entries.length} transactions
                   </Typography>
                   <img
-                    className={`w-16 transition-transform duration-300 ${
-                      entriesOpen ? 'rotate-180' : 'rotate-0'
-                    }`}
+                    className={`w-16 transition-transform duration-300 ${entriesOpen ? 'rotate-180' : 'rotate-0'
+                      }`}
                     src="assets/icons/arrow-gray.svg"
                     alt="arrow"
                   />
@@ -242,9 +242,8 @@ function TxItem({
             <div className="">
               {entries.map((item, index) => (
                 <div
-                  className={`flex justify-between flex-col md:flex-row gap-8 ${
-                    index !== entries.length - 1 ? 'border-b-[1px] py-12 ' : 'pt-12'
-                  }`}
+                  className={`flex justify-between flex-col md:flex-row gap-8 ${index !== entries.length - 1 ? 'border-b-[1px] py-12 ' : 'pt-12'
+                    }`}
                   key={index}
                 >
                   <AddressLink value={item.destId} />
