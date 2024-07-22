@@ -1,0 +1,56 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Mobile Layout */
+    --header-height: 66px;
+    --footer-height: 120px;
+    --container-height: calc(100vh - var(--header-height) - var(--footer-height));
+    /* Desktop Layout */
+    --desktop-header-height: 66px;
+    --desktop-footer-height: 104px;
+    --desktop-container-height: calc(
+      100vh - var(--desktop-header-height) - var(--desktop-footer-height)
+    );
+  }
+
+  html {
+    font-family: 'Noto Sans', system-ui, sans-serif;
+    @apply bg-[#101820];
+  }
+
+  html,
+  body,
+  p,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  span,
+  a,
+  div {
+    @apply text-white;
+  }
+}
+
+@font-face {
+  font-family: 'Inter var';
+  font-weight: 100 900;
+  font-display: swap;
+  font-style: normal;
+  font-named-instance: 'Regular';
+  src: url('Inter-roman.var.woff2?v=3.18') format('woff2');
+}
+
+@font-face {
+  font-family: 'Inter var';
+  font-weight: 100 900;
+  font-display: swap;
+  font-style: italic;
+  font-named-instance: 'Italic';
+  src: url('Inter-italic.var.woff2?v=3.18') format('woff2');
+}
