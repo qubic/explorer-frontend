@@ -21,22 +21,22 @@ production environments.
 
 - **Development Environment**:
 
-  Copy the `.env.development.local.example` file, renaming it to `.env.development.local`:
+  Copy the `.env.example` file, renaming it to `.env`:
 
   ```
-  cp .env.development.local.example .env.development.local
+  cp .env.development.local.example .env
   ```
 
   Open this file and add the development API URL:
 
   ```
-  REACT_APP_QLI_URL=http://localhost:7002
-  REACT_APP_ARCHIEVER=http://localhost:7003
+  VITE_QLI_API_URL=dev-proxy-qli-api
+  VITE_ARCHIVER_API_URL=dev-proxy-archiver-api
   ```
 
 - **Production Environment**:
 
-  Copy the `.env.production.local.example` file, renaming it to `.env.production.local`:
+  Copy the `.env.example` file, renaming it to `.env.production.local`:
 
   ```
   cp .env.production.local.example .env.production.local
@@ -45,8 +45,8 @@ production environments.
   Then, set the production API URL:
 
   ```
-  REACT_APP_QLI_URL=https://api.qubic.li
-  REACT_APP_ARCHIEVER=https://rpc.qubic.org/v1
+  VITE_QLI_API_URL=https://api.qubic.li
+  VITE_ARCHIVER_API_URL=https://rpc.qubic.org/v1
   ```
 
 Ensure these files are not committed to the repository to protect sensitive information.
@@ -56,46 +56,22 @@ Ensure these files are not committed to the repository to protect sensitive info
 Install the project's dependencies by running:
 
 ```
-npm install
+pnpm install
 ```
 
 This command installs all necessary dependencies required for the project to run.
-
-### Step 4: Run the Local API Proxy
-
-For local development, especially if you need to work with APIs, run the local API proxy:
-
-```
-npm run start-api-proxy
-```
-
-This command starts a proxy server that facilitates communication between the frontend application
-running on port 3000 and the backend API or external services, as specified in your
-`.env.development.local`.
 
 ### Step 5: Start the Development Server
 
 To start the project in development mode, run:
 
 ```
-npm start
+pnpm run dev
 ```
 
-This will start the React development server, typically available at
-[http://localhost:3000](http://localhost:3000). Navigate to this URL in your browser to view the
+This will start the Vite React development server, typically available at
+[http://localhost:5173](http://localhost:5173). Navigate to this URL in your browser to view the
 application.
-
-Ensure the `start-api-proxy` script is correctly defined in your `package.json`:
-
-```json
-"scripts": {
-  "start-api-proxy": "node dev-proxy.js",
-  ...
-}
-```
-
-This script should be tailored to your development setup, proxying requests to the appropriate
-backend service or external API.
 
 ## License
 
