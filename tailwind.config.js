@@ -65,23 +65,6 @@ export default {
         40: '#CDA747',
         90: '#322D11'
       },
-      grey: {
-        50: '#FAFAFA',
-        100: '#F5F5F5',
-        200: '#EEEEEE',
-        300: '#E0E0E0',
-        400: '#BDBDBD',
-        500: '#9E9E9E',
-        DEFAULT: '#9E9E9E',
-        600: '#757575',
-        700: '#616161',
-        800: '#424242',
-        900: '#212121',
-        A100: '#D5D5D5',
-        A200: '#AAAAAA',
-        A400: '#303030',
-        A700: '#616161'
-      },
       red: {
         50: '#FFEBEE',
         100: '#FFCDD2',
@@ -807,63 +790,6 @@ export default {
         'monospace'
       ]
     },
-    fontSize: {
-      // xs: '1rem',
-      // sm: '1.2rem',
-      // md: '1.3rem',
-      // base: '1.4rem',
-      // lg: '1.6rem',
-      // xl: '1.8rem',
-      // '2xl': '2rem',
-      // '3xl': '2.4rem',
-      // '4xl': '3.2rem',
-      // '5xl': '3.6rem',
-      // '6xl': '4rem',
-      // '7xl': '4.8rem',
-      // '8xl': '6.4rem',
-      // '9xl': '9.6rem',
-      // '10xl': '12.8rem',
-      xs: ['1.2rem', { lineHeight: '1.6rem' }],
-      sm: ['1.4rem', { lineHeight: '2rem' }],
-      base: ['1.6rem', { lineHeight: '2.4rem' }],
-      lg: ['1.8rem', { lineHeight: '2.8em' }],
-      xl: ['2rem', { lineHeight: '2.8rem' }],
-      '2xl': ['2.4rem', { lineHeight: '3.2rem' }],
-      '3xl': ['3rem', { lineHeight: '3.6rem' }],
-      '4xl': ['3.6rem', { lineHeight: '4rem' }],
-      '5xl': ['4.8rem', { lineHeight: '1' }],
-      '6xl': ['6rem', { lineHeight: '1' }],
-      '7xl': ['7.2rem', { lineHeight: '1' }],
-      '8xl': ['9.6rem', { lineHeight: '1' }],
-      '9xl': ['12.8rem', { lineHeight: '1' }],
-      10: ['0.625rem', { lineHeight: '1.25' }], // 10px
-      11: ['0.6875rem', { lineHeight: '1.25' }], // 11px
-      12: ['0.75rem', { lineHeight: '1.25' }], // 12px
-      13: ['0.8125rem', { lineHeight: '1.25' }], // 13px
-      14: ['0.875rem', { lineHeight: '1.25' }], // 14px
-      15: ['0.9375rem', { lineHeight: '1.25' }], // 15px
-      16: ['1rem', { lineHeight: '1.25' }], // 16px
-      17: ['1.0625rem', { lineHeight: '1.25' }], // 17px
-      18: ['1.125rem', { lineHeight: '1.25' }], // 18px
-      19: ['1.1875rem', { lineHeight: '1.25' }], // 19px
-      20: ['1.25rem', { lineHeight: '1.25' }], // 20px
-      22: ['1.375rem', { lineHeight: '1.25' }], // 22px
-      24: ['1.5rem', { lineHeight: '1.25' }], // 24px
-      28: ['1.75rem', { lineHeight: '1.25' }], // 28px
-      32: ['2rem', { lineHeight: '1.25' }], // 32px
-      36: ['2.25rem', { lineHeight: '1.25' }], // 36px
-      40: ['2.5rem', { lineHeight: '1.25' }], // 40px
-      44: ['2.75rem', { lineHeight: '1.25' }], // 44px
-      48: ['3rem', { lineHeight: '1.25' }], // 48px
-      52: ['3.25rem', { lineHeight: '1.25' }], // 52px
-      56: ['3.5rem', { lineHeight: '1.25' }], // 56px
-      60: ['3.75rem', { lineHeight: '1.25' }], // 60px
-      64: ['4rem', { lineHeight: '1.25' }], // 64px
-      68: ['4.25rem', { lineHeight: '1.25' }], // 68px
-      72: ['4.5rem', { lineHeight: '1.25' }], // 72px
-      96: ['6rem', { lineHeight: '1.25' }], // 96px
-      128: ['8rem', { lineHeight: '1.25' }] // 128px
-    },
     fontWeight: {
       thin: '100',
       extralight: '200',
@@ -1440,24 +1366,35 @@ export default {
       9999: '9999'
     },
     extend: {
-      // @tailwindcss/typography
-      // typography: () => ({
-      //   DEFAULT: {
-      //     css: {
-      //       fontSize: '1.4rem'
-      //     }
-      //   },
-      //   sm: {
-      //     css: {
-      //       fontSize: '1.2rem'
-      //     }
-      //   },
-      //   lg: {
-      //     css: {
-      //       fontSize: '1.6rem'
-      //     }
-      //   }
-      // }),
+      fontSize: {
+        10: ['0.625rem', { lineHeight: '1.25' }], // 10px
+        11: ['0.6875rem', { lineHeight: '1.25' }], // 11px
+        12: ['0.75rem', { lineHeight: '1.25' }], // 12px
+        13: ['0.8125rem', { lineHeight: '1.25' }], // 13px
+        14: ['0.875rem', { lineHeight: '1.25' }], // 14px
+        15: ['0.9375rem', { lineHeight: '1.25' }], // 15px
+        16: ['1rem', { lineHeight: '1.25' }], // 16px
+        17: ['1.0625rem', { lineHeight: '1.25' }], // 17px
+        18: ['1.125rem', { lineHeight: '1.25' }], // 18px
+        19: ['1.1875rem', { lineHeight: '1.25' }], // 19px
+        20: ['1.25rem', { lineHeight: '1.25' }], // 20px
+        22: ['1.375rem', { lineHeight: '1.25' }], // 22px
+        24: ['1.5rem', { lineHeight: '1.25' }], // 24px
+        28: ['1.75rem', { lineHeight: '1.25' }], // 28px
+        32: ['2rem', { lineHeight: '1.25' }], // 32px
+        36: ['2.25rem', { lineHeight: '1.25' }], // 36px
+        40: ['2.5rem', { lineHeight: '1.25' }], // 40px
+        44: ['2.75rem', { lineHeight: '1.25' }], // 44px
+        48: ['3rem', { lineHeight: '1.25' }], // 48px
+        52: ['3.25rem', { lineHeight: '1.25' }], // 52px
+        56: ['3.5rem', { lineHeight: '1.25' }], // 56px
+        60: ['3.75rem', { lineHeight: '1.25' }], // 60px
+        64: ['4rem', { lineHeight: '1.25' }], // 64px
+        68: ['4.25rem', { lineHeight: '1.25' }], // 68px
+        72: ['4.5rem', { lineHeight: '1.25' }], // 72px
+        96: ['6rem', { lineHeight: '1.25' }], // 96px
+        128: ['8rem', { lineHeight: '1.25' }] // 128px
+      },
       animation: {
         progress: 'progress 1s infinite linear'
       },
