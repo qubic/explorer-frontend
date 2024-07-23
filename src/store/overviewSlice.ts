@@ -5,13 +5,13 @@ import type { PayloadAction } from '@reduxjs/toolkit'
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import axios from 'axios'
 
-export interface NetworkState {
+export interface OverviewState {
   overview: TickOverview | null
   isLoading: boolean
   error: string | null
 }
 
-const initialState: NetworkState = {
+const initialState: OverviewState = {
   overview: null,
   isLoading: false,
   error: null
@@ -27,7 +27,7 @@ export const getOverview = createAsyncThunk('network/overview', async () => {
   return data
 })
 
-const networkSlice = createSlice({
+const overviewSlice = createSlice({
   name: 'network/overview',
   initialState,
   reducers: {},
@@ -48,9 +48,7 @@ const networkSlice = createSlice({
   }
 })
 
-export const selectNetworkOverview = (state: RootState) => state.network
-export const selectOverview = (state: RootState) => state.network.overview
-export const selectOverviewLoading = (state: RootState) => state.network.isLoading
-export const selectOverviewError = (state: RootState) => state.network.error
+// Selectors
+export const selectOverview = (state: RootState) => state.overview
 
-export default networkSlice.reducer
+export default overviewSlice.reducer

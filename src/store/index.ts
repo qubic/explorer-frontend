@@ -7,7 +7,7 @@ export const store = configureStore({
   reducer: {
     locale: localeReducer,
     search: searchReducer,
-    network: overviewReducer
+    overview: overviewReducer
   }
 })
 
