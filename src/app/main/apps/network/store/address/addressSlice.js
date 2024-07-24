@@ -71,7 +71,9 @@ const addressSlice = createSlice({
     setLastEndTick: (state, action) => {
       state.transferTxs.lastEndTick = action.payload;
     },
-    resetState: () => initialState,
+    resetState: (state) => {
+      Object.assign(state, initialState);
+    },
   },
   extraReducers: (builder) => {
     builder
