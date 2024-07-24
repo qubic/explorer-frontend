@@ -43,32 +43,35 @@ export const getHistoricalTxs = createAsyncThunk(
   }
 );
 
-const addressSlice = createSlice({
-  name: 'network/address',
-  initialState: {
-    address: null,
+const initialState = {
+  address: null,
+  isLoading: false,
+  error: null,
+  transferTxs: {
+    data: [],
     isLoading: false,
     error: null,
-    transferTxs: {
-      data: [],
-      isLoading: false,
-      error: null,
-      hasMore: true,
-      lastStartTick: 0,
-      lastEndTick: 0,
-    },
-    historicalTxs: {
-      data: [],
-      isLoading: false,
-      error: null,
-      hasMore: true,
-      page: 0,
-    },
+    hasMore: true,
+    lastStartTick: 0,
+    lastEndTick: 0,
   },
+  historicalTxs: {
+    data: [],
+    isLoading: false,
+    error: null,
+    hasMore: true,
+    page: 0,
+  },
+};
+
+const addressSlice = createSlice({
+  name: 'network/address',
+  initialState,
   reducers: {
     setLastEndTick: (state, action) => {
       state.transferTxs.lastEndTick = action.payload;
     },
+    resetState: () => initialState,
   },
   extraReducers: (builder) => {
     builder
@@ -142,6 +145,6 @@ export const selectTransferTxs = ({ network }) => network.address.transferTxs;
 export const selectHistoricalTxs = ({ network }) => network.address.historicalTxs;
 
 // actions
-export const { setLastEndTick } = addressSlice.actions;
+export const { setLastEndTick, resetState } = addressSlice.actions;
 
 export default addressSlice.reducer;
