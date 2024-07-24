@@ -7,7 +7,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { formatEllipsis, formatString } from 'src/app/utils/functions';
 import { CardItem, CopyText, HomeLink, TickLink } from '../components';
-import { getAddress, selectAddress, selectAddressLoading } from '../store/address/addressSlice';
+import {
+  getAddress,
+  resetState,
+  selectAddress,
+  selectAddressLoading,
+} from '../store/address/addressSlice';
 import { getOverview, selectOverview } from '../store/overviewSlice';
 import HistoricalTxs from './HistoricalTxs';
 import Transactions from './Transactions';
@@ -33,6 +38,9 @@ function AddressPage() {
     if (!overview) {
       dispatch(getOverview());
     }
+    return () => {
+      dispatch(resetState());
+    };
   }, [addressId, dispatch, overview]);
 
   if (isLoading) {
