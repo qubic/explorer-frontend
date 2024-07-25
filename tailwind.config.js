@@ -1,6 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 import aspectRatioPlugin from '@tailwindcss/aspect-ratio'
 import typographyPlugin from '@tailwindcss/typography'
+import scrollbarPlugin from 'tailwind-scrollbar'
 
 export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
@@ -1428,5 +1429,9 @@ export default {
     'active',
     'disabled'
   ],
-  plugins: [typographyPlugin({ modifiers: ['sm', 'lg'] }), aspectRatioPlugin]
+  plugins: [
+    typographyPlugin({ modifiers: ['sm', 'lg'] }),
+    aspectRatioPlugin,
+    scrollbarPlugin({ nocompatible: true, preferredStrategy: 'pseudoelements' })
+  ]
 }
