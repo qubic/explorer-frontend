@@ -64,6 +64,16 @@ export default function Modal({
   closeOnOutsideClick,
   onClose
 }: ModalProps) {
+  useEffect(() => {
+    if (isOpen) {
+      document.body.classList.add('overflow-hidden')
+    }
+
+    return () => {
+      document.body.classList.remove('overflow-hidden')
+    }
+  }, [isOpen])
+
   return isOpen
     ? createPortal(
         <ModalOverlayWrapper
