@@ -13,7 +13,7 @@ export default function AppLayout() {
   return (
     <>
       <Header />
-      <main className="w-full min-h-[var(--container-height)] sm:min-h-[var(--desktop-container-height)] px-8 pb-10 pt-20">
+      <main className="w-full min-h-[var(--container-height)] sm:min-h-[var(--desktop-container-height)]">
         <Outlet />
       </main>
       <Footer />
