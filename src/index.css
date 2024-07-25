@@ -5,11 +5,11 @@
 @layer base {
   :root {
     /* Mobile Layout */
-    --header-height: 66px;
+    --header-height: 67px;
     --footer-height: 120px;
     --container-height: calc(100vh - var(--header-height) - var(--footer-height));
     /* Desktop Layout */
-    --desktop-header-height: 66px;
+    --desktop-header-height: 67px;
     --desktop-footer-height: 104px;
     --desktop-container-height: calc(
       100vh - var(--desktop-header-height) - var(--desktop-footer-height)
@@ -34,6 +34,21 @@
   a,
   div {
     @apply text-white;
+    @apply scrollbar scrollbar-track-transparent scrollbar-thumb-gray-70;
+  }
+
+  body::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  body::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  body::-webkit-scrollbar-thumb {
+    border: 2px solid #101820;
+    background: #202e3c;
+    border-radius: 20px;
   }
 }
 
