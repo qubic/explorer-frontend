@@ -1,5 +1,11 @@
 const formatString = (string: string | number | undefined | null) => {
-  return string ? Number(string).toLocaleString('en-US') : '0'
+  if (string === undefined || string === null) return '0'
+
+  if (typeof string === 'number') {
+    return string.toLocaleString('en-US')
+  }
+
+  return string
 }
 
 const formatDate = (dateString: string) => {
