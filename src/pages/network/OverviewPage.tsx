@@ -118,7 +118,7 @@ export default function OverviewPage() {
   }
 
   return (
-    <div className="w-full pt-32">
+    <div className="w-full py-32">
       <div className="max-w-[960px] px-16 flex flex-1 flex-col gap-16 mx-auto">
         <div className="grid md:grid-flow-col gap-16">
           {cardData.slice(0, 2).map((card) => (
