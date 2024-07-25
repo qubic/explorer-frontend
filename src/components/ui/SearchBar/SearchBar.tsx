@@ -3,7 +3,7 @@ import { useAppDispatch, useAppSelector } from '@app/hooks/redux'
 import { Routes } from '@app/router'
 import { getSearch, resetSearch, searchSelector } from '@app/store/searchSlice'
 import { formatBase64, formatDate, formatString } from '@app/utils'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { LinearProgress } from '../loaders'
@@ -11,11 +11,12 @@ import Modal from '../Modal'
 import ResultItem from './ResultItem'
 
 const evaluateSearchType = (keyword: string) => {
-  if (keyword.trim().length === 60) {
-    if (/^[A-Z\s]+$/.test(keyword.trim())) {
+  const trimmedKeyword = keyword.trim()
+  if (trimmedKeyword.length === 60) {
+    if (/^[A-Z\s]+$/.test(trimmedKeyword)) {
       return 'address'
     }
-    if (/^[a-z]+$/.test(keyword.trim())) {
+    if (/^[a-z]+$/.test(trimmedKeyword)) {
       return 'tx'
     }
   } else if (parseInt(keyword.replace(/,/g, ''), 10).toString().length === 8) {
@@ -32,28 +33,32 @@ export default function SearchBar() {
   const [open, setOpen] = useState(false)
   const [keyword, setKeyword] = useState('')
 
-  const handleClose = () => {
+  const handleCloseCallback = useCallback(() => {
     setOpen(false)
     dispatch(resetSearch())
     setKeyword('')
-  }
+  }, [dispatch])
 
-  const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === 'Enter' && keyword !== '') {
-      event.preventDefault()
-      const type = evaluateSearchType(keyword)
-      if (type === 'address') {
-        navigate(`/network/address/${keyword.trim()}`)
-      } else if (type === 'tx') {
-        navigate(`/network/tx/${keyword.trim()}`)
-      } else if (type === 'tick') {
-        navigate(`/network/tick/${parseInt(keyword.replace(/,/g, ''), 10)}`)
-      } else {
-        navigate('/404')
+  const handleKeyPressCallback = useCallback(
+    (event: React.KeyboardEvent<HTMLInputElement>) => {
+      if (event.key === 'Enter' && keyword !== '') {
+        event.preventDefault()
+        const type = evaluateSearchType(keyword)
+        const trimmedKeyword = keyword.trim()
+        if (type === 'address') {
+          navigate(Routes.NETWORK.ADDRESS(trimmedKeyword))
+        } else if (type === 'tx') {
+          navigate(Routes.NETWORK.TX(trimmedKeyword))
+        } else if (type === 'tick') {
+          navigate(Routes.NETWORK.TICK(parseInt(keyword.replace(/,/g, ''), 10)))
+        } else {
+          navigate(Routes.NOT_FOUND)
+        }
+        handleCloseCallback()
       }
-      handleClose()
-    }
-  }
+    },
+    [handleCloseCallback, keyword, navigate]
+  )
 
   useEffect(() => {
     const timerId = setTimeout(() => {
@@ -80,7 +85,7 @@ export default function SearchBar() {
         isOpen={open}
         className="top-60"
         closeOnOutsideClick
-        onClose={handleClose}
+        onClose={handleCloseCallback}
       >
         <div className="w-full h-fit bg-gray-80">
           {isLoading && (
@@ -101,13 +106,13 @@ export default function SearchBar() {
                 onChange={(e) => {
                   setKeyword(e.target.value)
                 }}
-                onKeyDown={handleKeyPress}
+                onKeyDown={handleKeyPressCallback}
               />
             </div>
             <button
               type="button"
               className="absolute ltr:right-12 ltr:sm:right-24 rtl:left-12 rtl:sm:left-24"
-              onClick={handleClose}
+              onClick={handleCloseCallback}
               aria-label="close-button"
             >
               <XmarkIcon className="w-24 h-24" />
@@ -121,50 +126,38 @@ export default function SearchBar() {
           )}
 
           {searchResult && (
-            <div className="max-h-[320px] overflow-auto max-w-[800px] mx-auto pb-20">
+            <div className="max-h-[320px] overflow-y-scroll max-w-[800px] mx-auto pb-20 scrollbar scrollbar-track-transparent scrollbar-thumb-gray-70 scrollbar-thumb-rounded-full scrollbar-w-4">
               {'balance' in searchResult && (
                 <ResultItem
                   icon={<GridAddIcon className="min-w-16 min-h-16 w-16 h-16 mr-6" />}
                   title={`Qubic ${t('address')}`}
-                  content={
-                    <p className="text-14 font-sans">
-                      {searchResult.balance.id}{' '}
-                      <span className="text-gray-50">{t('balance')}:</span>{' '}
-                      {formatString(searchResult.balance.balance)}
-                    </p>
-                  }
-                  onClick={handleClose}
+                  result={formatString(searchResult.balance.id)}
+                  label={t('balance')}
+                  info={formatString(searchResult.balance.balance)}
                   link={Routes.NETWORK.ADDRESS(searchResult.balance.id)}
+                  onClick={handleCloseCallback}
                 />
               )}
               {'transaction' in searchResult && (
                 <ResultItem
                   icon={<CameraIcon className="w-16 h-16 mr-6" />}
                   title={t('transaction')}
-                  content={
-                    <p className="text-14 font-sans">
-                      {searchResult.transaction.txId}{' '}
-                      <span className="text-gray-50">{t('tick')}:</span>{' '}
-                      {formatString(searchResult.transaction.tickNumber)}
-                    </p>
-                  }
+                  result={formatString(searchResult.transaction.txId)}
+                  label={t('tick')}
+                  info={formatString(searchResult.transaction.tickNumber)}
                   link={Routes.NETWORK.TX(searchResult.transaction.txId)}
-                  onClick={handleClose}
+                  onClick={handleCloseCallback}
                 />
               )}
               {'tickData' in searchResult && (
                 <ResultItem
-                  icon={<CameraIcon className="w-16 h-16 mr-6" />}
+                  icon={<CameraIcon className="min-w-16 w-16 h-16 mr-6" />}
                   title={t('tick')}
-                  content={
-                    <p className="text-14 font-sans">
-                      {formatBase64(searchResult.tickData.signatureHex)}{' '}
-                      <span className="text-gray-50">{t('from')}</span>{' '}
-                      {formatDate(searchResult.tickData.timestamp)}
-                    </p>
-                  }
+                  result={formatBase64(searchResult.tickData.signatureHex)}
+                  label={t('from')}
+                  info={formatDate(searchResult.tickData.timestamp)}
                   link={Routes.NETWORK.TICK(searchResult.tickData.tickNumber)}
-                  onClick={handleClose}
+                  onClick={handleCloseCallback}
                   items={searchResult.tickData.transactionIds}
                 />
               )}
