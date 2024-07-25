@@ -17,7 +17,7 @@ export interface SearchState {
 
 interface SearchQuery {
   query: string
-  type: 'address' | 'tx' | 'tick'
+  type: 'address' | 'tx' | 'tick' | null
 }
 
 export const getSearch = createAsyncThunk<SearchState['result'], SearchQuery>(
