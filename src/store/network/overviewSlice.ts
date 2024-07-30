@@ -49,6 +49,6 @@ const overviewSlice = createSlice({
 })
 
 // Selectors
-export const selectOverview = (state: RootState) => state.overview
+export const selectOverview = (state: RootState) => state.network.overview
 
 export default overviewSlice.reducer

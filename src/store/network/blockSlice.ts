@@ -73,6 +73,6 @@ const blockSlice = createSlice({
 })
 
 // Selectors
-export const selectBlock = (state: RootState) => state.block
+export const selectBlock = (state: RootState) => state.network.block
 
 export default blockSlice.reducer
