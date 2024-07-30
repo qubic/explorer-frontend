@@ -37,9 +37,9 @@ export default function LanguagePicker() {
     <DropdownMenu show={showDropdown}>
       <DropdownMenu.Trigger
         onToggle={handleDropdownToggle}
-        className="hover:bg-gray-70/80 p-8 rounded-full"
+        className="rounded-full p-8 hover:bg-gray-70/80"
       >
-        <GlobeGrayIcon className="w-24 h-24 " />
+        <GlobeGrayIcon className="h-24 w-24" />
       </DropdownMenu.Trigger>
       <DropdownMenu.Content>
         <ul className="grid" ref={dropdownRef}>
@@ -49,7 +49,7 @@ export default function LanguagePicker() {
                 type="button"
                 onClick={() => handleLanguageChange(lng)}
                 className={clsxTwMerge(
-                  'text-left px-16 py-10 w-full hover:bg-gray-60/40 font-space min-w-[164px] leading-tight',
+                  'w-full min-w-[164px] px-16 py-10 text-left font-space leading-tight hover:bg-gray-60/40',
                   language === lng.id && 'bg-gray-60/60',
                   index === 0 && 'rounded-t-md',
                   index === LANGUAGES.length - 1 && 'rounded-b-md'
