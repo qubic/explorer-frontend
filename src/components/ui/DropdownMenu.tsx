@@ -1,5 +1,6 @@
 import { clsxTwMerge } from '@app/utils'
-import React, { ReactElement, ReactNode } from 'react'
+import type { ReactElement, ReactNode } from 'react'
+import React from 'react'
 
 interface DropdownMenuProps {
   children: ReactNode
@@ -55,7 +56,7 @@ DropdownMenu.Content = function DropdownMenuContent({
   return (
     <div
       className={clsxTwMerge(
-        'origin-top-right absolute right-0 top-40 mt-2 w-fit rounded-md shadow-lg bg-gray-70 ring-1 ring-black ring-opacity-5 focus:outline-none transition duration-1000 ease-in-out',
+        'absolute right-0 top-40 z-50 mt-2 w-fit origin-top-right rounded-md bg-gray-70 shadow-lg ring-1 ring-black ring-opacity-5 transition duration-1000 ease-in-out focus:outline-none',
         className
       )}
       role="menu"
