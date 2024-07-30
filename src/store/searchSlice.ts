@@ -1,16 +1,16 @@
-import ARCHIVER_API_ENDPOINTS from '@app/api/archiver/endpoints'
+import ARCHIVER_API_ENDPOINTS from '@app/services/archiver/endpoints'
 import type {
-  BalancesResponse,
+  GetBalancesResponse,
   GetTickDataResponse,
   GetTransactionByIdResponse
-} from '@app/api/archiver/types'
+} from '@app/services/archiver/types'
 import type { RootState } from '@app/store'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import axios from 'axios'
 
 export interface SearchState {
-  result: BalancesResponse | GetTickDataResponse | GetTransactionByIdResponse | null
+  result: GetBalancesResponse | GetTickDataResponse | GetTransactionByIdResponse | null
   isLoading: boolean
   error: string | null
 }
@@ -30,7 +30,7 @@ export const getSearch = createAsyncThunk<SearchState['result'], SearchQuery>(
         case 'tx':
           return ARCHIVER_API_ENDPOINTS.TRANSACTIONS(query)
         case 'tick':
-          return ARCHIVER_API_ENDPOINTS.TICKS(query)
+          return ARCHIVER_API_ENDPOINTS.TICK_DATA(query)
         default:
           throw new Error('Invalid search type')
       }
