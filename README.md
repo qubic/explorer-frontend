@@ -30,8 +30,8 @@ production environments.
   Open this file and add the development API URL:
 
   ```
-  VITE_QLI_API_URL=dev-proxy-qli-api
-  VITE_ARCHIVER_API_URL=dev-proxy-archiver-api
+  VITE_QLI_API_URL=/dev-proxy-qli-api
+  VITE_ARCHIVER_API_URL=/dev-proxy-archiver-api
   ```
 
 - **Production Environment**:
