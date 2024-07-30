@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 import aspectRatioPlugin from '@tailwindcss/aspect-ratio'
+import formsPlugin from '@tailwindcss/forms'
 import typographyPlugin from '@tailwindcss/typography'
 import scrollbarPlugin from 'tailwind-scrollbar'
 
@@ -433,6 +434,7 @@ export default {
       12: '0.75rem', // 12px
       14: '0.875rem', // 14px
       16: '1rem', // 16px
+      18: '1.125rem', // 18px
       20: '1.25rem', // 20px
       24: '1.5rem', // 24px
       28: '1.75rem', // 28px
@@ -1430,8 +1432,9 @@ export default {
     'disabled'
   ],
   plugins: [
-    typographyPlugin({ modifiers: ['sm', 'lg'] }),
     aspectRatioPlugin,
+    formsPlugin({ strategy: 'class' }),
+    typographyPlugin({ modifiers: ['sm', 'lg'] }),
     scrollbarPlugin({ nocompatible: true, preferredStrategy: 'pseudoelements' })
   ]
 }
