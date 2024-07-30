@@ -1,5 +1,5 @@
-import QLI_API_ENDPOINTS from '@app/api/qli/endpoints'
-import type { TickOverview } from '@app/api/qli/types'
+import QLI_API_ENDPOINTS from '@app/services/qli/endpoints'
+import type { TickOverview } from '@app/services/qli/types'
 import type { RootState } from '@app/store'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
