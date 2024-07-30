@@ -1,4 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit'
+import blockReducer from './blockSlice'
 import localeReducer from './localeSlice'
 import overviewReducer from './overviewSlice'
 import searchReducer from './searchSlice'
@@ -7,7 +8,9 @@ export const store = configureStore({
   reducer: {
     locale: localeReducer,
     search: searchReducer,
-    overview: overviewReducer
+    // Network reducers
+    overview: overviewReducer,
+    block: blockReducer
   }
 })
 
