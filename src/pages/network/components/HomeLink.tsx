@@ -1,11 +1,11 @@
+import { HomeIcon } from '@app/assets/icons'
+import { Routes } from '@app/router'
 import { Link } from 'react-router-dom'
 
-function HomeLink() {
+export default function HomeLink() {
   return (
-    <Link className="text-16 leading-20 mb-8 text-gray-50" to="/network" role="button">
-      <img src="assets/icons/home.svg" alt="home" />
+    <Link to={Routes.NETWORK.ROOT} role="button">
+      <HomeIcon />
     </Link>
   )
 }
-
-export default HomeLink
