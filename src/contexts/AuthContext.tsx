@@ -1,5 +1,5 @@
-import QLI_API_ENDPOINTS from '@app/api/qli/endpoints'
 import { AppLoader } from '@app/components/ui/loaders'
+import QLI_API_ENDPOINTS from '@app/services/qli/endpoints'
 import axios from 'axios'
 import { createContext, useEffect, useMemo, useState } from 'react'
 
