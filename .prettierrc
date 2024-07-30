@@ -7,5 +7,7 @@
   "tabWidth": 2,
   "semi": false,
   "trailingComma": "none",
-  "endOfLine": "lf"
+  "endOfLine": "lf",
+  "plugins": ["prettier-plugin-tailwindcss"],
+  "tailwindFunctions": ["clsx", "twMerge", "clsxTwMerge"]
 }
