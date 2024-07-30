@@ -1,8 +1,8 @@
 import ARCHIVER_API_ENDPOINTS from '@app/services/archiver/endpoints'
 import type {
-  GetBalancesResponse,
+  GetBalanceResponse,
   GetTickDataResponse,
-  GetTransactionByIdResponse
+  GetTransactionResponse
 } from '@app/services/archiver/types'
 import type { RootState } from '@app/store'
 import type { PayloadAction } from '@reduxjs/toolkit'
@@ -10,7 +10,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import axios from 'axios'
 
 export interface SearchState {
-  result: GetBalancesResponse | GetTickDataResponse | GetTransactionByIdResponse | null
+  result: GetBalanceResponse | GetTickDataResponse | GetTransactionResponse | null
   isLoading: boolean
   error: string | null
 }

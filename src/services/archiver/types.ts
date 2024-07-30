@@ -30,13 +30,18 @@ export interface Transaction {
   signatureHex: string
 }
 
+export interface TransactionStatus {
+  txId: string
+  moneyFlew: boolean
+}
+
 export interface Computor {
   epoch: number
   itentities: string[]
   signatureHex: string
 }
 
-export interface GetBalancesResponse {
+export interface GetBalanceResponse {
   balance: Balance
 }
 
@@ -56,8 +61,12 @@ export interface GetTickApprovedTransactionsResponse {
   approvedTransactions: Transaction[]
 }
 
-export interface GetTransactionByIdResponse {
+export interface GetTransactionResponse {
   transaction: Transaction
+}
+
+export interface GetTransactionStatusResponse {
+  transactionStatus: TransactionStatus
 }
 
 export interface GetEpochComputorsResponse {

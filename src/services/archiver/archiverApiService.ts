@@ -1,13 +1,14 @@
 import axios from 'axios'
 import ARCHIVER_API_ENDPOINTS from './endpoints'
 import type {
-  GetBalancesResponse,
+  GetBalanceResponse,
   GetEpochComputorsResponse,
   GetTickApprovedTransactionsResponse,
   GetTickDataResponse,
   GetTickTransactionsResponse,
   GetTickTransferTransactionsResponse,
-  GetTransactionByIdResponse
+  GetTransactionResponse,
+  GetTransactionStatusResponse
 } from './types'
 
 const fetchData = async <T>(url: string): Promise<T> => {
@@ -20,36 +21,40 @@ const fetchData = async <T>(url: string): Promise<T> => {
 }
 
 const archiverApiService = {
-  getBalances: async (query: string): Promise<GetBalancesResponse> => {
+  getBalance: async (query: string): Promise<GetBalanceResponse> => {
     const url = ARCHIVER_API_ENDPOINTS.BALANCES(query)
-    return fetchData<GetBalancesResponse>(url)
+    return fetchData<GetBalanceResponse>(url)
   },
-  getTransactions: async (query: string): Promise<GetTransactionByIdResponse> => {
-    const url = ARCHIVER_API_ENDPOINTS.TRANSACTIONS(query)
-    return fetchData<GetTransactionByIdResponse>(url)
+  getTransaction: async (txId: string): Promise<GetTransactionResponse> => {
+    const url = ARCHIVER_API_ENDPOINTS.TRANSACTIONS(txId)
+    return fetchData<GetTransactionResponse>(url)
   },
-  getTickData: async (query: string): Promise<GetTickDataResponse> => {
-    const url = ARCHIVER_API_ENDPOINTS.TICK_DATA(query)
+  getTransactionStatus: async (txId: string): Promise<GetTransactionStatusResponse> => {
+    const url = ARCHIVER_API_ENDPOINTS.TRANSACTION_STATUS(txId)
+    return fetchData<GetTransactionStatusResponse>(url)
+  },
+  getTickData: async (tick: string): Promise<GetTickDataResponse> => {
+    const url = ARCHIVER_API_ENDPOINTS.TICK_DATA(tick)
     return fetchData<GetTickDataResponse>(url)
   },
-  getTickTransactions: async (query: string): Promise<GetTickTransactionsResponse> => {
-    const url = ARCHIVER_API_ENDPOINTS.TICK_TRANSACTIONS(query)
+  getTickTransactions: async (tick: string): Promise<GetTickTransactionsResponse> => {
+    const url = ARCHIVER_API_ENDPOINTS.TICK_TRANSACTIONS(tick)
     return fetchData<GetTickTransactionsResponse>(url)
   },
   getTickTransferTransactions: async (
-    query: string
+    tick: string
   ): Promise<GetTickTransferTransactionsResponse> => {
-    const url = ARCHIVER_API_ENDPOINTS.TICK_TRANSFER_TRANSACTIONS(query)
+    const url = ARCHIVER_API_ENDPOINTS.TICK_TRANSFER_TRANSACTIONS(tick)
     return fetchData<GetTickTransferTransactionsResponse>(url)
   },
   getTickApprovedTransactions: async (
-    query: string
+    tick: string
   ): Promise<GetTickApprovedTransactionsResponse> => {
-    const url = ARCHIVER_API_ENDPOINTS.TICK_APPROVED_TRANSACTIONS(query)
+    const url = ARCHIVER_API_ENDPOINTS.TICK_APPROVED_TRANSACTIONS(tick)
     return fetchData<GetTickApprovedTransactionsResponse>(url)
   },
-  getEpochComputors: async (query: number): Promise<GetEpochComputorsResponse> => {
-    const url = ARCHIVER_API_ENDPOINTS.EPOCH_COMPUTORS(query)
+  getEpochComputors: async (epoch: number): Promise<GetEpochComputorsResponse> => {
+    const url = ARCHIVER_API_ENDPOINTS.EPOCH_COMPUTORS(epoch)
     return fetchData<GetEpochComputorsResponse>(url)
   }
 }

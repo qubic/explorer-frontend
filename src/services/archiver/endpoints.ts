@@ -8,14 +8,15 @@ const makeTicksUrl = (tick: string) => `${BASE_URL}/ticks/${formatTick(tick)}`
 
 const ARCHIVER_API_ENDPOINTS = {
   // BALANCES
-  BALANCES: (query: string) => `${BASE_URL}/balances/${query}`,
+  BALANCES: (addressId: string) => `${BASE_URL}/balances/${addressId}`,
   // TRANSACTIONS
-  TRANSACTIONS: (query: string) => `${BASE_URL}/transactions/${query}`,
+  TRANSACTIONS: (txId: string) => `${BASE_URL}/transactions/${txId}`,
+  TRANSACTION_STATUS: (txId: string) => `${BASE_URL}/tx-status/${txId}`,
   // TICKS
-  TICK_DATA: (query: string) => `${makeTicksUrl(query)}/tick-data`,
-  TICK_TRANSACTIONS: (query: string) => `${makeTicksUrl(query)}/transactions`,
-  TICK_TRANSFER_TRANSACTIONS: (query: string) => `${makeTicksUrl(query)}/transfer-transactions`,
-  TICK_APPROVED_TRANSACTIONS: (query: string) => `${makeTicksUrl(query)}/approved-transactions`,
+  TICK_DATA: (tick: string) => `${makeTicksUrl(tick)}/tick-data`,
+  TICK_TRANSACTIONS: (tick: string) => `${makeTicksUrl(tick)}/transactions`,
+  TICK_TRANSFER_TRANSACTIONS: (tick: string) => `${makeTicksUrl(tick)}/transfer-transactions`,
+  TICK_APPROVED_TRANSACTIONS: (tick: string) => `${makeTicksUrl(tick)}/approved-transactions`,
   // EPOCHS
   EPOCH_COMPUTORS: (epoch: number) => `${BASE_URL}/epochs/${epoch}/computors`
 } as const
