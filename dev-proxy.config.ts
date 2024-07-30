@@ -1,6 +1,6 @@
 import type { HttpProxy, ProxyOptions } from 'vite'
 
-export const qliApiProxy = {
+export const qliApiProxy: ProxyOptions = {
   target: 'https://api.qubic.li',
   changeOrigin: true,
   rewrite: (path: string) => path.replace(/^\/dev-proxy-qli-api/, ''),
@@ -33,7 +33,7 @@ export const qliApiProxy = {
   }
 }
 
-export const archiverApiProxy = {
+export const archiverApiProxy: ProxyOptions = {
   target: 'https://rpc.qubic.org/v1',
   changeOrigin: true,
   rewrite: (path: string) => path.replace(/^\/dev-proxy-archiver-api/, ''),
