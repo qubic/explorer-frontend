@@ -61,15 +61,15 @@ export default function RichListPage() {
           </Typography>
           <div className="w-full bg-gray-80 border-gray-70 border-[1px] rounded-12">
             <table className="w-full ">
-              <thead className="border-gray-70 border-b-[1px] text-left text-gray-50 font-space text-sm font-400">
+              <thead className="border-gray-70 border-b-[1px] text-left text-gray-50 font-space text-sm">
                 <tr>
-                  <th className="p-16 text-center">
+                  <th className="p-16 text-center font-400">
                     <span className="hidden sm:block">{t('rank')}</span>
                   </th>
-                  <th className="p-16">
+                  <th className="p-16 font-400">
                     <span>{t('addressID')}</span>
                   </th>
-                  <th className="p-16">
+                  <th className="p-16 font-400">
                     <span>{t('amount')} (QUBIC)</span>
                   </th>
                 </tr>
