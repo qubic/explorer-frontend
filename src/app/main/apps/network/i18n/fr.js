@@ -2,6 +2,7 @@ const locale = {
   activeAddresses: 'Adresses actives',
   amount: 'Montant',
   circulatingSupply: 'Offre en circulation',
+  burnedSupply: 'Offre Brûlée',
   complete: 'Complet',
   currentTick: 'Tick actuel',
   dataStatus: 'Statut des données',
@@ -44,6 +45,9 @@ const locale = {
   loading: 'Chargement',
   historicalDataWarning:
     'Vous consultez des données historiques. Certaines données peuvent ne pas être entièrement exactes ou complètes.',
+  richList: 'Liste des Riches',
+  rank: 'Rang',
+  addressID: "ID d'Adresse",
 };
 
 export default locale;

@@ -2,6 +2,7 @@ const locale = {
   activeAddresses: 'العناوين النشطة',
   amount: 'المبلغ',
   circulatingSupply: 'العرض المتداول',
+  burnedSupply: 'العرض المحترق',
   complete: 'كامل',
   currentTick: 'العلامة الحالية',
   dataStatus: 'حالة البيانات',
@@ -43,6 +44,9 @@ const locale = {
   historical: 'تاريخي',
   loading: 'جار التحميل',
   historicalDataWarning: 'أنت تشاهد بيانات تاريخية. قد لا تكون بعض البيانات دقيقة تمامًا أو كاملة.',
+  richList: 'قائمة الأثرياء',
+  rank: 'الرتبة',
+  addressID: 'معرف العنوان',
 };
 
 export default locale;

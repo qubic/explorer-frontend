@@ -2,6 +2,7 @@ const locale = {
   activeAddresses: '活跃地址',
   amount: '数量',
   circulatingSupply: '流通供应',
+  burnedSupply: '燃烧供应',
   complete: '完成',
   currentTick: '当前刻度',
   dataStatus: '数据状态',
@@ -43,6 +44,9 @@ const locale = {
   historical: '历史',
   loading: '加载中',
   historicalDataWarning: '您正在查看历史数据。某些数据可能不完全准确或完整。',
+  richList: '富豪榜',
+  rank: '排名',
+  addressID: '地址ID',
 };
 
 export default locale;

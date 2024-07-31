@@ -2,6 +2,7 @@ const locale = {
   activeAddresses: 'Endereços Ativos',
   amount: 'Valor',
   circulatingSupply: 'Fornecimento Circulante',
+  burnedSupply: 'Suprimento Queimado',
   complete: 'Completo',
   currentTick: 'Tick Atual',
   dataStatus: 'Status dos Dados',
@@ -44,6 +45,9 @@ const locale = {
   loading: 'Carregando',
   historicalDataWarning:
     'U bekijkt historische gegevens. Sommige gegevens zijn mogelijk niet volledig nauwkeurig of volledig.',
+  richList: 'Lista dos Ricos',
+  rank: 'Classificação',
+  addressID: 'ID de Endereço',
 };
 
 export default locale;

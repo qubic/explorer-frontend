@@ -2,6 +2,7 @@ const locale = {
   activeAddresses: 'Actieve Adressen',
   amount: 'Bedrag',
   circulatingSupply: 'Circulerend Aanbod',
+  burnedSupply: 'Verbrand Voorraad',
   complete: 'Compleet',
   currentTick: 'Huidige Tijdstap',
   dataStatus: 'Gegevensstatus',
@@ -44,6 +45,9 @@ const locale = {
   loading: 'Bezig met laden',
   historicalDataWarning:
     'U bekijkt historische gegevens. Sommige gegevens zijn mogelijk niet volledig nauwkeurig of volledig.',
+  richList: 'Rijkenlijst',
+  rank: 'Rang',
+  addressID: 'Adres-ID',
 };
 
 export default locale;
