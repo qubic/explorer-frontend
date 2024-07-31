@@ -38,7 +38,7 @@ function Footer() {
           Network Status
         </Link>
       </div>
-      <Typography className="text-12 font-space text-gray-50">Version 1.4.2</Typography>
+      <Typography className="text-12 font-space text-gray-50">Version 1.4.3</Typography>
     </footer>
   );
 }
