@@ -1,21 +1,12 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-export const getRichList = createAsyncThunk('network/rich-list', async ({ page }, { getState }) => {
-  let { epoch } = getState().network.richList;
-
-  if (!epoch) {
-    const { data: latestStats } = await axios.get(
-      `${process.env.REACT_APP_ARCHIEVER}/latest-stats`
-    );
-    epoch = latestStats.data.epoch;
-  }
-
+export const getRichList = createAsyncThunk('network/rich-list', async ({ page, pageSize }) => {
   const { data } = await axios.get(
-    `${process.env.REACT_APP_ARCHIEVER}/epochs/${epoch}/rich-list?page=${page}`
+    `${process.env.REACT_APP_ARCHIEVER}/rich-list?page=${page}&pageSize=${pageSize}`
   );
 
-  return { epoch, ...data };
+  return data;
 });
 
 const richListSlice = createSlice({
