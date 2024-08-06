@@ -48,6 +48,8 @@ const locale = {
   richList: 'Reichenliste',
   rank: 'Rang',
   addressID: 'Adress-ID',
+  richListLoadFailed:
+    'Fehler: Die Rich List konnte nicht geladen werden. Bitte aktualisieren Sie die Seite oder versuchen Sie es später erneut.',
 };
 
 export default locale;

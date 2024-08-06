@@ -47,6 +47,8 @@ const locale = {
   richList: 'قائمة الأثرياء',
   rank: 'الرتبة',
   addressID: 'معرف العنوان',
+  richListLoadFailed:
+    'خطأ: تعذر تحميل قائمة الأغنياء. يرجى تحديث الصفحة أو المحاولة مرة أخرى لاحقًا.',
 };
 
 export default locale;

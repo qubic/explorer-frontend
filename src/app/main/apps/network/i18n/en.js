@@ -48,6 +48,8 @@ const locale = {
   richList: 'Rich List',
   rank: 'Rank',
   addressID: 'Address ID',
+  richListLoadFailed:
+    'Error: Unable to Load Rich List. Please refresh the page or try again later.',
 };
 
 export default locale;

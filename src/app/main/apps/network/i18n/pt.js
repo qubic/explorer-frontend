@@ -48,6 +48,8 @@ const locale = {
   richList: 'Lista dos Ricos',
   rank: 'Classificação',
   addressID: 'ID de Endereço',
+  richListLoadFailed:
+    'Erro: Não foi possível carregar a lista de ricos. Por favor, atualize a página ou tente novamente mais tarde.',
 };
 
 export default locale;

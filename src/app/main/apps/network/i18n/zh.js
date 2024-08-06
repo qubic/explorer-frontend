@@ -47,6 +47,7 @@ const locale = {
   richList: '富豪榜',
   rank: '排名',
   addressID: '地址ID',
+  richListLoadFailed: '错误：无法加载富人列表。请刷新页面或稍后重试。',
 };
 
 export default locale;

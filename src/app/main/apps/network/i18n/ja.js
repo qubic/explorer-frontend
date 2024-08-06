@@ -48,6 +48,8 @@ const locale = {
   richList: 'リッチリスト',
   rank: 'ランク',
   addressID: 'アドレスID',
+  richListLoadFailed:
+    'エラー: リッチリストを読み込めませんでした。ページを更新するか、後でもう一度お試しください。',
 };
 
 export default locale;

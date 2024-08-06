@@ -48,6 +48,8 @@ const locale = {
   richList: 'Rijkenlijst',
   rank: 'Rang',
   addressID: 'Adres-ID',
+  richListLoadFailed:
+    'Fout: Kan de rijke lijst niet laden. Vernieuw de pagina of probeer het later opnieuw.',
 };
 
 export default locale;

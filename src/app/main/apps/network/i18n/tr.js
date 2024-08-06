@@ -48,6 +48,8 @@ const locale = {
   richList: 'Zenginler Listesi',
   rank: 'Rütbe',
   addressID: 'Adres Kimliği',
+  richListLoadFailed:
+    'Hata: Zengin Listesi Yüklenemedi. Lütfen sayfayı yenileyin veya daha sonra tekrar deneyin.',
 };
 
 export default locale;

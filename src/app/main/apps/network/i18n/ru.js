@@ -48,6 +48,8 @@ const locale = {
   richList: 'Список Богатых',
   rank: 'Ранг',
   addressID: 'ID Адреса',
+  richListLoadFailed:
+    'Ошибка: не удалось загрузить список богатых. Пожалуйста, обновите страницу или попробуйте позже.',
 };
 
 export default locale;
