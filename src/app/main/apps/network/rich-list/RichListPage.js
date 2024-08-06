@@ -8,8 +8,9 @@ import { Link } from 'react-router-dom';
 import { NextIcon, PrevIcon } from 'src/assets/icons/svg';
 import HomeLink from '../components/HomeLink';
 import { getRichList, selectRichList } from '../store/richListSlice';
+import { CardItem } from '../components';
 
-const PAGE_SIZE = 100;
+const PAGE_SIZE = 15;
 
 export default function RichListPage() {
   const { t } = useTranslation('networkPage');
@@ -37,7 +38,7 @@ export default function RichListPage() {
   );
 
   useEffect(() => {
-    dispatch(getRichList({ page }));
+    dispatch(getRichList({ page, pageSize: PAGE_SIZE }));
   }, [dispatch, page]);
 
   if (isLoading) {
@@ -75,21 +76,37 @@ export default function RichListPage() {
                 </tr>
               </thead>
               <tbody>
-                {entitiesWithRank?.map((entity) => (
-                  <tr key={entity.identity} className="border-b">
-                    <td className="p-16 text-center">{entity.rank}</td>
-                    <td className="p-16 overflow-hidden whitespace-nowrap overflow-ellipsis max-w-[30vw] sm:max-w-[45vw] md:max-w-[50vw]">
-                      <Typography
-                        role="button"
-                        component={Link}
-                        to={`/network/address/${entity.identity}`}
-                      >
-                        {entity.identity}
-                      </Typography>
+                {error || entitiesWithRank?.length === 0 ? (
+                  <tr>
+                    <td colSpan={3} className="p-32">
+                      <CardItem className="p-20 flex items-center justify-center gap-6">
+                        <img
+                          src="/assets/icons/exclamation-triangle.svg"
+                          alt="warning-icon"
+                          className="w-20 h-20"
+                          stroke="#f97066"
+                        />
+                        <p className="text-error-40">{t('richListLoadFailed')}</p>
+                      </CardItem>
                     </td>
-                    <td className="p-16 ">{entity.balance}</td>
                   </tr>
-                ))}
+                ) : (
+                  entitiesWithRank?.map((entity) => (
+                    <tr key={entity.identity} className="border-b">
+                      <td className="p-16 text-center">{entity.rank}</td>
+                      <td className="p-16 overflow-hidden whitespace-nowrap overflow-ellipsis max-w-[30vw] sm:max-w-[45vw] md:max-w-[50vw]">
+                        <Typography
+                          role="button"
+                          component={Link}
+                          to={`/network/address/${entity.identity}`}
+                        >
+                          {entity.identity}
+                        </Typography>
+                      </td>
+                      <td className="p-16 ">{entity.balance}</td>
+                    </tr>
+                  ))
+                )}
               </tbody>
             </table>
             <Pagination
