@@ -1,3 +1,4 @@
+import { Routes } from '@app/router'
 import { formatEllipsis } from '@app/utils'
 import clsx from 'clsx'
 import { Link } from 'react-router-dom'
@@ -10,13 +11,13 @@ type Props = {
   className?: string
 }
 
-function AddressLink({ value, copy, ellipsis, className }: Props) {
+export default function AddressLink({ value, copy, ellipsis, className }: Props) {
   return (
-    <div className="flex gap-10 items-center">
+    <div className="flex items-center gap-10">
       <Link
-        className={clsx('text-14 leading-20 font-space text-primary-40 break-all', className)}
-        to={`/network/address/${value}`}
         role="button"
+        className={clsx('break-all font-space text-sm text-primary-40', className)}
+        to={Routes.NETWORK.ADDRESS(value)}
       >
         {ellipsis ? formatEllipsis(value) : value}
       </Link>
@@ -24,4 +25,3 @@ function AddressLink({ value, copy, ellipsis, className }: Props) {
     </div>
   )
 }
-export default AddressLink
