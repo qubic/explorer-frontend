@@ -37,7 +37,7 @@ export interface TransactionStatus {
 
 export interface Computor {
   epoch: number
-  itentities: string[]
+  identities: string[]
   signatureHex: string
 }
 
