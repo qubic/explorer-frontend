@@ -1,67 +1,61 @@
 import { useTranslation } from 'react-i18next'
 
-import { Typography } from '@app/components/ui'
-import { formatString } from '@app/utils'
+import { clsxTwMerge, formatString } from '@app/utils'
 import CardItem from './CardItem'
 
 type Props = {
   dataStatus: boolean
   tickStatus: boolean
   transactions: number
-  option: string
 }
 
-function TickStatus({ dataStatus, tickStatus, transactions, option }: Props) {
-  const { t } = useTranslation('networkPage')
+function StatusItem({
+  label,
+  value,
+  isSuccess
+}: {
+  label: string
+  value: string
+  isSuccess?: boolean
+}) {
+  return (
+    <div className="flex flex-col gap-8">
+      <p className="font-space text-sm text-gray-50">{label}</p>
+      <p
+        className={clsxTwMerge(
+          'font-space text-base',
+          isSuccess ? 'text-success-40' : 'text-error-40',
+          isSuccess === undefined && 'text-primary-20'
+        )}
+      >
+        {value}
+      </p>
+    </div>
+  )
+}
+
+export default function TickStatus({ dataStatus, tickStatus, transactions }: Props) {
+  const { t } = useTranslation('network-page')
+
+  const tickStatusText = tickStatus
+    ? `${t('nonEmpty')} / ${t('executed')}`
+    : `${t('empty')} / ${t('unexecuted')}`
 
   return (
     <CardItem className="px-24 py-16">
-      <div className="flex flex-col md:flex-row justify-between gap-24 md:gap-52">
-        <div className="flex gap-52">
-          <div className="flex flex-col gap-8">
-            <Typography className="text-14 leading-20 font-space text-gray-50">
-              {t('dataStatus')}
-            </Typography>
-            {dataStatus ? (
-              <Typography className="text-16 leading-20 font-space text-success-40">
-                {t('complete')}
-              </Typography>
-            ) : (
-              <Typography className="text-16 leading-20 font-space text-error-40">
-                {t('incomplete')}
-              </Typography>
-            )}
-          </div>
-          {dataStatus && (
-            <div className="flex flex-col gap-8">
-              <Typography className="text-14 leading-20 font-space text-gray-50">
-                {t('tickStatus')}
-              </Typography>
-              {tickStatus ? (
-                <Typography className="text-16 leading-20 font-space text-success-40">
-                  {t('nonEmpty')} / {t('executed')}
-                </Typography>
-              ) : (
-                <Typography className="text-16 leading-20 font-space text-error-40">
-                  {t('empty')} / {t('unexecuted')}
-                </Typography>
-              )}
-            </div>
-          )}
-        </div>
+      <div className="flex flex-wrap gap-24 md:gap-52">
+        <StatusItem
+          label={t('dataStatus')}
+          value={dataStatus ? t('complete') : t('incomplete')}
+          isSuccess={dataStatus}
+        />
         {dataStatus && (
-          <div className="flex flex-col gap-8">
-            <Typography className="text-14 leading-20 font-space text-gray-50">
-              {t('numberOfTransactions')}
-            </Typography>
-            <Typography className="text-16 leading-20 font-space text-primary-20">
-              {formatString(transactions)}
-            </Typography>
-          </div>
+          <>
+            <StatusItem label={t('tickStatus')} value={tickStatusText} isSuccess={tickStatus} />
+            <StatusItem label={t('numberOfTransactions')} value={formatString(transactions)} />
+          </>
         )}
       </div>
     </CardItem>
   )
 }
-
-export default TickStatus
