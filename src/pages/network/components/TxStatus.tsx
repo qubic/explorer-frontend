@@ -1,17 +1,18 @@
+import { CheckIcon, XmarkIcon } from '@app/assets/icons'
+
 type Props = {
   executed: boolean
 }
 
 function TxStatus({ executed }: Props) {
   return (
-    <div className="inline-flex gap-4 py-2 px-8 bg-gray-70 rounded-full items-center">
-      <p className="text-12 leading-20 text-gray-50 font-space">TX</p>
-      {/* <FuseSvgIcon
-        size="16"
-        className={`text-16 w-16 h-16 ${executed ? 'text-success-40' : 'text-error-40'}`}
-      >
-        {executed ? 'heroicons-solid:check' : 'heroicons-solid:x'}
-      </FuseSvgIcon> */}
+    <div className="flex items-center gap-4 rounded-full bg-gray-70 px-8 py-4">
+      <p className="font-space text-xs text-gray-50">TX</p>
+      {executed ? (
+        <CheckIcon className="h-16 w-16 text-success-40" />
+      ) : (
+        <XmarkIcon className="h-16 w-16 text-error-40" />
+      )}
     </div>
   )
 }
