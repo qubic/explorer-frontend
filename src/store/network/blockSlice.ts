@@ -24,8 +24,12 @@ const initialState: BlockState = {
   error: null
 }
 
-export const getBlock = createAsyncThunk('network/block', async (tick: string) => {
+export const getBlock = createAsyncThunk('network/block', async (tick: string | undefined) => {
   try {
+    if (!tick) {
+      throw new Error('Invalid tick')
+    }
+
     const { tickData } = await archiverApiService.getTickData(tick)
 
     if (!tickData.epoch) {
