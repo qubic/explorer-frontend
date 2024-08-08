@@ -16,7 +16,7 @@ import {
 import { PaginationBar } from '@app/components/ui'
 import { LinearProgress } from '@app/components/ui/loaders'
 import { useAppDispatch, useAppSelector } from '@app/hooks/redux'
-import { getOverview, selectOverview } from '@app/store/overviewSlice'
+import { getOverview, selectOverview } from '@app/store/network/overviewSlice'
 import { formatString } from '@app/utils'
 import { CardItem, OverviewCardItem, TickLink } from './components'
 
@@ -119,8 +119,8 @@ export default function OverviewPage() {
 
   return (
     <div className="w-full py-32">
-      <div className="max-w-[960px] px-16 flex flex-1 flex-col gap-16 mx-auto">
-        <div className="grid md:grid-flow-col gap-16">
+      <div className="mx-auto flex max-w-[960px] flex-1 flex-col gap-16 px-16">
+        <div className="grid gap-16 md:grid-flow-col">
           {cardData.slice(0, 2).map((card) => (
             <OverviewCardItem
               key={card.id}
@@ -130,7 +130,7 @@ export default function OverviewPage() {
             />
           ))}
         </div>
-        <div className="grid 827px:grid-flow-col gap-16">
+        <div className="grid gap-16 827px:grid-flow-col">
           {cardData.slice(2, 5).map((card) => (
             <OverviewCardItem
               key={card.id}
@@ -140,7 +140,7 @@ export default function OverviewPage() {
             />
           ))}
         </div>
-        <div className="grid grid-cols-2 827px:grid-cols-4 gap-16">
+        <div className="grid grid-cols-2 gap-16 827px:grid-cols-4">
           {cardData.slice(5, 9).map((card) => (
             <OverviewCardItem
               key={card.id}
@@ -153,16 +153,16 @@ export default function OverviewPage() {
         </div>
         <CardItem className="px-24 py-20">
           <div className="flex flex-col gap-20">
-            <div className="flex flex-col sm:flex-row gap-20 sm:gap-8 md:gap-10 lg:gap-20 justify-between">
-              <div className="flex justify-between sm:justify-start items-center gap-8">
-                <p className="text-22 font-space font-500">{t('ticks')}</p>
-                <p className=" align-middle text-14 font-space text-gray-50">
+            <div className="flex flex-col justify-between gap-20 sm:flex-row sm:gap-8 md:gap-10 lg:gap-20">
+              <div className="flex items-center justify-between gap-8 sm:justify-start">
+                <p className="font-space text-22 font-500">{t('ticks')}</p>
+                <p className="align-middle font-space text-14 text-gray-50">
                   ( {formatString(overview && overview.ticks[0].tick)} -{' '}
                   {formatString(overview && overview.ticks[overview.ticks.length - 1].tick)} )
                 </p>
               </div>
             </div>
-            <div className="grid grid-cols-3 xs:grid-cols-4 sm:grid-cols-6 md:grid-cols-10 gap-12">
+            <div className="grid grid-cols-3 gap-12 xs:grid-cols-4 sm:grid-cols-6 md:grid-cols-10">
               {displayedTicks.map((item) => (
                 <TickLink
                   key={item.tick}
