@@ -14,7 +14,6 @@ export default function DotsLoader({ className, showLoadingText, loadingText = '
     <div
       className={clsxTwMerge(
         'flex flex-1 flex-col items-center justify-center gap-10 p-24',
-        !showLoadingText && 'hidden',
         className
       )}
     >
