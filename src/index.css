@@ -1,0 +1,71 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Mobile Layout */
+    --header-height: 67px;
+    --footer-height: 120px;
+    --container-height: calc(100vh - var(--header-height) - var(--footer-height));
+    /* Desktop Layout */
+    --desktop-header-height: 67px;
+    --desktop-footer-height: 104px;
+    --desktop-container-height: calc(
+      100vh - var(--desktop-header-height) - var(--desktop-footer-height)
+    );
+  }
+
+  html {
+    font-family: 'Noto Sans', system-ui, sans-serif;
+    @apply bg-[#101820];
+  }
+
+  html,
+  body,
+  p,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  span,
+  a,
+  div {
+    @apply text-white;
+    @apply scrollbar scrollbar-track-transparent scrollbar-thumb-gray-70;
+  }
+
+  body::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  body::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  body::-webkit-scrollbar-thumb {
+    border: 2px solid #101820;
+    background: #202e3c;
+    border-radius: 20px;
+  }
+}
+
+@font-face {
+  font-family: 'Inter var';
+  font-weight: 100 900;
+  font-display: swap;
+  font-style: normal;
+  font-named-instance: 'Regular';
+  src: url('/assets/fonts/inter/Inter-roman.var.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Inter var';
+  font-weight: 100 900;
+  font-display: swap;
+  font-style: italic;
+  font-named-instance: 'Italic';
+  src: url('/assets/fonts/inter/Inter-italic.var.woff2') format('woff2');
+}
