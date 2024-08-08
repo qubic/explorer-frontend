@@ -1,27 +1,23 @@
-import { Typography } from '@app/components/ui'
-
 type Props = {
   title: string
   content: React.ReactNode
-  variant?: string
+  variant?: 'primary'
 }
 
-function SubCardItem({ title, content, variant }: Props) {
+export default function SubCardItem({ title, content, variant }: Props) {
   if (variant === 'primary') {
     return (
-      <div className="flex flex-col md:flex-row md:justify-between gap-8">
-        <Typography className="text-14 leading-18 font-space text-gray-50">{title}</Typography>
+      <div className="flex flex-col gap-8 md:flex-row md:justify-between">
+        <p className="font-space text-14 leading-18 text-gray-50">{title}</p>
         {content}
       </div>
     )
   }
 
   return (
-    <div className="flex flex-col md:flex-row gap-12 pt-12 mb-12 border-t-[1px] border-gray-70">
-      <Typography className="w-120 text-14 leading-20 font-space text-gray-50">{title}</Typography>
+    <div className="mb-12 flex flex-col gap-12 border-t-[1px] border-gray-70 pt-12 md:flex-row">
+      <p className="w-120 font-space text-14 leading-20 text-gray-50">{title}</p>
       {content}
     </div>
   )
 }
-
-export default SubCardItem
