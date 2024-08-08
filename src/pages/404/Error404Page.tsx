@@ -14,30 +14,30 @@ function ErrorContent({ is404Error = false, error }: ErrorContentProps) {
   const { t } = useTranslation('error-404-page')
   return (
     <>
-      <div className="relative h-[315px] md:h-[496px] overflow-hidden flex justify-center items-end">
+      <div className="relative flex h-[315px] items-end justify-center overflow-hidden md:h-[496px]">
         {/* // TODO: Put different error img for non 404 errors */}
         <Error404
-          className="w-full min-w-[742px] min-h-[267px] md:h-[460px] max-w-[742px] md:max-w-[1279px]"
+          className="min-h-[267px] w-full min-w-[742px] max-w-[742px] md:h-[460px] md:max-w-[1279px]"
           width={742}
           height={267}
         />
       </div>
       <div>
-        <h1 className="text-32 leading-40 md:text-4xl md:leading-tight font-700 font-space text-center">
+        <h1 className="text-center font-space text-32 font-700 leading-40 md:text-4xl md:leading-tight">
           {is404Error ? t('pageNotFound') : t('title')}
         </h1>
       </div>
 
-      <div className="max-w-[400px] mx-auto">
-        <p className="mt-16 text-16 md:text-18 leading-20 font-space text-gray-50 text-center">
+      <div className="mx-auto max-w-[400px]">
+        <p className="mt-16 text-center font-space text-16 leading-20 text-gray-50 md:text-18">
           {is404Error ? t('error404Message') : t('unexpectedError')}
         </p>
       </div>
 
-      <div className="mt-32 md:mt-40 text-center">
+      <div className="mt-32 text-center md:mt-40">
         {error && !is404Error && (
-          <div className="bg-red-100 w-fit p-16 rounded-md mx-auto">
-            <p className="text-16 text-red-800 font-medium">
+          <div className="mx-auto w-fit rounded-md bg-red-100 p-16">
+            <p className="text-16 font-medium text-red-800">
               <i>
                 {error.status} | {error.statusText}
               </i>
@@ -59,8 +59,8 @@ export default function Error404Page() {
   return (
     <>
       <Header />
-      <main className="w-full min-h-[var(--container-height)] sm:min-h-[var(--desktop-container-height)] px-8 pb-10 pt-20">
-        <div className="w-full h-full">
+      <main className="min-h-[var(--container-height)] w-full px-8 pb-10 pt-20 sm:min-h-[var(--desktop-container-height)]">
+        <div className="h-full w-full">
           {(() => {
             if (!isRouteErrorResponse(error)) {
               return <ErrorContent />
@@ -73,9 +73,9 @@ export default function Error404Page() {
             )
           })()}
 
-          <div className="mt-32 md:mt-40 text-center">
+          <div className="mt-32 text-center md:mt-40">
             <Link
-              className=" py-10 px-28 bg-primary-50 rounded-8 font-500 font-space text-16 leading-28 text-gray-90 "
+              className="rounded-8 bg-primary-50 px-28 py-10 font-space text-16 font-500 leading-28 text-gray-90"
               to={Routes.NETWORK.ROOT}
               role="button"
             >
