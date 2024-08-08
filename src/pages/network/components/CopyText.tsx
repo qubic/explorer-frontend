@@ -1,5 +1,7 @@
-import { copyText } from '@app/utils'
 import { useEffect, useState } from 'react'
+
+import { CheckIcon, CopyTextIcon } from '@app/assets/icons'
+import { copyText } from '@app/utils'
 
 type Props = {
   text: string
@@ -20,15 +22,11 @@ export default function CopyText({ text }: Props) {
   }
 
   return (
-    <button
-      type="button"
-      className="w-14 h-14 flex-none" // Adjust the button size for smaller screens
-      onClick={handleCopy}
-    >
+    <button type="button" className="h-14 w-14 flex-none" onClick={handleCopy}>
       {isCopy ? (
-        <img className="w-full" src="assets/icons/check.svg" alt="" />
+        <CheckIcon className="w-full text-success-40" />
       ) : (
-        <img className="w-full" src="assets/icons/copy-text.svg" alt="" />
+        <CopyTextIcon className="w-full" />
       )}
     </button>
   )
