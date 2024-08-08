@@ -1,6 +1,8 @@
-import { formatString } from '@app/utils'
-// import { fetchEntries, formatString } from '@app/utils'
-// import { IconButton } from '@mui/material'
+import { ArrowDownIcon, ArrowUpIcon, ChevronDownIcon } from '@app/assets/icons'
+import type { Transaction } from '@app/services/archiver'
+import { clsxTwMerge, formatString } from '@app/utils'
+import type { Transfer } from '@app/utils/qubic-ts'
+import { getTransfers, QUTIL_ADDRESS } from '@app/utils/qubic-ts'
 import { memo, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import AddressLink from './AddressLink'
@@ -10,74 +12,78 @@ import TickLink from './TickLink'
 import TxLink from './TxLink'
 import TxStatus from './TxStatus'
 
-// TODO: Fake typography component
-function Typography({ children, className }: { children: React.ReactNode; className?: string }) {
-  return <p className={className}>{children}</p>
-}
-
 type Props = {
+  tx: Omit<Transaction, 'inputSize' | 'signatureHex'>
   identify?: string
-  txId: string
-  sourceId: string
-  tickNumber: number
-  destId: string
-  inputType: number
-  amount: number
-  inputHex: string
   nonExecutedTxIds: string[]
   variant: string
   isHistoricalTx?: boolean
 }
 
+function TypeItemContent({ inputType }: { inputType: number }) {
+  return (
+    <p className="font-space text-14 leading-18">
+      {formatString(inputType)} {inputType === 0 ? 'Standard' : 'SC'}
+    </p>
+  )
+}
+
+function TransferItem({ transfer, className }: { transfer: Transfer; className?: string }) {
+  return (
+    <li className={clsxTwMerge(`flex flex-col justify-between gap-8 md:flex-row`, className)}>
+      <AddressLink value={transfer.destId} />
+      <p className="font-space text-sm">{formatString(Number(transfer.amount))} QUBIC</p>
+    </li>
+  )
+}
+
 function TxItem({
+  tx: { txId, sourceId, tickNumber, destId, inputType, amount, inputHex },
   identify,
-  txId,
-  sourceId,
-  tickNumber,
-  destId,
-  inputType,
-  amount,
-  inputHex,
   nonExecutedTxIds,
   variant,
   isHistoricalTx = false
 }: Props) {
-  const { t } = useTranslation('networkPage')
-  const [entries, setEntries] = useState([])
+  const { t } = useTranslation('network-page')
+  const [entries, setEntries] = useState<Transfer[]>([])
   const [entriesOpen, setEntriesOpen] = useState(false)
   const [detailsOpen, setDetailsOpen] = useState(false)
 
+  const handleToggleDetails = () => {
+    setDetailsOpen((prev) => !prev)
+  }
+
+  const handleToggleEntries = () => {
+    setEntriesOpen((prev) => !prev)
+  }
+
   useEffect(() => {
-    if (
-      destId === 'EAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAVWRF' &&
-      inputType === 1 &&
-      inputHex
-    ) {
-      // TODO: Implement properly fetchEntries function on app utils
-      // fetchEntries(inputHex)
-      //   .then((resp) => {
-      //     setEntries(resp)
-      //   })
-      //   .catch((error) => {
-      //     console.log(error)
-      //   })
+    if (destId === QUTIL_ADDRESS && inputType === 1 && inputHex) {
+      ;(async () => {
+        try {
+          const transfers = await getTransfers(inputHex)
+          setEntries(transfers)
+        } catch (error) {
+          // eslint-disable-next-line no-console
+          console.log(error)
+        }
+      })()
     }
-  }, [])
+  }, [destId, inputHex, inputType])
 
   if (variant === 'primary') {
     return (
-      <CardItem className="flex flex-col p-12 transition-all duration-300 rounded-12">
+      <CardItem className="flex flex-col rounded-12 p-12 transition-all duration-300">
         <div className="flex items-center justify-between gap-8">
           <TxStatus executed={!(nonExecutedTxIds || []).includes(txId)} />
-          <div className="flex flex-grow flex-col sm:flex-row items-start sm:justify-between gap-8">
+          <div className="flex flex-grow flex-col items-start gap-8 sm:flex-row sm:justify-between">
             {identify ? (
               <div className="flex gap-8">
-                <img
-                  src={`assets/icons/arrow-${identify === sourceId ? 'down' : 'up'}.svg`}
-                  alt="arrow"
-                  width={9}
-                  height={12}
-                />
+                {identify === sourceId ? (
+                  <ArrowDownIcon className="h-12 w-9" />
+                ) : (
+                  <ArrowUpIcon className="h-12 w-9" />
+                )}
                 <AddressLink
                   className="text-16"
                   value={identify === sourceId ? destId : sourceId}
@@ -94,29 +100,33 @@ function TxItem({
                 copy
               />
             )}
-            <Typography className="text-center font-space text-16" role="button">
-              {formatString(amount)} <span className="text-gray-50">QUBIC</span>
-            </Typography>
+            <p className="text-center font-space text-16">
+              {formatString(Number(amount))} <span className="text-gray-50">QUBIC</span>
+            </p>
           </div>
-          {/* // TODO: Add IconButton component */}
-          {/* <IconButton className="rounded-8 p-8" onClick={() => setDetailsOpen((prev) => !prev)}>
-            <img
-              className={`w-16 transition-transform duration-300 ${detailsOpen ? 'rotate-180' : 'rotate-0'
-                }`}
-              src="assets/icons/arrow-gray.svg"
-              alt="arrow"
+          <button
+            type="button"
+            aria-label="open-transaction-details"
+            className="rounded-8 px-6 py-3 hover:bg-primary-30"
+            onClick={handleToggleDetails}
+          >
+            <ChevronDownIcon
+              className={clsxTwMerge(
+                'h-20 w-20 text-gray-50 transition-transform duration-300',
+                detailsOpen ? 'rotate-180' : 'rotate-0'
+              )}
             />
-          </IconButton> */}
+          </button>
         </div>
         {detailsOpen && (
-          <div className="flex flex-col gap-12 pt-12 mt-14 border-t-[1px] border-gray-70">
+          <div className="mt-14 flex flex-col gap-12 border-t-[1px] border-gray-70 pt-12">
             <SubCardItem
               title={`TX ${t('id')}`}
               variant="primary"
               content={
                 <TxLink
                   isHistoricalTx={isHistoricalTx}
-                  className="text-primary-40 text-14"
+                  className="text-14 text-primary-40"
                   value={txId}
                   copy
                 />
@@ -140,54 +150,49 @@ function TxItem({
             <SubCardItem
               title={t('type')}
               variant="primary"
-              content={
-                <Typography className="text-14 leading-18 font-space">
-                  {formatString(inputType)} {inputType === 0 ? 'Standard' : 'SC'}
-                </Typography>
-              }
+              content={<TypeItemContent inputType={inputType} />}
             />
-            {entries.length !== 0 && entriesOpen && (
-              <div
-                className={`my-8 p-12 bg-gray-70 flex flex-col gap-8 rounded-8 transition-all duration-300 ${entriesOpen ? 'h-auto' : 'h-0'
-                  }`}
-              >
-                <div className="flex justify-between">
-                  <Typography className="text-14 leading-18 font-space text-gray-50">
-                    {t('destination')}
-                  </Typography>
-                  <Typography className="text-14 leading-18 font-space text-gray-50 hidden md:block">
-                    {t('amount')}
-                  </Typography>
-                </div>
-                <div className="">
-                  {entries.map((item, index) => (
-                    <div
-                      className="flex justify-between flex-col md:flex-row gap-8 py-8"
-                      key={index}
-                    >
-                      <AddressLink value={item.destId} />
-                      <Typography className="text-14 leading-18 font-space">
-                        {formatString(item.amount)} QUBIC
-                      </Typography>
+
+            {entries.length > 0 && (
+              <>
+                {entriesOpen && (
+                  <div className="my-8 flex flex-col gap-8 rounded-8 bg-gray-70 p-12 transition-all duration-300">
+                    <div className="flex justify-between">
+                      <p className="font-space text-14 leading-18 text-gray-50">
+                        {t('destination')}
+                      </p>
+                      <p className="hidden font-space text-14 leading-18 text-gray-50 md:block">
+                        {t('amount')}
+                      </p>
                     </div>
-                  ))}
-                </div>
-              </div>
-            )}
-            {entries.length !== 0 && (
-              <div className="text-center">
-                <IconButton className="rounded-8" onClick={() => setEntriesOpen((prev) => !prev)}>
-                  <Typography className="text-center font-space text-14 mr-12 " role="button">
-                    {entriesOpen ? 'Hide' : 'Show'} {entries.length} transactions
-                  </Typography>
-                  <img
-                    className={`w-16 transition-transform duration-300 ${entriesOpen ? 'rotate-180' : 'rotate-0'
-                      }`}
-                    src="assets/icons/arrow-gray.svg"
-                    alt="arrow"
+                    <ul>
+                      {entries.map((item) => (
+                        <TransferItem
+                          key={`${item.destId}-${item.amount}`}
+                          className="py-8"
+                          transfer={item}
+                        />
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                <button
+                  type="button"
+                  className="mx-auto flex gap-12 rounded-8 p-8 hover:bg-primary-30"
+                  onClick={handleToggleEntries}
+                >
+                  <span className="text-center font-space text-14">
+                    {/* // TODO: Put this in translatiosn */}
+                    {entriesOpen ? 'Hide' : 'Show'} {entries.length} {t('transactions')}
+                  </span>
+                  <ChevronDownIcon
+                    className={clsxTwMerge(
+                      'h-20 w-20 text-gray-50 transition-transform duration-300',
+                      entriesOpen ? 'rotate-180' : 'rotate-0'
+                    )}
                   />
-                </IconButton>
-              </div>
+                </button>
+              </>
             )}
           </div>
         )}
@@ -197,7 +202,7 @@ function TxItem({
 
   return (
     <>
-      <div className="flex flex-col md:flex-row md:items-center gap-10 md:gap-16 mb-24">
+      <div className="mb-24 flex flex-col gap-10 md:flex-row md:items-center md:gap-16">
         <div className="">
           <TxStatus executed={!(nonExecutedTxIds || []).includes(txId)} />
         </div>
@@ -205,54 +210,36 @@ function TxItem({
       </div>
       <SubCardItem
         title={t('amount')}
-        content={
-          <Typography className="text-14 leading-20 font-space">
-            {formatString(amount)} QUBIC
-          </Typography>
-        }
+        content={<p className="font-space text-14 leading-20">{formatString(amount)} QUBIC</p>}
       />
-      <SubCardItem
-        title={t('type')}
-        content={
-          <Typography className="text-14 leading-20 font-space">
-            {formatString(inputType)} {inputType === 0 ? 'Standard' : 'SC'}
-          </Typography>
-        }
-      />
+      <SubCardItem title={t('type')} content={<TypeItemContent inputType={inputType} />} />
       <SubCardItem title={t('source')} content={<AddressLink value={sourceId} />} />
       <SubCardItem title={t('destination')} content={<AddressLink value={destId} />} />
       <SubCardItem
         title={t('tick')}
         content={<TickLink className="text-primary-40" value={tickNumber} />}
       />
-      {entries.length !== 0 && (
+      {entries.length > 0 && (
         <>
-          <Typography className="text-18 leading-20 font-space py-12">
-            {entries.length} transactions
-          </Typography>
-          <CardItem className="p-12 md:p-16 flex flex-col gap-8">
+          <p className="py-12 font-space text-18 leading-20">
+            {entries.length} {t('transactions')}
+          </p>
+          <CardItem className="flex flex-col gap-8 p-12 md:p-16">
             <div className="flex justify-between">
-              <Typography className="text-14 leading-18 font-space text-gray-50">
-                {t('destination')}
-              </Typography>
-              <Typography className="text-14 leading-18 font-space text-gray-50 hidden md:block">
+              <p className="font-space text-14 leading-18 text-gray-50">{t('destination')}</p>
+              <p className="hidden font-space text-14 leading-18 text-gray-50 md:block">
                 {t('amount')}
-              </Typography>
+              </p>
             </div>
-            <div className="">
+            <ul>
               {entries.map((item, index) => (
-                <div
-                  className={`flex justify-between flex-col md:flex-row gap-8 ${index !== entries.length - 1 ? 'border-b-[1px] py-12 ' : 'pt-12'
-                    }`}
-                  key={index}
-                >
-                  <AddressLink value={item.destId} />
-                  <Typography className="text-14 leading-18 font-space">
-                    {formatString(item.amount)} QUBIC
-                  </Typography>
-                </div>
+                <TransferItem
+                  key={`${item.destId}-${item.amount}`}
+                  className={index !== entries.length - 1 ? 'border-b-[1px] py-12' : 'pt-12'}
+                  transfer={item}
+                />
               ))}
-            </div>
+            </ul>
           </CardItem>
         </>
       )}
