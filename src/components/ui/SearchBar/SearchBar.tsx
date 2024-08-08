@@ -74,11 +74,11 @@ export default function SearchBar() {
     <>
       <button
         type="button"
-        className="hover:bg-gray-70/80 p-8 rounded-full"
+        className="rounded-full p-8 hover:bg-gray-70/80"
         onClick={() => setOpen(true)}
         aria-label="search-button"
       >
-        <MagnifyIcon className="w-24 h-24" />
+        <MagnifyIcon className="h-24 w-24" />
       </button>
       <Modal
         id="search-modal"
@@ -87,18 +87,18 @@ export default function SearchBar() {
         closeOnOutsideClick
         onClose={handleCloseCallback}
       >
-        <div className="w-full h-fit bg-gray-80">
+        <div className="h-fit w-full bg-gray-80">
           {isLoading && (
             <div className="absolute w-full">
               <LinearProgress />
             </div>
           )}
 
-          <div className="flex justify-center items-center w-full relative border-y-[1px] border-gray-70">
-            <div className="flex items-center bg-gray-40 mx-auto max-w-[820px] w-full gap-8 pl-12 pr-20">
-              <MagnifyIcon className="w-16 h-16" />
+          <div className="relative flex w-full items-center justify-center border-y-[1px] border-gray-70">
+            <div className="bg-gray-40 mx-auto flex w-full max-w-[820px] items-center gap-8 pl-12 pr-20">
+              <MagnifyIcon className="h-16 w-16" />
               <input
-                className="w-full py-12 pr-20 bg-inherit focus:outline-none placeholder:font-space placeholder:text-14 placeholder:text-gray-50 text-14"
+                className="w-full bg-inherit py-12 pr-20 text-14 placeholder:font-space placeholder:text-14 placeholder:text-gray-50 focus:outline-none"
                 placeholder="Search TX, ticks, IDs..."
                 value={keyword}
                 // eslint-disable-next-line jsx-a11y/no-autofocus
@@ -115,21 +115,21 @@ export default function SearchBar() {
               onClick={handleCloseCallback}
               aria-label="close-button"
             >
-              <XmarkIcon className="w-24 h-24" />
+              <XmarkIcon className="h-24 w-24" />
             </button>
           </div>
 
           {error && (
-            <div className="mt-12 max-w-[800px] mx-auto pb-10">
-              <p className="text-center font-space ">{t('noResult')}</p>
+            <div className="mx-auto mt-12 max-w-[800px] pb-10">
+              <p className="text-center font-space">{t('noResult')}</p>
             </div>
           )}
 
           {searchResult && (
-            <div className="max-h-[320px] overflow-y-scroll max-w-[800px] mx-auto pb-20 scrollbar scrollbar-track-transparent scrollbar-thumb-gray-70 scrollbar-thumb-rounded-full scrollbar-w-4">
+            <div className="mx-auto max-h-[320px] max-w-[800px] overflow-y-scroll pb-20 scrollbar scrollbar-track-transparent scrollbar-thumb-gray-70 scrollbar-thumb-rounded-full scrollbar-w-4">
               {'balance' in searchResult && (
                 <ResultItem
-                  icon={<GridAddIcon className="min-w-16 min-h-16 w-16 h-16 mr-6" />}
+                  icon={<GridAddIcon className="mr-6 h-16 min-h-16 w-16 min-w-16" />}
                   title={`Qubic ${t('address')}`}
                   result={formatString(searchResult.balance.id)}
                   label={t('balance')}
@@ -140,7 +140,7 @@ export default function SearchBar() {
               )}
               {'transaction' in searchResult && (
                 <ResultItem
-                  icon={<CameraIcon className="w-16 h-16 mr-6" />}
+                  icon={<CameraIcon className="mr-6 h-16 w-16" />}
                   title={t('transaction')}
                   result={formatString(searchResult.transaction.txId)}
                   label={t('tick')}
@@ -151,7 +151,7 @@ export default function SearchBar() {
               )}
               {'tickData' in searchResult && (
                 <ResultItem
-                  icon={<CameraIcon className="min-w-16 w-16 h-16 mr-6" />}
+                  icon={<CameraIcon className="mr-6 h-16 w-16 min-w-16" />}
                   title={t('tick')}
                   result={formatBase64(searchResult.tickData.signatureHex)}
                   label={t('from')}
