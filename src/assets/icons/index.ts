@@ -1,4 +1,5 @@
 export { default as CameraIcon } from './camera.svg?react'
+export { default as CheckIcon } from './check.svg?react'
 export { default as CirculatingCoinsIcon } from './circulating-coins.svg?react'
 export { default as CoinsStackIcon } from './coins-stack.svg?react'
 export { default as CopyTextIcon } from './copy-text.svg?react'
