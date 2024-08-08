@@ -1,3 +1,4 @@
+import { Suspense } from 'react'
 import { Outlet, useNavigation } from 'react-router-dom'
 import { AppLoader } from '../loaders'
 import Footer from './Footer'
@@ -13,8 +14,10 @@ export default function AppLayout() {
   return (
     <>
       <Header />
-      <main className="w-full min-h-[var(--container-height)] sm:min-h-[var(--desktop-container-height)]">
-        <Outlet />
+      <main className="min-h-[var(--container-height)] w-full sm:min-h-[var(--desktop-container-height)]">
+        <Suspense fallback={<AppLoader />}>
+          <Outlet />
+        </Suspense>
       </main>
       <Footer />
     </>
