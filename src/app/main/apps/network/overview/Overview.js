@@ -88,8 +88,6 @@ function Overview() {
               </div>
             </div>
           </CardItem>
-        </div>
-        <div className="grid 827px:grid-flow-col gap-16">
           <CardItem className="px-24 py-16">
             <div className="flex items-center gap-24">
               <img className="w-24 h-24" src="assets/icons/sand-clock.svg" alt="icon" />
@@ -103,6 +101,8 @@ function Overview() {
               </div>
             </div>
           </CardItem>
+        </div>
+        <div className="grid 827px:grid-flow-col gap-16">
           <CardItem className="px-24 py-16">
             <div className="flex items-center gap-24">
               <img className="w-24 h-24" src="assets/icons/circulating-coins.svg" alt="icon" />
@@ -112,6 +112,19 @@ function Overview() {
                 </Typography>
                 <Typography className="text-18 xs:text-24 leading-20 sm:text-22 sm:leading-28 font-space">
                   {formatString(network?.supply)}
+                </Typography>
+              </div>
+            </div>
+          </CardItem>
+          <CardItem className="px-24 py-16">
+            <div className="flex items-center gap-24">
+              <img className="w-24 h-24" src="assets/icons/circulating-coins.svg" alt="icon" />
+              <div className="flex flex-col gap-8">
+                <Typography className="text-14 leading-18 text-gray-50 font-space">
+                  {t('burnedSupply')}
+                </Typography>
+                <Typography className="text-18 xs:text-24 leading-20 sm:text-22 sm:leading-28 font-space">
+                  {formatString(network?.burnedQus)}
                 </Typography>
               </div>
             </div>

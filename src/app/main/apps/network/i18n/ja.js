@@ -2,6 +2,7 @@ const locale = {
   activeAddresses: 'アクティブアドレス',
   amount: '金額',
   circulatingSupply: '流通供給',
+  burnedSupply: '燃やされた供給',
   complete: '完了',
   currentTick: '現在のティック',
   dataStatus: 'データステータス',
@@ -44,6 +45,11 @@ const locale = {
   loading: '読み込み中',
   historicalDataWarning:
     '過去のデータを表示しています。一部のデータは完全に正確または完全でない場合があります。',
+  richList: 'リッチリスト',
+  rank: 'ランク',
+  addressID: 'アドレスID',
+  richListLoadFailed:
+    'エラー: リッチリストを読み込めませんでした。ページを更新するか、後でもう一度お試しください。',
 };
 
 export default locale;

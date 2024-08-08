@@ -2,6 +2,7 @@ const locale = {
   activeAddresses: 'Aktive Adressen',
   amount: 'Betrag',
   circulatingSupply: 'Circulating Supply',
+  burnedSupply: 'Verbrannte Lieferung',
   complete: 'Komplett',
   currentTick: 'Aktueller Tick',
   dataStatus: 'Datenstatus',
@@ -44,6 +45,11 @@ const locale = {
   loading: 'Laden',
   historicalDataWarning:
     'Sie betrachten historische Daten. Einige Daten sind möglicherweise nicht vollständig genau oder vollständig.',
+  richList: 'Reichenliste',
+  rank: 'Rang',
+  addressID: 'Adress-ID',
+  richListLoadFailed:
+    'Fehler: Die Rich List konnte nicht geladen werden. Bitte aktualisieren Sie die Seite oder versuchen Sie es später erneut.',
 };
 
 export default locale;

@@ -15,6 +15,7 @@ import NetworkPage from './NetworkPage';
 import Overview from './overview/Overview';
 import TickPage from './tick/TickPage';
 import TxPage from './tx/TxPage';
+import RichListPage from './rich-list/RichListPage';
 
 i18next.addResourceBundle('en', 'networkPage', en);
 i18next.addResourceBundle('de', 'networkPage', de);
@@ -88,6 +89,10 @@ const NetworkConfig = {
               element: <AddressPage />,
             },
           ],
+        },
+        {
+          path: 'rich-list',
+          element: <RichListPage />,
         },
       ],
     },
