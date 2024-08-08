@@ -8,7 +8,7 @@ const formatString = (string: string | number | undefined | null) => {
   return string
 }
 
-const formatDate = (dateString: string) => {
+const formatDate = (dateString: string | undefined) => {
   const options = {
     year: 'numeric',
     month: 'long',
@@ -43,7 +43,7 @@ function formatEllipsis(str: string) {
   return ''
 }
 
-function formatBase64(hex: string) {
+function formatBase64(hex: string | undefined) {
   if (hex) {
     const bytes = hex.match(/.{1,2}/g)?.map((byte) => parseInt(byte, 16)) || []
     const uint8Array = new Uint8Array(bytes)
