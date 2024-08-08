@@ -1,4 +1,4 @@
-import clsx from 'clsx'
+import { clsxTwMerge } from '@app/utils'
 
 type Props = {
   children: React.ReactNode
@@ -7,7 +7,7 @@ type Props = {
 
 export default function CardItem({ children, className }: Props) {
   return (
-    <div className={clsx('bg-gray-80 border-gray-70 border-[1px] rounded-12', className)}>
+    <div className={clsxTwMerge('rounded-12 border-[1px] border-gray-70 bg-gray-80', className)}>
       {children}
     </div>
   )
