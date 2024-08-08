@@ -1,3 +1,5 @@
+import { Routes } from '@app/router'
+import type { NetworkTxQueryParams } from '@app/router/routes'
 import { formatEllipsis } from '@app/utils'
 import clsx from 'clsx'
 import { Link } from 'react-router-dom'
@@ -18,11 +20,15 @@ export default function TxLink({
   ellipsis,
   isHistoricalTx = false
 }: Props) {
+  const queryParams: NetworkTxQueryParams = {
+    type: isHistoricalTx ? 'historical' : 'latest'
+  }
+
   return (
-    <div className="flex gap-10 items-center">
+    <div className="flex items-center gap-10">
       <Link
-        className={clsx('font-space break-all', className)}
-        to={`/network/tx/${value}?type=${isHistoricalTx ? 'historical' : 'latest'}`}
+        className={clsx('break-all font-space text-sm', className)}
+        to={Routes.NETWORK.TX(value, queryParams)}
         role="button"
       >
         {ellipsis ? formatEllipsis(value) : value}
