@@ -36,21 +36,6 @@ export default function TickPage() {
     return transferTx.filter((tx) => !approvedTxIds.has(tx.txId)).map((tx) => tx.txId)
   }, [block])
 
-  const handleOnSelect = (selectedOption: Option) => {
-    setOption(selectedOption.value)
-  }
-
-  useEffect(() => {
-    dispatch(getBlock(tick))
-  }, [tick, dispatch])
-
-  useEffect(() => {
-    if (block && block.tx) {
-      setDisplayTransactions((selectedTxs || []).slice(0, PAGE_SIZE))
-      setHasMore(selectedTxs.length > PAGE_SIZE)
-    }
-  }, [block, selectedTxs])
-
   const loadMoreTransactions = () => {
     if (displayTransactions.length < selectedTxs.length) {
       const nextTransactions = selectedTxs.slice(
@@ -65,10 +50,25 @@ export default function TickPage() {
     }
   }
 
+  const handleOnSelect = (selectedOption: Option) => {
+    setOption(selectedOption.value)
+  }
+
   const handleTickNavigation = (direction: 'previous' | 'next') => () => {
     const newTick = Number(tick) + (direction === 'previous' ? -1 : 1)
     navigate(Routes.NETWORK.TICK(newTick))
   }
+
+  useEffect(() => {
+    dispatch(getBlock(tick))
+  }, [tick, dispatch])
+
+  useEffect(() => {
+    if (block && block.tx) {
+      setDisplayTransactions((selectedTxs || []).slice(0, PAGE_SIZE))
+      setHasMore(selectedTxs.length > PAGE_SIZE)
+    }
+  }, [block, selectedTxs])
 
   useEffect(() => {
     if (option === 'all') {
@@ -125,6 +125,7 @@ export default function TickPage() {
         <div className="mb-24">
           <SubCardItem
             title={t('signature')}
+            variant="secondary"
             content={
               <p className="break-all font-space text-14 leading-20 text-gray-50">
                 {formatBase64(block?.tick.signatureHex)}
@@ -133,6 +134,7 @@ export default function TickPage() {
           />
           <SubCardItem
             title={t('tickLeader')}
+            variant="secondary"
             content={
               <AddressLink value={block?.epoch.identities[block?.tick.computorIndex] ?? ''} copy />
             }
