@@ -1,5 +1,5 @@
 import axios from 'axios'
-import ARCHIVER_API_ENDPOINTS from './endpoints'
+import { ARCHIVER_API_ENDPOINTS } from './endpoints'
 import type {
   GetBalanceResponse,
   GetEpochComputorsResponse,

@@ -6,7 +6,7 @@ const formatTick = (tick: string) => parseInt(tick.replace(/,/g, ''), 10)
 
 const makeTicksUrl = (tick: string) => `${BASE_URL}/ticks/${formatTick(tick)}`
 
-const ARCHIVER_API_ENDPOINTS = {
+export const ARCHIVER_API_ENDPOINTS = {
   // BALANCES
   BALANCES: (addressId: string) => `${BASE_URL}/balances/${addressId}`,
   // TRANSACTIONS
