@@ -1,9 +1,8 @@
-import QLI_API_ENDPOINTS from '@app/services/qli/endpoints'
+import { qliApiService } from '@app/services/qli'
 import type { TickOverview } from '@app/services/qli/types'
 import type { RootState } from '@app/store'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import axios from 'axios'
 
 export interface OverviewState {
   overview: TickOverview | null
@@ -18,13 +17,8 @@ const initialState: OverviewState = {
 }
 
 export const getOverview = createAsyncThunk('network/overview', async () => {
-  const token = window.localStorage.getItem('jwt_access_token')
-  const { data } = await axios.get(QLI_API_ENDPOINTS.TICK_OVERVIEW, {
-    headers: {
-      Authorization: `Bearer ${token}`
-    }
-  })
-  return data
+  const tickOverview = await qliApiService.getTickOverview()
+  return tickOverview
 })
 
 const overviewSlice = createSlice({
