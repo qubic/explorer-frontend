@@ -1,6 +1,5 @@
 import type { Language } from '@app/types'
 
-// eslint-disable-next-line import/prefer-default-export
 export const LANGUAGES: Language[] = [
   { id: 'en', label: 'English' },
   { id: 'de', label: 'Deutsch' },
@@ -14,3 +13,5 @@ export const LANGUAGES: Language[] = [
   { id: 'ja', label: '日本語' },
   { id: 'ar', label: 'العربية' }
 ]
+
+export default { LANGUAGES }
