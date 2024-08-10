@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router-dom'
 
@@ -22,63 +22,57 @@ export default function TickPage() {
   const navigate = useNavigate()
   const { tick } = useParams()
   const { block, isLoading, error } = useAppSelector(selectBlock)
-  const [selectedTxs, setSelectedTxs] = useState<Transaction[]>([])
+
+  const [option, setOption] = useState('all')
   const [displayTransactions, setDisplayTransactions] = useState<Transaction[]>([])
   const [hasMore, setHasMore] = useState(true)
-  const [option, setOption] = useState('all')
 
   const nonExecutedTxIds = useMemo(() => {
     if (!block) return []
-
     const transferTx = block.transferTx || []
     const approvedTxIds = new Set((block.approvedTx || []).map((tx) => tx.txId))
-
     return transferTx.filter((tx) => !approvedTxIds.has(tx.txId)).map((tx) => tx.txId)
   }, [block])
 
-  const loadMoreTransactions = () => {
+  const selectedTxs = useMemo(() => {
+    if (option === 'transfer') return block?.transferTx || []
+    if (option === 'approved') return block?.approvedTx || []
+    return block?.tx || []
+  }, [option, block])
+
+  const loadMoreTransactions = useCallback(() => {
     if (displayTransactions.length < selectedTxs.length) {
       const nextTransactions = selectedTxs.slice(
         displayTransactions.length,
         displayTransactions.length + PAGE_SIZE
       )
-
       setDisplayTransactions((prevTransactions) => [...prevTransactions, ...nextTransactions])
       setHasMore(displayTransactions.length + PAGE_SIZE < selectedTxs.length)
     } else {
       setHasMore(false)
     }
-  }
+  }, [displayTransactions, selectedTxs])
 
-  const handleOnSelect = (selectedOption: Option) => {
+  const handleOnSelect = useCallback((selectedOption: Option) => {
     setOption(selectedOption.value)
-  }
+  }, [])
 
-  const handleTickNavigation = (direction: 'previous' | 'next') => () => {
-    const newTick = Number(tick) + (direction === 'previous' ? -1 : 1)
-    navigate(Routes.NETWORK.TICK(newTick))
-  }
+  const handleTickNavigation = useCallback(
+    (direction: 'previous' | 'next') => () => {
+      const newTick = Number(tick) + (direction === 'previous' ? -1 : 1)
+      navigate(Routes.NETWORK.TICK(newTick))
+    },
+    [navigate, tick]
+  )
 
   useEffect(() => {
     dispatch(getBlock(tick))
   }, [tick, dispatch])
 
   useEffect(() => {
-    if (block && block.tx) {
-      setDisplayTransactions((selectedTxs || []).slice(0, PAGE_SIZE))
-      setHasMore(selectedTxs.length > PAGE_SIZE)
-    }
-  }, [block, selectedTxs])
-
-  useEffect(() => {
-    if (option === 'all') {
-      setSelectedTxs(block?.tx || [])
-    } else if (option === 'transfer') {
-      setSelectedTxs(block?.transferTx || [])
-    } else {
-      setSelectedTxs(block?.approvedTx || [])
-    }
-  }, [option, block])
+    setDisplayTransactions(selectedTxs.slice(0, PAGE_SIZE))
+    setHasMore(selectedTxs.length > PAGE_SIZE)
+  }, [selectedTxs])
 
   if (isLoading) {
     return <LinearProgress />
@@ -117,7 +111,7 @@ export default function TickPage() {
           <TickStatus
             dataStatus={!error}
             tickStatus={Boolean(block?.tick?.transactionIds?.length)}
-            transactions={selectedTxs?.length}
+            transactions={selectedTxs.length}
           />
         </div>
       </div>
@@ -145,7 +139,7 @@ export default function TickPage() {
         <TickStatus
           dataStatus={!error}
           tickStatus={Boolean(block?.tick?.transactionIds?.length)}
-          transactions={selectedTxs?.length}
+          transactions={selectedTxs.length}
         />
       </div>
       {!error && (
