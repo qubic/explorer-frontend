@@ -1,8 +1,8 @@
+import { Link } from 'react-router-dom'
+
 import { Routes } from '@app/router'
 import type { NetworkTxQueryParams } from '@app/router/routes'
-import { formatEllipsis } from '@app/utils'
-import clsx from 'clsx'
-import { Link } from 'react-router-dom'
+import { clsxTwMerge, formatEllipsis } from '@app/utils'
 import CopyText from './CopyText'
 
 type Props = {
@@ -27,7 +27,7 @@ export default function TxLink({
   return (
     <div className="flex items-center gap-10">
       <Link
-        className={clsx('break-all font-space text-sm', className)}
+        className={clsxTwMerge('break-all font-space text-sm', className)}
         to={Routes.NETWORK.TX(value, queryParams)}
         role="button"
       >
