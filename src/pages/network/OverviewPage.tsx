@@ -17,7 +17,7 @@ import { PaginationBar } from '@app/components/ui'
 import { LinearProgress } from '@app/components/ui/loaders'
 import { useAppDispatch, useAppSelector } from '@app/hooks/redux'
 import { getOverview, selectOverview } from '@app/store/network/overviewSlice'
-import { formatString } from '@app/utils'
+import { clsxTwMerge, formatString } from '@app/utils'
 import { CardItem, OverviewCardItem, TickLink } from './components'
 
 function getTickQuality(numberOfTicks: number | undefined, numberOfEmptyTicks: number | undefined) {
@@ -167,7 +167,10 @@ export default function OverviewPage() {
                 <TickLink
                   key={item.tick}
                   value={item.tick}
-                  className={`text-12 ${item.arbitrated ? 'text-error-40' : 'text-gray-50'}`}
+                  className={clsxTwMerge(
+                    'text-xs',
+                    item.arbitrated ? 'text-error-40' : 'text-gray-50'
+                  )}
                 />
               ))}
             </div>
