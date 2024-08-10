@@ -1,6 +1,6 @@
 import { AppLayout } from '@app/components/ui/layouts'
 import { Error404Page } from '@app/pages'
-import { OverviewPage, TickPage } from '@app/pages/network'
+import { OverviewPage, TickPage, TxPage } from '@app/pages/network'
 import { createBrowserRouter, Navigate } from 'react-router-dom'
 import Routes from './routes'
 
@@ -35,7 +35,7 @@ const router: ReturnType<typeof createBrowserRouter> = createBrowserRouter([
             children: [
               {
                 path: ':txId',
-                element: <p>TX Page</p>
+                element: <TxPage />
               }
             ]
           },
