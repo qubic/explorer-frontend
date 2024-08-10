@@ -1,4 +1,4 @@
-import ARCHIVER_API_ENDPOINTS from '@app/services/archiver/endpoints'
+import { archiverApiService } from '@app/services/archiver'
 import type {
   GetBalanceResponse,
   GetTickDataResponse,
@@ -7,12 +7,19 @@ import type {
 import type { RootState } from '@app/store'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import axios from 'axios'
+
+type HandlerResponse = GetBalanceResponse | GetTickDataResponse | GetTransactionResponse
 
 export interface SearchState {
-  result: GetBalanceResponse | GetTickDataResponse | GetTransactionResponse | null
+  result: HandlerResponse | null
   isLoading: boolean
   error: string | null
+}
+
+const initialState: SearchState = {
+  result: null,
+  isLoading: false,
+  error: null
 }
 
 interface SearchQuery {
@@ -20,33 +27,23 @@ interface SearchQuery {
   type: 'address' | 'tx' | 'tick' | null
 }
 
-export const getSearch = createAsyncThunk<SearchState['result'], SearchQuery>(
-  'search',
-  async ({ query, type }) => {
-    const getRequestUrl = () => {
-      switch (type) {
-        case 'address':
-          return ARCHIVER_API_ENDPOINTS.BALANCES(query)
-        case 'tx':
-          return ARCHIVER_API_ENDPOINTS.TRANSACTIONS(query)
-        case 'tick':
-          return ARCHIVER_API_ENDPOINTS.TICK_DATA(query)
-        default:
-          throw new Error('Invalid search type')
-      }
-    }
-
-    const response = await axios.get(getRequestUrl())
-
-    return response.data
-  }
-)
-
-const initialState: SearchState = {
-  result: null,
-  isLoading: false,
-  error: null
+const searchHandlers: Record<string, (query: string) => Promise<HandlerResponse>> = {
+  address: archiverApiService.getBalance,
+  tx: archiverApiService.getTransaction,
+  tick: archiverApiService.getTickData
 }
+
+export const getSearch = createAsyncThunk<
+  SearchState['result'],
+  SearchQuery,
+  { rejectValue: string }
+>('search', async ({ query, type }, { rejectWithValue }) => {
+  if (!type || type in searchHandlers === false) {
+    return rejectWithValue('Invalid search type')
+  }
+
+  return searchHandlers[type](query)
+})
 
 const searchSlice = createSlice({
   name: 'search',
@@ -70,13 +67,13 @@ const searchSlice = createSlice({
       })
       .addCase(getSearch.rejected, (state, action) => {
         state.isLoading = false
-        state.error = action.error.message || 'Something went wrong'
+        state.error = action.payload || action.error.message || 'Something went wrong'
       })
   }
 })
 
 // Selectors
-export const searchSelector = (state: RootState) => state.search
+export const selectSearch = (state: RootState) => state.search
 
 export const { resetSearch } = searchSlice.actions
 

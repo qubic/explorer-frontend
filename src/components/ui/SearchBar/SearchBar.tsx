@@ -1,7 +1,7 @@
 import { CameraIcon, GridAddIcon, MagnifyIcon, XmarkIcon } from '@app/assets/icons'
 import { useAppDispatch, useAppSelector } from '@app/hooks/redux'
 import { Routes } from '@app/router'
-import { getSearch, resetSearch, searchSelector } from '@app/store/searchSlice'
+import { getSearch, resetSearch, selectSearch } from '@app/store/searchSlice'
 import { formatBase64, formatDate, formatString } from '@app/utils'
 import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -29,7 +29,7 @@ export default function SearchBar() {
   const { t } = useTranslation('global')
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
-  const { result: searchResult, isLoading, error } = useAppSelector(searchSelector)
+  const { result: searchResult, isLoading, error } = useAppSelector(selectSearch)
   const [open, setOpen] = useState(false)
   const [keyword, setKeyword] = useState('')
 
