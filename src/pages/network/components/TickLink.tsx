@@ -1,6 +1,7 @@
-import { formatString } from '@app/utils'
-import clsx from 'clsx'
 import { Link } from 'react-router-dom'
+
+import { Routes } from '@app/router'
+import { clsxTwMerge, formatString } from '@app/utils'
 
 type Props = {
   value: number
@@ -10,9 +11,8 @@ type Props = {
 export default function TickLink({ value, className }: Props) {
   return (
     <Link
-      // TODO: Put this route in to routes file
-      to={`/network/tick/${value}`}
-      className={clsx(`font-space font-500`, className)}
+      to={Routes.NETWORK.TICK(value)}
+      className={clsxTwMerge(`font-space font-500`, className)}
       role="button"
     >
       {formatString(value)}
