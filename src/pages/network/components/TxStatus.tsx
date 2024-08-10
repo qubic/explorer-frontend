@@ -6,7 +6,7 @@ type Props = {
 
 function TxStatus({ executed }: Props) {
   return (
-    <div className="flex items-center gap-4 rounded-full bg-gray-70 px-8 py-4">
+    <div className="flex w-fit items-center gap-4 rounded-full bg-gray-70 px-8 py-4">
       <p className="font-space text-xs text-gray-50">TX</p>
       {executed ? (
         <CheckIcon className="h-16 w-16 text-success-40" />
