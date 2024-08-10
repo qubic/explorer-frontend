@@ -81,11 +81,7 @@ export default function TickPage() {
   }, [option, block])
 
   if (isLoading) {
-    return (
-      <div className="absolute w-full">
-        <LinearProgress />
-      </div>
-    )
+    return <LinearProgress />
   }
 
   return (
@@ -173,7 +169,7 @@ export default function TickPage() {
               </p>
             }
             renderItem={(tx) => (
-              <TxItem key={tx.txId} variant="primary" tx={tx} nonExecutedTxIds={nonExecutedTxIds} />
+              <TxItem key={tx.txId} tx={tx} nonExecutedTxIds={nonExecutedTxIds} />
             )}
           />
         </div>
