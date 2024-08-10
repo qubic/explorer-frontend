@@ -1,22 +1,30 @@
+import { clsxTwMerge } from '@app/utils'
+
 type Props = {
   title: string
   content: React.ReactNode
-  variant?: 'primary'
+  variant?: 'primary' | 'secondary'
 }
 
-export default function SubCardItem({ title, content, variant }: Props) {
-  if (variant === 'primary') {
-    return (
-      <div className="flex flex-col gap-8 md:flex-row md:justify-between">
-        <p className="font-space text-14 leading-18 text-gray-50">{title}</p>
-        {content}
-      </div>
-    )
-  }
-
+export default function SubCardItem({ title, content, variant = 'primary' }: Props) {
+  const isSecondaryVariant = variant === 'secondary'
   return (
-    <div className="mb-12 flex flex-col gap-12 border-t-[1px] border-gray-70 pt-12 md:flex-row">
-      <p className="w-120 font-space text-14 leading-20 text-gray-50">{title}</p>
+    <div
+      className={clsxTwMerge(
+        'flex flex-col md:flex-row',
+        isSecondaryVariant
+          ? 'mb-12 gap-12 border-t-[1px] border-gray-70 pt-12'
+          : 'gap-8 md:justify-between'
+      )}
+    >
+      <p
+        className={clsxTwMerge(
+          'font-space text-sm leading-18 text-gray-50',
+          isSecondaryVariant && 'w-120 leading-20'
+        )}
+      >
+        {title}
+      </p>
       {content}
     </div>
   )
