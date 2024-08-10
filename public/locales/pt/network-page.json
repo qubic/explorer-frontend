@@ -42,5 +42,7 @@
   "allTransactionsLoaded": "Você viu todas as transações",
   "historical": "Histórico",
   "loading": "Carregando",
-  "historicalDataWarning": "U bekijkt historische gegevens. Sommige gegevens zijn mogelijk niet volledig nauwkeurig of volledig."
+  "historicalDataWarning": "U bekijkt historische gegevens. Sommige gegevens zijn mogelijk niet volledig nauwkeurig of volledig.",
+  "hide": "Esconder",
+  "show": "Mostrar"
 }

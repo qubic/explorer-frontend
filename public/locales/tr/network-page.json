@@ -42,5 +42,7 @@
   "allTransactionsLoaded": "Tüm işlemleri gördünüz",
   "historical": "Tarihi",
   "loading": "Yükleniyor",
-  "historicalDataWarning": "Tarihî verileri görüntülüyorsunuz. Bazı veriler tamamen doğru veya eksiksiz olmayabilir."
+  "historicalDataWarning": "Tarihî verileri görüntülüyorsunuz. Bazı veriler tamamen doğru veya eksiksiz olmayabilir.",
+  "hide": "Gizle",
+  "show": "Göster"
 }

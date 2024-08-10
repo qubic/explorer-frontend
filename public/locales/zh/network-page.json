@@ -42,5 +42,7 @@
   "allTransactionsLoaded": "您已查看所有交易",
   "historical": "历史",
   "loading": "加载中",
-  "historicalDataWarning": "您正在查看历史数据。某些数据可能不完全准确或完整。"
+  "historicalDataWarning": "您正在查看历史数据。某些数据可能不完全准确或完整。",
+  "hide": "隐藏",
+  "show": "显示"
 }
