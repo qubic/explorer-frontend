@@ -41,9 +41,11 @@ export default function TransactionDetails({
 }: Props) {
   const { t } = useTranslation('network-page')
 
+  const isSecondaryVariant = variant === 'secondary'
+
   return (
     <TransactionDetailsWrapper variant={variant}>
-      {variant === 'secondary' ? (
+      {isSecondaryVariant ? (
         <SubCardItem
           variant="secondary"
           title={t('amount')}
@@ -69,12 +71,12 @@ export default function TransactionDetails({
       <SubCardItem
         title={t('source')}
         variant={variant}
-        content={<AddressLink value={sourceId} copy />}
+        content={<AddressLink value={sourceId} copy={!isSecondaryVariant} />}
       />
       <SubCardItem
         title={t('destination')}
         variant={variant}
-        content={<AddressLink value={destId} copy />}
+        content={<AddressLink value={destId} copy={!isSecondaryVariant} />}
       />
       <SubCardItem
         title={t('tick')}
@@ -90,6 +92,7 @@ export default function TransactionDetails({
           </p>
         }
       />
+
       <TransferList entries={entries} variant={variant} />
     </TransactionDetailsWrapper>
   )
