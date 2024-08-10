@@ -15,3 +15,17 @@ export interface TickOverview {
   timestamp: string
   ticks: Tick[]
 }
+
+export interface HistoricalTx {
+  id: string
+  executed: boolean
+  tick: number
+  includedByTickLeader: boolean
+  sourceId: string
+  destId: string
+  amount: number
+  type: number
+  digest: string
+  moneyFlew: boolean
+  data: string
+}
