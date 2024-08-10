@@ -1,3 +1,5 @@
+import type { TxType } from '@app/types'
+
 function buildUrlWithQueryParams<T extends Record<string, string>>(
   path: string,
   queryParams?: T
@@ -9,7 +11,7 @@ function buildUrlWithQueryParams<T extends Record<string, string>>(
 }
 
 export type NetworkTxQueryParams = {
-  type?: 'historical' | 'latest'
+  type?: TxType
 }
 
 const Routes = {
