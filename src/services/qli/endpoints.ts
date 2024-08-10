@@ -2,9 +2,10 @@ import envConfig from '@app/configs/envConfig'
 
 const BASE_URL = envConfig.QLI_API_URL
 
-const QLI_API_ENDPOINTS = {
+export const QLI_API_ENDPOINTS = {
   LOGIN: `${BASE_URL}/Auth/Login`,
-  TICK_OVERVIEW: `${BASE_URL}/Network/TickOverview`
+  TICK_OVERVIEW: `${BASE_URL}/Network/TickOverview`,
+  TX: (txId: string) => `${BASE_URL}/Network/tx/${txId}`
 } as const
 
 export default QLI_API_ENDPOINTS
