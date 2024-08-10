@@ -7,6 +7,7 @@ module.exports = {
   },
   extends: [
     'eslint:recommended',
+    'plugin:import/recommended',
     'plugin:@typescript-eslint/recommended',
     'plugin:react/recommended',
     'plugin:react-hooks/recommended',
@@ -32,6 +33,7 @@ module.exports = {
       version: 'detect'
     },
     'import/resolver': {
+      typescript: true,
       node: {
         paths: ['src'],
         extensions: ['.ts', '.tsx']
