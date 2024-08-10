@@ -44,5 +44,6 @@
   "loading": "Bezig met laden",
   "historicalDataWarning": "U bekijkt historische gegevens. Sommige gegevens zijn mogelijk niet volledig nauwkeurig of volledig.",
   "hide": "Verbergen",
-  "show": "Tonen"
+  "show": "Tonen",
+  "transactionNotFound": "Transactie niet gevonden"
 }

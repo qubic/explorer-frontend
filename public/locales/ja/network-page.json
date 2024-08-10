@@ -44,5 +44,6 @@
   "loading": "読み込み中",
   "historicalDataWarning": "過去のデータを表示しています。一部のデータは完全に正確または完全でない場合があります。",
   "hide": "隠す",
-  "show": "表示"
+  "show": "表示",
+  "transactionNotFound": "取引が見つかりません"
 }

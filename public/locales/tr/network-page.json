@@ -44,5 +44,6 @@
   "loading": "Yükleniyor",
   "historicalDataWarning": "Tarihî verileri görüntülüyorsunuz. Bazı veriler tamamen doğru veya eksiksiz olmayabilir.",
   "hide": "Gizle",
-  "show": "Göster"
+  "show": "Göster",
+  "transactionNotFound": "İşlem bulunamadı"
 }

@@ -44,5 +44,6 @@
   "loading": "Laden",
   "historicalDataWarning": "Sie betrachten historische Daten. Einige Daten sind möglicherweise nicht vollständig genau oder vollständig.",
   "hide": "Verstecken",
-  "show": "Anzeigen"
+  "show": "Anzeigen",
+  "transactionNotFound": "Transaktion nicht gefunden"
 }

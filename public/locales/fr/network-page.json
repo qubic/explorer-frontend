@@ -44,5 +44,6 @@
   "loading": "Chargement",
   "historicalDataWarning": "Vous consultez des données historiques. Certaines données peuvent ne pas être entièrement exactes ou complètes.",
   "hide": "Cacher",
-  "show": "Afficher"
+  "show": "Afficher",
+  "transactionNotFound": "Transaction non trouvée"
 }
