@@ -1,68 +1,83 @@
-import type React from 'react'
-
-import { Infocon } from '@app/assets/icons'
-import { clsxTwMerge } from '@app/utils'
 import { memo } from 'react'
+
+import {
+  CheckCircleIcon,
+  ExclamationCircleIcon,
+  ExclamationTriangleIcon,
+  Infocon
+} from '@app/assets/icons'
+import { clsxTwMerge } from '@app/utils'
 
 type Variant = 'info' | 'warning' | 'error' | 'success'
 
+type Size = 'sm' | 'md' | 'lg'
+
 type Props = {
   variant?: Variant
+  size?: Size
   children: React.ReactNode
   className?: string
 }
 
-const variantBgClasses: Record<Variant, string> = {
-  info: 'bg-info-90',
-  warning: 'bg-warning-90',
-  error: 'bg-error-90',
-  success: 'bg-success-90'
-}
-
-const variantTextClasses: Record<Variant, string> = {
-  info: 'text-info-40',
-  warning: 'text-warning-40',
-  error: 'text-error-40',
-  success: 'text-success-40'
-}
-// TODO: Add the correct icon for each variant
-const variantIcons: Record<Variant, { icon: React.ElementType; className: string }> = {
+const variantClasses = {
   info: {
+    bg: 'bg-info-90',
+    text: 'text-info-40',
     icon: Infocon,
-    className: 'text-info-40'
+    iconClass: 'text-info-40'
   },
   warning: {
-    icon: Infocon,
-    className: 'text-yellow-400'
+    bg: 'bg-warning-90',
+    text: 'text-warning-40',
+    icon: ExclamationTriangleIcon,
+    iconClass: 'text-yellow-400'
   },
   error: {
-    icon: Infocon,
-    className: 'text-error-40'
+    bg: 'bg-error-90',
+    text: 'text-error-40',
+    icon: ExclamationCircleIcon,
+    iconClass: 'text-error-40'
   },
   success: {
-    icon: Infocon,
-    className: 'text-success-40'
+    bg: 'bg-success-90',
+    text: 'text-success-40',
+    icon: CheckCircleIcon,
+    iconClass: 'text-success-40'
   }
-}
+} as const
 
-function Alert({ variant = 'info', children, className }: Props) {
-  const IconComponent = variantIcons[variant].icon
+const sizeClasses = {
+  sm: {
+    container: 'gap-6',
+    text: 'text-xs',
+    icon: 'size-16 '
+  },
+  md: {
+    container: 'gap-8',
+    text: 'text-sm',
+    icon: 'size-20'
+  },
+  lg: {
+    container: 'gap-10',
+    text: 'text-base',
+    icon: 'size-24'
+  }
+} as const
+
+function Alert({ children, variant = 'info', size = 'md', className }: Props) {
+  const { bg: bgColor, text: textColor, icon: IconComponent, iconClass } = variantClasses[variant]
+  const { container: containerSize, text: textSize, icon: iconSize } = sizeClasses[size]
+
   return (
     <div
       role="alert"
-      className={clsxTwMerge(
-        'flex items-center gap-10 rounded-12 p-16 text-sm',
-        variantBgClasses[variant],
-        className
-      )}
+      className={clsxTwMerge('flex rounded-12 p-16', bgColor, containerSize, className)}
     >
       <IconComponent
         aria-label={`${variant} icon`}
-        className={clsxTwMerge('size-16', variantIcons[variant].className)}
+        className={clsxTwMerge('flex-shrink-0', iconClass, iconSize)}
       />
-      <div className={clsxTwMerge('font-sans text-sm', variantTextClasses[variant])}>
-        {children}
-      </div>
+      <div className={clsxTwMerge('font-sans', textColor, textSize)}>{children}</div>
     </div>
   )
 }
