@@ -2,8 +2,7 @@ import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 
-import { Infocon } from '@app/assets/icons'
-import { Breadcrumbs } from '@app/components/ui'
+import { Alert, Breadcrumbs } from '@app/components/ui'
 import { LinearProgress } from '@app/components/ui/loaders'
 import { useAppDispatch, useAppSelector } from '@app/hooks/redux'
 import type { TransactionStatus } from '@app/services/archiver'
@@ -37,10 +36,9 @@ export default function TxPage() {
         {txWithStatus?.tx ? (
           <>
             {txType === 'historical' && (
-              <div className="mb-24 flex items-start justify-center gap-4 rounded-12 bg-[#122B35] p-12 sm:items-center">
-                <Infocon className="h-16 w-16 text-primary-50" />
-                <p className="w-fit text-xs text-primary-40">{t('historicalDataWarning')}</p>
-              </div>
+              <Alert variant="info" className="mb-24" size="sm">
+                {t('historicalDataWarning')}
+              </Alert>
             )}
             <Breadcrumbs aria-label="breadcrumb">
               <HomeLink />
