@@ -8,7 +8,7 @@ function TransferItem({ transfer, className }: { transfer: Transfer; className?:
   return (
     <li className={clsxTwMerge('flex flex-col justify-between gap-8 md:flex-row', className)}>
       <AddressLink value={transfer.destId} />
-      <p className="font-space text-sm">{formatString(Number(transfer.amount))} QUBIC</p>
+      <p className="font-space text-sm">{formatString(transfer.amount)} QUBIC</p>
     </li>
   )
 }

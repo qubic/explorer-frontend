@@ -83,7 +83,7 @@ export default function TickPage() {
       <Breadcrumbs>
         <HomeLink />
         <p className="font-sans text-12 text-primary-40">
-          {t('tick')} {formatString(Number(tick))}
+          {t('tick')} {formatString(tick)}
         </p>
       </Breadcrumbs>
       <div className="mb-36 mt-24 flex items-center justify-between gap-12">
@@ -96,7 +96,7 @@ export default function TickPage() {
             >
               <ChevronLeftIcon className="h-24 w-24 text-gray-50 rtl:rotate-180 rtl:transform" />
             </button>
-            <p className="font-space text-32 font-500">{formatString(Number(tick))}</p>
+            <p className="font-space text-32 font-500">{formatString(tick)}</p>
             <button type="button" aria-label="Next Tick" onClick={handleTickNavigation('next')}>
               <ChevronRightIcon className="h-24 w-24 rtl:rotate-180 rtl:transform" />
             </button>
