@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 import { CheckIcon, CopyTextIcon } from '@app/assets/icons'
 import { copyText } from '@app/utils'
@@ -10,15 +10,10 @@ type Props = {
 export default function CopyText({ text }: Props) {
   const [isCopy, setIsCopy] = useState(false)
 
-  useEffect(() => {
-    if (isCopy) {
-      setTimeout(() => setIsCopy(false), 1000)
-    }
-  }, [isCopy])
-
   const handleCopy = () => {
     copyText(text)
     setIsCopy(true)
+    setTimeout(() => setIsCopy(false), 1000)
   }
 
   return (
