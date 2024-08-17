@@ -67,6 +67,10 @@ export default {
         40: '#CDA747',
         90: '#322D11'
       },
+      info: {
+        40: '#61F0FE',
+        90: '#122B35'
+      },
       red: {
         50: '#FFEBEE',
         100: '#FFCDD2',
