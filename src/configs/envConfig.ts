@@ -3,7 +3,7 @@ type EnvConfig = {
   ARCHIVER_API_URL: string
 }
 
-const envConfig: EnvConfig = {
+export const envConfig: EnvConfig = {
   QLI_API_URL: import.meta.env.VITE_QLI_API_URL,
   ARCHIVER_API_URL: import.meta.env.VITE_ARCHIVER_API_URL
 }
