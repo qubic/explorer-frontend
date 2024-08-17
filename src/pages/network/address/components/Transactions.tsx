@@ -38,8 +38,8 @@ export default function Transactions({ addressId, address }: Props) {
     if (remainingTxs.length >= BATCH_SIZE) {
       setDisplayTransferTxs((prev) => [...prev, ...remainingTxs])
     } else if (!isLoading && hasMore) {
-      const newEndTick = lastEndTick - 1 - TICK_SIZE
-      const newStartTick = lastStartTick - 1 - TICK_SIZE
+      const newEndTick = Math.max(0, lastEndTick - 1 - TICK_SIZE)
+      const newStartTick = Math.max(0, lastStartTick - 1 - TICK_SIZE)
       dispatch(getTransferTxs({ addressId, startTick: newStartTick, endTick: newEndTick }))
     }
   }, [
