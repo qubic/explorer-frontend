@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { Alert, InfiniteScroll } from '@app/components/ui'
+import { InfiniteScroll } from '@app/components/ui'
 import { DotsLoader } from '@app/components/ui/loaders'
 import { useAppDispatch, useAppSelector } from '@app/hooks/redux'
 import type { Address, TransactionWithMoneyFlew } from '@app/store/network/addressSlice'
@@ -74,10 +74,6 @@ export default function Transactions({ addressId, address }: Props) {
     }
   }, [transferTxs])
 
-  if (error) {
-    return <Alert variant="error">{t('errorLoadingTransactions')}</Alert>
-  }
-
   return (
     <InfiniteScroll
       items={displayTransferTxs}
@@ -85,6 +81,7 @@ export default function Transactions({ addressId, address }: Props) {
       hasMore={hasMore}
       isLoading={isLoading}
       loader={<DotsLoader showLoadingText />}
+      error={error && t('loadingTransactionsError')}
       endMessage={
         <p className="py-32 text-center text-14 text-gray-50">
           {displayTransferTxs.length === 0 ? t('noTransactions') : t('allTransactionsLoaded')}
