@@ -1,11 +1,12 @@
 const formatString = (string: string | number | undefined | null) => {
   if (string === undefined || string === null) return '0'
 
-  if (typeof string === 'number') {
-    return string.toLocaleString('en-US')
-  }
+  if (!Number.isNaN(Number(string)))
+    return Number(string).toLocaleString('en-US', {
+      maximumFractionDigits: 2
+    })
 
-  return string
+  return String(string)
 }
 
 const formatDate = (dateString: string | undefined) => {
