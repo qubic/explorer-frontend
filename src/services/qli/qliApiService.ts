@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { QLI_API_ENDPOINTS } from './endpoints'
-import type { HistoricalTx, TickOverview } from './types'
+import type { Address, HistoricalTx, TickOverview } from './types'
 
 const fetchData = async <T>(url: string): Promise<T> => {
   try {
@@ -29,6 +29,14 @@ const qliApiService = {
   getTransaction: async (txId: string): Promise<HistoricalTx> => {
     const url = QLI_API_ENDPOINTS.TX(txId)
     return fetchData<HistoricalTx>(url)
+  },
+  getAddress: async (addressId: string): Promise<Address> => {
+    const url = QLI_API_ENDPOINTS.ADDRESS(addressId)
+    return fetchData<Address>(url)
+  },
+  getAddressHistory: async (addressId: string, page: number): Promise<HistoricalTx[]> => {
+    const url = QLI_API_ENDPOINTS.ADDRESS_HISTORY(addressId, page)
+    return fetchData<HistoricalTx[]>(url)
   }
 }
 
