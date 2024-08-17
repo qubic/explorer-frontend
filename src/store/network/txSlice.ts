@@ -29,36 +29,37 @@ type GetTxArgs = {
   txType: TxType
 }
 
-export const getTx = createAsyncThunk<TransactionWithStatus, GetTxArgs>(
-  'network/tx',
-  async ({ txId, txType }) => {
-    if (!txId) {
-      throw new Error('Invalid transaction ID')
-    }
-
-    if (txType === 'historical') {
-      const historicalTx = null
-      // TODO: Implement getting historical transaction data from state once address slice it's implemented
-      // const historicalTx = getState().network.address.historicalTxs.data.find(
-      //   (tx) => tx.id === txId
-      // )
-
-      if (!historicalTx) {
-        const getHistoricalTxResult = await qliApiService.getTransaction(txId)
-        return convertHistoricalTxToTxWithStatus(getHistoricalTxResult)
-      }
-      // TODO: Implement getting historical transaction data from state once address slice it's implemented
-      // return convertHistoricalTxToTxWithStatus(historicalTx)
-    }
-
-    const [{ transaction }, { transactionStatus }] = await Promise.all([
-      archiverApiService.getTransaction(txId),
-      archiverApiService.getTransactionStatus(txId)
-    ])
-
-    return { tx: transaction, status: transactionStatus }
+export const getTx = createAsyncThunk<
+  TransactionWithStatus,
+  GetTxArgs,
+  {
+    state: RootState
   }
-)
+>('network/tx', async ({ txId, txType }, { getState }) => {
+  if (!txId) {
+    throw new Error('Invalid transaction ID')
+  }
+
+  if (txType === 'historical') {
+    const historicalTx = getState().network.address.historicalTxs.data.find(
+      ({ tx }) => tx.txId === txId
+    )
+
+    if (!historicalTx) {
+      const getHistoricalTxResult = await qliApiService.getTransaction(txId)
+      return convertHistoricalTxToTxWithStatus(getHistoricalTxResult)
+    }
+
+    return historicalTx
+  }
+
+  const [{ transaction }, { transactionStatus }] = await Promise.all([
+    archiverApiService.getTransaction(txId),
+    archiverApiService.getTransactionStatus(txId)
+  ])
+
+  return { tx: transaction, status: transactionStatus }
+})
 
 const txSlice = createSlice({
   name: 'network/tx',
