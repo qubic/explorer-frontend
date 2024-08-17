@@ -3,24 +3,21 @@ import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 
 import { Alert, Breadcrumbs, Tabs } from '@app/components/ui'
-import { ChevronToggleButton } from '@app/components/ui/buttons'
+import { ChevronToggleButton, CopyTextButton } from '@app/components/ui/buttons'
 import { LinearProgress } from '@app/components/ui/loaders'
 import { useAppDispatch, useAppSelector } from '@app/hooks/redux'
 import { getAddress, resetState, selectAddress } from '@app/store/network/addressSlice'
 import { getOverview, selectOverview } from '@app/store/network/overviewSlice'
 import { formatEllipsis, formatString } from '@app/utils'
-import { CardItem, CopyText, HomeLink, TickLink } from '../components'
-import HistoricalTxs from './HistoricalTxs'
-import Transactions from './Transactions'
+import { CardItem, HomeLink, TickLink } from '../components'
+import { HistoricalTxs, Transactions } from './components'
 
 export default function AddressPage() {
   const { t } = useTranslation('network-page')
   const dispatch = useAppDispatch()
   const { addressId = '' } = useParams()
-
   const { address, isLoading } = useAppSelector(selectAddress)
   const { overview } = useAppSelector(selectOverview)
-
   const [detailsOpen, setDetailsOpen] = useState(false)
 
   const handleToggleDetails = () => {
@@ -42,7 +39,6 @@ export default function AddressPage() {
   }
 
   if (!address) {
-    // TODO: Add alert error page that can be reused
     return (
       <Alert variant="error" className="mx-auto my-32 max-w-[960px]">
         {t('addressNotFound')}
@@ -60,7 +56,7 @@ export default function AddressPage() {
       </Breadcrumbs>
       <div className="flex items-center gap-12 pb-8 pt-16">
         <p className="break-all font-space text-16 leading-20 text-gray-50">{addressId}</p>
-        <CopyText text={addressId} />
+        <CopyTextButton text={addressId} />
       </div>
       <div>
         <div className="flex flex-col">

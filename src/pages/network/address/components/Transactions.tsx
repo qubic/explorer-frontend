@@ -6,7 +6,7 @@ import { DotsLoader } from '@app/components/ui/loaders'
 import { useAppDispatch, useAppSelector } from '@app/hooks/redux'
 import type { Address, TransactionWithMoneyFlew } from '@app/store/network/addressSlice'
 import { getTransferTxs, selectTransferTxs } from '@app/store/network/addressSlice'
-import { TxItem } from '../components'
+import { TxItem } from '../../components'
 
 type Props = {
   addressId: string
