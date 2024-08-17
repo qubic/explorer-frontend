@@ -1,2 +1,2 @@
-// eslint-disable-next-line import/prefer-default-export
 export { default as ChevronToggleButton } from './ChevronToggleButton'
+export { default as CopyTextButton } from './CopyTextButton'
