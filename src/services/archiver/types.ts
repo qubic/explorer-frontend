@@ -4,6 +4,10 @@ export interface Balance {
   validForTick: number
   latestIncomingTransferTick: number
   latestOutgoingTransferTick: number
+  incomingAmount: string
+  outgoingAmount: string
+  numberOfIncomingTransfers: number
+  numberOfOutgoingTransfers: number
 }
 
 export interface TickData {
@@ -39,6 +43,45 @@ export interface Computor {
   epoch: number
   identities: string[]
   signatureHex: string
+}
+
+export interface LastProcessedTick {
+  tickNumber: number
+  epoch: number
+}
+
+export interface LastProcessedTicksPerEpoch {
+  [key: string]: number
+}
+
+export interface SkipedTick {
+  startTick: number
+  endTick: number
+}
+
+export interface TickInterval {
+  initialProcessedTick: number
+  lastProcessedTick: number
+}
+
+export interface ProcessedTickIntervalPerEpoch {
+  epoch: number
+  intervals: TickInterval[]
+}
+
+export interface GetStatusResponse {
+  lastProcessedTick: LastProcessedTick
+  lastProcessedTicksPerEpoch: LastProcessedTicksPerEpoch
+  skippedTicks: SkipedTick[]
+  processedTickIntervalsPerEpoch: ProcessedTickIntervalPerEpoch[]
+}
+
+export interface GetAddressTransferTransactionsResponse {
+  transferTransactionsPerTick: {
+    tickNumber: number
+    identity: string
+    transactions: Transaction[]
+  }[]
 }
 
 export interface GetBalanceResponse {
