@@ -115,7 +115,7 @@ export default function SearchBar() {
               onClick={handleCloseCallback}
               aria-label="close-button"
             >
-              <XmarkIcon className="h-24 w-24" />
+              <XmarkIcon className="h-24 w-24 text-gray-50" />
             </button>
           </div>
 
