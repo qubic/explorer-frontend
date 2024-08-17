@@ -29,3 +29,23 @@ export interface HistoricalTx {
   moneyFlew: boolean
   data: string
 }
+
+export interface ReportedValue {
+  publicKey: string
+  incomingAmount: number
+  outgoingAmount: number
+  numberOfIncomingTransfers: number
+  numberOfOutgoingTransfers: number
+  latestIncomingTransferTick: number
+  latestOutgoingTransferTick: number
+}
+
+export interface ReportedValues {
+  [ip: string]: ReportedValue
+}
+
+export interface Address {
+  id: string
+  latestTransfers: HistoricalTx[]
+  reportedValues: ReportedValues
+}
