@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 
-import { BATCH_SIZE, TICK_SIZE } from '@app/pages/network/address/Transactions'
+import { BATCH_SIZE, TICK_SIZE } from '@app/pages/network/address/components/Transactions'
 import type { Balance, Transaction } from '@app/services/archiver'
 import { archiverApiService } from '@app/services/archiver'
 import type { ReportedValues } from '@app/services/qli'
@@ -163,9 +163,6 @@ const addressSlice = createSlice({
   name: 'network/address',
   initialState,
   reducers: {
-    setLastEndTick: (state, action) => {
-      state.transferTxs.lastEndTick = action.payload
-    },
     resetState: (state) => {
       Object.assign(state, initialState)
     }
@@ -197,9 +194,9 @@ const addressSlice = createSlice({
           state.transferTxs.hasMore = false
         } else {
           state.transferTxs.data.push(...newTxs.data)
-          state.transferTxs.lastStartTick = newTxs.lastStartTick
-          state.transferTxs.lastEndTick = newTxs.lastEndTick
         }
+        state.transferTxs.lastStartTick = newTxs.lastStartTick
+        state.transferTxs.lastEndTick = newTxs.lastEndTick
       })
       .addCase(getTransferTxs.rejected, (state, action) => {
         state.transferTxs.isLoading = false
@@ -234,6 +231,6 @@ export const selectTransferTxs = (state: RootState) => state.network.address.tra
 export const selectHistoricalTxs = (state: RootState) => state.network.address.historicalTxs
 
 // actions
-export const { setLastEndTick, resetState } = addressSlice.actions
+export const { resetState } = addressSlice.actions
 
 export default addressSlice.reducer
