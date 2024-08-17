@@ -35,7 +35,7 @@ function TxItem({
 
   useEffect(() => {
     if (destId === QUTIL_ADDRESS && inputType === 1 && inputHex) {
-      ;(async () => {
+      ; (async () => {
         try {
           const transfers = await getTransfers(inputHex)
           setEntries(transfers)
@@ -74,9 +74,9 @@ function TxItem({
           {identify ? (
             <div className="flex items-center gap-8">
               {identify === sourceId ? (
-                <ArrowDownIcon className="size-12" />
+                <ArrowDownIcon className="text-error-30 size-12" />
               ) : (
-                <ArrowUpIcon className="size-12" />
+                <ArrowUpIcon className="text-success-30 size-12" />
               )}
               <AddressLink
                 className="text-base"
