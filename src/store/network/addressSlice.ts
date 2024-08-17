@@ -6,24 +6,31 @@ import { archiverApiService } from '@app/services/archiver'
 import type { ReportedValues } from '@app/services/qli'
 import { qliApiService } from '@app/services/qli'
 import type { RootState } from '@app/store'
+import { handleThunkError } from '@app/utils/error-handlers'
 import { convertHistoricalTxToTxWithStatus } from './adapters'
 import type { TransactionWithStatus } from './txSlice'
 
 export type TransactionWithMoneyFlew = Transaction & { moneyFlew: boolean | null }
 
-export const getAddress = createAsyncThunk('network/address', async (addressId: string) => {
-  const [{ reportedValues }, { lastProcessedTick }, { balance }] = await Promise.all([
-    qliApiService.getAddress(addressId),
-    archiverApiService.getStatus(),
-    archiverApiService.getBalance(addressId)
-  ])
-
-  return {
-    reportedValues,
-    endTick: lastProcessedTick.tickNumber,
-    balance
+export const getAddress = createAsyncThunk(
+  'network/address',
+  async (addressId: string, { rejectWithValue }) => {
+    try {
+      const [{ reportedValues }, { lastProcessedTick }, { balance }] = await Promise.all([
+        qliApiService.getAddress(addressId),
+        archiverApiService.getStatus(),
+        archiverApiService.getBalance(addressId)
+      ])
+      return {
+        reportedValues,
+        endTick: lastProcessedTick.tickNumber,
+        balance
+      }
+    } catch (error) {
+      return rejectWithValue(handleThunkError(error))
+    }
   }
-})
+)
 
 export const getTransferTxs = createAsyncThunk<
   {
@@ -37,54 +44,57 @@ export const getTransferTxs = createAsyncThunk<
   }
 >(
   'network/getTransferTxs',
-  async ({ addressId, startTick, endTick }) => {
-    let data: Transaction[] = []
-    let lastStartTick = startTick
-    let lastEndTick = endTick
+  async ({ addressId, startTick, endTick }, { rejectWithValue }) => {
+    try {
+      let data: Transaction[] = []
+      let lastStartTick = startTick
+      let lastEndTick = endTick
 
-    const getTransfers = async (start: number, end: number) => {
-      const { transferTransactionsPerTick } =
-        await archiverApiService.getAddressTransferTransactions(addressId, start, end)
-      return transferTransactionsPerTick.flatMap(({ transactions }) => transactions) || []
-    }
+      const getTransfers = async (start: number, end: number) => {
+        const { transferTransactionsPerTick } =
+          await archiverApiService.getAddressTransferTransactions(addressId, start, end)
+        return transferTransactionsPerTick.flatMap(({ transactions }) => transactions) || []
+      }
+      const fetchRecursive = async (start: number, end: number) => {
+        const transfers = await getTransfers(start, end)
+        data = [...new Set(data.concat(transfers))]
 
-    const fetchRecursive = async (start: number, end: number) => {
-      const transfers = await getTransfers(start, end)
-      data = [...new Set(data.concat(transfers))]
+        if (start === 0 && transfers.length === 0) {
+          return { data: data.sort((a, b) => b.tickNumber - a.tickNumber) }
+        }
 
-      if (start === 0 && transfers.length === 0) {
+        if (data.length < BATCH_SIZE) {
+          lastEndTick = Math.max(0, start - 1)
+          lastStartTick = Math.max(0, lastEndTick - TICK_SIZE)
+
+          return fetchRecursive(lastStartTick, lastEndTick)
+        }
         return { data: data.sort((a, b) => b.tickNumber - a.tickNumber) }
       }
 
-      if (data.length < BATCH_SIZE) {
-        lastEndTick = Math.max(0, start - 1)
-        lastStartTick = Math.max(0, lastEndTick - TICK_SIZE)
+      const finalResult = await fetchRecursive(startTick, endTick)
 
-        return fetchRecursive(lastStartTick, lastEndTick)
-      }
-      return { data: data.sort((a, b) => b.tickNumber - a.tickNumber) }
+      const txsWithMoneyFlew = await Promise.all(
+        finalResult.data.map(async (tx) => {
+          try {
+            const { transactionStatus } = await archiverApiService.getTransactionStatus(tx.txId)
+            return { ...tx, moneyFlew: transactionStatus.moneyFlew }
+          } catch (error) {
+            return { ...tx, moneyFlew: null }
+          }
+        })
+      )
+
+      return { data: txsWithMoneyFlew, lastStartTick, lastEndTick }
+    } catch (error) {
+      return rejectWithValue(handleThunkError(error))
     }
-
-    const finalResult = await fetchRecursive(startTick, endTick)
-
-    const txsWithMoneyFlew = await Promise.all(
-      finalResult.data.map(async (tx) => {
-        try {
-          const { transactionStatus } = await archiverApiService.getTransactionStatus(tx.txId)
-          return { ...tx, moneyFlew: transactionStatus.moneyFlew }
-        } catch (error) {
-          return { ...tx, moneyFlew: null }
-        }
-      })
-    )
-
-    return { data: txsWithMoneyFlew, lastStartTick, lastEndTick }
   },
   // Conditionally fetch historical transactions to prevent issues from React.StrictMode - https://redux.js.org/tutorials/essentials/part-5-async-logic#avoiding-duplicate-fetches
   {
     condition: (_, { getState }) => {
-      const { isLoading, hasMore } = getState().network.address.transferTxs
-      return !isLoading && hasMore
+      const { isLoading, hasMore, error } = getState().network.address.transferTxs
+      return !isLoading && hasMore && !error
     }
   }
 )
@@ -97,16 +107,20 @@ export const getHistoricalTxs = createAsyncThunk<
   }
 >(
   'network/getHistoricalTxs',
-  async (addressId, { getState }) => {
-    const { page } = getState().network.address.historicalTxs
-    const historicalTxs = await qliApiService.getAddressHistory(addressId, page)
-    return historicalTxs.map(convertHistoricalTxToTxWithStatus)
+  async (addressId, { getState, rejectWithValue }) => {
+    try {
+      const { page } = getState().network.address.historicalTxs
+      const historicalTxs = await qliApiService.getAddressHistory(addressId, page)
+      return historicalTxs.map(convertHistoricalTxToTxWithStatus)
+    } catch (error) {
+      return rejectWithValue(handleThunkError(error))
+    }
   },
   // Conditionally fetch historical transactions to prevent issues from React.StrictMode - https://redux.js.org/tutorials/essentials/part-5-async-logic#avoiding-duplicate-fetches
   {
     condition: (_, { getState }) => {
-      const { isLoading, hasMore } = getState().network.address.historicalTxs
-      return !isLoading && hasMore
+      const { isLoading, hasMore, error } = getState().network.address.historicalTxs
+      return !isLoading && hasMore && !error
     }
   }
 )
@@ -200,7 +214,7 @@ const addressSlice = createSlice({
       })
       .addCase(getTransferTxs.rejected, (state, action) => {
         state.transferTxs.isLoading = false
-        state.error = action.error.message ?? 'Unknown error'
+        state.transferTxs.error = action.error.message ?? 'Unknown error'
       })
       // getHistoricalTxs
       .addCase(getHistoricalTxs.pending, (state) => {
@@ -220,7 +234,7 @@ const addressSlice = createSlice({
       })
       .addCase(getHistoricalTxs.rejected, (state, action) => {
         state.historicalTxs.isLoading = false
-        state.error = action.error.message ?? 'Unknown error'
+        state.historicalTxs.error = action.error.message ?? 'Unknown error'
       })
   }
 })
