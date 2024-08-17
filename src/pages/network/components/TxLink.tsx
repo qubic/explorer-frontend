@@ -1,9 +1,9 @@
 import { Link } from 'react-router-dom'
 
+import { CopyTextButton } from '@app/components/ui/buttons'
 import { Routes } from '@app/router'
 import type { NetworkTxQueryParams } from '@app/router/routes'
 import { clsxTwMerge, formatEllipsis } from '@app/utils'
-import CopyText from './CopyText'
 
 type Props = {
   value: string
@@ -33,7 +33,7 @@ export default function TxLink({
       >
         {ellipsis ? formatEllipsis(value) : value}
       </Link>
-      {copy && <CopyText text={value} />}
+      {copy && <CopyTextButton text={value} />}
     </div>
   )
 }
