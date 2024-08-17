@@ -1,8 +1,10 @@
 import axios from 'axios'
 import { ARCHIVER_API_ENDPOINTS } from './endpoints'
 import type {
+  GetAddressTransferTransactionsResponse,
   GetBalanceResponse,
   GetEpochComputorsResponse,
+  GetStatusResponse,
   GetTickApprovedTransactionsResponse,
   GetTickDataResponse,
   GetTickTransactionsResponse,
@@ -21,6 +23,18 @@ const fetchData = async <T>(url: string): Promise<T> => {
 }
 
 const archiverApiService = {
+  getStatus: async (): Promise<GetStatusResponse> => {
+    const url = ARCHIVER_API_ENDPOINTS.STATUS
+    return fetchData<GetStatusResponse>(url)
+  },
+  getAddressTransferTransactions: async (
+    addressId: string,
+    startTick: number,
+    endTick: number
+  ): Promise<GetAddressTransferTransactionsResponse> => {
+    const url = ARCHIVER_API_ENDPOINTS.IDENTITY_TRANSFER_TRANSACTIONS(addressId, startTick, endTick)
+    return fetchData<GetAddressTransferTransactionsResponse>(url)
+  },
   getBalance: async (query: string): Promise<GetBalanceResponse> => {
     const url = ARCHIVER_API_ENDPOINTS.BALANCES(query)
     return fetchData<GetBalanceResponse>(url)
