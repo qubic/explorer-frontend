@@ -40,9 +40,9 @@ export default function AddressPage() {
 
   if (!address) {
     return (
-      <Alert variant="error" className="mx-auto my-32 max-w-[960px]">
-        {t('addressNotFound')}
-      </Alert>
+      <div className="mx-auto my-32 max-w-[960px] px-12">
+        <Alert variant="error">{t('addressNotFoundError')}</Alert>
+      </div>
     )
   }
 
