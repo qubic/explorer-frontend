@@ -57,12 +57,17 @@ function formatBase64(hex: string | undefined) {
 }
 
 function copyText(textToCopy: string) {
-  const input = document.createElement('input')
-  input.value = textToCopy
-  document.body.appendChild(input)
-  input.select()
-  document.execCommand('copy')
-  document.body.removeChild(input)
+  if (navigator.clipboard && window.isSecureContext) {
+    // Use the modern clipboard API if available and secure
+    navigator.clipboard.writeText(textToCopy)
+  } else {
+    const input = document.createElement('input')
+    input.value = textToCopy
+    document.body.appendChild(input)
+    input.select()
+    document.execCommand('copy')
+    document.body.removeChild(input)
+  }
 }
 
 export * from './styles'
