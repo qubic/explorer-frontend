@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { ChevronDownIcon } from '@app/assets/icons'
+import { ChevronToggleButton } from '@app/components/ui/buttons'
 import { clsxTwMerge } from '@app/utils'
 import type { Transfer } from '@app/utils/qubic-ts'
 import type { TxItemVariant } from '../TxItem.types'
@@ -66,22 +66,14 @@ export default function TransferListToggle({ entries, variant = 'primary' }: Pro
   return (
     <>
       {entriesOpen && <TransferList entries={entries} />}
-      <button
-        type="button"
+      <ChevronToggleButton
+        className="mx-auto p-8"
         aria-label="toggle-entries"
-        className="mx-auto flex gap-12 rounded-8 p-8 hover:bg-primary-30"
+        isOpen={entriesOpen}
         onClick={handleToggleEntries}
       >
-        <span className="text-center font-space text-14">
-          {entriesOpen ? t('hide') : t('show')} {entries.length} {t('transactions')}
-        </span>
-        <ChevronDownIcon
-          className={clsxTwMerge(
-            'h-20 w-20 text-gray-50 transition-transform duration-300',
-            entriesOpen ? 'rotate-180' : 'rotate-0'
-          )}
-        />
-      </button>
+        {entriesOpen ? t('hide') : t('show')} {entries.length} {t('transactions')}
+      </ChevronToggleButton>
     </>
   )
 }
