@@ -1,4 +1,4 @@
-import envConfig from '@app/configs/envConfig'
+import { envConfig } from '@app/configs'
 
 const BASE_URL = envConfig.ARCHIVER_API_URL
 
@@ -7,6 +7,10 @@ const formatTick = (tick: string) => parseInt(tick.replace(/,/g, ''), 10)
 const makeTicksUrl = (tick: string) => `${BASE_URL}/ticks/${formatTick(tick)}`
 
 export const ARCHIVER_API_ENDPOINTS = {
+  STATUS: `${BASE_URL}/status`,
+  // IDENTITIES
+  IDENTITY_TRANSFER_TRANSACTIONS: (addressId: string, startTick: number, endtick: number) =>
+    `${BASE_URL}/identities/${addressId}/transfer-transactions?startTick=${startTick}&endTick=${endtick}`,
   // BALANCES
   BALANCES: (addressId: string) => `${BASE_URL}/balances/${addressId}`,
   // TRANSACTIONS
