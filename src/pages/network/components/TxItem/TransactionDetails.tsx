@@ -29,7 +29,7 @@ function TransactionDetailsWrapper({
   }
 
   return (
-    <div className="mt-14 flex flex-col gap-12 border-t-[1px] border-gray-70 pt-12">{children}</div>
+    <div className="mt-14 flex flex-col gap-12 border-t-1 border-gray-70 pt-12">{children}</div>
   )
 }
 
@@ -49,9 +49,7 @@ export default function TransactionDetails({
         <SubCardItem
           variant="secondary"
           title={t('amount')}
-          content={
-            <p className="font-space text-14 leading-20">{formatString(Number(amount))} QUBIC</p>
-          }
+          content={<p className="font-space text-14 leading-20">{formatString(amount)} QUBIC</p>}
         />
       ) : (
         <SubCardItem
