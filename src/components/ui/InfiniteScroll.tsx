@@ -12,6 +12,7 @@ interface InfiniteScrollProps<T> {
   endMessage?: React.ReactNode // Message to display when all items are loaded
   threshold?: number // Threshold to trigger load more function
   className?: string // Custom class name for list container
+  isLoading?: boolean // Boolean indicating if loading (can be controlled externally)
 }
 
 export default function InfiniteScroll<T>({
@@ -22,18 +23,21 @@ export default function InfiniteScroll<T>({
   loader = <DotsLoader />,
   endMessage,
   threshold = 0,
+  isLoading: externalIsLoading,
   className
 }: InfiniteScrollProps<T>) {
   const observer = useRef<IntersectionObserver | null>(null)
-  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [internalIsLoading, setInternalIsLoading] = useState<boolean>(false)
+
+  const isLoading = externalIsLoading !== undefined ? externalIsLoading : internalIsLoading
 
   const handleLoadMore = useCallback(() => {
     const result = loadMore()
-    setIsLoading(true)
+    setInternalIsLoading(true)
     if (result instanceof Promise) {
-      result.finally(() => setIsLoading(false))
+      result.finally(() => setInternalIsLoading(false))
     } else {
-      setTimeout(() => setIsLoading(false), 1500)
+      setTimeout(() => setInternalIsLoading(false), 1500)
     }
   }, [loadMore])
 
