@@ -1,8 +1,9 @@
 import { memo, useEffect, useState } from 'react'
 
-import { ArrowDownIcon, ArrowUpIcon, ChevronDownIcon } from '@app/assets/icons'
+import { ArrowDownIcon, ArrowUpIcon } from '@app/assets/icons'
+import { ChevronToggleButton } from '@app/components/ui/buttons'
 import type { Transaction } from '@app/services/archiver'
-import { clsxTwMerge, formatString } from '@app/utils'
+import { formatString } from '@app/utils'
 import type { Transfer } from '@app/utils/qubic-ts'
 import { getTransfers, QUTIL_ADDRESS } from '@app/utils/qubic-ts'
 import AddressLink from '../AddressLink'
@@ -69,13 +70,13 @@ function TxItem({
     <CardItem className="flex flex-col rounded-12 p-12 transition-all duration-300">
       <div className="flex items-center justify-between gap-8">
         <TxStatus executed={!(nonExecutedTxIds || []).includes(txId)} />
-        <div className="flex flex-grow flex-col items-start gap-8 sm:flex-row sm:justify-between">
+        <div className="flex flex-grow flex-col items-start gap-8 sm:flex-row sm:items-center sm:justify-between">
           {identify ? (
-            <div className="flex gap-8">
+            <div className="flex items-center gap-8">
               {identify === sourceId ? (
-                <ArrowDownIcon className="h-12 w-9" />
+                <ArrowDownIcon className="size-12" />
               ) : (
-                <ArrowUpIcon className="h-12 w-9" />
+                <ArrowUpIcon className="size-12" />
               )}
               <AddressLink
                 className="text-base"
@@ -94,22 +95,14 @@ function TxItem({
             />
           )}
           <p className="text-center font-space text-base">
-            {formatString(Number(amount))} <span className="text-gray-50">QUBIC</span>
+            {formatString(amount)} <span className="text-gray-50">QUBIC</span>
           </p>
         </div>
-        <button
-          type="button"
-          aria-label="toggle-transaction-details"
-          className="rounded-8 px-6 py-3 hover:bg-primary-30"
+        <ChevronToggleButton
+          aria-label="toggle-tx-details"
+          isOpen={detailsOpen}
           onClick={handleToggleDetails}
-        >
-          <ChevronDownIcon
-            className={clsxTwMerge(
-              'h-20 w-20 text-gray-50 transition-transform duration-300',
-              detailsOpen ? 'rotate-180' : 'rotate-0'
-            )}
-          />
-        </button>
+        />
       </div>
       {detailsOpen && (
         <TransactionDetails
