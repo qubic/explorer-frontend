@@ -14,7 +14,7 @@ type Props = {
 export default function HistoricalTxs({ addressId }: Props) {
   const { t } = useTranslation('network-page')
   const dispatch = useAppDispatch()
-  const { data: historicalTxs, isLoading, hasMore } = useAppSelector(selectHistoricalTxs)
+  const { data: historicalTxs, isLoading, hasMore, error } = useAppSelector(selectHistoricalTxs)
 
   const loadMoreTxs = useCallback(() => {
     dispatch(getHistoricalTxs(addressId))
@@ -41,6 +41,7 @@ export default function HistoricalTxs({ addressId }: Props) {
         hasMore={hasMore}
         isLoading={isLoading}
         loader={<DotsLoader showLoadingText />}
+        error={error && t('loadingTransactionsError')}
         endMessage={
           <p className="py-32 text-center text-14 text-gray-50">
             {historicalTxs.length === 0 ? t('noTransactions') : t('allTransactionsLoaded')}
