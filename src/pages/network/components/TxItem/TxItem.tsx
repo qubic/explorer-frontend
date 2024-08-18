@@ -89,7 +89,7 @@ function TxItem({
             <TxLink
               isHistoricalTx={isHistoricalTx}
               value={txId}
-              className="text-primary-40"
+              className="text-primary-30"
               ellipsis
               copy
             />

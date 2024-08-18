@@ -82,7 +82,7 @@ export default function TickPage() {
     <div className="mx-auto max-w-[960px] px-12 py-32">
       <Breadcrumbs>
         <HomeLink />
-        <p className="font-sans text-12 text-primary-40">
+        <p className="font-sans text-12 text-primary-30">
           {t('tick')} {formatString(tick)}
         </p>
       </Breadcrumbs>

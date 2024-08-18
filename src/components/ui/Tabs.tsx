@@ -56,7 +56,7 @@ export default function Tabs({ children, className, onChange, selectedIndex = 0 
 
 Tabs.List = function TabsList({ children, className, onTabClick, currentIndex }: TabsListProps) {
   return (
-    <div className={clsxTwMerge('border-b-1 border-gray-70', className)}>
+    <div className={clsxTwMerge('border-b-1 border-primary-60', className)}>
       <nav aria-label="Tabs" className="flex space-x-2">
         {Children.map(children, (child, index) =>
           isValidElement<TabComponentProps>(child)
@@ -78,8 +78,8 @@ Tabs.Tab = function TabsTab({ children, className, isSelected, onClick }: TabCom
       className={clsxTwMerge(
         'whitespace-nowrap border-b-2 px-16 py-12 font-space text-sm font-medium transition-all duration-300',
         isSelected
-          ? 'border-primary-50 text-primary-50'
-          : 'border-transparent text-gray-500 hover:border-gray-60 hover:text-gray-700',
+          ? 'border-primary-30 text-primary-30'
+          : 'hover:text-primary-600 border-transparent text-gray-500 hover:border-gray-60',
         className
       )}
       onClick={onClick}

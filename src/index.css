@@ -34,7 +34,7 @@
   a,
   div {
     @apply text-white;
-    @apply scrollbar scrollbar-track-transparent scrollbar-thumb-gray-70;
+    @apply scrollbar scrollbar-track-transparent scrollbar-thumb-primary-60;
   }
 
   body::-webkit-scrollbar {

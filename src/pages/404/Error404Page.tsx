@@ -75,7 +75,7 @@ export default function Error404Page() {
 
           <div className="mt-32 text-center md:mt-40">
             <Link
-              className="rounded-8 bg-primary-50 px-28 py-10 font-space text-16 font-500 leading-28 text-gray-90"
+              className="rounded-8 bg-primary-30 px-28 py-10 font-space text-16 font-500 leading-28 text-primary-70"
               to={Routes.NETWORK.ROOT}
               role="button"
             >

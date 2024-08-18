@@ -44,9 +44,9 @@ export default function PaginationBar({ pageCount, page, onPageChange }: Props) 
             type="button"
             key={pageNumber}
             className={clsxTwMerge(
-              'h-32 w-32 px-6 font-sans text-center text-sm rounded-4 content-center text-gray-50',
+              'h-32 w-32 content-center rounded-4 px-6 text-center font-sans text-sm text-gray-50',
               pageNumber === page
-                ? 'bg-primary-40 text-primary-60 hover:bg-primary-70'
+                ? 'bg-primary-30 text-primary-70 hover:bg-primary-50'
                 : 'hover:bg-gray-60/40'
             )}
             onClick={() => onPageChange(pageNumber)}
@@ -76,11 +76,11 @@ export default function PaginationBar({ pageCount, page, onPageChange }: Props) 
       >
         <ArrowLeftIcon
           aria-hidden="true"
-          className={clsxTwMerge('h-20 w-20', page === 1 && 'opacity-40 cursor-not-allowed')}
+          className={clsxTwMerge('h-20 w-20', page === 1 && 'cursor-not-allowed opacity-40')}
         />
       </button>
-      <div className="hidden sm:flex gap-6">{renderPageButtons(false)}</div>
-      <div className="flex sm:hidden gap-6">{renderPageButtons(true)}</div>
+      <div className="hidden gap-6 sm:flex">{renderPageButtons(false)}</div>
+      <div className="flex gap-6 sm:hidden">{renderPageButtons(true)}</div>
       <button
         type="button"
         className="flex flex-1 justify-end"
@@ -92,7 +92,7 @@ export default function PaginationBar({ pageCount, page, onPageChange }: Props) 
           aria-hidden="true"
           className={clsxTwMerge(
             'h-20 w-20',
-            page === pageCount && 'opacity-40 cursor-not-allowed'
+            page === pageCount && 'cursor-not-allowed opacity-40'
           )}
         />
       </button>

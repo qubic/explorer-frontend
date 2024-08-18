@@ -74,7 +74,7 @@ export default function SearchBar() {
     <>
       <button
         type="button"
-        className="rounded-full p-8 hover:bg-gray-70/80"
+        className="rounded-full p-8 hover:bg-primary-60/80"
         onClick={() => setOpen(true)}
         aria-label="search-button"
       >
@@ -94,7 +94,7 @@ export default function SearchBar() {
             </div>
           )}
 
-          <div className="relative flex w-full items-center justify-center border-y-[1px] border-gray-70">
+          <div className="relative flex w-full items-center justify-center border-y-[1px] border-primary-60">
             <div className="bg-gray-40 mx-auto flex w-full max-w-[820px] items-center gap-8 pl-12 pr-20">
               <MagnifyIcon className="h-16 w-16" />
               <input
@@ -126,7 +126,7 @@ export default function SearchBar() {
           )}
 
           {searchResult && (
-            <div className="mx-auto max-h-[320px] max-w-[800px] overflow-y-scroll pb-20 scrollbar scrollbar-track-transparent scrollbar-thumb-gray-70 scrollbar-thumb-rounded-full scrollbar-w-4">
+            <div className="mx-auto max-h-[320px] max-w-[800px] overflow-y-scroll pb-20 scrollbar scrollbar-track-transparent scrollbar-thumb-primary-60 scrollbar-thumb-rounded-full scrollbar-w-4">
               {'balance' in searchResult && (
                 <ResultItem
                   icon={<GridAddIcon className="mr-6 h-16 min-h-16 w-16 min-w-16" />}

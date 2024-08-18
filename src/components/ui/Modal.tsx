@@ -51,7 +51,7 @@ function ModalOverlayWrapper({
       >
         {children}
       </div>
-      <div className="fixed inset-0 z-50 bg-primary-60 bg-opacity-80" />
+      <div className="fixed inset-0 z-50 bg-primary-70 bg-opacity-80" />
     </>
   )
 }

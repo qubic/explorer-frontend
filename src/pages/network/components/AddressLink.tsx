@@ -16,7 +16,7 @@ export default function AddressLink({ value, copy, ellipsis, className }: Props)
     <div className="flex items-center gap-10">
       <Link
         role="button"
-        className={clsxTwMerge('break-all font-space text-sm text-primary-40', className)}
+        className={clsxTwMerge('break-all font-space text-sm text-primary-30', className)}
         to={Routes.NETWORK.ADDRESS(value)}
       >
         {ellipsis ? formatEllipsis(value) : value}

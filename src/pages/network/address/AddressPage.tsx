@@ -50,7 +50,7 @@ export default function AddressPage() {
     <div className="mx-auto max-w-[960px] px-12 py-16">
       <Breadcrumbs aria-label="breadcrumbs">
         <HomeLink />
-        <p className="font-space text-12 text-primary-40">
+        <p className="font-space text-12 text-primary-30">
           {t('id')} {formatEllipsis(addressId)}
         </p>
       </Breadcrumbs>
@@ -96,7 +96,7 @@ export default function AddressPage() {
                       {t('latest')}:{' '}
                       <TickLink
                         value={details.latestIncomingTransferTick}
-                        className="break-all text-primary-40"
+                        className="break-all text-primary-30"
                       />
                       )
                     </p>
@@ -106,7 +106,7 @@ export default function AddressPage() {
                       {t('latest')}:{' '}
                       <TickLink
                         value={details.latestOutgoingTransferTick}
-                        className="break-all text-primary-40"
+                        className="break-all text-primary-30"
                       />
                       )
                     </p>

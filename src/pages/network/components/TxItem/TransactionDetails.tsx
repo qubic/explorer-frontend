@@ -29,7 +29,7 @@ function TransactionDetailsWrapper({
   }
 
   return (
-    <div className="mt-14 flex flex-col gap-12 border-t-1 border-gray-70 pt-12">{children}</div>
+    <div className="mt-14 flex flex-col gap-12 border-t-1 border-primary-60 pt-12">{children}</div>
   )
 }
 
@@ -58,7 +58,7 @@ export default function TransactionDetails({
           content={
             <TxLink
               isHistoricalTx={isHistoricalTx}
-              className="text-14 text-primary-40"
+              className="text-14 text-primary-30"
               value={txId}
               copy
             />
@@ -79,7 +79,7 @@ export default function TransactionDetails({
       <SubCardItem
         title={t('tick')}
         variant={variant}
-        content={<TickLink className="text-sm text-primary-40" value={tickNumber} />}
+        content={<TickLink className="text-sm text-primary-30" value={tickNumber} />}
       />
       <SubCardItem
         title={t('type')}

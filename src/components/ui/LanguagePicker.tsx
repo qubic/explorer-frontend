@@ -37,7 +37,7 @@ export default function LanguagePicker() {
     <DropdownMenu show={showDropdown}>
       <DropdownMenu.Trigger
         onToggle={handleDropdownToggle}
-        className="rounded-full p-8 hover:bg-gray-70/80"
+        className="rounded-full p-8 hover:bg-primary-60/80"
       >
         <GlobeGrayIcon className="h-24 w-24" />
       </DropdownMenu.Trigger>

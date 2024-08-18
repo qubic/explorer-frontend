@@ -18,7 +18,7 @@ export default function ChevronToggleButton({
       {...rest}
       type="button"
       className={clsxTwMerge(
-        'flex size-fit items-center gap-12 rounded-8 px-6 py-3 hover:bg-primary-30',
+        'flex size-fit items-center gap-12 rounded-8 px-6 py-3 hover:bg-primary-60',
         className
       )}
       onClick={onClick}

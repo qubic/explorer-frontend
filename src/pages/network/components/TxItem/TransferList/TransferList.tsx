@@ -23,8 +23,8 @@ function TransferList({ entries, variant = 'primary' }: Props) {
       className={clsxTwMerge(
         'flex flex-col gap-8 rounded-12 p-12 md:p-16',
         variant === 'secondary'
-          ? 'border-[1px] border-gray-70 bg-gray-80'
-          : 'my-8 bg-gray-70 transition-all duration-300'
+          ? 'border-[1px] border-primary-60 bg-gray-80'
+          : 'my-8 bg-primary-60 transition-all duration-300'
       )}
     >
       <div className="flex justify-between">

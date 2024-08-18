@@ -46,7 +46,7 @@ export default function TxPage() {
                 {t('tick')}{' '}
                 <TickLink className="text-xs text-gray-50" value={txWithStatus.tx.tickNumber} />
               </p>
-              <p className="font-space text-xs text-primary-40">
+              <p className="font-space text-xs text-primary-30">
                 {formatEllipsis(txWithStatus.tx.txId)}
               </p>
             </Breadcrumbs>
