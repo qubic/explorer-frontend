@@ -1,14 +1,13 @@
-import { AppLoader } from '@app/components/ui/loaders'
 import { QLI_API_ENDPOINTS } from '@app/services/qli/endpoints'
 import axios from 'axios'
 import { createContext, useEffect, useMemo, useState } from 'react'
 
-const AuthContext = createContext({ waitAuthCheck: false })
+const AuthContext = createContext({ isAuthorized: false })
 
 function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [waitAuthCheck, setWaitAuthCheck] = useState(false)
+  const [isAuthorized, setIsAuthorized] = useState(false)
 
-  const contextValue = useMemo(() => ({ waitAuthCheck }), [waitAuthCheck])
+  const contextValue = useMemo(() => ({ isAuthorized }), [isAuthorized])
 
   const loginAsGuest = async () => {
     try {
@@ -18,7 +17,7 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
         twoFactorCode: ''
       })
       localStorage.setItem('jwt_access_token', response.data.token)
-      setWaitAuthCheck(true)
+      setIsAuthorized(true)
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error('Error during guest login:', error)
@@ -32,7 +31,7 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
           Authorization: `Bearer ${token}`
         }
       })
-      setWaitAuthCheck(true)
+      setIsAuthorized(true)
     } catch (error) {
       await loginAsGuest()
     }
@@ -48,11 +47,7 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  return waitAuthCheck ? (
-    <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
-  ) : (
-    <AppLoader />
-  )
+  return <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
 }
 
 export { AuthContext, AuthProvider }
