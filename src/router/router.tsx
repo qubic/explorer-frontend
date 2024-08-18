@@ -2,7 +2,7 @@ import { createBrowserRouter, Navigate } from 'react-router-dom'
 
 import { AppLayout } from '@app/components/ui/layouts'
 import { Error404Page } from '@app/pages'
-import { AddressPage, OverviewPage, TickPage, TxPage } from '@app/pages/network'
+import { AddressPageLazy, OverviewPage, TickPageLazy, TxPageLazy } from '@app/pages/network'
 import Routes from './routes'
 
 const router: ReturnType<typeof createBrowserRouter> = createBrowserRouter([
@@ -23,16 +23,16 @@ const router: ReturnType<typeof createBrowserRouter> = createBrowserRouter([
             element: <OverviewPage />
           },
           {
-            path: 'tick/:tick',
-            element: <TickPage />
+            path: Routes.NETWORK.TICK(':tick'),
+            element: <TickPageLazy />
           },
           {
-            path: 'tx/:txId',
-            element: <TxPage />
+            path: Routes.NETWORK.TX(':txId', {}),
+            element: <TxPageLazy />
           },
           {
-            path: 'address/:addressId',
-            element: <AddressPage />
+            path: Routes.NETWORK.ADDRESS(':addressId'),
+            element: <AddressPageLazy />
           }
         ]
       }
