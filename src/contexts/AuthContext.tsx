@@ -1,4 +1,4 @@
-import { AppLoader } from '@app/components/ui/loaders'
+import { LinearProgress } from '@app/components/ui/loaders'
 import QLI_API_ENDPOINTS from '@app/services/qli/endpoints'
 import axios from 'axios'
 import { createContext, useEffect, useMemo, useState } from 'react'
@@ -51,7 +51,7 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
   return waitAuthCheck ? (
     <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
   ) : (
-    <AppLoader />
+    <LinearProgress />
   )
 }
 
