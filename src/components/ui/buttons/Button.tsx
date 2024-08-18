@@ -1,17 +1,17 @@
 import { clsxTwMerge } from '@app/utils'
 
 type Variant = 'filled' | 'outlined' | 'text'
-
 type Color = 'primary'
-
 type Size = 'sm' | 'md' | 'lg'
 
-type Props = {
+type Props<T extends React.ElementType = 'button'> = {
   children: React.ReactNode
   variant?: Variant
   size?: Size
   color?: Color
-} & React.ButtonHTMLAttributes<HTMLButtonElement>
+  className?: string
+  as?: T
+} & React.ComponentPropsWithoutRef<T>
 
 const sizeClasses = {
   sm: 'px-24 py-8 text-xs',
@@ -27,17 +27,19 @@ const colorVariantClasses = {
   }
 } as const
 
-export default function Button({
+export default function Button<T extends React.ElementType = 'button'>({
   children,
   variant = 'filled',
   color = 'primary',
   size = 'md',
   className,
+  as,
   ...restProps
-}: Props) {
+}: Props<T>) {
+  const Component: React.ElementType = as || 'button'
+
   return (
-    <button
-      type="button"
+    <Component
       // eslint-disable-next-line react/jsx-props-no-spreading
       {...restProps}
       className={clsxTwMerge(
@@ -48,6 +50,6 @@ export default function Button({
       )}
     >
       {children}
-    </button>
+    </Component>
   )
 }
