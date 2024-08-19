@@ -3,4 +3,11 @@ export type Language = {
   label: string
 }
 
-export type TxType = 'latest' | 'historical'
+export type TxEra = 'latest' | 'historical'
+
+export enum TxTypeEnum {
+  TRANSFER = 'TRANSFER',
+  PROTOCOL = 'PROTOCOL'
+}
+
+export type TxType = keyof typeof TxTypeEnum
