@@ -2,6 +2,7 @@ const locale = {
   activeAddresses: 'Активные адреса',
   amount: 'Объем',
   circulatingSupply: 'Общая циркуляция',
+  burnedSupply: 'Сожжённое Предложение',
   complete: 'Завершено',
   currentTick: 'Текущий тик',
   dataStatus: 'Статус',
@@ -44,6 +45,11 @@ const locale = {
   loading: 'Загрузка',
   historicalDataWarning:
     'Вы просматриваете исторические данные. Некоторые данные могут быть не совсем точными или полными.',
+  richList: 'Список Богатых',
+  rank: 'Ранг',
+  addressID: 'ID Адреса',
+  richListLoadFailed:
+    'Ошибка: не удалось загрузить список богатых. Пожалуйста, обновите страницу или попробуйте позже.',
 };
 
 export default locale;

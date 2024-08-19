@@ -4,6 +4,7 @@ const locale = {
   tickLeader: 'Tik Lideri',
   tickStatus: 'Tik Durumu',
   circulatingSupply: 'Dolaşımdaki Arz',
+  burnedSupply: 'Yakılmış Tedarik',
   complete: 'Tamamlanmış',
   currentTick: 'Güncel Tik',
   dataStatus: 'Veri Durumu',
@@ -44,6 +45,11 @@ const locale = {
   loading: 'Yükleniyor',
   historicalDataWarning:
     'Tarihî verileri görüntülüyorsunuz. Bazı veriler tamamen doğru veya eksiksiz olmayabilir.',
+  richList: 'Zenginler Listesi',
+  rank: 'Rütbe',
+  addressID: 'Adres Kimliği',
+  richListLoadFailed:
+    'Hata: Zengin Listesi Yüklenemedi. Lütfen sayfayı yenileyin veya daha sonra tekrar deneyin.',
 };
 
 export default locale;
