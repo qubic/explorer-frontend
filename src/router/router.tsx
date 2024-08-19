@@ -37,6 +37,10 @@ const router: ReturnType<typeof createBrowserRouter> = createBrowserRouter([
         ]
       }
     ]
+  },
+  {
+    path: Routes.NOT_FOUND,
+    element: <Error404Page />
   }
 ])
 
