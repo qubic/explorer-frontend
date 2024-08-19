@@ -4,12 +4,13 @@ import type { Transaction, TransactionStatus } from '@app/services/archiver'
 import { archiverApiService } from '@app/services/archiver'
 import { qliApiService } from '@app/services/qli'
 import type { RootState } from '@app/store'
-import type { TxType } from '@app/types'
+import { TxTypeEnum, type TxEra, type TxType } from '@app/types'
+import { isTransferTx } from '@app/utils/qubic-ts'
 import { convertHistoricalTxToTxWithStatus } from './adapters'
 
 export type TransactionWithStatus = {
   tx: Transaction
-  status: TransactionStatus
+  status: TransactionStatus & { txType: TxType }
 }
 
 export interface TxState {
@@ -26,7 +27,7 @@ const initialState: TxState = {
 
 type GetTxArgs = {
   txId: string | undefined
-  txType: TxType
+  txEra: TxEra
 }
 
 export const getTx = createAsyncThunk<
@@ -35,12 +36,12 @@ export const getTx = createAsyncThunk<
   {
     state: RootState
   }
->('network/tx', async ({ txId, txType }, { getState }) => {
+>('network/tx', async ({ txId, txEra }, { getState, rejectWithValue }) => {
   if (!txId) {
-    throw new Error('Invalid transaction ID')
+    return rejectWithValue('Invalid transaction ID')
   }
 
-  if (txType === 'historical') {
+  if (txEra === 'historical') {
     const historicalTx = getState().network.address.historicalTxs.data.find(
       ({ tx }) => tx.txId === txId
     )
@@ -53,12 +54,19 @@ export const getTx = createAsyncThunk<
     return historicalTx
   }
 
-  const [{ transaction }, { transactionStatus }] = await Promise.all([
-    archiverApiService.getTransaction(txId),
-    archiverApiService.getTransactionStatus(txId)
-  ])
+  const { transaction } = await archiverApiService.getTransaction(txId)
+  const { transactionStatus } = isTransferTx(
+    transaction.sourceId,
+    transaction.destId,
+    transaction.amount
+  )
+    ? await archiverApiService.getTransactionStatus(txId)
+    : { transactionStatus: { txId, moneyFlew: false, txType: TxTypeEnum.PROTOCOL } }
 
-  return { tx: transaction, status: transactionStatus }
+  return {
+    tx: transaction,
+    status: { ...transactionStatus, txType: TxTypeEnum.TRANSFER }
+  }
 })
 
 const txSlice = createSlice({
