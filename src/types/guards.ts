@@ -1,7 +1,7 @@
-import type { TxType } from './index'
+import type { TxEra } from './index'
 
-export const isTxType = (value: string | null): value is TxType => {
+export const isTxEraType = (value: string | null): value is TxEra => {
   return value === 'latest' || value === 'historical'
 }
 
-export default { isTxType }
+export default { isTxEraType }

@@ -9,22 +9,22 @@ import type { TransactionStatus } from '@app/services/archiver'
 import { getTx, selectTx } from '@app/store/network/txSlice'
 import { formatEllipsis } from '@app/utils'
 import { HomeLink, TickLink, TxItem } from './components'
-import { useValidatedTxType } from './hooks'
+import { useValidatedTxEra } from './hooks'
 
 export default function TxPage() {
   const { t } = useTranslation('network-page')
   const dispatch = useAppDispatch()
   const { txWithStatus, isLoading } = useAppSelector(selectTx)
   const { txId } = useParams()
-  const txType = useValidatedTxType()
+  const txEra = useValidatedTxEra()
 
   const getNonExecutedTxIds = (status: TransactionStatus) => {
     return status?.moneyFlew ? [] : [status?.txId]
   }
 
   useEffect(() => {
-    dispatch(getTx({ txId, txType }))
-  }, [txId, txType, dispatch])
+    dispatch(getTx({ txId, txEra }))
+  }, [txId, txEra, dispatch])
 
   if (isLoading) {
     return <LinearProgress />
@@ -35,7 +35,7 @@ export default function TxPage() {
       <div className="mx-auto max-w-[960px] px-12 py-32">
         {txWithStatus?.tx ? (
           <>
-            {txType === 'historical' && (
+            {txEra === 'historical' && (
               <Alert variant="info" className="mb-24" size="sm">
                 {t('historicalDataWarning')}
               </Alert>

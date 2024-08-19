@@ -1,4 +1,4 @@
-import type { TxType } from '@app/types'
+import type { TxEra } from '@app/types'
 
 function buildUrlWithQueryParams<T extends Record<string, string>>(
   path: string,
@@ -11,7 +11,7 @@ function buildUrlWithQueryParams<T extends Record<string, string>>(
 }
 
 export type NetworkTxQueryParams = {
-  type?: TxType
+  type?: TxEra
 }
 
 const Routes = {
