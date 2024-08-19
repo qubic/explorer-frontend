@@ -6,11 +6,16 @@ import { archiverApiService } from '@app/services/archiver'
 import type { ReportedValues } from '@app/services/qli'
 import { qliApiService } from '@app/services/qli'
 import type { RootState } from '@app/store'
+import { TxTypeEnum } from '@app/types'
 import { handleThunkError } from '@app/utils/error-handlers'
+import { isTransferTx } from '@app/utils/qubic-ts'
 import { convertHistoricalTxToTxWithStatus } from './adapters'
 import type { TransactionWithStatus } from './txSlice'
 
-export type TransactionWithMoneyFlew = Transaction & { moneyFlew: boolean | null }
+export type TransactionWithMoneyFlew = Transaction & {
+  moneyFlew: boolean | null
+  txType: TxTypeEnum
+}
 
 export const getAddress = createAsyncThunk(
   'network/address',
@@ -76,11 +81,14 @@ export const getTransferTxs = createAsyncThunk<
 
       const txsWithMoneyFlew = await Promise.all(
         finalResult.data.map(async (tx) => {
+          if (!isTransferTx(tx.sourceId, tx.destId, tx.amount)) {
+            return { ...tx, moneyFlew: true, txType: TxTypeEnum.PROTOCOL }
+          }
           try {
             const { transactionStatus } = await archiverApiService.getTransactionStatus(tx.txId)
-            return { ...tx, moneyFlew: transactionStatus.moneyFlew }
+            return { ...tx, moneyFlew: transactionStatus.moneyFlew, txType: TxTypeEnum.TRANSFER }
           } catch (error) {
-            return { ...tx, moneyFlew: null }
+            return { ...tx, moneyFlew: null, txType: TxTypeEnum.TRANSFER }
           }
         })
       )
