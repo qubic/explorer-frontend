@@ -1,11 +1,14 @@
+import { useEffect, useRef, useState } from 'react'
+
 import { GlobeGrayIcon } from '@app/assets/icons'
 import { LANGUAGES } from '@app/constants/i18n'
 import { useAppDispatch, useAppSelector } from '@app/hooks/redux'
 import { selectLocale, setLanguage } from '@app/store/localeSlice'
 import type { Language } from '@app/types'
 import { clsxTwMerge } from '@app/utils'
-import { useEffect, useRef, useState } from 'react'
+import Alert from './Alert'
 import DropdownMenu from './DropdownMenu'
+import { ErrorBoundary } from './error-boundaries'
 
 export default function LanguagePicker() {
   const dispatch = useAppDispatch()
@@ -34,33 +37,35 @@ export default function LanguagePicker() {
   }, [])
 
   return (
-    <DropdownMenu show={showDropdown}>
-      <DropdownMenu.Trigger
-        onToggle={handleDropdownToggle}
-        className="rounded-full p-8 hover:bg-primary-60/80"
-      >
-        <GlobeGrayIcon className="h-24 w-24" />
-      </DropdownMenu.Trigger>
-      <DropdownMenu.Content>
-        <ul className="grid" ref={dropdownRef}>
-          {LANGUAGES.map((lng, index) => (
-            <li key={lng.id}>
-              <button
-                type="button"
-                onClick={() => handleLanguageChange(lng)}
-                className={clsxTwMerge(
-                  'w-full min-w-[164px] px-16 py-10 text-left font-space leading-tight hover:bg-gray-60/40',
-                  language === lng.id && 'bg-gray-60/60',
-                  index === 0 && 'rounded-t-md',
-                  index === LANGUAGES.length - 1 && 'rounded-b-md'
-                )}
-              >
-                {lng.label}
-              </button>
-            </li>
-          ))}
-        </ul>
-      </DropdownMenu.Content>
-    </DropdownMenu>
+    <ErrorBoundary fallback={<Alert variant="error" className="mx-5 my-2.5" />}>
+      <DropdownMenu show={showDropdown}>
+        <DropdownMenu.Trigger
+          onToggle={handleDropdownToggle}
+          className="rounded-full p-8 hover:bg-primary-60/80"
+        >
+          <GlobeGrayIcon className="h-24 w-24" />
+        </DropdownMenu.Trigger>
+        <DropdownMenu.Content>
+          <ul className="grid" ref={dropdownRef}>
+            {LANGUAGES.map((lng, index) => (
+              <li key={lng.id}>
+                <button
+                  type="button"
+                  onClick={() => handleLanguageChange(lng)}
+                  className={clsxTwMerge(
+                    'w-full min-w-[164px] px-16 py-10 text-left font-space leading-tight hover:bg-gray-60/40',
+                    language === lng.id && 'bg-gray-60/60',
+                    index === 0 && 'rounded-t-md',
+                    index === LANGUAGES.length - 1 && 'rounded-b-md'
+                  )}
+                >
+                  {lng.label}
+                </button>
+              </li>
+            ))}
+          </ul>
+        </DropdownMenu.Content>
+      </DropdownMenu>
+    </ErrorBoundary>
   )
 }
