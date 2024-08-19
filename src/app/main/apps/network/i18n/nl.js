@@ -50,6 +50,7 @@ const locale = {
   addressID: 'Adres-ID',
   richListLoadFailed:
     'Fout: Kan de rijke lijst niet laden. Vernieuw de pagina of probeer het later opnieuw.',
+  richListWarning: 'Rijkelijstgegevens worden aan het begin van elke epoch bijgewerkt',
 };
 
 export default locale;

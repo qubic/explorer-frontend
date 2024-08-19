@@ -50,6 +50,7 @@ const locale = {
   addressID: 'Address ID',
   richListLoadFailed:
     'Error: Unable to Load Rich List. Please refresh the page or try again later.',
+  richListWarning: 'Rich list data is updated at the beginning of each epoch',
 };
 
 export default locale;
