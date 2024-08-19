@@ -5,10 +5,11 @@ import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { formatString } from 'src/app/utils/functions';
 import { NextIcon, PrevIcon } from 'src/assets/icons/svg';
+import { CardItem } from '../components';
 import HomeLink from '../components/HomeLink';
 import { getRichList, selectRichList } from '../store/richListSlice';
-import { CardItem } from '../components';
 
 const PAGE_SIZE = 15;
 
@@ -103,7 +104,7 @@ export default function RichListPage() {
                           {entity.identity}
                         </Typography>
                       </td>
-                      <td className="p-16 ">{entity.balance}</td>
+                      <td className="p-16 text-right">{formatString(entity.balance)}</td>
                     </tr>
                   ))
                 )}
