@@ -1,11 +1,14 @@
+import { useCallback, useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router-dom'
+
 import { CameraIcon, GridAddIcon, MagnifyIcon, XmarkIcon } from '@app/assets/icons'
 import { useAppDispatch, useAppSelector } from '@app/hooks/redux'
 import { Routes } from '@app/router'
 import { getSearch, resetSearch, selectSearch } from '@app/store/searchSlice'
 import { formatBase64, formatDate, formatString } from '@app/utils'
-import { useCallback, useEffect, useState } from 'react'
-import { useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router-dom'
+import Alert from '../Alert'
+import { ErrorBoundary } from '../error-boundaries'
 import { LinearProgress } from '../loaders'
 import Modal from '../Modal'
 import ResultItem from './ResultItem'
@@ -71,7 +74,7 @@ export default function SearchBar() {
   }, [keyword, dispatch])
 
   return (
-    <>
+    <ErrorBoundary fallback={<Alert variant="error" className="mx-5 my-2.5" />}>
       <button
         type="button"
         className="rounded-full p-8 hover:bg-primary-60/80"
@@ -165,6 +168,6 @@ export default function SearchBar() {
           )}
         </div>
       </Modal>
-    </>
+    </ErrorBoundary>
   )
 }
