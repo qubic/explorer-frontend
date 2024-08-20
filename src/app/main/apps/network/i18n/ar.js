@@ -49,6 +49,7 @@ const locale = {
   addressID: 'معرف العنوان',
   richListLoadFailed:
     'خطأ: تعذر تحميل قائمة الأغنياء. يرجى تحديث الصفحة أو المحاولة مرة أخرى لاحقًا.',
+  richListWarning: 'يتم تحديث بيانات القائمة الغنية في بداية كل فترة',
 };
 
 export default locale;

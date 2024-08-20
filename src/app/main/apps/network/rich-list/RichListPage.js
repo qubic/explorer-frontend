@@ -58,9 +58,12 @@ export default function RichListPage() {
           <Typography className="text-12 text-primary-40">{t('richList')}</Typography>
         </Breadcrumbs>
         <div className="space-y-14 md:space-y-28">
-          <Typography className="text-24 leading-26 font-500 font-space">
-            {t('richList')}
-          </Typography>
+          <div className="space-y-10">
+            <Typography className="text-24 leading-26 font-500 font-space">
+              {t('richList')}
+            </Typography>
+            <p className="text-left text-14 text-gray-50">{t('richListWarning')}</p>
+          </div>
           <div className="w-full bg-gray-80 border-gray-70 border-[1px] rounded-12">
             <table className="w-full ">
               <thead className="border-gray-70 border-b-[1px] text-left text-gray-50 font-space text-sm">
@@ -94,17 +97,20 @@ export default function RichListPage() {
                 ) : (
                   entitiesWithRank?.map((entity) => (
                     <tr key={entity.identity} className="border-b">
-                      <td className="p-16 text-center">{entity.rank}</td>
+                      <td className="p-16 text-center font-space text-14">{entity.rank}</td>
                       <td className="p-16 overflow-hidden whitespace-nowrap overflow-ellipsis max-w-[30vw] sm:max-w-[45vw] md:max-w-[50vw]">
                         <Typography
                           role="button"
                           component={Link}
                           to={`/network/address/${entity.identity}`}
+                          className="text-primary-40 font-space text-14"
                         >
                           {entity.identity}
                         </Typography>
                       </td>
-                      <td className="p-16 text-right">{formatString(entity.balance)}</td>
+                      <td className="p-16 text-right font-space text-14">
+                        {formatString(entity.balance)}
+                      </td>
                     </tr>
                   ))
                 )}

@@ -48,6 +48,7 @@ const locale = {
   rank: '排名',
   addressID: '地址ID',
   richListLoadFailed: '错误：无法加载富人列表。请刷新页面或稍后重试。',
+  richListWarning: '富豪榜数据会在每个纪元开始时更新',
 };
 
 export default locale;

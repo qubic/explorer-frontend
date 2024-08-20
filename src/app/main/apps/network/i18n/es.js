@@ -50,6 +50,7 @@ const locale = {
   addressID: 'ID de Dirección',
   richListLoadFailed:
     'Error: No se pudo cargar la lista de ricos. Por favor, actualice la página o intente nuevamente más tarde.',
+  richListWarning: 'Los datos de la lista de ricos se actualizan al comienzo de cada época',
 };
 
 export default locale;

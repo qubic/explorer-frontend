@@ -50,6 +50,7 @@ const locale = {
   addressID: 'Adres Kimliği',
   richListLoadFailed:
     'Hata: Zengin Listesi Yüklenemedi. Lütfen sayfayı yenileyin veya daha sonra tekrar deneyin.',
+  richListWarning: 'Zenginler listesi verileri her dönemin başında güncellenir',
 };
 
 export default locale;

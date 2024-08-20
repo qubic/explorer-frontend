@@ -50,6 +50,7 @@ const locale = {
   addressID: 'アドレスID',
   richListLoadFailed:
     'エラー: リッチリストを読み込めませんでした。ページを更新するか、後でもう一度お試しください。',
+  richListWarning: 'リッチリストのデータは各エポックの開始時に更新されます',
 };
 
 export default locale;

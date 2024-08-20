@@ -50,6 +50,7 @@ const locale = {
   addressID: 'ID Адреса',
   richListLoadFailed:
     'Ошибка: не удалось загрузить список богатых. Пожалуйста, обновите страницу или попробуйте позже.',
+  richListWarning: 'Данные списка богатых обновляются в начале каждой эпохи',
 };
 
 export default locale;

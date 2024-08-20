@@ -44,12 +44,13 @@ const locale = {
   historical: 'Histórico',
   loading: 'Carregando',
   historicalDataWarning:
-    'U bekijkt historische gegevens. Sommige gegevens zijn mogelijk niet volledig nauwkeurig of volledig.',
+    'Você está visualizando dados históricos. Alguns dados podem não ser totalmente precisos ou completos.',
   richList: 'Lista dos Ricos',
   rank: 'Classificação',
   addressID: 'ID de Endereço',
   richListLoadFailed:
     'Erro: Não foi possível carregar a lista de ricos. Por favor, atualize a página ou tente novamente mais tarde.',
+  richListWarning: 'Os dados da lista de ricos são atualizados no início de cada época',
 };
 
 export default locale;

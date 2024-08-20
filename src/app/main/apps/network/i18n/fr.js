@@ -50,6 +50,7 @@ const locale = {
   addressID: "ID d'Adresse",
   richListLoadFailed:
     'Erreur : impossible de charger la liste des riches. Veuillez actualiser la page ou réessayer plus tard.',
+  richListWarning: 'Les données de la liste des riches sont mises à jour au début de chaque époque',
 };
 
 export default locale;
