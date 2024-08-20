@@ -1,11 +1,11 @@
-import { memo, useEffect, useState } from 'react'
+import { memo, useEffect, useMemo, useState } from 'react'
 
 import { ArrowDownIcon, ArrowUpIcon } from '@app/assets/icons'
 import { ChevronToggleButton } from '@app/components/ui/buttons'
 import type { Transaction } from '@app/services/archiver'
 import { formatString } from '@app/utils'
 import type { Transfer } from '@app/utils/qubic-ts'
-import { getTransfers, QUTIL_ADDRESS } from '@app/utils/qubic-ts'
+import { getTransfers, isTransferTx, QUTIL_ADDRESS } from '@app/utils/qubic-ts'
 import AddressLink from '../AddressLink'
 import CardItem from '../CardItem'
 import TxLink from '../TxLink'
@@ -33,9 +33,14 @@ function TxItem({
 
   const handleToggleDetails = () => setDetailsOpen((prev) => !prev)
 
+  const isTransferTransaction = useMemo(
+    () => isTransferTx(sourceId, destId, amount),
+    [sourceId, destId, amount]
+  )
+
   useEffect(() => {
     if (destId === QUTIL_ADDRESS && inputType === 1 && inputHex) {
-      ; (async () => {
+      ;(async () => {
         try {
           const transfers = await getTransfers(inputHex)
           setEntries(transfers)
@@ -52,7 +57,10 @@ function TxItem({
       <>
         <div className="mb-24 flex flex-col gap-10 md:flex-row md:items-center md:gap-16">
           <div className="">
-            <TxStatus executed={!(nonExecutedTxIds || []).includes(txId)} />
+            <TxStatus
+              executed={!(nonExecutedTxIds || []).includes(txId)}
+              isTransferTx={isTransferTransaction}
+            />
           </div>
           <TxLink isHistoricalTx={isHistoricalTx} className="text-base text-gray-50" value={txId} />
         </div>
@@ -69,7 +77,10 @@ function TxItem({
   return (
     <CardItem className="flex flex-col rounded-12 p-12 transition-all duration-300">
       <div className="flex items-center justify-between gap-8">
-        <TxStatus executed={!(nonExecutedTxIds || []).includes(txId)} />
+        <TxStatus
+          executed={!(nonExecutedTxIds || []).includes(txId)}
+          isTransferTx={isTransferTransaction}
+        />
         <div className="flex flex-grow flex-col items-start gap-8 sm:flex-row sm:items-center sm:justify-between">
           {identify ? (
             <div className="flex items-center gap-8">
