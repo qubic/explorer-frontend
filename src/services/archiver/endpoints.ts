@@ -22,7 +22,10 @@ export const ARCHIVER_API_ENDPOINTS = {
   TICK_TRANSFER_TRANSACTIONS: (tick: string) => `${makeTicksUrl(tick)}/transfer-transactions`,
   TICK_APPROVED_TRANSACTIONS: (tick: string) => `${makeTicksUrl(tick)}/approved-transactions`,
   // EPOCHS
-  EPOCH_COMPUTORS: (epoch: number) => `${BASE_URL}/epochs/${epoch}/computors`
+  EPOCH_COMPUTORS: (epoch: number) => `${BASE_URL}/epochs/${epoch}/computors`,
+  // RICH_LIST
+  RICH_LIST: (page: number, pageSize: number) =>
+    `${BASE_URL}/rich-list?page=${page}&pageSize=${pageSize}`
 } as const
 
 export default ARCHIVER_API_ENDPOINTS

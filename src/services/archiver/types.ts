@@ -69,6 +69,17 @@ export interface ProcessedTickIntervalPerEpoch {
   intervals: TickInterval[]
 }
 
+export interface Entity {
+  identity: string
+  balance: string
+}
+
+export interface PaginationInfo {
+  totalRecords: number
+  currentPage: number
+  totalPages: number
+}
+
 export interface GetStatusResponse {
   lastProcessedTick: LastProcessedTick
   lastProcessedTicksPerEpoch: LastProcessedTicksPerEpoch
@@ -114,4 +125,12 @@ export interface GetTransactionStatusResponse {
 
 export interface GetEpochComputorsResponse {
   computors: Computor
+}
+
+export interface GetRichListResponse {
+  pagination: PaginationInfo
+  epoch: number
+  richList: {
+    entities: Entity[]
+  }
 }
