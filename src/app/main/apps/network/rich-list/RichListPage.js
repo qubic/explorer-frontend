@@ -74,7 +74,7 @@ export default function RichListPage() {
                   <th className="p-16 font-400">
                     <span>{t('addressID')}</span>
                   </th>
-                  <th className="p-16 font-400">
+                  <th className="p-16 font-400 text-right">
                     <span>{t('amount')} (QUBIC)</span>
                   </th>
                 </tr>
