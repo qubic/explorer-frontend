@@ -14,13 +14,14 @@ export type NetworkTxQueryParams = {
   type?: TxEra
 }
 
-const Routes = {
+export const Routes = {
   NETWORK: {
     ROOT: '/network',
     ADDRESS: (address: string) => `${Routes.NETWORK.ROOT}/address/${address}`,
     TX: (txId: string, query: NetworkTxQueryParams = { type: 'latest' }) =>
       buildUrlWithQueryParams(`${Routes.NETWORK.ROOT}/tx/${txId}`, query),
-    TICK: (tick: string | number) => `${Routes.NETWORK.ROOT}/tick/${tick}`
+    TICK: (tick: string | number) => `${Routes.NETWORK.ROOT}/tick/${tick}`,
+    RICH_LIST: () => `${Routes.NETWORK.ROOT}/rich-list`
   },
   NOT_FOUND: '/404'
 } as const
