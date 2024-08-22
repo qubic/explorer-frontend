@@ -7,7 +7,7 @@ type Props = {
 
 export default function CardItem({ children, className }: Props) {
   return (
-    <div className={clsxTwMerge('rounded-12 border-[1px] border-primary-60 bg-gray-80', className)}>
+    <div className={clsxTwMerge('bg-primary-80 rounded-12 border-1 border-primary-60', className)}>
       {children}
     </div>
   )
