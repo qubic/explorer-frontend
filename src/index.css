@@ -18,7 +18,7 @@
 
   html {
     font-family: 'Noto Sans', system-ui, sans-serif;
-    @apply bg-[#101820];
+    @apply bg-primary-70;
   }
 
   html,
@@ -38,17 +38,16 @@
   }
 
   body::-webkit-scrollbar {
-    width: 10px;
+    @apply w-10;
   }
 
   body::-webkit-scrollbar-track {
-    background: transparent;
+    @apply bg-transparent;
   }
 
   body::-webkit-scrollbar-thumb {
-    border: 2px solid #101820;
-    background: #202e3c;
-    border-radius: 20px;
+    @apply bg-primary-60;
+    @apply rounded-20 border-2 border-solid border-primary-70;
   }
 }
 
