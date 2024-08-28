@@ -1,6 +1,6 @@
 import { ArrowLeftIcon, ArrowRightIcon } from '@app/assets/icons'
 import { clsxTwMerge } from '@app/utils'
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 
 type Props = {
   page: number
@@ -16,12 +16,18 @@ const transitionClasses = 'transition duration-100 ease-in-out'
 const arrowButtonClasses = 'flex size-32 items-center justify-center rounded-4'
 
 export default function PaginationBar({ pageCount, page, onPageChange, className }: Props) {
+  const zeroOrNegativePage = useMemo(() => page <= 0, [page])
+
   const getPaginationBar = useCallback(
     (isMobile: boolean) => {
       const rangeSize = isMobile ? 3 : 5
       const startSize = isMobile ? 3 : 6
       const endSize = isMobile ? 2 : 4
       const middlePages = isMobile ? [page] : [page - 1, page, page + 1]
+
+      if (zeroOrNegativePage) {
+        return [1]
+      }
 
       if (pageCount <= startSize) {
         return generatePageRange(1, pageCount)
@@ -37,7 +43,7 @@ export default function PaginationBar({ pageCount, page, onPageChange, className
 
       return [1, '...', ...middlePages, '...', pageCount]
     },
-    [page, pageCount]
+    [page, pageCount, zeroOrNegativePage]
   )
 
   const renderPageButtons = useCallback(
@@ -50,7 +56,7 @@ export default function PaginationBar({ pageCount, page, onPageChange, className
             className={clsxTwMerge(
               'h-32 min-w-32 rounded-4 px-6 text-center font-sans text-sm text-gray-50',
               transitionClasses,
-              pageNumber === page
+              pageNumber === page || zeroOrNegativePage
                 ? 'text-primary-80 bg-primary-30 hover:bg-primary-50'
                 : 'hover:bg-gray-60/40'
             )}
@@ -67,7 +73,7 @@ export default function PaginationBar({ pageCount, page, onPageChange, className
           </span>
         )
       ),
-    [page, getPaginationBar, onPageChange]
+    [getPaginationBar, page, zeroOrNegativePage, onPageChange]
   )
 
   return (
