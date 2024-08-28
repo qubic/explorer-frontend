@@ -18,7 +18,7 @@
 
   html {
     font-family: 'Noto Sans', system-ui, sans-serif;
-    @apply bg-primary-70;
+    @apply bg-primary-80;
   }
 
   html,
@@ -47,7 +47,7 @@
 
   body::-webkit-scrollbar-thumb {
     @apply bg-primary-60;
-    @apply rounded-20 border-2 border-solid border-primary-70;
+    @apply border-primary-80 rounded-20 border-2 border-solid;
   }
 }
 

@@ -51,7 +51,7 @@ function ModalOverlayWrapper({
       >
         {children}
       </div>
-      <div className="fixed inset-0 z-50 bg-primary-70 bg-opacity-80" />
+      <div className="fixed inset-0 z-50 bg-primary-80 bg-opacity-80" />
     </>
   )
 }
@@ -76,15 +76,15 @@ export default function Modal({
 
   return isOpen
     ? createPortal(
-        <ModalOverlayWrapper
-          id={id}
-          className={className}
-          closeOnOutsideClick={closeOnOutsideClick}
-          onClose={onClose}
-        >
-          {children}
-        </ModalOverlayWrapper>,
-        document.getElementById('modal-root') as HTMLElement
-      )
+      <ModalOverlayWrapper
+        id={id}
+        className={className}
+        closeOnOutsideClick={closeOnOutsideClick}
+        onClose={onClose}
+      >
+        {children}
+      </ModalOverlayWrapper>,
+      document.getElementById('modal-root') as HTMLElement
+    )
     : null
 }

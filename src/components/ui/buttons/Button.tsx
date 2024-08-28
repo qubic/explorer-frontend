@@ -21,7 +21,7 @@ const sizeClasses = {
 
 const colorVariantClasses = {
   primary: {
-    filled: 'text-primary-70 bg-primary-30 hover:bg-primary-40 hover:text-primary-70',
+    filled: 'text-primary-80 bg-primary-30 hover:bg-primary-40 hover:text-primary-80',
     outlined: 'text-primary-30 border border-primary-30 hover:bg-primary-60',
     text: 'text-white hover:bg-primary-60'
   }

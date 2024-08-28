@@ -111,7 +111,7 @@ export default function InfiniteScroll<T>({
           type="button"
           aria-label="Scroll to top"
           onClick={handleScrollToTop}
-          className="fixed bottom-16 right-16 rounded-full border border-gray-60 bg-primary-70 p-12 text-gray-60 shadow-lg hover:border-gray-50 hover:text-gray-50"
+          className="fixed bottom-16 right-16 rounded-full border border-gray-60 bg-primary-80 p-12 text-gray-60 shadow-lg hover:border-gray-50 hover:text-gray-50"
         >
           <ArrowUpIcon className="size-24" />
         </button>

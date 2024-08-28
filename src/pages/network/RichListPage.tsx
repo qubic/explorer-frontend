@@ -53,7 +53,7 @@ export default function RichListPage() {
             <p className="font-space text-24 font-500 leading-26">{t('richList')}</p>
             <p className="text-left text-sm text-gray-50">{t('richListWarning')}</p>
           </div>
-          <div className="bg-primary-80 w-full rounded-12 border-1 border-primary-60">
+          <div className="w-full rounded-12 border-1 border-primary-60 bg-primary-70">
             <table className="w-full">
               <thead className="border-b-1 border-primary-60 text-left font-space text-sm text-gray-50">
                 <tr>
