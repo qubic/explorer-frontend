@@ -29,7 +29,7 @@ function FooterLink({ label, to, isInternal }: FooterLinkProps) {
 
 function Footer() {
   const linkItems: FooterLinkProps[] = [
-    { label: 'Rich List', to: Routes.NETWORK.RICH_LIST(), isInternal: true },
+    { label: 'Rich List', to: Routes.NETWORK.RICH_LIST, isInternal: true },
     { label: 'Terms of Service', to: 'https://qubic.org/Terms-of-service', isInternal: false },
     { label: 'Privacy Policy', to: 'https://qubic.org/Privacy-policy', isInternal: false },
     { label: 'Network Status', to: 'https://status.qubic.li', isInternal: false }
