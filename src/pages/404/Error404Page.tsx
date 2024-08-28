@@ -1,6 +1,6 @@
 import { Suspense } from 'react'
 import { useTranslation } from 'react-i18next'
-import { isRouteErrorResponse, Link, useRouteError } from 'react-router-dom'
+import { isRouteErrorResponse, Link, useLocation, useRouteError } from 'react-router-dom'
 
 import { Button } from '@app/components/ui/buttons'
 import { ErrorDisplay } from '@app/components/ui/error-boundaries'
@@ -11,13 +11,19 @@ import { Routes } from '@app/router'
 function Error404Page() {
   const { t } = useTranslation('error-404-page')
   const error = useRouteError()
+  const { pathname } = useLocation()
+  const isNotFound = pathname === Routes.NOT_FOUND
 
   const renderErrorDisplay = () => {
-    if (!isRouteErrorResponse(error)) {
-      return <ErrorDisplay />
+    if (isNotFound || (isRouteErrorResponse(error) && error?.status === 404)) {
+      return <ErrorDisplay is404Error />
     }
 
-    return error.status === 404 ? <ErrorDisplay is404Error /> : <ErrorDisplay error={error} />
+    if (isRouteErrorResponse(error)) {
+      return <ErrorDisplay error={error} />
+    }
+
+    return <ErrorDisplay />
   }
 
   return (
