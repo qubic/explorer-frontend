@@ -46,7 +46,7 @@ export default function RichListPage() {
       <div className="mx-auto max-w-[960px] space-y-20 px-20 py-32 md:space-y-40">
         <Breadcrumbs aria-label="breadcrumb">
           <HomeLink />
-          <p className="text-xs text-primary-40">{t('richList')}</p>
+          <p className="text-xs text-primary-30">{t('richList')}</p>
         </Breadcrumbs>
         <div className="space-y-14 md:space-y-28">
           <div className="space-y-10">
