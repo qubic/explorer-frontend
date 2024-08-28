@@ -1,4 +1,4 @@
-import { Error404 } from '@app/assets/images/errors'
+import { Error404, GenericError } from '@app/assets/images/errors'
 import { Alert } from '@app/components/ui'
 import { useTranslation } from 'react-i18next'
 import type { ErrorResponse } from 'react-router-dom'
@@ -10,11 +10,12 @@ type ErrorDisplayProps = {
 
 export default function ErrorDisplay({ is404Error = false, error }: ErrorDisplayProps) {
   const { t } = useTranslation('error-404-page')
+  const ErrorImg = is404Error ? Error404 : GenericError
+
   return (
     <>
       <div className="relative overflow-x-hidden">
-        {/* // TODO: Put different error img for non 404 errors */}
-        <Error404
+        <ErrorImg
           className="min-h-[267px] w-full min-w-[742px] max-w-[742px] md:h-[460px] md:max-w-[1279px]"
           width={742}
           height={267}
