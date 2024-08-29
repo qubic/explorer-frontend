@@ -44,7 +44,7 @@ export default function ErrorDisplay({ is404Error = false, error }: ErrorDisplay
                   <p className="text-base font-medium text-error-40">
                     {error.status} | {error.statusText}
                   </p>
-                  <p className="text-sm text-red-700">{String(error.data)}</p>
+                  <p className="text-sm text-error-40">{String(error.data)}</p>
                 </>
               )}
             </Alert>
