@@ -30,7 +30,7 @@ const variantClasses = {
     bg: 'bg-warning-90',
     text: 'text-warning-40',
     icon: ExclamationTriangleIcon,
-    iconClass: 'text-yellow-400'
+    iconClass: 'text-warning-40'
   },
   error: {
     bg: 'bg-error-90',
