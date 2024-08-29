@@ -57,7 +57,7 @@ export default function PaginationBar({ pageCount, page, onPageChange, className
               'h-32 min-w-32 rounded-4 px-6 text-center font-sans text-sm text-gray-50',
               transitionClasses,
               pageNumber === page || zeroOrNegativePage
-                ? 'text-primary-80 bg-primary-30 hover:bg-primary-50'
+                ? 'bg-primary-30 text-primary-80 hover:bg-primary-50'
                 : 'hover:bg-gray-60/40'
             )}
             onClick={() => onPageChange(pageNumber)}
