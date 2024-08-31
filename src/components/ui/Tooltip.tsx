@@ -8,7 +8,7 @@ export default function Tooltip({ children, content }: Props) {
     <div className="group relative">
       <div>{children}</div>
       <div className="absolute bottom-full left-1/2 mb-2 hidden -translate-x-1/2 transform group-hover:block">
-        <div className="whitespace-nowrap rounded-8 bg-primary-60 px-8 py-4 text-xs text-white">
+        <div className="text-xxs w-max max-w-[50vw] break-words rounded-8 bg-primary-60 px-8 py-6 text-white xs:text-xs md:max-w-512">
           {content}
         </div>
         <svg
