@@ -45,5 +45,12 @@
   "historicalDataWarning": "Estás viendo datos históricos. Algunos datos pueden no ser completamente precisos o completos.",
   "hide": "Ocultar",
   "show": "Mostrar",
-  "transactionNotFound": "Transacción no encontrada"
+  "transactionNotFound": "Transacción no encontrada",
+  "addressNotFoundError": "Error: No pudimos encontrar la dirección que estás buscando. Verifica la dirección y vuelve a intentarlo.",
+  "loadingTransactionsError": "Error: Algo ha ido mal al cargar las transacciones. Por favor, inténtalo de nuevo más tarde.",
+  "richList": "Lista de Ricos",
+  "rank": "Rango",
+  "addressID": "ID de Dirección",
+  "richListLoadFailed": "Error: No se pudo cargar la lista de ricos. Por favor, actualice la página o intente nuevamente más tarde.",
+  "richListWarning": "Los datos de la lista de ricos se actualizan al comienzo de cada época"
 }

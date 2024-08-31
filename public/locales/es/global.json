@@ -1,11 +1,11 @@
 {
   "address": "Dirección",
-  "balance": "Balance",
+  "balance": "Saldo",
   "noResult": "No hay resultados",
   "search": "Buscar",
   "tick": "Tick",
   "from": "de",
   "to": "a",
-  "transaction": "Transaction",
-  "transactions": "Transactions"
+  "transaction": "Transacción",
+  "transactions": "Transacciones"
 }

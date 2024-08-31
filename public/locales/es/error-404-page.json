@@ -1,7 +1,8 @@
 {
-  "pageNotFound": "Page not found",
-  "error404Message": "Congratulations! You are one of the elite who managed to find our 404 page.",
-  "backToHomePage": "Back to homepage",
-  "title": "Oops!",
-  "unexpectedError": "Sorry, an unexpected error has occurred."
+  "pageNotFound": "Página no encontrada",
+  "error404Message": "¡Felicitaciones! Eres uno de los pocos que lograron encontrar nuestra página 404.",
+  "backToHomePage": "Volver a la página de inicio",
+  "title": "¡Ups!",
+  "unexpectedError": "Lo siento, ha ocurrido un error inesperado.",
+  "retry": "Reintentar"
 }
