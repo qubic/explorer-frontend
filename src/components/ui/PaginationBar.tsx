@@ -126,7 +126,7 @@ export default function PaginationBar({ pageCount, page, onPageChange, className
         onClick={() => onPageChange(page - 1)}
         disabled={page <= 1}
       >
-        <ArrowLeftIcon aria-hidden="true" className="size-20" />
+        <ArrowLeftIcon aria-hidden="true" className="size-20 rtl:rotate-180 rtl:transform" />
       </button>
       <div className="flex gap-6 xs:hidden">{renderPageButtons('xs')}</div>
       <div className="hidden gap-6 xs:flex sm:hidden">{renderPageButtons('sm')}</div>
@@ -142,7 +142,7 @@ export default function PaginationBar({ pageCount, page, onPageChange, className
         onClick={() => onPageChange(page + 1)}
         disabled={page === pageCount}
       >
-        <ArrowRightIcon aria-hidden="true" className="size-20" />
+        <ArrowRightIcon aria-hidden="true" className="size-20 rtl:rotate-180 rtl:transform" />
       </button>
     </nav>
   )
