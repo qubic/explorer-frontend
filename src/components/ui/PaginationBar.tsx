@@ -9,6 +9,42 @@ type Props = {
   className?: string
 }
 
+type Size = 'xs' | 'sm' | 'md'
+
+type PaginationSizeConfig = {
+  rangeSize: number
+  startSize: number
+  endSize: number
+  middlePages: number[]
+}
+
+const getPaginationSizeConfig = (size: Size, page: number): PaginationSizeConfig => {
+  switch (size) {
+    case 'xs':
+      return {
+        rangeSize: 1,
+        startSize: 1,
+        endSize: 0,
+        middlePages: [page]
+      }
+    case 'sm':
+      return {
+        rangeSize: 3,
+        startSize: 3,
+        endSize: 2,
+        middlePages: [page]
+      }
+    case 'md':
+    default:
+      return {
+        rangeSize: 5,
+        startSize: 6,
+        endSize: 4,
+        middlePages: [page - 1, page, page + 1]
+      }
+  }
+}
+
 const generatePageRange = (start: number, end: number) =>
   Array.from({ length: end - start + 1 }, (_, index) => start + index)
 
@@ -19,11 +55,8 @@ export default function PaginationBar({ pageCount, page, onPageChange, className
   const zeroOrNegativePage = useMemo(() => page <= 0, [page])
 
   const getPaginationBar = useCallback(
-    (isMobile: boolean) => {
-      const rangeSize = isMobile ? 3 : 5
-      const startSize = isMobile ? 3 : 6
-      const endSize = isMobile ? 2 : 4
-      const middlePages = isMobile ? [page] : [page - 1, page, page + 1]
+    (size: Size) => {
+      const { rangeSize, startSize, endSize, middlePages } = getPaginationSizeConfig(size, page)
 
       if (zeroOrNegativePage) {
         return [1]
@@ -31,6 +64,10 @@ export default function PaginationBar({ pageCount, page, onPageChange, className
 
       if (pageCount <= startSize) {
         return generatePageRange(1, pageCount)
+      }
+
+      if (size === 'xs') {
+        return [page]
       }
 
       if (page < rangeSize) {
@@ -47,8 +84,8 @@ export default function PaginationBar({ pageCount, page, onPageChange, className
   )
 
   const renderPageButtons = useCallback(
-    (isMobile: boolean) =>
-      getPaginationBar(isMobile).map((pageNumber, index) =>
+    (size: Size) =>
+      getPaginationBar(size).map((pageNumber, index) =>
         typeof pageNumber === 'number' ? (
           <button
             type="button"
@@ -91,8 +128,9 @@ export default function PaginationBar({ pageCount, page, onPageChange, className
       >
         <ArrowLeftIcon aria-hidden="true" className="size-20" />
       </button>
-      <div className="hidden gap-6 sm:flex">{renderPageButtons(false)}</div>
-      <div className="flex gap-6 sm:hidden">{renderPageButtons(true)}</div>
+      <div className="flex gap-6 xs:hidden">{renderPageButtons('xs')}</div>
+      <div className="hidden gap-6 xs:flex sm:hidden">{renderPageButtons('sm')}</div>
+      <div className="hidden gap-6 sm:flex">{renderPageButtons('md')}</div>
       <button
         type="button"
         className={clsxTwMerge(
