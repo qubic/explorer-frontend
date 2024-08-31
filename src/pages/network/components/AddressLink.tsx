@@ -1,10 +1,10 @@
-import React from 'react'
 import { Link } from 'react-router-dom'
 
 import { Tooltip } from '@app/components/ui'
 import { CopyTextButton } from '@app/components/ui/buttons'
 import { Routes } from '@app/router'
 import { clsxTwMerge, formatEllipsis } from '@app/utils'
+import { useMemo } from 'react'
 
 type Props = {
   value: string
@@ -21,10 +21,8 @@ export default function AddressLink({
   ellipsis = false,
   showTooltip = false
 }: Props) {
-  const Wrapper = showTooltip ? Tooltip : React.Fragment
-
-  return (
-    <Wrapper content={value}>
+  const addressLink = useMemo(
+    () => (
       <div className="flex items-center gap-10">
         <Link
           role="button"
@@ -38,6 +36,9 @@ export default function AddressLink({
         </Link>
         {copy && <CopyTextButton text={value} />}
       </div>
-    </Wrapper>
+    ),
+    [value, className, copy, ellipsis]
   )
+
+  return showTooltip ? <Tooltip content={value}>{addressLink}</Tooltip> : addressLink
 }
