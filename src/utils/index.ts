@@ -34,14 +34,11 @@ const formatDate = (dateString: string | undefined) => {
   return ''
 }
 
-function formatEllipsis(str: string) {
-  if (str) {
-    if (str.length > 10) {
-      return `${str.substr(0, 5)}...${str.substr(-5)}`
-    }
-    return str
+function formatEllipsis(str = '') {
+  if (str.length > 10) {
+    return `${str.slice(0, 5)}...${str.slice(-5)}`
   }
-  return ''
+  return str
 }
 
 function formatBase64(hex: string | undefined) {
