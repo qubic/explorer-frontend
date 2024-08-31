@@ -1,15 +1,20 @@
 import { useAppDispatch, useAppSelector } from '@app/hooks/redux'
 import { useTranslation } from 'react-i18next'
 
-import { Alert, Breadcrumbs, PaginationBar } from '@app/components/ui'
-import { LinearProgress } from '@app/components/ui/loaders'
+import { Breadcrumbs, PaginationBar } from '@app/components/ui'
 import { useTailwindBreakpoint } from '@app/hooks'
 import { getRichList, selectRichList } from '@app/store/network/richListSlice'
-import { formatString } from '@app/utils'
-import { useEffect, useMemo, useState } from 'react'
-import { AddressLink, HomeLink } from './components'
+import { memo, useCallback, useEffect, useMemo, useState } from 'react'
+import { HomeLink } from '../components'
+import { RichListErrorRow, RichListRow, RichListSkeletonRow } from './components'
 
 const PAGE_SIZE = 15
+
+const RichListLoadingRows = memo(() => {
+  return Array.from({ length: PAGE_SIZE }).map((_, index) => (
+    <RichListSkeletonRow key={String(`${index}`)} />
+  ))
+})
 
 export default function RichListPage() {
   const { t } = useTranslation('network-page')
@@ -18,9 +23,9 @@ export default function RichListPage() {
   const [page, setPage] = useState(1)
   const { isMobile } = useTailwindBreakpoint()
 
-  const handlePageChange = (value: number) => {
+  const handlePageChange = useCallback((value: number) => {
     setPage(value)
-  }
+  }, [])
 
   const entitiesWithRank = useMemo(
     () =>
@@ -35,13 +40,17 @@ export default function RichListPage() {
     dispatch(getRichList({ page, pageSize: PAGE_SIZE }))
   }, [dispatch, page])
 
-  if (isLoading) {
-    return (
-      <div className="absolute w-full">
-        <LinearProgress />
-      </div>
-    )
-  }
+  const renderTableContent = useCallback(() => {
+    if (isLoading) return <RichListLoadingRows />
+
+    if (error || entitiesWithRank?.length === 0) {
+      return <RichListErrorRow />
+    }
+
+    return entitiesWithRank?.map((entity) => (
+      <RichListRow key={entity.identity} entity={entity} isMobile={isMobile} />
+    ))
+  }, [entitiesWithRank, isLoading, error, isMobile])
 
   return (
     <div className="w-full">
@@ -60,7 +69,7 @@ export default function RichListPage() {
               <table className="w-full">
                 <thead className="border-b-1 border-primary-60 text-left font-space text-sm text-gray-50">
                   <tr>
-                    <th className="p-16 text-center font-400">
+                    <th className="p-16 text-center font-400 sm:w-72">
                       <span className="hidden text-gray-50 sm:block">{t('rank')}</span>
                     </th>
                     <th className="p-16 font-400">
@@ -71,33 +80,7 @@ export default function RichListPage() {
                     </th>
                   </tr>
                 </thead>
-                <tbody>
-                  {error || entitiesWithRank?.length === 0 ? (
-                    <tr>
-                      <td colSpan={3} className="p-32">
-                        <Alert variant="error">{t('richListLoadFailed')}</Alert>
-                      </td>
-                    </tr>
-                  ) : (
-                    entitiesWithRank?.map((entity) => (
-                      <tr key={entity.identity} className="border-b border-primary-60">
-                        <td className="px-8 py-16 text-center font-space text-xs xs:text-sm sm:p-16">
-                          {entity.rank}
-                        </td>
-                        <td className="px-8 py-16 sm:p-16">
-                          <AddressLink
-                            value={entity.identity}
-                            ellipsis={isMobile}
-                            showTooltip={isMobile}
-                          />
-                        </td>
-                        <td className="px-8 py-16 text-right font-space text-xs xs:text-sm sm:p-16">
-                          {formatString(entity.balance)}
-                        </td>
-                      </tr>
-                    ))
-                  )}
-                </tbody>
+                <tbody>{renderTableContent()}</tbody>
               </table>
             </div>
             <PaginationBar
