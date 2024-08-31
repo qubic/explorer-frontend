@@ -57,7 +57,7 @@ export default function Select({
 
         <ListboxOptions
           transition
-          className="bg-primary-70 absolute z-10 mt-1 w-full overflow-auto rounded-md py-5 text-base shadow-2xl ring-1 ring-black ring-opacity-5 drop-shadow-2xl scrollbar-thin scrollbar-thumb-rounded-full data-[closed]:data-[leave]:opacity-0 data-[leave]:transition data-[leave]:duration-100 data-[leave]:ease-in focus:outline-none sm:text-sm"
+          className="absolute z-10 mt-1 w-full overflow-auto rounded-md bg-primary-70 py-5 text-base shadow-2xl ring-1 ring-black ring-opacity-5 drop-shadow-2xl scrollbar-thin scrollbar-thumb-rounded-full data-[closed]:data-[leave]:opacity-0 data-[leave]:transition data-[leave]:duration-100 data-[leave]:ease-in focus:outline-none sm:text-sm"
         >
           {options.map((option) => (
             <ListboxOption
