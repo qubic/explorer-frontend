@@ -168,7 +168,7 @@ export default function OverviewPage() {
                   key={item.tick}
                   value={item.tick}
                   className={clsxTwMerge(
-                    'text-xs',
+                    'font-space text-xs',
                     item.arbitrated ? 'text-error-40' : 'text-gray-50'
                   )}
                 />
