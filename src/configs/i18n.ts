@@ -25,10 +25,13 @@ i18n
   .use(HttpBackend)
   .use(initReactI18next)
   .init({
-    // Setting this to false to avoid the default fallback language search for a translation.json file
-    // https://github.com/aurelia/i18n/issues/47
-    fallbackLng: false,
     lng: getInitialLanguage(),
+    ns: ['network-page', 'global', 'error-404-page'],
+    // default namespace (needs no prefix on calling t)
+    defaultNS: 'global',
+    fallbackNS: ['network-page', 'global', 'error-404-page'],
+    fallbackLng: 'en',
+
     backend: {
       loadPath: '/locales/{{lng}}/{{ns}}.json'
     },
