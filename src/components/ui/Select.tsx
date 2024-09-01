@@ -1,7 +1,7 @@
 import { ChevronDownIcon } from '@app/assets/icons'
 import { clsxTwMerge } from '@app/utils'
 import { Label, Listbox, ListboxButton, ListboxOption, ListboxOptions } from '@headlessui/react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 export type Option = {
   readonly label: string
@@ -34,6 +34,12 @@ export default function Select({
     onSelect(option)
   }
 
+  useEffect(() => {
+    if (options) {
+      setSelected((prev) => options.find((option) => option.value === prev.value) || options[0])
+    }
+  }, [options])
+
   return (
     <Listbox value={selected} onChange={handleSelect} name={name}>
       <Label
@@ -44,7 +50,7 @@ export default function Select({
       >
         {label}
       </Label>
-      <div className={clsxTwMerge('relative w-[200px] font-space sm:w-[225px]', className)}>
+      <div className={clsxTwMerge('relative w-[150px] font-space sm:w-[225px]', className)}>
         <ListboxButton className="sm:leading-6 text-primary-800 relative w-full cursor-default rounded-md border border-gray-500 bg-primary-80 py-8 pl-12 pr-16 text-left text-sm shadow-sm hover:cursor-pointer hover:border-white focus:border-gray-60 focus:outline-none focus:ring-2 focus:ring-gray-60 sm:py-16 sm:pl-14 sm:pr-32 sm:text-base">
           <span className="block truncate leading-tight">{selected?.label}</span>
           <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-10">
