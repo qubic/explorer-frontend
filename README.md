@@ -24,7 +24,7 @@ production environments.
   Copy the `.env.example` file, renaming it to `.env`:
 
   ```
-  cp .env.development.local.example .env
+  cp .env.example .env
   ```
 
   Open this file and add the development API URL:
@@ -56,7 +56,7 @@ Ensure these files are not committed to the repository to protect sensitive info
 Install the project's dependencies by running:
 
 ```
-pnpm install
+pnpm install --frozen-lockfile
 ```
 
 This command installs all necessary dependencies required for the project to run.
