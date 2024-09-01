@@ -40,7 +40,7 @@ function TxItem({
 
   useEffect(() => {
     if (destId === QUTIL_ADDRESS && inputType === 1 && inputHex) {
-      ; (async () => {
+      ;(async () => {
         try {
           const transfers = await getTransfers(inputHex)
           setEntries(transfers)

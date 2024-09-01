@@ -12,7 +12,7 @@ export default function TickLink({ value, className }: Props) {
   return (
     <Link
       to={Routes.NETWORK.TICK(value)}
-      className={clsxTwMerge(`font-space font-500`, className)}
+      className={clsxTwMerge('font-space font-500', className)}
       role="button"
     >
       {formatString(value)}

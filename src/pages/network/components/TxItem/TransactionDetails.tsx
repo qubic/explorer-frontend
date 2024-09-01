@@ -49,7 +49,7 @@ export default function TransactionDetails({
         <SubCardItem
           variant="secondary"
           title={t('amount')}
-          content={<p className="font-space text-14 leading-20">{formatString(amount)} QUBIC</p>}
+          content={<p className="font-space text-sm">{formatString(amount)} QUBIC</p>}
         />
       ) : (
         <SubCardItem
@@ -58,10 +58,22 @@ export default function TransactionDetails({
           content={
             <TxLink
               isHistoricalTx={isHistoricalTx}
-              className="text-14 text-primary-30"
+              className="text-sm text-primary-30"
               value={txId}
               copy
             />
+          }
+        />
+      )}
+
+      {variant === 'secondary' && (
+        <SubCardItem
+          title={t('type')}
+          variant={variant}
+          content={
+            <p className="font-space text-sm">
+              {formatString(inputType)} {inputType === 0 ? 'Standard' : 'SC'}
+            </p>
           }
         />
       )}
@@ -81,15 +93,17 @@ export default function TransactionDetails({
         variant={variant}
         content={<TickLink className="text-sm text-primary-30" value={tickNumber} />}
       />
-      <SubCardItem
-        title={t('type')}
-        variant={variant}
-        content={
-          <p className="font-space text-14 leading-18">
-            {formatString(inputType)} {inputType === 0 ? 'Standard' : 'SC'}
-          </p>
-        }
-      />
+      {variant === 'primary' && (
+        <SubCardItem
+          title={t('type')}
+          variant={variant}
+          content={
+            <p className="font-space text-sm">
+              {formatString(inputType)} {inputType === 0 ? 'Standard' : 'SC'}
+            </p>
+          }
+        />
+      )}
 
       <TransferList entries={entries} variant={variant} />
     </TransactionDetailsWrapper>

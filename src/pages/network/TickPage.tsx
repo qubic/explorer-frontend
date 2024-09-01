@@ -6,7 +6,8 @@ import { ChevronLeftIcon, ChevronRightIcon } from '@app/assets/icons'
 import { Breadcrumbs, InfiniteScroll, Select } from '@app/components/ui'
 import { DotsLoader, LinearProgress } from '@app/components/ui/loaders'
 import type { Option } from '@app/components/ui/Select'
-import { TRANSACTION_OPTIONS } from '@app/constants'
+import { TRANSACTION_OPTIONS, TRANSACTION_OPTIONS_MOBILE } from '@app/constants'
+import { useTailwindBreakpoint } from '@app/hooks'
 import { useAppDispatch, useAppSelector } from '@app/hooks/redux'
 import { Routes } from '@app/router'
 import type { Transaction } from '@app/services/archiver'
@@ -22,6 +23,7 @@ export default function TickPage() {
   const navigate = useNavigate()
   const { tick } = useParams()
   const { block, isLoading, error } = useAppSelector(selectBlock)
+  const { isMobile } = useTailwindBreakpoint()
 
   const [option, setOption] = useState('all')
   const [displayTransactions, setDisplayTransactions] = useState<Transaction[]>([])
@@ -144,11 +146,11 @@ export default function TickPage() {
       </div>
       {!error && (
         <div className="flex flex-col gap-16">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between gap-10">
             <p className="font-space text-20 font-500 leading-26">{t('transactions')}</p>
             <Select
               label="Transactions Type"
-              options={TRANSACTION_OPTIONS}
+              options={isMobile ? TRANSACTION_OPTIONS_MOBILE : TRANSACTION_OPTIONS}
               onSelect={handleOnSelect}
             />
           </div>
