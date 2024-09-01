@@ -17,12 +17,7 @@ export default function SubCardItem({ title, content, variant = 'primary' }: Pro
           : 'gap-8 md:justify-between'
       )}
     >
-      <p
-        className={clsxTwMerge(
-          'font-space text-sm leading-18 text-gray-50',
-          isSecondaryVariant && 'w-120 leading-20'
-        )}
-      >
+      <p className={clsxTwMerge('font-space text-sm text-gray-50', isSecondaryVariant && 'w-120')}>
         {title}
       </p>
       {content}
