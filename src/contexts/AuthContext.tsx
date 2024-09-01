@@ -1,3 +1,4 @@
+import { AppLoader } from '@app/components/ui/loaders'
 import { QLI_API_ENDPOINTS } from '@app/services/qli/endpoints'
 import axios from 'axios'
 import { createContext, useEffect, useMemo, useState } from 'react'
@@ -47,7 +48,11 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  return <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
+  return isAuthorized ? (
+    <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
+  ) : (
+    <AppLoader />
+  )
 }
 
 export { AuthContext, AuthProvider }
