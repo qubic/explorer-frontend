@@ -25,7 +25,9 @@ i18n
   .use(HttpBackend)
   .use(initReactI18next)
   .init({
-    fallbackLng: 'en',
+    // Setting this to false to avoid the default fallback language search for a translation.json file
+    // https://github.com/aurelia/i18n/issues/47
+    fallbackLng: false,
     lng: getInitialLanguage(),
     backend: {
       loadPath: '/locales/{{lng}}/{{ns}}.json'
