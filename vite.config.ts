@@ -16,7 +16,7 @@ const defaultConfig: UserConfig = {
 
 // https://vitejs.dev/config/
 export default defineConfig(({ command, mode }) => {
-  const env = loadEnv(mode, process.cwd(), '')
+  const env = loadEnv(mode, process.cwd())
 
   if (command === 'serve' && (mode === 'development' || env.VITE_ENABLE_PROXY === 'true')) {
     return {
