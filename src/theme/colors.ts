@@ -36,6 +36,9 @@ export const colors: ThemeConfig['colors'] = ({ colors: defaultColors }: PluginU
     A400: '#303030',
     A700: '#616161'
   },
+  slate: {
+    50: '#232A31'
+  },
   error: {
     30: '#F39CC6',
     40: '#F97066',

@@ -89,18 +89,24 @@ export default function TickPage() {
         </p>
       </Breadcrumbs>
       <div className="mb-36 mt-24 flex items-center justify-between gap-12">
-        <div className="flex flex-col gap-8">
-          <div className="flex items-center gap-8">
+        <div className="flex flex-col gap-4">
+          <div className="flex items-center justify-between gap-10">
             <button
               type="button"
               aria-label="Previous Tick"
+              className="hover:bg-slate-50 flex size-fit rounded-full py-6 pl-11 pr-1 hover:transition hover:duration-300"
               onClick={handleTickNavigation('previous')}
             >
-              <ChevronLeftIcon className="h-24 w-24 text-gray-50 rtl:rotate-180 rtl:transform" />
+              <ChevronLeftIcon className="size-24 text-gray-50 rtl:rotate-180 rtl:transform" />
             </button>
             <p className="font-space text-32 font-500">{formatString(tick)}</p>
-            <button type="button" aria-label="Next Tick" onClick={handleTickNavigation('next')}>
-              <ChevronRightIcon className="h-24 w-24 rtl:rotate-180 rtl:transform" />
+            <button
+              type="button"
+              aria-label="Next Tick"
+              className="hover:bg-slate-50 flex size-fit items-center justify-center rounded-full py-6 pl-1 pr-11 hover:transition hover:duration-300"
+              onClick={handleTickNavigation('next')}
+            >
+              <ChevronRightIcon className="size-24 rtl:rotate-180 rtl:transform" />
             </button>
           </div>
           {!error && (

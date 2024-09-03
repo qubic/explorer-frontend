@@ -44,14 +44,14 @@ export default function Select({
     <Listbox value={selected} onChange={handleSelect} name={name}>
       <Label
         className={clsxTwMerge(
-          'leading-6 mb-6 block text-sm font-normal text-gray-400',
+          'mb-6 block text-sm font-normal leading-6 text-gray-400',
           !showLabel && 'sr-only'
         )}
       >
         {label}
       </Label>
       <div className={clsxTwMerge('relative w-[150px] font-space sm:w-[225px]', className)}>
-        <ListboxButton className="sm:leading-6 text-primary-800 relative w-full cursor-default rounded-md border border-gray-500 bg-primary-80 py-8 pl-12 pr-16 text-left text-sm shadow-sm hover:cursor-pointer hover:border-white focus:border-gray-60 focus:outline-none focus:ring-2 focus:ring-gray-60 sm:py-16 sm:pl-14 sm:pr-32 sm:text-base">
+        <ListboxButton className="text-primary-800 relative w-full cursor-default rounded-md border border-gray-500 bg-primary-80 py-8 pl-12 pr-16 text-left text-sm shadow-sm hover:cursor-pointer hover:border-white focus:border-gray-60 focus:outline-none focus:ring-2 focus:ring-gray-60 sm:py-16 sm:pl-14 sm:pr-32 sm:text-base sm:leading-6">
           <span className="block truncate leading-tight">{selected?.label}</span>
           <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-10">
             <ChevronDownIcon
@@ -69,7 +69,7 @@ export default function Select({
             <ListboxOption
               key={option.value}
               value={option}
-              className="text-primary-800 group relative cursor-default select-none px-10 py-8 font-space text-sm data-[focus]:bg-[#232A31] data-[selected]:bg-[#18222C] data-[focus]:text-white hover:cursor-pointer sm:px-16 sm:py-10 sm:text-base"
+              className="text-primary-800 data-[focus]:bg-slate-50 group relative cursor-default select-none px-10 py-8 font-space text-sm data-[selected]:bg-[#18222C] data-[focus]:text-white hover:cursor-pointer sm:px-16 sm:py-10 sm:text-base"
             >
               <span className="block truncate font-normal group-data-[selected]:font-semibold">
                 {option.label}
