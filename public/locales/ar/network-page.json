@@ -2,6 +2,7 @@
   "activeAddresses": "العناوين النشطة",
   "amount": "المبلغ",
   "circulatingSupply": "العرض المتداول",
+  "burnedSupply": "العرض المحترق",
   "complete": "مكتمل",
   "currentTick": "التيك الحالي",
   "dataStatus": "حالة البيانات",

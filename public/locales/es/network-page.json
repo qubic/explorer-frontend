@@ -2,6 +2,7 @@
   "activeAddresses": "Direcciones activas",
   "amount": "Monto",
   "circulatingSupply": "Acciones en circulación",
+  "burnedSupply": "Suministro Quemado",
   "complete": "Completo",
   "currentTick": "Tick actual",
   "dataStatus": "Estado de los datos",

@@ -2,6 +2,7 @@
   "activeAddresses": "アクティブアドレス",
   "amount": "金額",
   "circulatingSupply": "流通供給量",
+  "burnedSupply": "燃やされた供給",
   "complete": "完了",
   "currentTick": "現在のティック",
   "dataStatus": "データステータス",

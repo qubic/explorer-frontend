@@ -2,6 +2,7 @@
   "activeAddresses": "活跃地址",
   "amount": "金额",
   "circulatingSupply": "流通供应量",
+  "burnedSupply": "燃烧供应",
   "complete": "完成",
   "currentTick": "当前滴答",
   "dataStatus": "数据状态",

@@ -2,6 +2,7 @@
   "activeAddresses": "Активные адреса",
   "amount": "Сумма",
   "circulatingSupply": "Объем в обращении",
+  "burnedSupply": "Сожжённое Предложение",
   "complete": "Завершено",
   "currentTick": "Текущий тик",
   "dataStatus": "Состояние данных",

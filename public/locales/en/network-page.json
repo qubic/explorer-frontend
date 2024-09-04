@@ -2,6 +2,7 @@
   "activeAddresses": "Active Addresses",
   "amount": "Amount",
   "circulatingSupply": "Circulating Supply",
+  "burnedSupply": "Burned Supply",
   "complete": "Complete",
   "currentTick": "Current Tick",
   "dataStatus": "Data Status",

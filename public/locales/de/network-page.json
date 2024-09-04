@@ -2,6 +2,7 @@
   "activeAddresses": "Aktive Adressen",
   "amount": "Betrag",
   "circulatingSupply": "Umlaufende Versorgung",
+  "burnedSupply": "Verbrannte Lieferung",
   "complete": "Vollständig",
   "currentTick": "Aktueller Tick",
   "dataStatus": "Datenstatus",

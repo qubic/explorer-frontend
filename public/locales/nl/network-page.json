@@ -2,6 +2,7 @@
   "activeAddresses": "Actieve adressen",
   "amount": "Bedrag",
   "circulatingSupply": "Circulerende voorraad",
+  "burnedSupply": "Verbrand Voorraad",
   "complete": "Voltooid",
   "currentTick": "Huidige Tick",
   "dataStatus": "Datastatus",
