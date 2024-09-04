@@ -1,11 +1,11 @@
-import { useCallback, useEffect, useState } from 'react'
+import { memo, useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { InfiniteScroll } from '@app/components/ui'
 import { DotsLoader } from '@app/components/ui/loaders'
-import { useAppDispatch, useAppSelector } from '@app/hooks/redux'
-import type { Address, TransactionWithMoneyFlew } from '@app/store/network/addressSlice'
-import { getTransferTxs, selectTransferTxs } from '@app/store/network/addressSlice'
+import { useLazyGetIndentityTransfersQuery } from '@app/store/apis/archiver-v2.api'
+import type { TransactionV2 } from '@app/store/apis/archiver-v2.types'
+import type { Address } from '@app/store/network/addressSlice'
 import { TxItem } from '../../components'
 
 type Props = {
@@ -15,64 +15,114 @@ type Props = {
 
 export const BATCH_SIZE = 50
 
-export const TICK_SIZE = 100_000
+export const TICK_SIZE = 200_000
 
-export default function Transactions({ addressId, address }: Props) {
+function Transactions({ addressId, address }: Props) {
   const { t } = useTranslation('network-page')
-  const dispatch = useAppDispatch()
-  const {
-    data: transferTxs,
-    isLoading,
-    error,
-    hasMore,
-    lastStartTick,
-    lastEndTick
-  } = useAppSelector(selectTransferTxs)
-  const [displayTransferTxs, setDisplayTransferTxs] = useState<TransactionWithMoneyFlew[]>([])
+  const [startTick, setStartTick] = useState(address.endTick - TICK_SIZE)
+  const [endTick, setEndTick] = useState(address.endTick)
+  const [getIdentityTransfersQuery, { isFetching, error }] = useLazyGetIndentityTransfersQuery({})
+  const [displayTransferTxs, setDisplayTransferTxs] = useState<TransactionV2[]>([])
+  const [txsList, setTxsList] = useState<TransactionV2[]>([])
 
-  const loadMore = useCallback(() => {
-    const remainingTxs = transferTxs.slice(
-      displayTransferTxs.length,
-      displayTransferTxs.length + BATCH_SIZE
-    )
-    if (remainingTxs.length >= BATCH_SIZE) {
-      setDisplayTransferTxs((prev) => [...prev, ...remainingTxs])
-    } else if (!isLoading && hasMore) {
-      const newEndTick = Math.max(0, lastEndTick - 1 - TICK_SIZE)
-      const newStartTick = Math.max(0, lastStartTick - 1 - TICK_SIZE)
-      dispatch(getTransferTxs({ addressId, startTick: newStartTick, endTick: newEndTick }))
+  const [isLoading, setIsLoading] = useState(false)
+
+  const hasMore = startTick > 0
+
+  const fetchTransfers = useCallback(
+    async (start: number, end: number) => {
+      const result = await getIdentityTransfersQuery({
+        addressId,
+        startTick: start,
+        endTick: end
+      }).unwrap()
+
+      return result || []
+    },
+    [getIdentityTransfersQuery, addressId]
+  )
+
+  const fetchRecursive = useCallback(
+    async (start: number, end: number, accumulatedData: TransactionV2[] = []) => {
+      const newTxs = await fetchTransfers(start, end)
+
+      console.log('🚀 ~ fetchRecursive ~ newTxs:', newTxs.length)
+
+      const combinedData = [...new Set(accumulatedData.concat(newTxs))]
+
+      console.log('🚀 ~ fetchRecursive ~ combinedData:', combinedData.length)
+
+      if (combinedData.length < BATCH_SIZE && start > 0) {
+        const newEndTick = Math.max(0, start - 1)
+        const newStartTick = Math.max(0, start - 1 - TICK_SIZE)
+        console.log('ticks in recursive', { newStartTick, newEndTick }, newStartTick - newEndTick)
+        return fetchRecursive(newStartTick, newEndTick, combinedData)
+      }
+
+      return {
+        newTxs: combinedData.sort((a, b) => b.transaction.tickNumber - a.transaction.tickNumber),
+        lastStartTick: start,
+        lastEndTick: end
+      }
+    },
+    [fetchTransfers]
+  )
+
+  const loadMore = useCallback(async () => {
+    if (isLoading || isFetching || !hasMore) return
+
+    setIsLoading(true)
+
+    if (txsList.length < BATCH_SIZE) {
+      const newStartTick = Math.max(0, startTick - 1 - TICK_SIZE)
+      const newEndTick = Math.max(0, startTick - 1)
+      console.log('ticks in loadMore', { newStartTick, newEndTick }, newStartTick - newEndTick)
+      const { newTxs, lastStartTick, lastEndTick } = await fetchRecursive(newStartTick, newEndTick)
+
+      // since there could be some txs in txsList already, we need to merge them and then slice
+      // setTxsList((prev) => [...prev, ...newTxs])
+      const updatedTxList = [...txsList, ...newTxs]
+      //
+      setDisplayTransferTxs((prev) => [...prev, ...updatedTxList.slice(0, BATCH_SIZE)])
+      // Removing the txs that we just added to displayTransferTxs
+      setTxsList(updatedTxList.slice(BATCH_SIZE, updatedTxList.length))
+      // setTxsList((prevTxsList) => prevTxsList.slice(BATCH_SIZE, prevTxsList.length))
+      setStartTick(lastStartTick)
+      setEndTick(lastEndTick)
+    } else {
+      setDisplayTransferTxs((prev) => [...prev, ...txsList.slice(0, BATCH_SIZE)])
+      setTxsList((prevTxsList) => prevTxsList.slice(BATCH_SIZE, prevTxsList.length))
     }
-  }, [
-    transferTxs,
-    displayTransferTxs.length,
-    isLoading,
-    hasMore,
-    lastEndTick,
-    lastStartTick,
-    dispatch,
-    addressId
-  ])
+    setIsLoading(false)
+  }, [startTick, fetchRecursive, isLoading, isFetching, hasMore, txsList])
 
   useEffect(() => {
-    if (!transferTxs.length && address.endTick) {
-      dispatch(
-        getTransferTxs({
-          addressId,
-          startTick: address.endTick - TICK_SIZE,
-          endTick: address.endTick
-        })
-      )
-    }
-  }, [address.endTick, addressId, dispatch, transferTxs.length])
+    let isMounted = true
 
-  useEffect(() => {
-    if (transferTxs.length > 0) {
-      setDisplayTransferTxs((prev) => [
-        ...prev,
-        ...transferTxs.slice(prev.length, prev.length + BATCH_SIZE)
-      ])
+    const initialFetch = async () => {
+      setIsLoading(true)
+      const { newTxs, lastStartTick, lastEndTick } = await fetchRecursive(startTick, endTick)
+
+      if (isMounted) {
+        setDisplayTransferTxs(newTxs.slice(0, BATCH_SIZE))
+        setTxsList(newTxs.slice(BATCH_SIZE, newTxs.length))
+        setStartTick(lastStartTick)
+        setEndTick(lastEndTick)
+        setIsLoading(false)
+      }
     }
-  }, [transferTxs])
+
+    if (displayTransferTxs.length === 0 && endTick) {
+      initialFetch()
+    }
+
+    return () => {
+      isMounted = false
+    }
+  }, [startTick, endTick, fetchRecursive, displayTransferTxs.length])
+
+  console.log('🚀 ~ txsList:', txsList.length)
+  console.log('🚀 ~ displayTransferTxs:', displayTransferTxs.length)
 
   return (
     <InfiniteScroll
@@ -83,19 +133,23 @@ export default function Transactions({ addressId, address }: Props) {
       loader={<DotsLoader showLoadingText />}
       error={error && t('loadingTransactionsError')}
       endMessage={
-        <p className="py-32 text-center text-14 text-gray-50">
+        <p className="py-32 text-center text-sm text-gray-50">
           {displayTransferTxs.length === 0 ? t('noTransactions') : t('allTransactionsLoaded')}
         </p>
       }
-      renderItem={(tx: TransactionWithMoneyFlew) => (
+      renderItem={({ transaction, moneyFlew }: TransactionV2) => (
         <TxItem
-          key={tx.txId}
-          tx={tx}
+          key={transaction.txId}
+          tx={transaction}
           identify={addressId}
           variant="primary"
-          nonExecutedTxIds={tx.moneyFlew ? [] : [tx.txId]}
+          nonExecutedTxIds={moneyFlew ? [] : [transaction.txId]}
         />
       )}
     />
   )
 }
+
+const MemoizedTransactions = memo(Transactions)
+
+export default MemoizedTransactions
