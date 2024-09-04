@@ -1,11 +1,14 @@
+import { archiverApiService } from '@app/services/archiver'
 import { qliApiService } from '@app/services/qli'
 import type { TickOverview } from '@app/services/qli/types'
 import type { RootState } from '@app/store'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 
+type TickOverviewWithBurnedQus = TickOverview & { burnedQus: string }
+
 export interface OverviewState {
-  overview: TickOverview | null
+  overview: TickOverviewWithBurnedQus | null
   isLoading: boolean
   error: string | null
 }
@@ -16,10 +19,16 @@ const initialState: OverviewState = {
   error: null
 }
 
-export const getOverview = createAsyncThunk('network/overview', async () => {
-  const tickOverview = await qliApiService.getTickOverview()
-  return tickOverview
-})
+export const getOverview = createAsyncThunk<TickOverviewWithBurnedQus>(
+  'network/overview',
+  async () => {
+    const [tickOverview, latestStats] = await Promise.all([
+      qliApiService.getTickOverview(),
+      archiverApiService.getLatestStats()
+    ])
+    return { ...tickOverview, burnedQus: latestStats.data.burnedQus }
+  }
+)
 
 const overviewSlice = createSlice({
   name: 'network/overview',
@@ -31,7 +40,7 @@ const overviewSlice = createSlice({
         state.isLoading = true
         state.error = null
       })
-      .addCase(getOverview.fulfilled, (state, action: PayloadAction<TickOverview>) => {
+      .addCase(getOverview.fulfilled, (state, action: PayloadAction<TickOverviewWithBurnedQus>) => {
         state.isLoading = false
         state.overview = action.payload
       })
