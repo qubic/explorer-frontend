@@ -183,7 +183,12 @@ export default function OverviewPage() {
                 />
               ))}
             </div>
-            <PaginationBar pageCount={pageCount} page={page} onPageChange={handlePageChange} />
+            <PaginationBar
+              className="mt-16 justify-center gap-10"
+              pageCount={pageCount}
+              page={page}
+              onPageChange={handlePageChange}
+            />
           </div>
         </CardItem>
       </div>
