@@ -2,6 +2,7 @@
   "activeAddresses": "Endereços ativos",
   "amount": "Quantidade",
   "circulatingSupply": "Oferta circulante",
+  "burnedSupply": "Suprimento Queimado",
   "complete": "Completo",
   "currentTick": "Tick atual",
   "dataStatus": "Status dos dados",

@@ -89,30 +89,28 @@ export default function TickPage() {
         </p>
       </Breadcrumbs>
       <div className="mb-36 mt-24 flex items-center justify-between gap-12">
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-8">
           <div className="flex items-center justify-between gap-10">
             <button
               type="button"
               aria-label="Previous Tick"
-              className="hover:bg-slate-50 flex size-fit rounded-full py-6 pl-11 pr-1 hover:transition hover:duration-300"
+              className="hover:bg-slate-50 flex size-fit rounded-full py-6 pl-11 pr-1 text-gray-50 hover:text-white hover:transition hover:duration-300"
               onClick={handleTickNavigation('previous')}
             >
-              <ChevronLeftIcon className="size-24 text-gray-50 rtl:rotate-180 rtl:transform" />
+              <ChevronLeftIcon className="size-24 rtl:rotate-180 rtl:transform" />
             </button>
             <p className="font-space text-32 font-500">{formatString(tick)}</p>
             <button
               type="button"
               aria-label="Next Tick"
-              className="hover:bg-slate-50 flex size-fit items-center justify-center rounded-full py-6 pl-1 pr-11 hover:transition hover:duration-300"
+              className="hover:bg-slate-50 flex size-fit items-center justify-center rounded-full py-6 pl-1 pr-11 text-gray-50 hover:text-white hover:transition hover:duration-300"
               onClick={handleTickNavigation('next')}
             >
               <ChevronRightIcon className="size-24 rtl:rotate-180 rtl:transform" />
             </button>
           </div>
           {!error && (
-            <p className="font-space text-14 leading-20 text-gray-50">
-              {formatDate(block?.tick.timestamp)}
-            </p>
+            <p className="font-space text-sm text-gray-50">{formatDate(block?.tick.timestamp)}</p>
           )}
         </div>
         <div className="hidden md:block">
@@ -129,7 +127,7 @@ export default function TickPage() {
             title={t('signature')}
             variant="secondary"
             content={
-              <p className="break-all font-space text-14 leading-20 text-gray-50">
+              <p className="break-all font-space text-sm text-gray-50">
                 {formatBase64(block?.tick.signatureHex)}
               </p>
             }
@@ -153,7 +151,7 @@ export default function TickPage() {
       {!error && (
         <div className="flex flex-col gap-16">
           <div className="flex items-center justify-between gap-10">
-            <p className="font-space text-20 font-500 leading-26">{t('transactions')}</p>
+            <p className="font-space text-xl font-500">{t('transactions')}</p>
             <Select
               label="Transactions Type"
               options={isMobile ? TRANSACTION_OPTIONS_MOBILE : TRANSACTION_OPTIONS}
@@ -166,7 +164,7 @@ export default function TickPage() {
             hasMore={hasMore}
             loader={<DotsLoader showLoadingText />}
             endMessage={
-              <p className="py-32 text-center text-14 text-gray-50">
+              <p className="py-32 text-center text-sm text-gray-50">
                 {displayTransactions.length === 0
                   ? t('noTransactions')
                   : t('allTransactionsLoaded')}

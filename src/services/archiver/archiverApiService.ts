@@ -4,6 +4,7 @@ import type {
   GetAddressTransferTransactionsResponse,
   GetBalanceResponse,
   GetEpochComputorsResponse,
+  GetLatestStatsResponse,
   GetRichListResponse,
   GetStatusResponse,
   GetTickApprovedTransactionsResponse,
@@ -27,6 +28,10 @@ const archiverApiService = {
   getStatus: async (): Promise<GetStatusResponse> => {
     const url = ARCHIVER_API_ENDPOINTS.STATUS
     return fetchData<GetStatusResponse>(url)
+  },
+  getLatestStats: async (): Promise<GetLatestStatsResponse> => {
+    const url = ARCHIVER_API_ENDPOINTS.LATEST_STATS
+    return fetchData<GetLatestStatsResponse>(url)
   },
   getAddressTransferTransactions: async (
     addressId: string,

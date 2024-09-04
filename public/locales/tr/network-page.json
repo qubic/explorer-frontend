@@ -2,6 +2,7 @@
   "activeAddresses": "Aktif adresler",
   "amount": "Miktar",
   "circulatingSupply": "Dolaşımdaki arz",
+  "burnedSupply": "Yakılmış Tedarik",
   "complete": "Tamamlanmış",
   "currentTick": "Mevcut tik",
   "dataStatus": "Veri durumu",
