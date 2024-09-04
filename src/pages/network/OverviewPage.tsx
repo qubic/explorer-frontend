@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import {
@@ -39,79 +39,88 @@ export default function OverviewPage() {
     dispatch(getOverview())
   }, [dispatch])
 
-  const ticks = overview?.ticks || []
+  const ticks = useMemo(() => overview?.ticks || [], [overview?.ticks])
   const pageCount = Math.ceil(ticks.length / PAGE_SIZE)
-  const startIndex = (page - 1) * PAGE_SIZE
-  const displayedTicks = ticks.slice(startIndex, startIndex + PAGE_SIZE)
+  const startIndex = useMemo(() => (page - 1) * PAGE_SIZE, [page])
+  const displayedTicks = useMemo(
+    () => ticks.slice(startIndex, startIndex + PAGE_SIZE),
+    [startIndex, ticks]
+  )
 
-  const handlePageChange = (value: number) => {
+  const handlePageChange = useCallback((value: number) => {
     setPage(value)
-  }
+  }, [])
 
-  const cardData = [
-    {
-      id: 'price',
-      icon: DollarCoinIcon,
-      label: t('price'),
-      value: `$${overview?.price}`
-    },
-    {
-      id: 'market-cap',
-      icon: CoinsStackIcon,
-      label: t('marketCap'),
-      value: `$${formatString(overview?.marketCapitalization)}`
-    },
-    {
-      id: 'current-epoch',
-      icon: SandClockIcon,
-      label: t('epoch'),
-      value: formatString(overview?.currentEpoch)
-    },
-    {
-      id: 'circulating-supply',
-      icon: CirculatingCoinsIcon,
-      label: t('circulatingSupply'),
-      value: formatString(overview?.supply)
-    },
-    {
-      id: 'active-addresses',
-      icon: WalletIcon,
-      label: t('activeAddresses'),
-      value: formatString(overview?.numberOfEntities)
-    },
-    {
-      id: 'current-tick',
-      icon: CurrentTickIcon,
-      label: t('currentTick'),
-      value: formatString(overview?.currentTick)
-    },
-    {
-      id: 'ticks-this-epoch',
-      icon: EpochTicksIcon,
-      label: t('ticksThisEpoch'),
-      value: formatString(overview?.numberOfTicks)
-    },
-    {
-      id: 'empty-ticks',
-      icon: EmptyTicksIcon,
-      label: (
-        <span className="flex items-center gap-10 text-inherit">
-          {t('empty')}
-          <Infocon />
-        </span>
-      ),
-      value: formatString(overview?.numberOfEmptyTicks)
-    },
-    {
-      id: 'tick-quality',
-      icon: StarsIcon,
-      label: t('tickQuality'),
-      value: useMemo(
-        () => getTickQuality(overview?.numberOfTicks, overview?.numberOfEmptyTicks),
-        [overview?.numberOfEmptyTicks, overview?.numberOfTicks]
-      )
-    }
-  ]
+  const cardData = useMemo(
+    () => [
+      {
+        id: 'price',
+        icon: DollarCoinIcon,
+        label: t('price'),
+        value: `$${overview?.price}`
+      },
+      {
+        id: 'market-cap',
+        icon: CoinsStackIcon,
+        label: t('marketCap'),
+        value: `$${formatString(overview?.marketCapitalization)}`
+      },
+      {
+        id: 'current-epoch',
+        icon: SandClockIcon,
+        label: t('epoch'),
+        value: formatString(overview?.currentEpoch)
+      },
+      {
+        id: 'circulating-supply',
+        icon: CirculatingCoinsIcon,
+        label: t('circulatingSupply'),
+        value: formatString(overview?.supply)
+      },
+      {
+        id: 'burned-supply',
+        icon: CirculatingCoinsIcon,
+        label: t('burnedSupply'),
+        value: formatString(overview?.burnedQus)
+      },
+      {
+        id: 'active-addresses',
+        icon: WalletIcon,
+        label: t('activeAddresses'),
+        value: formatString(overview?.numberOfEntities)
+      },
+      {
+        id: 'current-tick',
+        icon: CurrentTickIcon,
+        label: t('currentTick'),
+        value: formatString(overview?.currentTick)
+      },
+      {
+        id: 'ticks-this-epoch',
+        icon: EpochTicksIcon,
+        label: t('ticksThisEpoch'),
+        value: formatString(overview?.numberOfTicks)
+      },
+      {
+        id: 'empty-ticks',
+        icon: EmptyTicksIcon,
+        label: (
+          <span className="flex items-center gap-10 text-inherit">
+            {t('empty')}
+            <Infocon />
+          </span>
+        ),
+        value: formatString(overview?.numberOfEmptyTicks)
+      },
+      {
+        id: 'tick-quality',
+        icon: StarsIcon,
+        label: t('tickQuality'),
+        value: getTickQuality(overview?.numberOfTicks, overview?.numberOfEmptyTicks)
+      }
+    ],
+    [t, overview]
+  )
 
   if (isLoading) {
     return <LinearProgress />
@@ -121,7 +130,7 @@ export default function OverviewPage() {
     <div className="w-full py-32">
       <div className="mx-auto flex max-w-[960px] flex-1 flex-col gap-16 px-16">
         <div className="grid gap-16 md:grid-flow-col">
-          {cardData.slice(0, 2).map((card) => (
+          {cardData.slice(0, 3).map((card) => (
             <OverviewCardItem
               key={card.id}
               icon={card.icon}
@@ -131,7 +140,7 @@ export default function OverviewPage() {
           ))}
         </div>
         <div className="grid gap-16 827px:grid-flow-col">
-          {cardData.slice(2, 5).map((card) => (
+          {cardData.slice(3, 6).map((card) => (
             <OverviewCardItem
               key={card.id}
               icon={card.icon}
@@ -141,7 +150,7 @@ export default function OverviewPage() {
           ))}
         </div>
         <div className="grid grid-cols-2 gap-16 827px:grid-cols-4">
-          {cardData.slice(5, 9).map((card) => (
+          {cardData.slice(6, 10).map((card) => (
             <OverviewCardItem
               key={card.id}
               icon={card.icon}
