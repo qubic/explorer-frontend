@@ -1,6 +1,6 @@
 import { envConfig } from '@app/configs'
 
-const BASE_URL = `${envConfig.ARCHIVER_API_URL}/v1`
+const BASE_URL = envConfig.ARCHIVER_API_URL
 
 const formatTick = (tick: string) => parseInt(tick.replace(/,/g, ''), 10)
 
