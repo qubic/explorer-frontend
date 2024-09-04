@@ -87,6 +87,22 @@ export interface GetStatusResponse {
   processedTickIntervalsPerEpoch: ProcessedTickIntervalPerEpoch[]
 }
 
+export interface GetLatestStatsResponse {
+  data: {
+    timestamp: string
+    circulatingSupply: string
+    activeAddresses: number
+    price: number
+    marketCap: string
+    epoch: number
+    currentTick: number
+    ticksInCurrentEpoch: number
+    emptyTicksInCurrentEpoch: number
+    epochTickQuality: number
+    burnedQus: string
+  }
+}
+
 export interface GetAddressTransferTransactionsResponse {
   transferTransactionsPerTick: {
     tickNumber: number
