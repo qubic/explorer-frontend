@@ -16,7 +16,7 @@ export interface UseLatestTransactionsResult {
 
 export default function useLatestTransactions(
   addressId: string,
-  addressEndTick: Address['endTick'] = 0
+  addressEndTick: Address['endTick']
 ): UseLatestTransactionsResult {
   const [startTick, setStartTick] = useState(Math.max(0, addressEndTick - TICK_SIZE))
   const [transactions, setTransactions] = useState<TransactionV2[]>([])
