@@ -6,7 +6,7 @@ import { getHistoricalTxs, selectHistoricalTxs } from '@app/store/network/addres
 import type { TransactionWithStatus } from '@app/store/network/txSlice'
 import { useCallback, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { TxItem } from '../../components'
+import { TxItem } from '../../../components'
 
 type Props = {
   addressId: string

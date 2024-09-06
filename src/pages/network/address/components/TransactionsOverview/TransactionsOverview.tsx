@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Tabs } from '@app/components/ui'
 import type { Address } from '@app/store/network/addressSlice'
 import { memo } from 'react'
-import { useLatestTransactions } from '../hooks'
+import { useLatestTransactions } from '../../hooks'
 import HistoricalTxs from './HistoricalTxs'
 import LatestTransactions from './LatestTransactions'
 

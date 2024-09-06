@@ -4,7 +4,7 @@ import { InfiniteScroll } from '@app/components/ui'
 import { DotsLoader } from '@app/components/ui/loaders'
 import type { TransactionV2 } from '@app/store/apis/archiver-v2.types'
 import { useCallback } from 'react'
-import { TxItem } from '../../components'
+import { TxItem } from '../../../components'
 
 type Props = {
   addressId: string
