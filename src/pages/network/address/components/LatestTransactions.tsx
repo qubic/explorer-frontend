@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { InfiniteScroll } from '@app/components/ui'
 import { DotsLoader } from '@app/components/ui/loaders'
 import type { TransactionV2 } from '@app/store/apis/archiver-v2.types'
-import { memo } from 'react'
+import { useCallback } from 'react'
 import { TxItem } from '../../components'
 
 type Props = {
@@ -15,8 +15,28 @@ type Props = {
   error: string | null
 }
 
-function Transactions({ addressId, transactions, loadMore, hasMore, isLoading, error }: Props) {
+export default function LatestTransactions({
+  addressId,
+  transactions,
+  loadMore,
+  hasMore,
+  isLoading,
+  error
+}: Props) {
   const { t } = useTranslation('network-page')
+
+  const renderTxItem = useCallback(
+    ({ transaction, moneyFlew }: TransactionV2) => (
+      <TxItem
+        key={transaction.txId}
+        tx={transaction}
+        identity={addressId}
+        variant="primary"
+        nonExecutedTxIds={moneyFlew ? [] : [transaction.txId]}
+      />
+    ),
+    [addressId]
+  )
 
   return (
     <InfiniteScroll
@@ -31,19 +51,7 @@ function Transactions({ addressId, transactions, loadMore, hasMore, isLoading, e
           {transactions.length === 0 ? t('noTransactions') : t('allTransactionsLoaded')}
         </p>
       }
-      renderItem={({ transaction, moneyFlew }: TransactionV2) => (
-        <TxItem
-          key={transaction.txId}
-          tx={transaction}
-          identity={addressId}
-          variant="primary"
-          nonExecutedTxIds={moneyFlew ? [] : [transaction.txId]}
-        />
-      )}
+      renderItem={renderTxItem}
     />
   )
 }
-
-const MemoizedTransactions = memo(Transactions)
-
-export default MemoizedTransactions
