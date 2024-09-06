@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 
-import { Alert, Breadcrumbs, Tabs } from '@app/components/ui'
+import { Alert, Breadcrumbs } from '@app/components/ui'
 import { ChevronToggleButton, CopyTextButton } from '@app/components/ui/buttons'
 import { LinearProgress } from '@app/components/ui/loaders'
 import { useAppDispatch, useAppSelector } from '@app/hooks/redux'
@@ -10,7 +10,7 @@ import { getAddress, resetState, selectAddress } from '@app/store/network/addres
 import { getOverview, selectOverview } from '@app/store/network/overviewSlice'
 import { formatEllipsis, formatString } from '@app/utils'
 import { CardItem, HomeLink, TickLink } from '../components'
-import { HistoricalTxs, Transactions } from './components'
+import { TransactionsOverview } from './components'
 
 export default function AddressPage() {
   const { t } = useTranslation('network-page')
@@ -116,23 +116,7 @@ export default function AddressPage() {
           </div>
         )}
       </div>
-      <div className="mt-40">
-        <p className="my-10 font-space text-20 font-500 leading-26">{t('transactions')}</p>
-        <Tabs>
-          <Tabs.List>
-            <Tabs.Tab>{t('latest')}</Tabs.Tab>
-            <Tabs.Tab>{t('historical')}</Tabs.Tab>
-          </Tabs.List>
-          <Tabs.Panels>
-            <Tabs.Panel>
-              <Transactions addressId={addressId} address={address} />
-            </Tabs.Panel>
-            <Tabs.Panel>
-              <HistoricalTxs addressId={addressId} />
-            </Tabs.Panel>
-          </Tabs.Panels>
-        </Tabs>
-      </div>
+      <TransactionsOverview address={address} addressId={addressId} />
     </div>
   )
 }
