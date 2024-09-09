@@ -1,0 +1,11 @@
+{
+  "address": "Адрес",
+  "balance": "Баланс",
+  "noResult": "Результатов нет",
+  "search": "Поиск",
+  "tick": "Тик",
+  "from": "от",
+  "to": "до",
+  "transaction": "Транзакция",
+  "transactions": "Транзакции"
+}

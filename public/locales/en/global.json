@@ -1,0 +1,11 @@
+{
+  "address": "Address",
+  "balance": "Balance",
+  "noResult": "No results",
+  "search": "Search",
+  "tick": "Tick",
+  "from": "from",
+  "to": "to",
+  "transaction": "Transaction",
+  "transactions": "Transactions"
+}

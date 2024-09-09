@@ -1,0 +1,8 @@
+{
+  "pageNotFound": "Sayfa bulunamadı",
+  "error404Message": "Tebrikler! 404 sayfamızı bulmayı başaran seçkinlerden birisiniz.",
+  "backToHomePage": "Ana sayfaya dön",
+  "title": "Hata!",
+  "unexpectedError": "Üzgünüz, beklenmeyen bir hata oluştu.",
+  "retry": "Tekrar dene"
+}
