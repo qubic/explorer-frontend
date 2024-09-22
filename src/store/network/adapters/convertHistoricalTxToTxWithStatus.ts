@@ -1,7 +1,6 @@
 import type { HistoricalTx } from '@app/services/qli'
-import { TxTypeEnum } from '@app/types'
-import { isTransferTx } from '@app/utils/qubic-ts'
-import type { TransactionWithStatus } from '../txSlice'
+import { type TransactionWithStatus } from '@app/types'
+import { getTxType } from '@app/utils'
 import convertHistoricalTxToLatestTx from './convertHistoricalTxToLatestTx'
 
 export default function convertHistoricalTxToTxWithStatus(
@@ -12,9 +11,7 @@ export default function convertHistoricalTxToTxWithStatus(
     status: {
       txId: historicalTx.id,
       moneyFlew: historicalTx.moneyFlew,
-      txType: isTransferTx(historicalTx.sourceId, historicalTx.destId, historicalTx.amount)
-        ? TxTypeEnum.TRANSFER
-        : TxTypeEnum.PROTOCOL
+      txType: getTxType(historicalTx)
     }
   }
 }
