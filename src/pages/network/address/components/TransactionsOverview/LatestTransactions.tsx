@@ -26,13 +26,14 @@ export default function LatestTransactions({
   const { t } = useTranslation('network-page')
 
   const renderTxItem = useCallback(
-    ({ transaction, moneyFlew }: TransactionV2) => (
+    ({ transaction, moneyFlew, timestamp }: TransactionV2) => (
       <TxItem
         key={transaction.txId}
         tx={transaction}
         identity={addressId}
         variant="primary"
         nonExecutedTxIds={moneyFlew ? [] : [transaction.txId]}
+        timestamp={timestamp}
       />
     ),
     [addressId]
