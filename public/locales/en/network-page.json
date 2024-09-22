@@ -53,5 +53,6 @@
   "rank": "Rank",
   "addressID": "Address ID",
   "richListLoadFailed": "Error: Failed to load rich list. Please refresh the page or try again later.",
-  "richListWarning": "Rich list data is updated at the beginning of each epoch"
+  "richListWarning": "Rich list data is updated at the beginning of each epoch",
+  "timestamp": "Timestamp"
 }

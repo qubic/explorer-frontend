@@ -90,7 +90,7 @@ export default function SearchBar() {
         closeOnOutsideClick
         onClose={handleCloseCallback}
       >
-        <div className="bg-primary-70 h-fit w-full">
+        <div className="h-fit w-full bg-primary-70">
           {isLoading && (
             <div className="absolute w-full">
               <LinearProgress />

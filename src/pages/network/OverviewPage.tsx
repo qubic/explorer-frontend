@@ -13,7 +13,7 @@ import {
   StarsIcon,
   WalletIcon
 } from '@app/assets/icons'
-import { PaginationBar } from '@app/components/ui'
+import { PaginationBar, Tooltip } from '@app/components/ui'
 import { LinearProgress } from '@app/components/ui/loaders'
 import { useAppDispatch, useAppSelector } from '@app/hooks/redux'
 import { getOverview, selectOverview } from '@app/store/network/overviewSlice'
@@ -105,9 +105,11 @@ export default function OverviewPage() {
         id: 'empty-ticks',
         icon: EmptyTicksIcon,
         label: (
-          <span className="flex items-center gap-10 text-inherit">
+          <span className="flex items-center gap-4 text-inherit">
             {t('empty')}
-            <Infocon />
+            <Tooltip content={t('emptyTooltip')}>
+              <Infocon className="size-16 shrink-0" />
+            </Tooltip>
           </span>
         ),
         value: formatString(overview?.numberOfEmptyTicks)

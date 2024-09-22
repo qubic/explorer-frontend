@@ -9,31 +9,6 @@ const formatString = (string: string | number | undefined | null) => {
   return String(string)
 }
 
-const formatDate = (dateString: string | undefined) => {
-  const options = {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-    hour: 'numeric',
-    minute: 'numeric',
-    second: 'numeric',
-    timeZoneName: 'short',
-    hour12: true
-  } as const
-
-  if (dateString) {
-    let date
-    if (dateString.includes('T')) {
-      date = new Date(dateString)
-    } else {
-      const timestamp = parseInt(dateString, 10) // Include the radix parameter
-      date = new Date(timestamp)
-    }
-    return new Intl.DateTimeFormat('en-US', options).format(date) // Format date
-  }
-  return ''
-}
-
 function formatEllipsis(str = '') {
   if (str.length > 10) {
     return `${str.slice(0, 5)}...${str.slice(-5)}`
@@ -67,5 +42,7 @@ function copyText(textToCopy: string) {
   }
 }
 
+export * from './date'
 export * from './styles'
-export { copyText, formatBase64, formatDate, formatEllipsis, formatString }
+export * from './transactions'
+export { copyText, formatBase64, formatEllipsis, formatString }
