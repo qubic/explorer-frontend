@@ -1,10 +1,10 @@
-import { Children, Fragment } from 'react'
+import { Children, Fragment, memo } from 'react'
 
 type Props = {
   children?: React.ReactNode | React.ReactNode[]
 }
 
-export default function Breadcrumbs({ children }: Props) {
+function Breadcrumbs({ children }: Props) {
   return (
     <nav aria-label="Breadcrumbs" className="flex">
       <ol className="flex items-center font-sans">
@@ -22,3 +22,7 @@ export default function Breadcrumbs({ children }: Props) {
     </nav>
   )
 }
+
+const MemoizedBreadcrumbs = memo(Breadcrumbs)
+
+export default MemoizedBreadcrumbs
