@@ -3,9 +3,10 @@ import { InfiniteScroll } from '@app/components/ui'
 import { DotsLoader } from '@app/components/ui/loaders'
 import { useAppDispatch, useAppSelector } from '@app/hooks/redux'
 import { getHistoricalTxs, selectHistoricalTxs } from '@app/store/network/addressSlice'
+import type { TransactionWithStatus } from '@app/types'
 import { useCallback, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { TxItem } from '../../components'
+import { TxItem } from '../../../components'
 
 type Props = {
   addressId: string
@@ -19,6 +20,20 @@ export default function HistoricalTxs({ addressId }: Props) {
   const loadMoreTxs = useCallback(() => {
     dispatch(getHistoricalTxs(addressId))
   }, [dispatch, addressId])
+
+  const renderTxItem = useCallback(
+    ({ tx, status }: TransactionWithStatus) => (
+      <TxItem
+        key={tx.txId}
+        tx={tx}
+        identity={addressId}
+        variant="primary"
+        isHistoricalTx
+        nonExecutedTxIds={status?.moneyFlew ? [] : [status?.txId]}
+      />
+    ),
+    [addressId]
+  )
 
   useEffect(() => {
     if (historicalTxs.length === 0) {
@@ -47,16 +62,7 @@ export default function HistoricalTxs({ addressId }: Props) {
             {historicalTxs.length === 0 ? t('noTransactions') : t('allTransactionsLoaded')}
           </p>
         }
-        renderItem={({ tx, status }) => (
-          <TxItem
-            key={tx.txId}
-            tx={tx}
-            identify={addressId}
-            variant="primary"
-            isHistoricalTx
-            nonExecutedTxIds={status?.moneyFlew ? [] : [status?.txId]}
-          />
-        )}
+        renderItem={renderTxItem}
       />
     </div>
   )

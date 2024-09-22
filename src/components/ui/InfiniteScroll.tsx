@@ -3,8 +3,8 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 
 import { ArrowUpIcon } from '@app/assets/icons'
 import { Alert } from '@app/components/ui'
+import { DotsLoader } from '@app/components/ui/loaders'
 import { clsxTwMerge } from '@app/utils'
-import { DotsLoader } from './loaders'
 
 interface InfiniteScrollProps<T> {
   items: T[] // Array of items to display
@@ -36,8 +36,8 @@ export default function InfiniteScroll<T>({
   const [internalError, setInternalError] = useState<string | null>(null)
   const [showScrollToTop, setShowScrollToTop] = useState<boolean>(false)
 
-  const isLoading = externalIsLoading !== undefined ? externalIsLoading : internalIsLoading
-  const error = externalError !== undefined ? externalError : internalError
+  const isLoading = externalIsLoading ?? internalIsLoading
+  const error = externalError ?? internalError
 
   const handleLoadMore = useCallback(async () => {
     try {
@@ -69,22 +69,29 @@ export default function InfiniteScroll<T>({
     [handleLoadMore, hasMore, isLoading, threshold]
   )
 
-  const handleScrollToTop = () => {
+  const handleScrollToTop = useCallback(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' })
-  }
+  }, [])
+
+  const handleScroll = useCallback(() => {
+    if (window.scrollY > window.innerHeight) {
+      setShowScrollToTop(true)
+    } else {
+      setShowScrollToTop(false)
+    }
+  }, [])
 
   useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > window.innerHeight) {
-        setShowScrollToTop(true)
-      } else {
-        setShowScrollToTop(false)
-      }
-    }
-
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
+  }, [handleScroll])
+
+  const renderStatus = useCallback(() => {
+    if (error) return <Alert variant="error">{error}</Alert>
+    if (isLoading) return loader
+    if (!hasMore && endMessage) return endMessage
+    return null
+  }, [error, isLoading, loader, hasMore, endMessage])
 
   return (
     <div className="relative">
@@ -98,20 +105,15 @@ export default function InfiniteScroll<T>({
           </li>
         ))}
       </ul>
-      {isLoading && loader}
-      {!hasMore && !isLoading && endMessage}
-      {error && (
-        <Alert variant="error" className="my-16">
-          {error}
-        </Alert>
-      )}
+
+      {renderStatus()}
 
       {showScrollToTop && (
         <button
           type="button"
           aria-label="Scroll to top"
           onClick={handleScrollToTop}
-          className="fixed bottom-16 right-16 rounded-full border border-gray-60 bg-primary-80 p-12 text-gray-60 shadow-lg hover:border-gray-50 hover:text-gray-50"
+          className="fixed bottom-16 right-16 rounded-full border border-gray-60 bg-primary-80 p-12 text-gray-60 shadow-lg transition duration-300 hover:border-gray-50 hover:text-gray-50"
         >
           <ArrowUpIcon className="size-24" />
         </button>

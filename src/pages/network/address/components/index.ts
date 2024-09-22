@@ -1,2 +1,2 @@
-export { default as HistoricalTxs } from './HistoricalTxs'
-export { default as Transactions } from './Transactions'
+export { default as AddressDetails } from './AddressDetails'
+export { default as TransactionsOverview } from './TransactionsOverview/TransactionsOverview'

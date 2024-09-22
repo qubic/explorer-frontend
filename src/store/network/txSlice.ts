@@ -1,17 +1,9 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 
-import type { Transaction, TransactionStatus } from '@app/services/archiver'
-import { archiverApiService } from '@app/services/archiver'
 import { qliApiService } from '@app/services/qli'
 import type { RootState } from '@app/store'
-import { TxTypeEnum, type TxEra, type TxType } from '@app/types'
-import { isTransferTx } from '@app/utils/qubic-ts'
+import type { TransactionWithStatus, TxEra } from '@app/types'
 import { convertHistoricalTxToTxWithStatus } from './adapters'
-
-export type TransactionWithStatus = {
-  tx: Transaction
-  status: TransactionStatus & { txType: TxType }
-}
 
 export interface TxState {
   txWithStatus: TransactionWithStatus | null
@@ -31,7 +23,7 @@ type GetTxArgs = {
 }
 
 export const getTx = createAsyncThunk<
-  TransactionWithStatus,
+  TransactionWithStatus | null,
   GetTxArgs,
   {
     state: RootState
@@ -54,19 +46,7 @@ export const getTx = createAsyncThunk<
     return historicalTx
   }
 
-  const { transaction } = await archiverApiService.getTransaction(txId)
-  const { transactionStatus } = isTransferTx(
-    transaction.sourceId,
-    transaction.destId,
-    transaction.amount
-  )
-    ? await archiverApiService.getTransactionStatus(txId)
-    : { transactionStatus: { txId, moneyFlew: false, txType: TxTypeEnum.PROTOCOL } }
-
-  return {
-    tx: transaction,
-    status: { ...transactionStatus, txType: TxTypeEnum.TRANSFER }
-  }
+  return null
 })
 
 const txSlice = createSlice({

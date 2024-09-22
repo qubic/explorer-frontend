@@ -1,3 +1,5 @@
+import type { Transaction, TransactionStatus } from '@app/services/archiver'
+
 export type Language = {
   id: string
   label: string
@@ -11,3 +13,9 @@ export enum TxTypeEnum {
 }
 
 export type TxType = keyof typeof TxTypeEnum
+
+export type TransactionWithStatus = {
+  tx: Transaction
+  status: TransactionStatus & { txType: TxType }
+  timestamp?: string
+}
