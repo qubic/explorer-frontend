@@ -1,8 +1,9 @@
 import { useTranslation } from 'react-i18next'
 
 import type { Transaction } from '@app/services/archiver'
-import { formatString } from '@app/utils'
+import { formatDate, formatString } from '@app/utils'
 import type { Transfer } from '@app/utils/qubic-ts'
+import { useMemo } from 'react'
 import AddressLink from '../AddressLink'
 import SubCardItem from '../SubCardItem'
 import TickLink from '../TickLink'
@@ -15,6 +16,7 @@ type Props = {
   entries: Transfer[]
   isHistoricalTx?: boolean
   variant?: TxItemVariant
+  timestamp?: string
 }
 
 function TransactionDetailsWrapper({
@@ -37,11 +39,13 @@ export default function TransactionDetails({
   txDetails: { txId, sourceId, tickNumber, destId, inputType, amount },
   entries,
   isHistoricalTx = false,
+  timestamp,
   variant = 'primary'
 }: Props) {
   const { t } = useTranslation('network-page')
 
   const isSecondaryVariant = variant === 'secondary'
+  const { date, time } = useMemo(() => formatDate(timestamp, { split: true }), [timestamp])
 
   return (
     <TransactionDetailsWrapper variant={variant}>
@@ -100,6 +104,19 @@ export default function TransactionDetails({
           content={
             <p className="font-space text-sm">
               {formatString(inputType)} {inputType === 0 ? 'Standard' : 'SC'}
+            </p>
+          }
+        />
+      )}
+
+      {timestamp && (
+        <SubCardItem
+          title={t('timestamp')}
+          variant={variant}
+          content={
+            <p className="font-space text-sm">
+              <span className="text-white">{date}</span>{' '}
+              <span className="text-gray-50">{time}</span>
             </p>
           }
         />
