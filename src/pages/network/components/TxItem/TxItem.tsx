@@ -19,6 +19,7 @@ type Props = {
   nonExecutedTxIds: string[]
   variant?: TxItemVariant
   isHistoricalTx?: boolean
+  timestamp?: string
 }
 
 function TxItem({
@@ -26,7 +27,8 @@ function TxItem({
   identity,
   nonExecutedTxIds,
   variant = 'primary',
-  isHistoricalTx = false
+  isHistoricalTx = false,
+  timestamp
 }: Props) {
   const [entries, setEntries] = useState<Transfer[]>([])
   const [detailsOpen, setDetailsOpen] = useState(false)
@@ -69,6 +71,7 @@ function TxItem({
           isHistoricalTx={isHistoricalTx}
           variant={variant}
           entries={entries}
+          timestamp={timestamp}
         />
       </>
     )
@@ -121,6 +124,7 @@ function TxItem({
           isHistoricalTx={isHistoricalTx}
           variant={variant}
           entries={entries}
+          timestamp={timestamp}
         />
       )}
     </CardItem>
