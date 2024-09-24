@@ -16,8 +16,7 @@ cd <project-directory-name>
 
 ### Step 2: Configure Environment Variables
 
-Before running the project, you must configure environment-specific variables for development and
-production environments.
+Before running the project, you must configure environment-specific variables for development environment.
 
 - **Development Environment**:
 
@@ -30,23 +29,9 @@ production environments.
   Open this file and add the development API URL:
 
   ```
+  VITE_ENABLE_PROXY=true
   VITE_QLI_API_URL=/dev-proxy-qli-api
   VITE_ARCHIVER_API_URL=/dev-proxy-archiver-api
-  ```
-
-- **Production Environment**:
-
-  Copy the `.env.example` file, renaming it to `.env.production.local`:
-
-  ```
-  cp .env.production.local.example .env.production.local
-  ```
-
-  Then, set the production API URL:
-
-  ```
-  VITE_QLI_API_URL=https://api.qubic.li
-  VITE_ARCHIVER_API_URL=https://rpc.qubic.org/v1
   ```
 
 Ensure these files are not committed to the repository to protect sensitive information.

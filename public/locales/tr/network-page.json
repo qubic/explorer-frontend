@@ -53,5 +53,6 @@
   "rank": "Rütbe",
   "addressID": "Adres Kimliği",
   "richListLoadFailed": "Hata: Zenginler listesi yüklenemedi. Lütfen sayfayı yenileyin veya daha sonra tekrar deneyin.",
-  "richListWarning": "Zenginler listesi verileri her dönemin başında güncellenir"
+  "richListWarning": "Zenginler listesi verileri her dönemin başında güncellenir",
+  "timestamp": "Zaman damgası"
 }

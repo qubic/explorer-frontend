@@ -15,18 +15,20 @@ import type { TxItemVariant } from './TxItem.types'
 
 type Props = {
   tx: Omit<Transaction, 'inputSize' | 'signatureHex'>
-  identify?: string
+  identity?: string
   nonExecutedTxIds: string[]
   variant?: TxItemVariant
   isHistoricalTx?: boolean
+  timestamp?: string
 }
 
 function TxItem({
   tx: { txId, sourceId, tickNumber, destId, inputType, amount, inputHex },
-  identify,
+  identity,
   nonExecutedTxIds,
   variant = 'primary',
-  isHistoricalTx = false
+  isHistoricalTx = false,
+  timestamp
 }: Props) {
   const [entries, setEntries] = useState<Transfer[]>([])
   const [detailsOpen, setDetailsOpen] = useState(false)
@@ -69,6 +71,7 @@ function TxItem({
           isHistoricalTx={isHistoricalTx}
           variant={variant}
           entries={entries}
+          timestamp={timestamp}
         />
       </>
     )
@@ -82,16 +85,16 @@ function TxItem({
           isTransferTx={isTransferTransaction}
         />
         <div className="flex flex-grow flex-col items-start gap-8 sm:flex-row sm:items-center sm:justify-between">
-          {identify ? (
+          {identity ? (
             <div className="flex items-center gap-8">
-              {identify === sourceId ? (
+              {identity === sourceId ? (
                 <ArrowDownIcon className="size-12 text-error-30" />
               ) : (
                 <ArrowUpIcon className="size-12 text-success-30" />
               )}
               <AddressLink
                 className="text-base"
-                value={identify === sourceId ? destId : sourceId}
+                value={identity === sourceId ? destId : sourceId}
                 copy
                 ellipsis
               />
@@ -121,6 +124,7 @@ function TxItem({
           isHistoricalTx={isHistoricalTx}
           variant={variant}
           entries={entries}
+          timestamp={timestamp}
         />
       )}
     </CardItem>

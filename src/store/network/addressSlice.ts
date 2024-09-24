@@ -1,21 +1,13 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 
-import { BATCH_SIZE, TICK_SIZE } from '@app/pages/network/address/components/Transactions'
-import type { Balance, Transaction } from '@app/services/archiver'
+import type { Balance } from '@app/services/archiver'
 import { archiverApiService } from '@app/services/archiver'
 import type { ReportedValues } from '@app/services/qli'
 import { qliApiService } from '@app/services/qli'
 import type { RootState } from '@app/store'
-import { TxTypeEnum } from '@app/types'
+import type { TransactionWithStatus } from '@app/types'
 import { handleThunkError } from '@app/utils/error-handlers'
-import { isTransferTx } from '@app/utils/qubic-ts'
 import { convertHistoricalTxToTxWithStatus } from './adapters'
-import type { TransactionWithStatus } from './txSlice'
-
-export type TransactionWithMoneyFlew = Transaction & {
-  moneyFlew: boolean | null
-  txType: TxTypeEnum
-}
 
 export const getAddress = createAsyncThunk(
   'network/address',
@@ -27,82 +19,13 @@ export const getAddress = createAsyncThunk(
         archiverApiService.getBalance(addressId)
       ])
       return {
+        addressId,
         reportedValues,
         endTick: lastProcessedTick.tickNumber,
         balance
       }
     } catch (error) {
       return rejectWithValue(handleThunkError(error))
-    }
-  }
-)
-
-export const getTransferTxs = createAsyncThunk<
-  {
-    data: TransactionWithMoneyFlew[]
-    lastStartTick: number
-    lastEndTick: number
-  },
-  { addressId: string; startTick: number; endTick: number },
-  {
-    state: RootState
-  }
->(
-  'network/getTransferTxs',
-  async ({ addressId, startTick, endTick }, { rejectWithValue }) => {
-    try {
-      let data: Transaction[] = []
-      let lastStartTick = startTick
-      let lastEndTick = endTick
-
-      const getTransfers = async (start: number, end: number) => {
-        const { transferTransactionsPerTick } =
-          await archiverApiService.getAddressTransferTransactions(addressId, start, end)
-        return transferTransactionsPerTick.flatMap(({ transactions }) => transactions) || []
-      }
-      const fetchRecursive = async (start: number, end: number) => {
-        const transfers = await getTransfers(start, end)
-        data = [...new Set(data.concat(transfers))]
-
-        if (start === 0 && transfers.length === 0) {
-          return { data: data.sort((a, b) => b.tickNumber - a.tickNumber) }
-        }
-
-        if (data.length < BATCH_SIZE) {
-          lastEndTick = Math.max(0, start - 1)
-          lastStartTick = Math.max(0, lastEndTick - TICK_SIZE)
-
-          return fetchRecursive(lastStartTick, lastEndTick)
-        }
-        return { data: data.sort((a, b) => b.tickNumber - a.tickNumber) }
-      }
-
-      const finalResult = await fetchRecursive(startTick, endTick)
-
-      const txsWithMoneyFlew = await Promise.all(
-        finalResult.data.map(async (tx) => {
-          if (!isTransferTx(tx.sourceId, tx.destId, tx.amount)) {
-            return { ...tx, moneyFlew: true, txType: TxTypeEnum.PROTOCOL }
-          }
-          try {
-            const { transactionStatus } = await archiverApiService.getTransactionStatus(tx.txId)
-            return { ...tx, moneyFlew: transactionStatus.moneyFlew, txType: TxTypeEnum.TRANSFER }
-          } catch (error) {
-            return { ...tx, moneyFlew: null, txType: TxTypeEnum.TRANSFER }
-          }
-        })
-      )
-
-      return { data: txsWithMoneyFlew, lastStartTick, lastEndTick }
-    } catch (error) {
-      return rejectWithValue(handleThunkError(error))
-    }
-  },
-  // Conditionally fetch historical transactions to prevent issues from React.StrictMode - https://redux.js.org/tutorials/essentials/part-5-async-logic#avoiding-duplicate-fetches
-  {
-    condition: (_, { getState }) => {
-      const { isLoading, hasMore, error } = getState().network.address.transferTxs
-      return !isLoading && hasMore && !error
     }
   }
 )
@@ -134,6 +57,7 @@ export const getHistoricalTxs = createAsyncThunk<
 )
 
 export type Address = {
+  addressId: string
   reportedValues: ReportedValues
   endTick: number
   balance: Balance
@@ -143,14 +67,6 @@ export interface AddressState {
   address: Address | null
   isLoading: boolean
   error: string | null
-  transferTxs: {
-    data: TransactionWithMoneyFlew[]
-    isLoading: boolean
-    error: string | null
-    hasMore: boolean
-    lastStartTick: number
-    lastEndTick: number
-  }
   historicalTxs: {
     data: TransactionWithStatus[]
     isLoading: boolean
@@ -164,14 +80,6 @@ const initialState: AddressState = {
   address: null,
   isLoading: false,
   error: null,
-  transferTxs: {
-    data: [],
-    isLoading: false,
-    error: null,
-    hasMore: true,
-    lastStartTick: 0,
-    lastEndTick: 0
-  },
   historicalTxs: {
     data: [],
     isLoading: false,
@@ -204,26 +112,6 @@ const addressSlice = createSlice({
         state.isLoading = false
         state.error = action.error.message ?? 'Unknown error'
       })
-      // getTransferTxs
-      .addCase(getTransferTxs.pending, (state) => {
-        state.transferTxs.isLoading = true
-        state.transferTxs.error = null
-      })
-      .addCase(getTransferTxs.fulfilled, (state, action) => {
-        state.transferTxs.isLoading = false
-        const newTxs = action.payload
-        if (newTxs.data.length === 0) {
-          state.transferTxs.hasMore = false
-        } else {
-          state.transferTxs.data.push(...newTxs.data)
-        }
-        state.transferTxs.lastStartTick = newTxs.lastStartTick
-        state.transferTxs.lastEndTick = newTxs.lastEndTick
-      })
-      .addCase(getTransferTxs.rejected, (state, action) => {
-        state.transferTxs.isLoading = false
-        state.transferTxs.error = action.error.message ?? 'Unknown error'
-      })
       // getHistoricalTxs
       .addCase(getHistoricalTxs.pending, (state) => {
         state.historicalTxs.isLoading = true
@@ -249,7 +137,6 @@ const addressSlice = createSlice({
 
 // Selectors
 export const selectAddress = (state: RootState) => state.network.address
-export const selectTransferTxs = (state: RootState) => state.network.address.transferTxs
 export const selectHistoricalTxs = (state: RootState) => state.network.address.historicalTxs
 
 // actions
