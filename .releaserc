@@ -4,8 +4,12 @@
       "name": "main"
     },
     {
+      "name": "staging",
+      "prerelease": "rc"
+    },
+    {
       "name": "dev",
-      "prerelease": true
+      "prerelease": "beta"
     }
   ],
   "plugins": [
