@@ -1,7 +1,7 @@
 {
   "name": "explorer-frontend",
   "private": true,
-  "version": "1.0.0-beta.1",
+  "version": "1.0.1",
   "type": "module",
   "engines": {
     "node": "^20.17.0",
@@ -13,7 +13,8 @@
     "build": "tsc -b && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "format": "prettier --write .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "prepare": "husky"
   },
   "dependencies": {
     "@headlessui/react": "^2.1.2",
@@ -36,6 +37,9 @@
     "tailwind-merge": "^2.4.0"
   },
   "devDependencies": {
+    "@commitlint/cli": "^19.5.0",
+    "@commitlint/config-conventional": "^19.5.0",
+    "@commitlint/types": "^19.5.0",
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/git": "^10.0.1",
     "@types/node": "^22.5.2",
@@ -57,6 +61,8 @@
     "eslint-plugin-react-hooks": "^4.6.2",
     "eslint-plugin-react-refresh": "^0.4.7",
     "eslint-plugin-unused-imports": "2.0.0",
+    "husky": "^9.1.6",
+    "lint-staged": "^15.2.10",
     "postcss": "^8.4.39",
     "prettier": "3.3.2",
     "prettier-plugin-tailwindcss": "^0.6.5",
@@ -66,5 +72,14 @@
     "typescript": "^5.5.3",
     "vite": "^5.3.3",
     "vite-plugin-svgr": "^4.2.0"
+  },
+  "lint-staged": {
+    "**/*.{js,jsx,ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "**/*.json": [
+      "prettier --write"
+    ]
   }
 }

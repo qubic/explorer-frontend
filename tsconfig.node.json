@@ -12,6 +12,7 @@
   "include": [
     "vite.config.ts",
     "tailwind.config.ts",
+    "commitlint.config.ts",
     "dev-proxy.config.ts",
     "src/theme/colors.ts",
     "src/theme/screens.ts"
