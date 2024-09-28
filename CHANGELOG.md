@@ -1,3 +1,10 @@
+# [1.0.0-beta.2](https://github.com/alexmf91/explorer-frontend/compare/v1.0.0-beta.1...v1.0.0-beta.2) (2024-09-28)
+
+
+### Features
+
+* add lint workflow ([db5a709](https://github.com/alexmf91/explorer-frontend/commit/db5a7099681315c733a5bdda54170a7b56cebf0f))
+
 # 1.0.0-rc.1 (2024-09-26)
 
 
