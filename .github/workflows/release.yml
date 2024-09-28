@@ -7,6 +7,12 @@ on:
       - staging
       - dev
 
+  pull_request:
+    branches:
+      - main
+      - staging
+      - dev
+
 jobs:
   release:
     runs-on: ubuntu-latest
