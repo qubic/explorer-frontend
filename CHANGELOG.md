@@ -1,3 +1,10 @@
+# [1.0.0-beta.3](https://github.com/alexmf91/explorer-frontend/compare/v1.0.0-beta.2...v1.0.0-beta.3) (2024-09-28)
+
+
+### Features
+
+* add pull request trigger for main, staging, and dev branches in release workflow ([7f5606a](https://github.com/alexmf91/explorer-frontend/commit/7f5606a5c1bbe2105753b026c03044fb7a9bc476))
+
 # [1.0.0-beta.2](https://github.com/alexmf91/explorer-frontend/compare/v1.0.0-beta.1...v1.0.0-beta.2) (2024-09-28)
 
 
