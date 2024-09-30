@@ -12,6 +12,8 @@ on:
       - main
       - staging
       - dev
+    types:
+      - closed
 
 jobs:
   release:
