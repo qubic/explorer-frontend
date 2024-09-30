@@ -5,6 +5,7 @@
 
 * add closed type trigger for pull requests in release workflow ([b92ee86](https://github.com/alexmf91/explorer-frontend/commit/b92ee869d1e13fbfc9d514cf07cfd68626891dee))
 
+
 # [1.0.0-beta.3](https://github.com/alexmf91/explorer-frontend/compare/v1.0.0-beta.2...v1.0.0-beta.3) (2024-09-28)
 
 
