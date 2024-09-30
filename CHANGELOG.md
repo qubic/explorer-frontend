@@ -1,3 +1,26 @@
+# [1.0.0-beta.4](https://github.com/alexmf91/explorer-frontend/compare/v1.0.0-beta.3...v1.0.0-beta.4) (2024-09-30)
+
+
+### Features
+
+* add closed type trigger for pull requests in release workflow ([b92ee86](https://github.com/alexmf91/explorer-frontend/commit/b92ee869d1e13fbfc9d514cf07cfd68626891dee))
+
+
+# [1.0.0-beta.3](https://github.com/alexmf91/explorer-frontend/compare/v1.0.0-beta.2...v1.0.0-beta.3) (2024-09-28)
+
+
+### Features
+
+* add pull request trigger for main, staging, and dev branches in release workflow ([7f5606a](https://github.com/alexmf91/explorer-frontend/commit/7f5606a5c1bbe2105753b026c03044fb7a9bc476))
+
+
+# [1.0.0-beta.2](https://github.com/alexmf91/explorer-frontend/compare/v1.0.0-beta.1...v1.0.0-beta.2) (2024-09-28)
+
+
+### Features
+
+* add lint workflow ([db5a709](https://github.com/alexmf91/explorer-frontend/commit/db5a7099681315c733a5bdda54170a7b56cebf0f))
+
 # 1.0.0-rc.1 (2024-09-26)
 
 
