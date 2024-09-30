@@ -7,14 +7,6 @@ on:
       - staging
       - dev
 
-  pull_request:
-    branches:
-      - main
-      - staging
-      - dev
-    types:
-      - closed
-
 jobs:
   release:
     runs-on: ubuntu-latest
