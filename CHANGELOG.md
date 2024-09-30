@@ -1,3 +1,10 @@
+# [1.0.0-beta.5](https://github.com/alexmf91/explorer-frontend/compare/v1.0.0-beta.4...v1.0.0-beta.5) (2024-09-30)
+
+
+### Features
+
+* testing ([#21](https://github.com/alexmf91/explorer-frontend/issues/21)) ([d6c4fd1](https://github.com/alexmf91/explorer-frontend/commit/d6c4fd1b9eaa184251f83ad417190699f1ef04e5))
+
 # [1.0.0-beta.4](https://github.com/alexmf91/explorer-frontend/compare/v1.0.0-beta.3...v1.0.0-beta.4) (2024-09-30)
 
 
