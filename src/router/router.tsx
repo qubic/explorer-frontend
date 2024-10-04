@@ -9,6 +9,7 @@ import {
   TickPageLazy,
   TxPageLazy
 } from '@app/pages/network'
+import OOSOverviewPage from '@app/pages/oss/OOSOverviewPage'
 import { Routes } from './routes'
 
 const router: ReturnType<typeof createBrowserRouter> = createBrowserRouter([
@@ -45,6 +46,10 @@ const router: ReturnType<typeof createBrowserRouter> = createBrowserRouter([
             element: <RichListPageLazy />
           }
         ]
+      },
+      {
+        path: Routes.OSS,
+        element: <OOSOverviewPage />
       }
     ]
   },

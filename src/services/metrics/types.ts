@@ -12,3 +12,14 @@ export interface QubicStats {
   epochTickQuality: number
   burnedQus: string
 }
+
+export interface GithubStatsOverview {
+  commits: number
+  contributors: number
+  openIssues: number
+  closedIssues: number
+  branches: number
+  releases: number
+  starsCount: number
+  watchersCount: number
+}

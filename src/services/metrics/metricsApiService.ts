@@ -1,18 +1,13 @@
 import axios from 'axios'
 import { METRICS_API_ENDPOINTS } from './endpoints'
-import type { QubicStats } from './types'
+import type { GithubStatsOverview, QubicStats } from './types'
 
 const fetchData = async <T>(url: string): Promise<T> => {
+  console.log('fetchData', url)
   try {
-    const token = window.localStorage.getItem('jwt_access_token')
-
-    if (!token) {
-      throw new Error('Error: Missing access token')
-    }
-
     const response = await axios.get(url, {
       headers: {
-        Authorization: `Bearer ${token}`
+        'Content-Type': 'application/json'
       }
     })
     return response.data as T
@@ -22,9 +17,13 @@ const fetchData = async <T>(url: string): Promise<T> => {
 }
 
 const metricsApiService = {
-  getQubicStats: async (): Promise<QubicStats> => {
+  getQubicStats: async (): Promise<{ data: QubicStats }> => {
     const url = METRICS_API_ENDPOINTS.QUBIC_STATS
-    return (await fetchData<{ data: QubicStats }>(url)).data
+    return fetchData<{ data: QubicStats }>(url)
+  },
+  getGithubStatsOverview: async (): Promise<{ data: GithubStatsOverview }> => {
+    const url = METRICS_API_ENDPOINTS.GITHUB_STATS_OVERVIEW
+    return fetchData<{ data: GithubStatsOverview }>(url)
   }
 }
 

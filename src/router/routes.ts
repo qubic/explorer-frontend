@@ -23,6 +23,7 @@ export const Routes = {
     TICK: (tick: string | number) => `${Routes.NETWORK.ROOT}/tick/${tick}`,
     RICH_LIST: '/network/rich-list'
   },
+  OSS: '/oss',
   NOT_FOUND: '/404'
 } as const
 
