@@ -43,3 +43,6 @@ pnpm-lock.yaml
 
 # Ignore miscellaneous
 .vscode/
+
+# Ignore release files
+CHANGELOG.md
