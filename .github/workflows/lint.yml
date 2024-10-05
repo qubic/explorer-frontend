@@ -1,20 +1,27 @@
-name: Release
+name: Lint
 
 on:
+  pull_request:
+    branches:
+      - main
+      - staging
+      - dev
   push:
     branches:
       - main
       - staging
-  pull_request:
-    types:
-      - closed
+      - dev
 
 jobs:
-  release:
+  lint:
+    name: Lint
     runs-on: ubuntu-latest
+    permissions:
+      contents: 'read'
+      actions: 'read'
 
     steps:
-      - name: Checkout repository
+      - name: Checkout Repo
         uses: actions/checkout@v4
 
       - name: Setup pnpm
@@ -30,7 +37,8 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Semantic Release
-        run: pnpm run release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Run lint
+        run: pnpm lint
+
+      - name: Run prettier check
+        run: pnpm prettier:check
