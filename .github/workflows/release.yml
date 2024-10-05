@@ -39,6 +39,17 @@ jobs:
         id: semantic-release
         uses: cycjimmy/semantic-release-action@v4
         with:
+          semantic_version: 24
+          branches: |
+            [
+              {
+                "name": "main"
+              },
+              {
+                "name": "staging",
+                "prerelease": "rc"
+              }
+            ]
           extra_plugins: |
             @semantic-release/changelog
             @semantic-release/git
