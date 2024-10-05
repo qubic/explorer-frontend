@@ -37,7 +37,7 @@
   }
 
   body::-webkit-scrollbar-thumb {
-    @apply border-primary-80 rounded-full border-2 border-solid;
+    @apply rounded-full border-2 border-solid border-primary-80;
   }
 }
 

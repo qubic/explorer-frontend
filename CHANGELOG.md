@@ -1,3 +1,10 @@
+# [1.0.0-rc.3](https://github.com/alexmf91/explorer-frontend/compare/v1.0.0-rc.2...v1.0.0-rc.3) (2024-10-05)
+
+
+### Bug Fixes
+
+* reorder class names for consistency and readability across components ([cdf88b8](https://github.com/alexmf91/explorer-frontend/commit/cdf88b820b06bc4f13a42d1a59669bc7be290bce))
+
 # 1.0.0 (2024-10-05)
 
 
