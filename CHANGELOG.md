@@ -1,3 +1,27 @@
+# [1.6.0](https://github.com/alexmf91/explorer-frontend/compare/v1.5.1...v1.6.0) (2024-10-05)
+
+
+### Bug Fixes
+
+* change prerelease identifier from 'beta' to 'rc' in release configuration ([e4a8c72](https://github.com/alexmf91/explorer-frontend/commit/e4a8c72c2e3e7d517304a8b0f25093febd8e64dc))
+* change prerelease identifier from 'rc' to 'beta' in release configuration ([36fb6f2](https://github.com/alexmf91/explorer-frontend/commit/36fb6f2b8e3b12a260e76b1881f083e9d085d6c1))
+* clarify comment in GitHub Actions workflow for fetch-depth ([868cf68](https://github.com/alexmf91/explorer-frontend/commit/868cf688ad98c0f0d8405ec9bb19f9cb0efb5e4d))
+* reorder class names for consistency and readability across components ([cdf88b8](https://github.com/alexmf91/explorer-frontend/commit/cdf88b820b06bc4f13a42d1a59669bc7be290bce))
+* update commitlint range to validate all PR commits correctly ([b4b38f1](https://github.com/alexmf91/explorer-frontend/commit/b4b38f17475b2f0e0036a5f6168ba524677f176a))
+* update GitHub Actions workflow to fetch all history for tags ([d658436](https://github.com/alexmf91/explorer-frontend/commit/d658436a8f16dffd761f1617ffbfea594870434a))
+
+
+### Features
+
+* add closed type trigger for pull requests in release workflow ([b92ee86](https://github.com/alexmf91/explorer-frontend/commit/b92ee869d1e13fbfc9d514cf07cfd68626891dee))
+* add lint workflow ([db5a709](https://github.com/alexmf91/explorer-frontend/commit/db5a7099681315c733a5bdda54170a7b56cebf0f))
+* add linting workflow for pull requests and pushes ([cb95907](https://github.com/alexmf91/explorer-frontend/commit/cb95907d62cbc2106de17d8b68cd7157dcf8b405))
+* add pull request closed event to release workflow ([c1d341d](https://github.com/alexmf91/explorer-frontend/commit/c1d341d512f0f80d8ba83ac7cbf7fccd400508ef))
+* add pull request trigger for main, staging, and dev branches in release workflow ([7f5606a](https://github.com/alexmf91/explorer-frontend/commit/7f5606a5c1bbe2105753b026c03044fb7a9bc476))
+* disable scrolling when modal is open on desktop and mobile ([43d3279](https://github.com/alexmf91/explorer-frontend/commit/43d3279911b7edbeabfbf4c0d80ec481a0aee810))
+* enhance commitlint workflow to handle push and pull request events separately ([aafb9a1](https://github.com/alexmf91/explorer-frontend/commit/aafb9a11d83964d09b71ef602313ac5d5eef987d))
+* testing ([#21](https://github.com/alexmf91/explorer-frontend/issues/21)) ([d6c4fd1](https://github.com/alexmf91/explorer-frontend/commit/d6c4fd1b9eaa184251f83ad417190699f1ef04e5))
+
 # 1.0.0 (2024-10-05)
 
 
