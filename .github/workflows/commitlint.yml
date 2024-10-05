@@ -17,6 +17,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Fetches the full history so that all commit SHAs are available for commitlint
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4.0.0
