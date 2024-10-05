@@ -6,14 +6,6 @@ on:
       - main
       - staging
 
-  pull_request:
-    branches:
-      - main
-      - staging
-      - dev
-    types:
-      - closed
-
 jobs:
   release:
     runs-on: ubuntu-latest
@@ -36,23 +28,6 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Semantic Release
-        id: semantic-release
-        uses: cycjimmy/semantic-release-action@v4
-        with:
-          semantic_version: 24
-          branches: |
-            [
-              {
-                "name": "main"
-              },
-              {
-                "name": "staging",
-                "prerelease": "rc"
-              }
-            ]
-          extra_plugins: |
-            @semantic-release/changelog
-            @semantic-release/git
-            conventional-changelog-conventionalcommits
+        run: pnpm run release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
