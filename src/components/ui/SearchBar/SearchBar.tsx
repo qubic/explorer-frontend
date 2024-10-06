@@ -101,7 +101,7 @@ export default function SearchBar() {
             <div className="bg-gray-40 mx-auto flex w-full max-w-[820px] items-center gap-8 pl-12 pr-20">
               <MagnifyIcon className="h-16 w-16" />
               <input
-                className="w-full bg-inherit py-12 pr-20 text-14 placeholder:font-space placeholder:text-14 placeholder:text-gray-50 focus:outline-none"
+                className="w-full bg-inherit py-12 pr-20 text-base placeholder:font-space placeholder:text-base placeholder:text-gray-50 focus:outline-none sm:text-sm"
                 placeholder="Search TX, ticks, IDs..."
                 value={keyword}
                 // eslint-disable-next-line jsx-a11y/no-autofocus

@@ -23,7 +23,7 @@ function TransferList({ entries, variant = 'primary' }: Props) {
       className={clsxTwMerge(
         'flex flex-col gap-8 rounded-12 p-12 md:p-16',
         variant === 'secondary'
-          ? 'bg-primary-70 border-[1px] border-primary-60'
+          ? 'border-[1px] border-primary-60 bg-primary-70'
           : 'my-8 bg-primary-60 transition-all duration-300'
       )}
     >

@@ -51,7 +51,7 @@ function Footer() {
           </React.Fragment>
         ))}
       </div>
-      <p className="font-space text-xs text-gray-50">Version 1.5.1</p>
+      <p className="font-space text-xs text-gray-50">Version {__APP_VERSION__}</p>
     </footer>
   )
 }
