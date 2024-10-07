@@ -29,16 +29,7 @@ export const ReposHistoryChart = () => {
       className="h-320"
       data={statsData || []}
       index="date"
-      categories={[
-        'commits',
-        'contributors',
-        'openIssues',
-        'closedIssues',
-        'branches',
-        'releases',
-        'starsCount',
-        'watchersCount'
-      ]}
+      categories={['starsCount', 'commits', 'openIssues', 'closedIssues', 'watchersCount']}
       colors={['blue', 'emerald', 'violet', 'amber', 'gray', 'cyan', 'pink']}
       onValueChange={(v) => console.log(v)}
     />

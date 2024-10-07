@@ -15,7 +15,9 @@ import {
   RiGroup2Line,
   RiStarLine
 } from '@remixicon/react'
+import CardItem from './CardItem'
 import OverviewCardItem from './OverviewCardItem'
+import { ReposHistoryChart } from './ReposHistoryChart'
 
 async function getData() {
   const [overviewStats] = await Promise.all([metricsApiService.getGithubStatsOverview()])
@@ -111,7 +113,7 @@ export default function OOSOverviewPage() {
             />
           ))}
         </div>
-        {/* <CardItem className="px-24 py-20">
+        <CardItem className="px-24 py-20">
           <div className="flex flex-col gap-20">
             <div className="flex flex-col justify-between gap-20 sm:flex-row sm:gap-8 md:gap-10 lg:gap-20">
               <div className="flex items-center justify-between gap-8 sm:justify-start">
@@ -120,7 +122,7 @@ export default function OOSOverviewPage() {
             </div>
             <ReposHistoryChart />
           </div>
-        </CardItem> */}
+        </CardItem>
       </div>
     </div>
   )
