@@ -16,9 +16,9 @@ const fetchData = async <T>(url: string): Promise<T> => {
 }
 
 const metricsApiService = {
-  getQubicStats: async (): Promise<{ data: QubicStats }> => {
+  getQubicStats: async (): Promise<{ data: QubicStats[] }> => {
     const url = METRICS_API_ENDPOINTS.QUBIC_STATS
-    return fetchData<{ data: QubicStats }>(url)
+    return fetchData<{ data: QubicStats[] }>(url)
   },
   getGithubStatsOverview: async (): Promise<{ data: GithubStatsOverview }> => {
     const url = METRICS_API_ENDPOINTS.GITHUB_STATS_OVERVIEW

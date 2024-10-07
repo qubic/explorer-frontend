@@ -1,16 +1,16 @@
 export interface QubicStats {
   date: string
   timestamp: string
-  circulatingSupply: string
+  circulatingSupply: number
   activeAddresses: number
   price: number
-  marketCap: string
+  marketCap: number
   epoch: number
   currentTick: number
   ticksInCurrentEpoch: number
   emptyTicksInCurrentEpoch: number
   epochTickQuality: number
-  burnedQus: string
+  burnedQus: number
 }
 
 export interface GithubStatsOverview {

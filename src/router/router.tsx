@@ -2,6 +2,7 @@ import { createBrowserRouter, Navigate } from 'react-router-dom'
 
 import { AppLayout } from '@app/components/ui/layouts'
 import { Error404Page } from '@app/pages'
+import HistoryPage from '@app/pages/history/HistoryPage'
 import {
   AddressPageLazy,
   OverviewPage,
@@ -50,6 +51,10 @@ const router: ReturnType<typeof createBrowserRouter> = createBrowserRouter([
       {
         path: Routes.OSS,
         element: <OOSOverviewPage />
+      },
+      {
+        path: Routes.HISTORY,
+        element: <HistoryPage />
       }
     ]
   },
