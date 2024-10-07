@@ -7,5 +7,14 @@
   "from": "from",
   "to": "to",
   "transaction": "Transaction",
-  "transactions": "Transactions"
+  "transactions": "Transactions",
+  "commits": "Commits",
+  "contributors": "Contributors",
+  "openIssues": "Open Issues",
+  "closedIssues": "Closed Issues",
+  "branches": "Branches",
+  "releases": "Releases",
+  "starsCount": "Stars",
+  "watchersCount": "Watchers",
+  "history": "History"
 }

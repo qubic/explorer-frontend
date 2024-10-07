@@ -23,3 +23,7 @@ export interface GithubStatsOverview {
   starsCount: number
   watchersCount: number
 }
+
+export interface GithubStatsHistory extends GithubStatsOverview {
+  date: string
+}

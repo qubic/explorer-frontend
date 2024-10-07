@@ -14,13 +14,13 @@ function Header() {
         </Link>
         <div className="flex items-center gap-8">
           <Link
-            to={Routes.OSS}
+            to={Routes.HISTORY}
             className={clsxTwMerge(
               true ? 'bg-primary-60 text-white' : 'text-gray-600 hover:text-gray-800',
               'rounded px-10 py-4 text-sm font-medium'
             )}
           >
-            Charts
+            History
           </Link>
           <Link
             to={Routes.OSS}
@@ -29,7 +29,7 @@ function Header() {
               'rounded px-10 py-4 text-sm font-medium'
             )}
           >
-            Repositories
+            OSS
           </Link>
         </div>
       </nav>

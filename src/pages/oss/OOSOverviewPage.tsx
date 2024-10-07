@@ -1,19 +1,22 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import {
-  CheckCircleIcon,
-  CirculatingCoinsIcon,
-  GlobeGrayIcon,
-  SandClockIcon,
-  StarsIcon,
-  XmarkIcon
-} from '@app/assets/icons'
+import { XmarkIcon } from '@app/assets/icons'
 import { LinearProgress } from '@app/components/ui/loaders'
 import metricsApiService from '@app/services/metrics/metricsApiService'
 import { GithubStatsOverview } from '@app/services/metrics/types'
 import { formatString } from '@app/utils'
-import { OverviewCardItem } from './components'
+import {
+  RiExportLine,
+  RiEyeLine,
+  RiFolderOpenLine,
+  RiGitBranchLine,
+  RiGitRepositoryCommitsLine,
+  RiGroup2Line,
+  RiStarLine
+} from '@remixicon/react'
+import { CardItem, OverviewCardItem } from './components'
+import { HistoryChart } from './components/HistoryChart'
 
 async function getData() {
   const [overviewStats] = await Promise.all([metricsApiService.getGithubStatsOverview()])
@@ -21,16 +24,14 @@ async function getData() {
 }
 
 export default function OOSOverviewPage() {
-  const { t } = useTranslation('network-page')
+  const { t } = useTranslation('global')
 
   const [overviewStats, setOverviewStats] = useState<GithubStatsOverview>()
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    console.log('getData')
     getData()
       .then((data) => {
-        console.log('data', data)
         setOverviewStats(data.data)
       })
       .finally(() => setIsLoading(false))
@@ -40,43 +41,49 @@ export default function OOSOverviewPage() {
     () => [
       {
         id: 'commits',
-        icon: () => <CheckCircleIcon className="h-24 w-24 text-primary-50" />,
+        icon: () => <RiGitRepositoryCommitsLine className="h-24 w-24 text-primary-40/80" />,
         label: t('commits'),
         value: formatString(overviewStats?.commits)
       },
       {
-        id: 'stars',
-        icon: StarsIcon,
-        label: t('stars'),
+        id: 'starsCount',
+        icon: () => <RiStarLine className="h-24 w-24 text-primary-40/80" />,
+        label: t('starsCount'),
         value: formatString(overviewStats?.starsCount)
       },
       {
         id: 'contributors',
-        icon: () => <GlobeGrayIcon className="h-24 w-24 fill-primary-50" />,
+        icon: () => <RiGroup2Line className="h-24 w-24 text-primary-40/80" />,
         label: t('contributors'),
         value: formatString(overviewStats?.contributors)
       },
       {
-        id: 'open-issues',
-        icon: CirculatingCoinsIcon,
-        label: t('open-issues'),
+        id: 'watchersCount',
+        icon: () => <RiEyeLine className="h-24 w-24 text-primary-40/80" />,
+        label: t('watchersCount'),
+        value: formatString(overviewStats?.watchersCount)
+      },
+      {
+        id: 'openIssues',
+        icon: () => <RiFolderOpenLine className="h-24 w-24 text-primary-40/80" />,
+        label: t('openIssues'),
         value: formatString(overviewStats?.openIssues)
       },
       {
-        id: 'closed-issues',
-        icon: () => <XmarkIcon className="h-24 w-24 text-primary-50" />,
-        label: t('closed-issues'),
+        id: 'closedIssues',
+        icon: () => <XmarkIcon className="h-24 w-24 text-primary-40/80" />,
+        label: t('closedIssues'),
         value: formatString(overviewStats?.closedIssues)
       },
       {
         id: 'branches',
-        icon: StarsIcon,
+        icon: () => <RiGitBranchLine className="h-24 w-24 text-primary-40/80" />,
         label: t('branches'),
         value: formatString(overviewStats?.branches)
       },
       {
         id: 'releases',
-        icon: SandClockIcon,
+        icon: () => <RiExportLine className="h-24 w-24 text-primary-40/80" />,
         label: t('releases'),
         value: formatString(overviewStats?.releases)
       }
@@ -101,6 +108,16 @@ export default function OOSOverviewPage() {
             />
           ))}
         </div>
+        <CardItem className="px-24 py-20">
+          <div className="flex flex-col gap-20">
+            <div className="flex flex-col justify-between gap-20 sm:flex-row sm:gap-8 md:gap-10 lg:gap-20">
+              <div className="flex items-center justify-between gap-8 sm:justify-start">
+                <p className="font-space text-22 font-500">{t('history')}</p>
+              </div>
+            </div>
+            <HistoryChart />
+          </div>
+        </CardItem>
       </div>
     </div>
   )

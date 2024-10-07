@@ -24,6 +24,7 @@ export const Routes = {
     RICH_LIST: '/network/rich-list'
   },
   OSS: '/oss',
+  HISTORY: '/history',
   NOT_FOUND: '/404'
 } as const
 
