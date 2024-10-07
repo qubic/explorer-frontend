@@ -14,22 +14,13 @@ function Header() {
         </Link>
         <div className="flex items-center gap-8">
           <Link
-            to={Routes.HISTORY}
+            to={Routes.ANALYTICS}
             className={clsxTwMerge(
               true ? 'bg-primary-60 text-white' : 'text-gray-600 hover:text-gray-800',
               'rounded px-10 py-4 text-sm font-medium'
             )}
           >
-            History
-          </Link>
-          <Link
-            to={Routes.OSS}
-            className={clsxTwMerge(
-              true ? 'bg-primary-60 text-white' : 'text-gray-600 hover:text-gray-800',
-              'rounded px-10 py-4 text-sm font-medium'
-            )}
-          >
-            OSS
+            Analytics
           </Link>
         </div>
       </nav>

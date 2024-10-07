@@ -15,8 +15,7 @@ import {
   RiGroup2Line,
   RiStarLine
 } from '@remixicon/react'
-import { CardItem, OverviewCardItem } from './components'
-import { HistoryChart } from './components/HistoryChart'
+import OverviewCardItem from './OverviewCardItem'
 
 async function getData() {
   const [overviewStats] = await Promise.all([metricsApiService.getGithubStatsOverview()])
@@ -98,6 +97,10 @@ export default function OOSOverviewPage() {
   return (
     <div className="w-full py-32">
       <div className="mx-auto flex max-w-[960px] flex-1 flex-col gap-16 px-16">
+        <p className="font-space text-18 xs:text-24 sm:text-22">Open Source</p>
+        <p className="font-space text-14 text-gray-50">
+          Statistics of Qubic's open source repositories
+        </p>
         <div className="grid grid-cols-4 gap-16">
           {cardData.map((card) => (
             <OverviewCardItem
@@ -108,16 +111,16 @@ export default function OOSOverviewPage() {
             />
           ))}
         </div>
-        <CardItem className="px-24 py-20">
+        {/* <CardItem className="px-24 py-20">
           <div className="flex flex-col gap-20">
             <div className="flex flex-col justify-between gap-20 sm:flex-row sm:gap-8 md:gap-10 lg:gap-20">
               <div className="flex items-center justify-between gap-8 sm:justify-start">
                 <p className="font-space text-22 font-500">{t('history')}</p>
               </div>
             </div>
-            <HistoryChart />
+            <ReposHistoryChart />
           </div>
-        </CardItem>
+        </CardItem> */}
       </div>
     </div>
   )

@@ -2,7 +2,7 @@ import { createBrowserRouter, Navigate } from 'react-router-dom'
 
 import { AppLayout } from '@app/components/ui/layouts'
 import { Error404Page } from '@app/pages'
-import HistoryPage from '@app/pages/history/HistoryPage'
+import AnalyticsPage from '@app/pages/analytics/AnalyticsPage'
 import {
   AddressPageLazy,
   OverviewPage,
@@ -10,7 +10,6 @@ import {
   TickPageLazy,
   TxPageLazy
 } from '@app/pages/network'
-import OOSOverviewPage from '@app/pages/oss/OOSOverviewPage'
 import { Routes } from './routes'
 
 const router: ReturnType<typeof createBrowserRouter> = createBrowserRouter([
@@ -49,12 +48,8 @@ const router: ReturnType<typeof createBrowserRouter> = createBrowserRouter([
         ]
       },
       {
-        path: Routes.OSS,
-        element: <OOSOverviewPage />
-      },
-      {
-        path: Routes.HISTORY,
-        element: <HistoryPage />
+        path: Routes.ANALYTICS,
+        element: <AnalyticsPage />
       }
     ]
   },

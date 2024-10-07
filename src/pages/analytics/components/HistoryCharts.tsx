@@ -4,10 +4,10 @@ import { useTranslation } from 'react-i18next'
 import { LinearProgress } from '@app/components/ui/loaders'
 import metricsApiService from '@app/services/metrics/metricsApiService'
 import { QubicStats } from '@app/services/metrics/types'
-import { CardItem } from './components'
 
 import { AreaChart } from '@app/components/charts/AreaChart'
 import { formatString } from '@app/utils'
+import CardItem from './CardItem'
 
 async function getData() {
   const [overviewStats] = await Promise.all([metricsApiService.getQubicStats()])
@@ -25,7 +25,7 @@ function calculateVariance<K extends keyof QubicStats>(stats: QubicStats[], key:
   return `${variance.toFixed(2)}%`
 }
 
-export default function HistoryPage() {
+export default function HistoryCharts() {
   const { t } = useTranslation('global')
 
   const [overviewStats, setOverviewStats] = useState<QubicStats[]>([])
@@ -87,7 +87,7 @@ export default function HistoryPage() {
             />
           </div>
         </CardItem>
-        <CardItem className="px-24 py-20">
+        {/* <CardItem className="px-24 py-20">
           <div className="flex flex-col gap-20">
             <div className="flex flex-col justify-between gap-20 sm:flex-row sm:gap-8 md:gap-10 lg:gap-20">
               <div className="flex items-center justify-between gap-8 sm:justify-start">
@@ -106,7 +106,7 @@ export default function HistoryPage() {
               showYAxis={false}
             />
           </div>
-        </CardItem>
+        </CardItem> */}
       </div>
     </div>
   )

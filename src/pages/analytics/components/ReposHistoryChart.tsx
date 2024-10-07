@@ -8,7 +8,7 @@ async function getData() {
   return { ...historyStats }
 }
 
-export const HistoryChart = () => {
+export const ReposHistoryChart = () => {
   const [statsData, setStatsData] = useState<GithubStatsHistory[]>()
   const [isLoading, setIsLoading] = useState(true)
 
