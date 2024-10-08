@@ -1,3 +1,4 @@
+import { envConfig } from '@app/configs'
 import axios from 'axios'
 import { METRICS_API_ENDPOINTS } from './endpoints'
 import type { GithubStatsHistory, GithubStatsOverview, QubicStats } from './types'
@@ -6,7 +7,8 @@ const fetchData = async <T>(url: string): Promise<T> => {
   try {
     const response = await axios.get(url, {
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${envConfig.METRICS_API_TOKEN}`
       }
     })
     return response.data as T
