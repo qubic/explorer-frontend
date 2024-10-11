@@ -1,0 +1,48 @@
+# Ignore Vite build output
+dist/
+build/
+
+# Ignore dependencies
+node_modules/
+
+# Logs
+logs
+*.log
+pnpm-debug.log*
+
+# Env
+.env*
+!.env.example
+*.local
+
+# Ignore Vite cache
+.vite/
+.cache/
+
+# Ignore TypeScript build output
+*.tsbuildinfo
+*.d.ts
+
+# Ignore editor config files
+*.log
+*.swp
+*.swo
+*.DS_Store
+
+# Ignore tests coverage reports
+coverage/
+
+# Ignore package lock files
+pnpm-lock.yaml
+
+# Ignore Vercel/Netlify deploy settings if you're using them
+.vercel/
+
+# Ignore .idea folder from WebStorm/IntelliJ
+.idea/
+
+# Ignore miscellaneous
+.vscode/
+
+# Ignore release files
+CHANGELOG.md
