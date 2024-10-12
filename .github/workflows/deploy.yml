@@ -4,11 +4,14 @@ on:
   push:
     branches:
       - dev
-      - staging
-      - main
+  workflow_run:
+    workflows: ['Release']
+    types:
+      - completed
 
 jobs:
   deploy:
+    if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/dev') || (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success') }}
     runs-on: ubuntu-latest
     steps:
       - name: 🛎️ Checkout repository
