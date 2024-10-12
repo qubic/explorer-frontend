@@ -69,7 +69,7 @@ export default function Select({
             <ListboxOption
               key={option.value}
               value={option}
-              className="text-primary-800 data-[focus]:bg-slate-50 group relative cursor-default select-none px-10 py-8 font-space text-sm data-[selected]:bg-[#18222C] data-[focus]:text-white hover:cursor-pointer sm:px-16 sm:py-10 sm:text-base"
+              className="text-primary-800 group relative cursor-default select-none px-10 py-8 font-space text-sm data-[focus]:bg-slate-50 data-[selected]:bg-[#18222C] data-[focus]:text-white hover:cursor-pointer sm:px-16 sm:py-10 sm:text-base"
             >
               <span className="block truncate font-normal group-data-[selected]:font-semibold">
                 {option.label}

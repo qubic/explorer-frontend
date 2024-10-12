@@ -1,6 +1,6 @@
 import { clsxTwMerge } from '@app/utils'
 
-type Variant = 'filled' | 'outlined' | 'text'
+type Variant = 'filled' | 'outlined' | 'text' | 'link'
 type Color = 'primary'
 type Size = 'sm' | 'md' | 'lg'
 
@@ -23,7 +23,8 @@ const colorVariantClasses = {
   primary: {
     filled: 'text-primary-80 bg-primary-30 hover:bg-primary-40 hover:text-primary-80',
     outlined: 'text-primary-30 border border-primary-30 hover:bg-primary-60',
-    text: 'text-white hover:bg-primary-60'
+    text: 'text-white hover:bg-primary-60',
+    link: 'text-primary-30 hover:text-primary-40 p-0 hover:underline'
   }
 } as const
 
@@ -44,8 +45,8 @@ export default function Button<T extends React.ElementType = 'button'>({
       {...restProps}
       className={clsxTwMerge(
         'w-fit rounded-8 font-space font-medium transition duration-300',
-        colorVariantClasses[color][variant],
         sizeClasses[size],
+        colorVariantClasses[color][variant],
         className
       )}
     >

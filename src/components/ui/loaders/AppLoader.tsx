@@ -9,9 +9,9 @@ type Props = {
 
 export default function AppLoader({ width = 200, height = 200, message = '' }: Props) {
   return (
-    <div id="app-loader" className="w-screen h-screen grid place-content-center bg-[#111827]">
+    <div id="app-loader" className="grid h-screen w-screen place-content-center bg-[#111827]">
       <Lottie animationData={loaderAnimation} loop autoplay style={{ width, height }} />
-      {message && <p className="text-gray-50 text-center text-16 mt-10">{message}</p>}
+      {message && <p className="mt-10 text-center text-16 text-gray-50">{message}</p>}
     </div>
   )
 }

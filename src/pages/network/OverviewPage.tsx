@@ -8,6 +8,7 @@ import {
   DollarCoinIcon,
   EmptyTicksIcon,
   EpochTicksIcon,
+  FireIcon,
   Infocon,
   SandClockIcon,
   StarsIcon,
@@ -79,7 +80,7 @@ export default function OverviewPage() {
       },
       {
         id: 'burned-supply',
-        icon: CirculatingCoinsIcon,
+        icon: FireIcon,
         label: t('burnedSupply'),
         value: formatString(overview?.burnedQus)
       },
