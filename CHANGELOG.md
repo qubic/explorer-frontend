@@ -1,3 +1,10 @@
+# [1.6.0-rc.4](https://github.com/qubic/explorer-frontend/compare/v1.6.0-rc.3...v1.6.0-rc.4) (2024-10-12)
+
+
+### Features
+
+* consolidate release and deployment workflows into a single workflow ([31118d3](https://github.com/qubic/explorer-frontend/commit/31118d34d14b5350f98df65eb75c7b9c2ffde871))
+
 # [1.6.0-rc.3](https://github.com/qubic/explorer-frontend/compare/v1.6.0-rc.2...v1.6.0-rc.3) (2024-10-12)
 
 
