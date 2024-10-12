@@ -1,3 +1,36 @@
+# [1.6.0-rc.1](https://github.com/qubic/explorer-frontend/compare/v1.5.1...v1.6.0-rc.1) (2024-10-12)
+
+
+### Bug Fixes
+
+* adjust layout in Error404Page to improve responsiveness ([5515a22](https://github.com/qubic/explorer-frontend/commit/5515a222c164695554d90ed3cc2093d79c98619d))
+* prevent body scrolling when modal is open on desktop and mobile ([211b43b](https://github.com/qubic/explorer-frontend/commit/211b43b7d4bbca1931caf5d80c35c897cf523562))
+* remove old richlistpage ([78b95ff](https://github.com/qubic/explorer-frontend/commit/78b95ff5c83adbf6236457e773d32ef534262e1e))
+* remove unused exclamation-triangle icon SVG from assets ([2e49580](https://github.com/qubic/explorer-frontend/commit/2e49580b10fbdcd69cbe7aa645b599c876533055))
+* reorder class names for consistency and readability across components ([3799144](https://github.com/qubic/explorer-frontend/commit/3799144371bedcb2494421277b243df287361c93))
+* replace CirculatingCoinsIcon with FireIcon in OverviewPage ([fc372ba](https://github.com/qubic/explorer-frontend/commit/fc372bad25d65c144bb20555256f0a5abed219ea))
+* update input text size in SearchBar for improved readability ([19f46d6](https://github.com/qubic/explorer-frontend/commit/19f46d6b58881b84339c392f66ddca6627da1eba))
+* update qubic-ts-library version to ^0.1.2 in pnpm-lock.yaml ([38602da](https://github.com/qubic/explorer-frontend/commit/38602da38cdc834d60d5e9e5c70a68a6e8d81b40))
+
+
+### Features
+
+* add .eslintignore file to exclude build outputs, dependencies, and various config files ([b159e4b](https://github.com/qubic/explorer-frontend/commit/b159e4b7df89aeb592e4f7c244cc8dc7889b0147))
+* add .prettierignore file ([8a0a69f](https://github.com/qubic/explorer-frontend/commit/8a0a69fffcd3486b6fed8dcac1ca87856288ea6a))
+* add 'link' variant to Button component with corresponding styles ([efdc902](https://github.com/qubic/explorer-frontend/commit/efdc902857e71397f881c1017852dbe8e3ca384d))
+* add commitlint configuration for standardized commit message formatting ([e61fd6d](https://github.com/qubic/explorer-frontend/commit/e61fd6d63a389c188da22ed2d881ad2347439c0b))
+* add FireIcon SVG and export in index.ts ([8919361](https://github.com/qubic/explorer-frontend/commit/8919361bdccdf4c5edcd2aacbef3b108811ed61b))
+* add GitHub Actions workflow for automated deployment ([b08702f](https://github.com/qubic/explorer-frontend/commit/b08702fa86a2e77da3edc821a4340c147f4dcce6))
+* add GitHub Actions workflow for automated release process ([e6e4b18](https://github.com/qubic/explorer-frontend/commit/e6e4b18a01b08ebb88e8dc09a47c2c9c9578cac9))
+* add GitHub Actions workflow for commitlint to enforce commit message standards ([8bbf0ce](https://github.com/qubic/explorer-frontend/commit/8bbf0ce99dfffec31aac041e0ba51fe2c625cf9c))
+* add GitHub Actions workflow for linting on pull requests and pushes ([4b89e46](https://github.com/qubic/explorer-frontend/commit/4b89e463e145331a00de96171e9093ea774f6379))
+* add GitHub Actions workflow for linting pull requests ([8c3aa15](https://github.com/qubic/explorer-frontend/commit/8c3aa1509169e514ada4472c9b70496c077d9638))
+* add Husky hooks for commit message linting and pre-commit checks ([851622e](https://github.com/qubic/explorer-frontend/commit/851622e73ca78a8a72b043bdcb639042371104d5))
+* add semantic release configuration for automated versioning and changelog generation ([cd5b4b9](https://github.com/qubic/explorer-frontend/commit/cd5b4b9146f322a63342a29f06c6fb4b8ba33bbc))
+* Define __APP_VERSION__ in Vite config and update type declaration ([341237f](https://github.com/qubic/explorer-frontend/commit/341237f44eaa98dde6b2d1ecb272a02c83510811))
+* install new dependencies and add engine specifications and enhance scripts in package.json ([ea0a72e](https://github.com/qubic/explorer-frontend/commit/ea0a72e2c77532042be2d440d33cac3883d6aa25))
+* update footer to display dynamic app version ([0f30e0b](https://github.com/qubic/explorer-frontend/commit/0f30e0b97d7aa232332152272c6b74ac0d8c5bf2))
+
 # Changelog
 
 ## v1.5.1 - v1.5.1 2024-09-24T22:19:14Z
@@ -151,4 +184,3 @@
 **Full Changelog**: https://github.com/qubic/explorer-frontend/commits/v1.1.0
 
 ---
-
