@@ -1,3 +1,10 @@
+# [1.6.0-rc.3](https://github.com/qubic/explorer-frontend/compare/v1.6.0-rc.2...v1.6.0-rc.3) (2024-10-12)
+
+
+### Features
+
+* fetch full commit history in deployment workflow ([9013c44](https://github.com/qubic/explorer-frontend/commit/9013c44aae292f576c44f8384df0b290a418bdbf))
+
 # [1.6.0-rc.2](https://github.com/qubic/explorer-frontend/compare/v1.6.0-rc.1...v1.6.0-rc.2) (2024-10-12)
 
 
