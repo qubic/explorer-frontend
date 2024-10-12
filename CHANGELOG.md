@@ -1,3 +1,10 @@
+# [1.6.0-rc.2](https://github.com/qubic/explorer-frontend/compare/v1.6.0-rc.1...v1.6.0-rc.2) (2024-10-12)
+
+
+### Features
+
+* update deployment workflow to trigger on successful release completion ([0a19db4](https://github.com/qubic/explorer-frontend/commit/0a19db4c02540173dfc89f50a8abc6fc1d1ea676))
+
 # [1.6.0-rc.1](https://github.com/qubic/explorer-frontend/compare/v1.5.1...v1.6.0-rc.1) (2024-10-12)
 
 
