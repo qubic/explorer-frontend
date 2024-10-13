@@ -1,3 +1,10 @@
+# [1.6.0-rc.5](https://github.com/qubic/explorer-frontend/compare/v1.6.0-rc.4...v1.6.0-rc.5) (2024-10-13)
+
+
+### Features
+
+* update tick quality source to be from stats api ([98f1051](https://github.com/qubic/explorer-frontend/commit/98f1051fbd68596d0d7e762d331074f9c0856e8b))
+
 # [1.6.0-rc.4](https://github.com/qubic/explorer-frontend/compare/v1.6.0-rc.3...v1.6.0-rc.4) (2024-10-12)
 
 
