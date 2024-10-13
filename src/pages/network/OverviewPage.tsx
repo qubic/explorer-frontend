@@ -21,11 +21,11 @@ import { getOverview, selectOverview } from '@app/store/network/overviewSlice'
 import { clsxTwMerge, formatString } from '@app/utils'
 import { CardItem, OverviewCardItem, TickLink } from './components'
 
-function getTickQuality(numberOfTicks: number | undefined, numberOfEmptyTicks: number | undefined) {
-  if (!numberOfTicks || !numberOfEmptyTicks) {
+function getTickQuality(tickQuality: number | undefined) {
+  if (!tickQuality) {
     return '0%'
   }
-  return `${formatString(((numberOfTicks - numberOfEmptyTicks) * 100) / numberOfTicks)}%`
+  return `${formatString(tickQuality)}%`
 }
 
 const PAGE_SIZE = 120
@@ -119,7 +119,7 @@ export default function OverviewPage() {
         id: 'tick-quality',
         icon: StarsIcon,
         label: t('tickQuality'),
-        value: getTickQuality(overview?.numberOfTicks, overview?.numberOfEmptyTicks)
+        value: getTickQuality(overview?.epochTickQuality)
       }
     ],
     [t, overview]

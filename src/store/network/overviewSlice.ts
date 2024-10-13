@@ -5,7 +5,7 @@ import type { RootState } from '@app/store'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 
-type TickOverviewWithBurnedQus = TickOverview & { burnedQus: string }
+type TickOverviewWithBurnedQus = TickOverview & { burnedQus: string; epochTickQuality: number }
 
 export interface OverviewState {
   overview: TickOverviewWithBurnedQus | null
@@ -26,7 +26,11 @@ export const getOverview = createAsyncThunk<TickOverviewWithBurnedQus>(
       qliApiService.getTickOverview(),
       archiverApiService.getLatestStats()
     ])
-    return { ...tickOverview, burnedQus: latestStats.data.burnedQus }
+    return {
+      ...tickOverview,
+      burnedQus: latestStats.data.burnedQus,
+      epochTickQuality: latestStats.data.epochTickQuality
+    }
   }
 )
 
