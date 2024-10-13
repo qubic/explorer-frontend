@@ -6,6 +6,9 @@ import { archiverApiProxy, qliApiProxy } from './dev-proxy.config'
 
 const defaultConfig: UserConfig = {
   plugins: [react(), svgr()],
+  define: {
+    __APP_VERSION__: JSON.stringify(process.env.npm_package_version)
+  },
   base: './',
   resolve: {
     alias: {

@@ -1,0 +1,64 @@
+name: 🚀 Release and Deploy
+
+on:
+  push:
+    branches:
+      - dev
+      - staging
+      - main
+  pull_request:
+    types:
+      - closed
+
+jobs:
+  release-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🛎️ Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Fetch full commit history
+
+      - name: ⚙️ Setup pnpm
+        uses: pnpm/action-setup@v4.0.0
+
+      - name: 🔧 Set up Node.js 20.x
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: 'pnpm'
+          registry-url: 'https://npm.pkg.github.com'
+
+      - name: 📦 Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: 🔖 Run Semantic Release
+        run: pnpm run release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/staging' # Only run for main or staging
+
+      - name: 🏗️ Build app
+        env:
+          VITE_QLI_API_URL: ${{ secrets.QLI_API_URL }}
+          VITE_ARCHIVER_API_URL: ${{ secrets.QUBIC_RPC_URL }}
+        run: pnpm run build
+
+      - name: 📤 Deploy to the corresponding environment
+        uses: SamKirkland/FTP-Deploy-Action@4.3.3
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: |
+            ${{
+              github.ref == 'refs/heads/main' && secrets.FTP_USERNAME_PROD ||
+              github.ref == 'refs/heads/staging' && secrets.FTP_USERNAME_STAGING ||
+              secrets.FTP_USERNAME_DEV
+            }}
+          password: |
+            ${{
+              github.ref == 'refs/heads/main' && secrets.FTP_PASSWORD_PROD ||
+              github.ref == 'refs/heads/staging' && secrets.FTP_PASSWORD_STAGING ||
+              secrets.FTP_PASSWORD_DEV
+            }}
+          local-dir: dist/
+          protocol: ftps

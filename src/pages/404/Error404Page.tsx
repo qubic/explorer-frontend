@@ -29,8 +29,8 @@ function Error404Page() {
   return (
     <>
       <Header />
-      <main className="grid min-h-[var(--container-height)] w-full px-8 pb-10 pt-20 sm:min-h-[var(--desktop-container-height)]">
-        <div className="grid h-full w-full place-items-center overflow-x-hidden">
+      <main className="grid min-h-[var(--container-height)] w-full overflow-x-hidden px-8 pb-10 pt-20 sm:min-h-[var(--desktop-container-height)]">
+        <div className="grid h-full w-full place-items-center">
           {renderErrorDisplay()}
 
           <div className="mt-32 text-center md:mt-40">
