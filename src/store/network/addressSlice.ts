@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 
 import type { Balance } from '@app/services/archiver'
 import { archiverApiService } from '@app/services/archiver'
-import type { ReportedValues } from '@app/services/qli'
+import type { Asset, ReportedValues } from '@app/services/qli'
 import { qliApiService } from '@app/services/qli'
 import type { RootState } from '@app/store'
 import type { TransactionWithStatus } from '@app/types'
@@ -13,16 +13,20 @@ export const getAddress = createAsyncThunk(
   'network/address',
   async (addressId: string, { rejectWithValue }) => {
     try {
-      const [{ reportedValues }, { lastProcessedTick }, { balance }] = await Promise.all([
-        qliApiService.getAddress(addressId),
-        archiverApiService.getStatus(),
-        archiverApiService.getBalance(addressId)
-      ])
+      const [{ reportedValues }, { lastProcessedTick }, { balance }, addressAssets] =
+        await Promise.all([
+          qliApiService.getAddress(addressId),
+          archiverApiService.getStatus(),
+          archiverApiService.getBalance(addressId),
+          qliApiService.getAddressAssets(addressId)
+        ])
+
       return {
         addressId,
         reportedValues,
         endTick: lastProcessedTick.tickNumber,
-        balance
+        balance,
+        assets: addressAssets
       }
     } catch (error) {
       return rejectWithValue(handleThunkError(error))
@@ -61,6 +65,7 @@ export type Address = {
   reportedValues: ReportedValues
   endTick: number
   balance: Balance
+  assets: Asset[]
 }
 
 export interface AddressState {

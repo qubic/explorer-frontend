@@ -9,7 +9,8 @@ import { useAppDispatch, useAppSelector } from '@app/hooks/redux'
 import { getAddress, resetState, selectAddress } from '@app/store/network/addressSlice'
 import { getOverview, selectOverview } from '@app/store/network/overviewSlice'
 import { formatEllipsis, formatString } from '@app/utils'
-import { HomeLink } from '../components'
+import { MAIN_ASSETS_ISSUER } from '@app/utils/qubic-ts'
+import { AddressLink, CardItem, HomeLink } from '../components'
 import { AddressDetails, TransactionsOverview } from './components'
 
 export default function AddressPage() {
@@ -77,6 +78,27 @@ export default function AddressPage() {
           </p>
         </div>
         {detailsOpen && <AddressDetails address={address} />}
+        {address.assets.length > 0 && (
+          <CardItem tag="ul" className="mt-16 flex flex-wrap gap-16 p-12">
+            {address.assets.map((asset) => (
+              <li
+                key={`${asset.assetName}-${asset.issuerIdentity}`}
+                className="flex items-center gap-4"
+              >
+                <p className="font-space text-base text-white">{formatString(asset.ownedAmount)}</p>
+                {asset.issuerIdentity === MAIN_ASSETS_ISSUER ? (
+                  <p className="font-space text-base text-gray-50">{asset.assetName}</p>
+                ) : (
+                  <AddressLink
+                    label={asset.assetName}
+                    value={asset.issuerIdentity}
+                    className="!text-base"
+                  />
+                )}
+              </li>
+            ))}
+          </CardItem>
+        )}
       </div>
       <TransactionsOverview address={address} addressId={addressId} />
     </div>

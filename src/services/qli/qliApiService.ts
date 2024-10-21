@@ -1,8 +1,12 @@
-import axios from 'axios'
+import axios, { type Method } from 'axios'
 import { QLI_API_ENDPOINTS } from './endpoints'
-import type { Address, HistoricalTx, TickOverview } from './types'
+import type { Address, Asset, HistoricalTx, TickOverview } from './types'
 
-const fetchData = async <T>(url: string): Promise<T> => {
+const makeApiRequest = async <T>(
+  url: string,
+  method: Method = 'GET',
+  data?: unknown
+): Promise<T> => {
   try {
     const token = window.localStorage.getItem('jwt_access_token')
 
@@ -10,33 +14,42 @@ const fetchData = async <T>(url: string): Promise<T> => {
       throw new Error('Error: Missing access token')
     }
 
-    const response = await axios.get(url, {
+    const response = await axios({
+      url,
+      method,
       headers: {
-        Authorization: `Bearer ${token}`
-      }
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+      data: method !== 'GET' ? data : undefined
     })
+
     return response.data as T
   } catch (error) {
-    throw new Error(`Failed to fetch data from ${url}: ${(error as Error).message}`)
+    throw new Error(`Failed to ${method} data from ${url}: ${(error as Error).message}`)
   }
 }
 
 const qliApiService = {
   getTickOverview: async (): Promise<TickOverview> => {
     const url = QLI_API_ENDPOINTS.TICK_OVERVIEW
-    return fetchData<TickOverview>(url)
+    return makeApiRequest<TickOverview>(url)
   },
   getTransaction: async (txId: string): Promise<HistoricalTx> => {
     const url = QLI_API_ENDPOINTS.TX(txId)
-    return fetchData<HistoricalTx>(url)
+    return makeApiRequest<HistoricalTx>(url)
   },
   getAddress: async (addressId: string): Promise<Address> => {
     const url = QLI_API_ENDPOINTS.ADDRESS(addressId)
-    return fetchData<Address>(url)
+    return makeApiRequest<Address>(url)
   },
   getAddressHistory: async (addressId: string, page: number): Promise<HistoricalTx[]> => {
     const url = QLI_API_ENDPOINTS.ADDRESS_HISTORY(addressId, page)
-    return fetchData<HistoricalTx[]>(url)
+    return makeApiRequest<HistoricalTx[]>(url)
+  },
+  getAddressAssets: async (addressId: string): Promise<Asset[]> => {
+    const url = QLI_API_ENDPOINTS.ADDRESS_ASSETS
+    return makeApiRequest<Asset[]>(url, 'POST', [addressId])
   }
 }
 

@@ -3,6 +3,8 @@ import { QubicTransferSendManyPayload } from 'qubic-ts-library/dist/qubic-types/
 
 export const { QUTIL_ADDRESS, ARBITRATOR, EMPTY_ADDRESS } = QubicDefinitions
 
+export const MAIN_ASSETS_ISSUER = 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFXIB'
+
 export type Transfer = {
   amount: string
   destId: string
