@@ -1,3 +1,25 @@
+# [1.7.0](https://github.com/qubic/explorer-frontend/compare/v1.6.0...v1.7.0) (2024-10-21)
+
+
+### Bug Fixes
+
+* adjust gap spacing in asset list items on AddressPage ([8643218](https://github.com/qubic/explorer-frontend/commit/8643218fd3336b1284904daa1b2eb13f75e5729f))
+* **i18n:** update Chinese translation for 'tick' to '刻度' ([ed0f4b0](https://github.com/qubic/explorer-frontend/commit/ed0f4b0617146c4d5f816a50c15c6cca480d0754))
+
+
+### Features
+
+* add ADDRESS_ASSETS endpoint to QLI_API_ENDPOINTS for wallet functionality ([7ce3b1b](https://github.com/qubic/explorer-frontend/commit/7ce3b1bfc7f3d401c930b6df0989b6887ee1a77b))
+* add Asset interface to define asset properties in QLI types ([e679dd5](https://github.com/qubic/explorer-frontend/commit/e679dd5541847025691b77a49bcb88fe535bf1a0))
+* add customizable tag prop to CardItem component for flexible rendering ([48e236d](https://github.com/qubic/explorer-frontend/commit/48e236d849b9abfef687aaade2fb7f023756416c))
+* add MAIN_ASSETS_ISSUER constant to qubic-ts utility ([1d923d8](https://github.com/qubic/explorer-frontend/commit/1d923d813f626fc94bed6993ce51a5a31179cb9c))
+* add optional label prop to AddressLink component for customizable display ([42ce672](https://github.com/qubic/explorer-frontend/commit/42ce6721f4f465abed88748657358f839521295b))
+* add unique key prop to asset list items in AddressPage ([87f9069](https://github.com/qubic/explorer-frontend/commit/87f90695585b325c9cf2ca156d8a31f541c7511a))
+* conditionally render asset name for MAIN_ASSETS_ISSUER in AddressPage ([0dadc32](https://github.com/qubic/explorer-frontend/commit/0dadc3207e685e8afc1eb047859beb875a87abc9))
+* display assets in AddressPage with CardItem component ([37f83a9](https://github.com/qubic/explorer-frontend/commit/37f83a9e14b14096e58da9d8d4daf9daf37933d6))
+* enhance getAddress thunk to include address assets in the response ([0b3c659](https://github.com/qubic/explorer-frontend/commit/0b3c659d91643e60665298fe9d8847a1468d4b60))
+* update API service to use enhanced makeApiRequest func and add getAddressAssets method ([eea8553](https://github.com/qubic/explorer-frontend/commit/eea855390bc17179c6f7976e304ff3247818a452))
+
 # [1.7.0-rc.1](https://github.com/qubic/explorer-frontend/compare/v1.6.0...v1.7.0-rc.1) (2024-10-21)
 
 
