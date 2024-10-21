@@ -49,3 +49,15 @@ export interface Address {
   latestTransfers: HistoricalTx[]
   reportedValues: ReportedValues
 }
+
+export interface Asset {
+  publicId: string
+  contractIndex: number
+  assetName: string
+  issuerIdentity: string
+  contractName: string
+  ownedAmount: number
+  possessedAmount: number
+  tick: number
+  reportingNodes: string[]
+}
