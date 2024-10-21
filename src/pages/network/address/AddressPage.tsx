@@ -83,7 +83,7 @@ export default function AddressPage() {
             {address.assets.map((asset) => (
               <li
                 key={`${asset.assetName}-${asset.issuerIdentity}`}
-                className="flex items-center gap-8"
+                className="flex items-center gap-4"
               >
                 <p className="font-space text-base text-white">{formatString(asset.ownedAmount)}</p>
                 {asset.issuerIdentity === MAIN_ASSETS_ISSUER ? (
