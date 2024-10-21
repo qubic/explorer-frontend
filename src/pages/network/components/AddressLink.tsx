@@ -8,6 +8,7 @@ import { useMemo } from 'react'
 
 type Props = {
   value: string
+  label?: string
   copy?: boolean
   ellipsis?: boolean
   className?: string
@@ -16,13 +17,24 @@ type Props = {
 
 export default function AddressLink({
   value,
+  label,
   className,
   copy = false,
   ellipsis = false,
   showTooltip = false
 }: Props) {
-  const addressLink = useMemo(
-    () => (
+  const addressLink = useMemo(() => {
+    const getDisplayValue = () => {
+      if (label) {
+        return label
+      }
+      if (ellipsis) {
+        return formatEllipsis(value)
+      }
+      return value
+    }
+
+    return (
       <div className="flex items-center gap-10">
         <Link
           role="button"
@@ -32,13 +44,12 @@ export default function AddressLink({
           )}
           to={Routes.NETWORK.ADDRESS(value)}
         >
-          {ellipsis ? formatEllipsis(value) : value}
+          {getDisplayValue()}
         </Link>
         {copy && <CopyTextButton text={value} />}
       </div>
-    ),
-    [value, className, copy, ellipsis]
-  )
+    )
+  }, [className, value, copy, label, ellipsis])
 
   return showTooltip ? <Tooltip content={value}>{addressLink}</Tooltip> : addressLink
 }
