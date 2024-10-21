@@ -81,7 +81,10 @@ export default function AddressPage() {
         {address.assets.length > 0 && (
           <CardItem tag="ul" className="mt-16 flex flex-wrap gap-16 p-12">
             {address.assets.map((asset) => (
-              <li className="flex items-center gap-8">
+              <li
+                key={`${asset.assetName}-${asset.issuerIdentity}`}
+                className="flex items-center gap-8"
+              >
                 <p className="font-space text-base text-white">{formatString(asset.ownedAmount)}</p>
                 {asset.issuerIdentity === MAIN_ASSETS_ISSUER ? (
                   <p className="font-space text-base text-gray-50">{asset.assetName}</p>
