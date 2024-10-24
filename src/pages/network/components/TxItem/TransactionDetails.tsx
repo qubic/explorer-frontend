@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next'
 
 import type { Transaction } from '@app/services/archiver'
 import { formatDate, formatString } from '@app/utils'
-import type { Transfer } from '@app/utils/qubic-ts'
+import type { AssetTransfer, Transfer } from '@app/utils/qubic-ts'
 import { useMemo } from 'react'
 import AddressLink from '../AddressLink'
 import SubCardItem from '../SubCardItem'
@@ -16,6 +16,7 @@ type Props = {
   entries: Transfer[]
   isHistoricalTx?: boolean
   variant?: TxItemVariant
+  assetDetails?: AssetTransfer
   timestamp?: string
 }
 
@@ -37,6 +38,7 @@ function TransactionDetailsWrapper({
 
 export default function TransactionDetails({
   txDetails: { txId, sourceId, tickNumber, destId, inputType, amount },
+  assetDetails,
   entries,
   isHistoricalTx = false,
   timestamp,
@@ -53,7 +55,17 @@ export default function TransactionDetails({
         <SubCardItem
           variant="secondary"
           title={t('amount')}
-          content={<p className="font-space text-sm">{formatString(amount)} QUBIC</p>}
+          content={
+            <p className="font-space text-sm">
+              {assetDetails ? (
+                <>
+                  {formatString(assetDetails.units)} {assetDetails.assetName}
+                </>
+              ) : (
+                <>{formatString(amount)} QUBIC</>
+              )}
+            </p>
+          }
         />
       ) : (
         <SubCardItem
@@ -106,6 +118,14 @@ export default function TransactionDetails({
               {formatString(inputType)} {inputType === 0 ? 'Standard' : 'SC'}
             </p>
           }
+        />
+      )}
+
+      {assetDetails?.units && (
+        <SubCardItem
+          title={t('fee')}
+          variant={variant}
+          content={<p className="font-space text-sm">{formatString(amount)} QUBIC</p>}
         />
       )}
 
