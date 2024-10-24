@@ -54,5 +54,6 @@
   "addressID": "アドレスID",
   "richListLoadFailed": "エラー：リッチリストの読み込みに失敗しました。ページを更新するか、後でもう一度お試しください。",
   "richListWarning": "リッチリストのデータは各エポックの開始時に更新されます",
-  "timestamp": "タイムスタンプ"
+  "timestamp": "タイムスタンプ",
+  "fee": "手数料"
 }

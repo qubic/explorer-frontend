@@ -54,5 +54,6 @@
   "addressID": "地址标识",
   "richListLoadFailed": "错误：无法加载富豪榜。请刷新页面或稍后再试。",
   "richListWarning": "富豪榜数据会在每个纪元开始时更新",
-  "timestamp": "时间戳"
+  "timestamp": "时间戳",
+  "fee": "费用"
 }
