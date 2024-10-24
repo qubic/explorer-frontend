@@ -54,5 +54,6 @@
   "addressID": "ID do Endereço",
   "richListLoadFailed": "Erro: Falha ao carregar a lista de ricos. Por favor, atualize a página ou tente novamente mais tarde.",
   "richListWarning": "Os dados da lista de ricos são atualizados no início de cada época",
-  "timestamp": "Carimbo de tempo"
+  "timestamp": "Carimbo de tempo",
+  "fee": "Taxa"
 }
