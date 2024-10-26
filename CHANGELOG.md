@@ -1,3 +1,10 @@
+## [1.8.1-rc.1](https://github.com/qubic/explorer-frontend/compare/v1.8.0...v1.8.1-rc.1) (2024-10-26)
+
+
+### Bug Fixes
+
+* conditionally display asset transfer warning ([63a18d4](https://github.com/qubic/explorer-frontend/commit/63a18d474ae344e9b00ac62e09f36140963a50b9))
+
 # [1.8.0](https://github.com/qubic/explorer-frontend/compare/v1.7.0...v1.8.0) (2024-10-26)
 
 
