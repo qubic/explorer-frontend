@@ -14,12 +14,12 @@ import TransactionDetails from './TransactionDetails'
 import type { TxItemVariant } from './TxItem.types'
 
 type Props = {
-  tx: Omit<Transaction, 'inputSize' | 'signatureHex'>
-  identity?: string
-  nonExecutedTxIds: string[]
-  variant?: TxItemVariant
-  isHistoricalTx?: boolean
-  timestamp?: string
+  readonly tx: Omit<Transaction, 'inputSize' | 'signatureHex'>
+  readonly identity?: string
+  readonly nonExecutedTxIds: string[]
+  readonly variant?: TxItemVariant
+  readonly isHistoricalTx?: boolean
+  readonly timestamp?: string
 }
 
 function TxItem({
