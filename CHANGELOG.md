@@ -1,3 +1,15 @@
+# [1.8.0](https://github.com/qubic/explorer-frontend/compare/v1.7.0...v1.8.0) (2024-10-26)
+
+
+### Features
+
+* add alert for asset transfer warning and improve prop types in TransactionDetails component ([31f54d1](https://github.com/qubic/explorer-frontend/commit/31f54d1be30d1926ac9922f403125abb89054a38))
+* add asset transfer functionality and update imports ([252518e](https://github.com/qubic/explorer-frontend/commit/252518e8aa8a25abbf1021e81624fa2de4838fb0))
+* add asset transfer support in TxItem component ([25327f0](https://github.com/qubic/explorer-frontend/commit/25327f0cbcc7aa3a0c771a5bf51d89740ca1200a))
+* add asset transfer warning message to network page localization files ([160cedf](https://github.com/qubic/explorer-frontend/commit/160cedf4d8058774923c64e64c208d8b92ccd04f))
+* add fee label to network page translations ([651abaa](https://github.com/qubic/explorer-frontend/commit/651abaae39e1cd59fce597019c127e82f482d037))
+* enhance TransactionDetails to support asset transfer display ([7e8926c](https://github.com/qubic/explorer-frontend/commit/7e8926c185474723d64077b715e35d9bb1f19079))
+
 # [1.8.0-rc.2](https://github.com/qubic/explorer-frontend/compare/v1.8.0-rc.1...v1.8.0-rc.2) (2024-10-26)
 
 
