@@ -38,11 +38,9 @@ export const getAssetsTransfers = async (data: string): Promise<AssetTransfer> =
 
   const parsedPayload = await new QubicTransferAssetPayload().parse(binaryData)
 
-  const assetName = await decoder.decode(parsedPayload.getAssetName()).replace(/\0/g, '')
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Doing this hacky way because the library has this properties as private
-  const units = (parsedPayload as any).numberOfUnits.getNumber().toString()
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Doing this hacky way because the library has this properties as private
-  const newOwnerAndPossessor = (parsedPayload as any).newOwnerAndPossessor.getIdentityAsSring()
+  const assetName = decoder.decode(parsedPayload.getAssetName()).replace(/\0/g, '')
+  const units = parsedPayload.getNumberOfUnits().getNumber().toString()
+  const newOwnerAndPossessor = parsedPayload.getNewOwnerAndPossessor().getIdentityAsSring() ?? ''
 
   return {
     assetName,
