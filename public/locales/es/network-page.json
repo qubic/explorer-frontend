@@ -55,5 +55,6 @@
   "richListLoadFailed": "Error: No se pudo cargar la lista de ricos. Por favor, actualice la página o intente nuevamente más tarde.",
   "richListWarning": "Los datos de la lista de ricos se actualizan al comienzo de cada época",
   "timestamp": "Fecha",
-  "fee": "Tarifa"
+  "fee": "Tarifa",
+  "assetTransferWarning": "Este registro de transacción es actualmente visible solo para el remitente. El destinatario no tendrá acceso a estos datos de la transacción en sus registros en este momento."
 }

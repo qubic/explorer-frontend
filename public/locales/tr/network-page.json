@@ -55,5 +55,6 @@
   "richListLoadFailed": "Hata: Zenginler listesi yüklenemedi. Lütfen sayfayı yenileyin veya daha sonra tekrar deneyin.",
   "richListWarning": "Zenginler listesi verileri her dönemin başında güncellenir",
   "timestamp": "Zaman damgası",
-  "fee": "Ücret"
+  "fee": "Ücret",
+  "assetTransferWarning": "Bu işlem kaydı şu anda yalnızca gönderen tarafından görülebilir. Alıcı, şu anda bu işlem verilerine kayıtlarında erişemeyecektir."
 }

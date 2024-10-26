@@ -55,5 +55,6 @@
   "richListLoadFailed": "错误：无法加载富豪榜。请刷新页面或稍后再试。",
   "richListWarning": "富豪榜数据会在每个纪元开始时更新",
   "timestamp": "时间戳",
-  "fee": "费用"
+  "fee": "费用",
+  "assetTransferWarning": "此交易记录当前仅对发送者可见。收件人目前无法在其记录中访问此交易数据。"
 }

@@ -55,5 +55,6 @@
   "richListLoadFailed": "Fout: Het laden van de rijkelijst is mislukt. Ververs de pagina of probeer het later opnieuw.",
   "richListWarning": "Rijkelijstgegevens worden aan het begin van elke epoche bijgewerkt",
   "timestamp": "Tijdstempel",
-  "fee": "Kosten"
+  "fee": "Kosten",
+  "assetTransferWarning": "Dit transactieoverzicht is momenteel alleen zichtbaar voor de afzender. De ontvanger heeft op dit moment geen toegang tot deze transactiegegevens in zijn administratie."
 }
