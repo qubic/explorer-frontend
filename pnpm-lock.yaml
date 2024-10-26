@@ -11,6 +11,9 @@ importers:
       '@headlessui/react':
         specifier: ^2.1.2
         version: 2.1.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@qubic-lib/qubic-ts-library':
+        specifier: 0.1.4
+        version: 0.1.4
       '@reduxjs/toolkit':
         specifier: ^2.2.6
         version: 2.2.6(react-redux@9.1.2(@types/react@18.3.3)(react@18.3.1)(redux@5.0.1))(react@18.3.1)
@@ -38,9 +41,6 @@ importers:
       lottie-react:
         specifier: ^2.4.0
         version: 2.4.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      qubic-ts-library:
-        specifier: ^0.1.2
-        version: 0.1.2
       react:
         specifier: ^18.3.1
         version: 18.3.1
@@ -660,6 +660,9 @@ packages:
   '@pnpm/npm-conf@2.3.1':
     resolution: {integrity: sha512-c83qWb22rNRuB0UaVCI0uRPNRr8Z0FWnEIvT47jiHAmOIUHbBOg5XvV7pM5x+rKn9HRpjxquDbXYSXr3fAKFcw==}
     engines: {node: '>=12'}
+
+  '@qubic-lib/qubic-ts-library@0.1.4':
+    resolution: {integrity: sha512-4yAdC1pJzqtEvA4aTEGZVnNKs7Lj3l5Rm5KbJM68+BQ5SUP5XqVuFIliVDnHnUNOz9WYdwUMd9Ebqor2MQY8mQ==}
 
   '@react-aria/focus@3.18.1':
     resolution: {integrity: sha512-N0Cy61WCIv+57mbqC7hiZAsB+3rF5n4JKabxUmg/2RTJL6lq7hJ5N4gx75ymKxkN8GnVDwt4pKZah48Wopa5jw==}
@@ -3106,9 +3109,6 @@ packages:
     resolution: {integrity: sha512-vYt7UD1U9Wg6138shLtLOvdAu+8DsC/ilFtEVHcH+wydcSpNE20AfSOduf6MkRFahL5FY7X1oU7nKVZFtfq8Fg==}
     engines: {node: '>=6'}
 
-  qubic-ts-library@0.1.2:
-    resolution: {integrity: sha512-VWSwY/FHKRg6G03dMrxqR5qU4AI0InNmLghl49gVbUoz6METR10yK3qT3jg298gJCMh1x7txjk+HZFs0QgpjNA==}
-
   queue-microtask@1.2.3:
     resolution: {integrity: sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A==}
 
@@ -4339,6 +4339,11 @@ snapshots:
       '@pnpm/config.env-replace': 1.1.0
       '@pnpm/network.ca-file': 1.0.2
       config-chain: 1.1.13
+
+  '@qubic-lib/qubic-ts-library@0.1.4':
+    dependencies:
+      bignumber.js: 9.1.2
+      net: 1.0.2
 
   '@react-aria/focus@3.18.1(react@18.3.1)':
     dependencies:
@@ -6856,11 +6861,6 @@ snapshots:
   proxy-from-env@1.1.0: {}
 
   punycode@2.3.1: {}
-
-  qubic-ts-library@0.1.2:
-    dependencies:
-      bignumber.js: 9.1.2
-      net: 1.0.2
 
   queue-microtask@1.2.3: {}
 

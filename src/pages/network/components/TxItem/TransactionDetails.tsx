@@ -1,8 +1,9 @@
 import { useTranslation } from 'react-i18next'
 
+import { Alert } from '@app/components/ui'
 import type { Transaction } from '@app/services/archiver'
-import { formatDate, formatString } from '@app/utils'
-import type { Transfer } from '@app/utils/qubic-ts'
+import { clsxTwMerge, formatDate, formatString } from '@app/utils'
+import type { AssetTransfer, Transfer } from '@app/utils/qubic-ts'
 import { useMemo } from 'react'
 import AddressLink from '../AddressLink'
 import SubCardItem from '../SubCardItem'
@@ -12,19 +13,20 @@ import TransferList from './TransferList/TransferList'
 import type { TxItemVariant } from './TxItem.types'
 
 type Props = {
-  txDetails: Omit<Transaction, 'inputSize' | 'signatureHex' | 'inputHex'>
-  entries: Transfer[]
-  isHistoricalTx?: boolean
-  variant?: TxItemVariant
-  timestamp?: string
+  readonly txDetails: Omit<Transaction, 'inputSize' | 'signatureHex' | 'inputHex'>
+  readonly entries: Transfer[]
+  readonly isHistoricalTx?: boolean
+  readonly variant?: TxItemVariant
+  readonly assetDetails?: AssetTransfer
+  readonly timestamp?: string
 }
 
 function TransactionDetailsWrapper({
   children,
   variant
 }: {
-  children: React.ReactNode
-  variant: TxItemVariant
+  readonly children: React.ReactNode
+  readonly variant: TxItemVariant
 }) {
   if (variant === 'secondary') {
     return children
@@ -37,6 +39,7 @@ function TransactionDetailsWrapper({
 
 export default function TransactionDetails({
   txDetails: { txId, sourceId, tickNumber, destId, inputType, amount },
+  assetDetails,
   entries,
   isHistoricalTx = false,
   timestamp,
@@ -49,11 +52,24 @@ export default function TransactionDetails({
 
   return (
     <TransactionDetailsWrapper variant={variant}>
+      <Alert size="sm" className={clsxTwMerge(variant === 'secondary' && 'mb-24')}>
+        {t('assetTransferWarning')}
+      </Alert>
       {isSecondaryVariant ? (
         <SubCardItem
           variant="secondary"
           title={t('amount')}
-          content={<p className="font-space text-sm">{formatString(amount)} QUBIC</p>}
+          content={
+            <p className="font-space text-sm">
+              {assetDetails ? (
+                <>
+                  {formatString(assetDetails.units)} {assetDetails.assetName}
+                </>
+              ) : (
+                <>{formatString(amount)} QUBIC</>
+              )}
+            </p>
+          }
         />
       ) : (
         <SubCardItem
@@ -90,7 +106,13 @@ export default function TransactionDetails({
       <SubCardItem
         title={t('destination')}
         variant={variant}
-        content={<AddressLink value={destId} copy={!isSecondaryVariant} />}
+        content={
+          <AddressLink
+            // value={destId}
+            value={assetDetails?.newOwnerAndPossessor ?? destId}
+            copy={!isSecondaryVariant}
+          />
+        }
       />
       <SubCardItem
         title={t('tick')}
@@ -106,6 +128,14 @@ export default function TransactionDetails({
               {formatString(inputType)} {inputType === 0 ? 'Standard' : 'SC'}
             </p>
           }
+        />
+      )}
+
+      {assetDetails?.units && (
+        <SubCardItem
+          title={t('fee')}
+          variant={variant}
+          content={<p className="font-space text-sm">{formatString(amount)} QUBIC</p>}
         />
       )}
 

@@ -54,5 +54,7 @@
   "addressID": "Address ID",
   "richListLoadFailed": "Error: Failed to load rich list. Please refresh the page or try again later.",
   "richListWarning": "Rich list data is updated at the beginning of each epoch",
-  "timestamp": "Timestamp"
+  "timestamp": "Timestamp",
+  "fee": "Fee",
+  "assetTransferWarning": "This transaction record is currently visible only to the sender. The recipient will not have access to this transaction data in their records at this time."
 }

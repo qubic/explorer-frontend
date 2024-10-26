@@ -54,5 +54,7 @@
   "addressID": "ID d'adresse",
   "richListLoadFailed": "Erreur : Impossible de charger la liste des riches. Veuillez actualiser la page ou réessayer plus tard.",
   "richListWarning": "Les données de la liste des riches sont mises à jour au début de chaque époque",
-  "timestamp": "Horodatage"
+  "timestamp": "Horodatage",
+  "fee": "Frais",
+  "assetTransferWarning": "Cet enregistrement de transaction est actuellement visible uniquement par l'expéditeur. Le destinataire n'aura pas accès à ces données de transaction dans ses enregistrements pour le moment."
 }

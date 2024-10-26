@@ -4,8 +4,8 @@ import { ArrowDownIcon, ArrowUpIcon } from '@app/assets/icons'
 import { ChevronToggleButton } from '@app/components/ui/buttons'
 import type { Transaction } from '@app/services/archiver'
 import { formatString } from '@app/utils'
-import type { Transfer } from '@app/utils/qubic-ts'
-import { getTransfers, isTransferTx, QUTIL_ADDRESS } from '@app/utils/qubic-ts'
+import type { AssetTransfer, Transfer } from '@app/utils/qubic-ts'
+import { getAssetsTransfers, getTransfers, isTransferTx, QUTIL_ADDRESS } from '@app/utils/qubic-ts'
 import AddressLink from '../AddressLink'
 import CardItem from '../CardItem'
 import TxLink from '../TxLink'
@@ -14,12 +14,12 @@ import TransactionDetails from './TransactionDetails'
 import type { TxItemVariant } from './TxItem.types'
 
 type Props = {
-  tx: Omit<Transaction, 'inputSize' | 'signatureHex'>
-  identity?: string
-  nonExecutedTxIds: string[]
-  variant?: TxItemVariant
-  isHistoricalTx?: boolean
-  timestamp?: string
+  readonly tx: Omit<Transaction, 'inputSize' | 'signatureHex'>
+  readonly identity?: string
+  readonly nonExecutedTxIds: string[]
+  readonly variant?: TxItemVariant
+  readonly isHistoricalTx?: boolean
+  readonly timestamp?: string
 }
 
 function TxItem({
@@ -31,6 +31,7 @@ function TxItem({
   timestamp
 }: Props) {
   const [entries, setEntries] = useState<Transfer[]>([])
+  const [asset, setAsset] = useState<AssetTransfer>()
   const [detailsOpen, setDetailsOpen] = useState(false)
 
   const handleToggleDetails = () => setDetailsOpen((prev) => !prev)
@@ -46,6 +47,17 @@ function TxItem({
         try {
           const transfers = await getTransfers(inputHex)
           setEntries(transfers)
+        } catch (error) {
+          // eslint-disable-next-line no-console
+          console.log(error)
+        }
+      })()
+    }
+    if (inputType === 2 && inputHex) {
+      ;(async () => {
+        try {
+          const assetTransfer = await getAssetsTransfers(inputHex)
+          setAsset(assetTransfer)
         } catch (error) {
           // eslint-disable-next-line no-console
           console.log(error)
@@ -71,6 +83,7 @@ function TxItem({
           isHistoricalTx={isHistoricalTx}
           variant={variant}
           entries={entries}
+          assetDetails={asset}
           timestamp={timestamp}
         />
       </>
@@ -109,7 +122,15 @@ function TxItem({
             />
           )}
           <p className="text-center font-space text-base">
-            {formatString(amount)} <span className="text-gray-50">QUBIC</span>
+            {asset ? (
+              <>
+                {formatString(asset.units)} <span className="text-gray-50">{asset.assetName}</span>
+              </>
+            ) : (
+              <>
+                {formatString(amount)} <span className="text-gray-50">QUBIC</span>
+              </>
+            )}
           </p>
         </div>
         <ChevronToggleButton
@@ -124,6 +145,7 @@ function TxItem({
           isHistoricalTx={isHistoricalTx}
           variant={variant}
           entries={entries}
+          assetDetails={asset}
           timestamp={timestamp}
         />
       )}

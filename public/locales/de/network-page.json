@@ -54,5 +54,7 @@
   "addressID": "Adress-ID",
   "richListLoadFailed": "Fehler: Reichenliste konnte nicht geladen werden. Bitte aktualisieren Sie die Seite oder versuchen Sie es später erneut.",
   "richListWarning": "Die Daten der Reichenliste werden zu Beginn jeder Epoche aktualisiert",
-  "timestamp": "Zeitstempel"
+  "timestamp": "Zeitstempel",
+  "fee": "Gebühr",
+  "assetTransferWarning": "Dieser Transaktionsdatensatz ist derzeit nur für den Absender sichtbar. Der Empfänger hat zu diesem Zeitpunkt keinen Zugriff auf diese Transaktionsdaten in seinen Aufzeichnungen."
 }
