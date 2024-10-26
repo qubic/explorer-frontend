@@ -52,9 +52,11 @@ export default function TransactionDetails({
 
   return (
     <TransactionDetailsWrapper variant={variant}>
-      <Alert size="sm" className={clsxTwMerge(variant === 'secondary' && 'mb-24')}>
-        {t('assetTransferWarning')}
-      </Alert>
+      {assetDetails && (
+        <Alert size="sm" className={clsxTwMerge(variant === 'secondary' && 'mb-24')}>
+          {t('assetTransferWarning')}
+        </Alert>
+      )}
       {isSecondaryVariant ? (
         <SubCardItem
           variant="secondary"
