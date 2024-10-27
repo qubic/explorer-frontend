@@ -1,3 +1,10 @@
+## [1.8.2-rc.1](https://github.com/qubic/explorer-frontend/compare/v1.8.1...v1.8.2-rc.1) (2024-10-27)
+
+
+### Bug Fixes
+
+* update address display logic for asset transfers ([0618f7c](https://github.com/qubic/explorer-frontend/commit/0618f7c483aa5ffcd9bc4dfd201d5ec37de65384))
+
 ## [1.8.1](https://github.com/qubic/explorer-frontend/compare/v1.8.0...v1.8.1) (2024-10-26)
 
 
