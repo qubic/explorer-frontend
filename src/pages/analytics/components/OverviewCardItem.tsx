@@ -19,13 +19,13 @@ export default function OverviewCardItem({
       <div
         className={clsxTwMerge(
           'flex items-center gap-24',
-          variant === 'small' && 'flex-col items-start sm:flex-row sm:items-center gap-16 w-full'
+          variant === 'small' && 'w-full flex-col items-start gap-16 sm:flex-row sm:items-center'
         )}
       >
-        <Icon className="w-24 h-24" />
+        <Icon className="h-24 w-24" />
         <div className="flex flex-col gap-8">
-          <p className="text-14 text-gray-50 font-space">{label}</p>
-          <p className="text-18 xs:text-24 sm:text-22 font-space">{value}</p>
+          <p className="font-space text-14 text-gray-50">{label}</p>
+          <p className="font-space text-18 xs:text-24 sm:text-22">{value}</p>
         </div>
       </div>
     </CardItem>

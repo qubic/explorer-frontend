@@ -1,24 +1,28 @@
 import { AreaChart } from '@app/components/charts/AreaChart'
 import { LinearProgress } from '@app/components/ui/loaders'
-import { GithubStatsHistory, metricsApiService } from '@app/services/metrics'
+import type { GithubStatsHistory } from '@app/services/metrics'
+import { metricsApiService } from '@app/services/metrics'
+import { useQueryState } from 'nuqs'
 import { useEffect, useState } from 'react'
 
-async function getData() {
-  const [historyStats] = await Promise.all([metricsApiService.getGithubStatsHistory()])
+async function getData(range: string | null) {
+  const [historyStats] = await Promise.all([metricsApiService.getGithubStatsHistory(range)])
   return { ...historyStats }
 }
 
-export const ReposHistoryChart = () => {
+export default function ReposHistoryChart() {
+  const [range] = useQueryState('range')
+
   const [statsData, setStatsData] = useState<GithubStatsHistory[]>()
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    getData()
+    getData(range)
       .then((data) => {
         setStatsData(data.data)
       })
       .finally(() => setIsLoading(false))
-  }, [])
+  }, [range])
 
   if (isLoading) {
     return <LinearProgress />
@@ -31,7 +35,6 @@ export const ReposHistoryChart = () => {
       index="date"
       categories={['starsCount', 'commits', 'openIssues', 'closedIssues', 'watchersCount']}
       colors={['blue', 'emerald', 'violet', 'amber', 'gray', 'cyan', 'pink']}
-      onValueChange={(v) => console.log(v)}
     />
   )
 }

@@ -18,17 +18,17 @@ const fetchData = async <T>(url: string): Promise<T> => {
 }
 
 const metricsApiService = {
-  getQubicStats: async (): Promise<{ data: QubicStats[] }> => {
+  getQubicStats: async (range: string | null): Promise<{ data: QubicStats[] }> => {
     const url = METRICS_API_ENDPOINTS.QUBIC_STATS
-    return fetchData<{ data: QubicStats[] }>(url)
+    return fetchData<{ data: QubicStats[] }>(`${url}?range=${range || 'ALL'}`)
   },
-  getGithubStatsOverview: async (): Promise<{ data: GithubStatsOverview }> => {
+  getGithubStatsOverview: async (range: string | null): Promise<{ data: GithubStatsOverview }> => {
     const url = METRICS_API_ENDPOINTS.GITHUB_STATS_OVERVIEW
-    return fetchData<{ data: GithubStatsOverview }>(url)
+    return fetchData<{ data: GithubStatsOverview }>(`${url}?range=${range || 'ALL'}`)
   },
-  getGithubStatsHistory: async (): Promise<{ data: GithubStatsHistory[] }> => {
+  getGithubStatsHistory: async (range: string | null): Promise<{ data: GithubStatsHistory[] }> => {
     const url = METRICS_API_ENDPOINTS.GITHUB_STATS_HISTORY
-    return fetchData<{ data: GithubStatsHistory[] }>(url)
+    return fetchData<{ data: GithubStatsHistory[] }>(`${url}?range=${range || 'ALL'}`)
   }
 }
 

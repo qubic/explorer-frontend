@@ -3,14 +3,15 @@ import { useTranslation } from 'react-i18next'
 
 import { LinearProgress } from '@app/components/ui/loaders'
 import metricsApiService from '@app/services/metrics/metricsApiService'
-import { QubicStats } from '@app/services/metrics/types'
+import type { QubicStats } from '@app/services/metrics/types'
 
 import { AreaChart } from '@app/components/charts/AreaChart'
 import { formatString } from '@app/utils'
+import { useQueryState } from 'nuqs'
 import CardItem from './CardItem'
 
-async function getData() {
-  const [overviewStats] = await Promise.all([metricsApiService.getQubicStats()])
+async function getData(range: string | null) {
+  const [overviewStats] = await Promise.all([metricsApiService.getQubicStats(range)])
   return { ...overviewStats }
 }
 
@@ -30,22 +31,22 @@ export default function HistoryCharts() {
 
   const [overviewStats, setOverviewStats] = useState<QubicStats[]>([])
   const [isLoading, setIsLoading] = useState(true)
+  const [range] = useQueryState('range')
 
   useEffect(() => {
-    getData()
+    getData(range)
       .then((data) => {
-        console.log(data)
         setOverviewStats(data.data)
       })
       .finally(() => setIsLoading(false))
-  }, [])
+  }, [range])
 
   if (isLoading) {
     return <LinearProgress />
   }
 
   return (
-    <div className="w-full py-32">
+    <div className="w-full pb-32 pt-16">
       <div className="mx-auto flex max-w-[960px] flex-1 flex-col gap-16 px-16">
         <CardItem className="px-24 py-20">
           <div className="flex flex-col gap-20">

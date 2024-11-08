@@ -1,3 +1,4 @@
+import { NuqsAdapter } from 'nuqs/adapters/react'
 import { HelmetProvider } from 'react-helmet-async'
 import { I18nextProvider } from 'react-i18next'
 import { Provider as ReduxProvider } from 'react-redux'
@@ -13,7 +14,9 @@ export default function App() {
       <I18nextProvider i18n={i18n}>
         <ReduxProvider store={store}>
           <AuthProvider>
-            <RouterProvider router={router} />
+            <NuqsAdapter>
+              <RouterProvider router={router} />
+            </NuqsAdapter>
           </AuthProvider>
         </ReduxProvider>
       </I18nextProvider>
