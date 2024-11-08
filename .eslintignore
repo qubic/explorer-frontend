@@ -43,3 +43,6 @@ pnpm-lock.yaml
 
 # Ignore miscellaneous
 .vscode/
+
+# Ignore tremor charts
+src/components/tremor

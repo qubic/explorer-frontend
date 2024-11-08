@@ -1,4 +1,4 @@
-import { AreaChart } from '@app/components/charts/AreaChart'
+import { AreaChart } from '@app/components/tremor/AreaChart'
 import { LinearProgress } from '@app/components/ui/loaders'
 import type { GithubStatsHistory } from '@app/services/metrics'
 import { metricsApiService } from '@app/services/metrics'
@@ -34,7 +34,6 @@ export default function ReposHistoryChart() {
       data={statsData || []}
       index="date"
       categories={['starsCount', 'commits', 'openIssues', 'closedIssues', 'watchersCount']}
-      colors={['blue', 'emerald', 'violet', 'amber', 'gray', 'cyan', 'pink']}
     />
   )
 }

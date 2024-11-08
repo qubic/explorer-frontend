@@ -5,8 +5,7 @@ import { LinearProgress } from '@app/components/ui/loaders'
 import metricsApiService from '@app/services/metrics/metricsApiService'
 import type { QubicStats } from '@app/services/metrics/types'
 
-import { AreaChart } from '@app/components/charts/AreaChart'
-import { formatString } from '@app/utils'
+import { ComboChart } from '@app/components/tremor/ComboChart'
 import { useQueryState } from 'nuqs'
 import CardItem from './CardItem'
 
@@ -58,13 +57,22 @@ export default function HistoryCharts() {
                 </p>
               </div>
             </div>
-            <AreaChart
+            <ComboChart
+              showLegend={false}
               className="h-320"
               data={overviewStats || []}
               index="date"
-              categories={['marketCap']}
-              valueFormatter={(value) => `$${formatString(value)}`}
-              showYAxis={false}
+              barSeries={{
+                categories: ['marketCap'],
+                colors: ['primary'],
+                valueFormatter: (value) => `$${value.toFixed(0)}`
+              }}
+              lineSeries={{
+                categories: ['btcMarketCap'],
+                colors: ['gray'],
+                valueFormatter: (value) => `$${value.toFixed(0)}`
+              }}
+              enableBiaxial
             />
           </div>
         </CardItem>
@@ -78,36 +86,26 @@ export default function HistoryCharts() {
                 </p>
               </div>
             </div>
-            <AreaChart
+
+            <ComboChart
+              showLegend={false}
               className="h-320"
               data={overviewStats || []}
               index="date"
-              categories={['price']}
-              valueFormatter={(value) => `$${value}`}
-              showYAxis={false}
+              barSeries={{
+                categories: ['price'],
+                colors: ['primary'],
+                valueFormatter: (value) => `$${value.toFixed(8)}`
+              }}
+              lineSeries={{
+                categories: ['btcPrice'],
+                colors: ['gray'],
+                valueFormatter: (value) => `$${value.toFixed(8)}`
+              }}
+              enableBiaxial
             />
           </div>
         </CardItem>
-        {/* <CardItem className="px-24 py-20">
-          <div className="flex flex-col gap-20">
-            <div className="flex flex-col justify-between gap-20 sm:flex-row sm:gap-8 md:gap-10 lg:gap-20">
-              <div className="flex items-center justify-between gap-8 sm:justify-start">
-                <p className="font-space text-22 font-500">{t('activeAddresses')}</p>
-                <p className="align-middle font-space text-14 text-gray-50">
-                  {calculateVariance(overviewStats, 'activeAddresses')}
-                </p>
-              </div>
-            </div>
-            <AreaChart
-              className="h-320"
-              data={overviewStats || []}
-              index="date"
-              categories={['activeAddresses']}
-              valueFormatter={(value) => `${formatString(value)}`}
-              showYAxis={false}
-            />
-          </div>
-        </CardItem> */}
       </div>
     </div>
   )
