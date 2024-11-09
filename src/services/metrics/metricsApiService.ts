@@ -1,7 +1,12 @@
 import { envConfig } from '@app/configs'
 import axios from 'axios'
 import { METRICS_API_ENDPOINTS } from './endpoints'
-import type { GithubStatsHistory, GithubStatsOverview, QubicStats } from './types'
+import type {
+  GithubStatsHistory,
+  GithubStatsOverview,
+  QubicLIScoresStats,
+  QubicStats
+} from './types'
 
 const fetchData = async <T>(url: string): Promise<T> => {
   try {
@@ -21,6 +26,14 @@ const metricsApiService = {
   getQubicStats: async (range: string | null): Promise<{ data: QubicStats[] }> => {
     const url = METRICS_API_ENDPOINTS.QUBIC_STATS
     return fetchData<{ data: QubicStats[] }>(`${url}?range=${range || 'ALL'}`)
+  },
+  getQubicLiquidityScoresStats: async (
+    range: string | null
+  ): Promise<{ data: QubicLIScoresStats[] }> => {
+    const url = METRICS_API_ENDPOINTS.QUBIC_LI_SCORES_STATS
+    return fetchData<{ data: QubicLIScoresStats[]; totalCount: number }>(
+      `${url}?range=${range || 'ALL'}`
+    )
   },
   getGithubStatsOverview: async (range: string | null): Promise<{ data: GithubStatsOverview }> => {
     const url = METRICS_API_ENDPOINTS.GITHUB_STATS_OVERVIEW

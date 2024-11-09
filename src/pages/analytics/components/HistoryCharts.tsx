@@ -1,13 +1,13 @@
+import { useQueryState } from 'nuqs'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { LinearProgress } from '@app/components/ui/loaders'
+import { ComboChart } from '@app/components/tremor/ComboChart'
 import metricsApiService from '@app/services/metrics/metricsApiService'
 import type { QubicStats } from '@app/services/metrics/types'
 
-import { ComboChart } from '@app/components/tremor/ComboChart'
-import { useQueryState } from 'nuqs'
 import CardItem from './CardItem'
+import ChartContainer from './ChartContainer'
 
 async function getData(range: string | null) {
   const [overviewStats] = await Promise.all([metricsApiService.getQubicStats(range)])
@@ -40,13 +40,9 @@ export default function HistoryCharts() {
       .finally(() => setIsLoading(false))
   }, [range])
 
-  if (isLoading) {
-    return <LinearProgress />
-  }
-
   return (
-    <div className="w-full pb-32 pt-16">
-      <div className="mx-auto flex max-w-[960px] flex-1 flex-col gap-16 px-16">
+    <ChartContainer isLoading={isLoading}>
+      <div className="flex flex-col gap-20">
         <CardItem className="px-24 py-20">
           <div className="flex flex-col gap-20">
             <div className="flex flex-col justify-between gap-20 sm:flex-row sm:gap-8 md:gap-10 lg:gap-20">
@@ -107,6 +103,6 @@ export default function HistoryCharts() {
           </div>
         </CardItem>
       </div>
-    </div>
+    </ChartContainer>
   )
 }

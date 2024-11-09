@@ -34,6 +34,7 @@ export default function ReposHistoryChart() {
       data={statsData || []}
       index="date"
       categories={['starsCount', 'commits', 'openIssues', 'closedIssues', 'watchersCount']}
+      colors={['gray', 'gray', 'gray', 'gray', 'gray']}
     />
   )
 }

@@ -27,3 +27,14 @@ export interface GithubStatsOverview {
 export interface GithubStatsHistory extends GithubStatsOverview {
   date: string
 }
+
+export interface QubicLIScoresStats {
+  date: string
+  minScore: number
+  maxScore: number
+  averageScore: number
+  estimatedIts: number
+  solutionsPerHour: number
+  solutionsPerHourCalculated: number
+  difficulty: number
+}
