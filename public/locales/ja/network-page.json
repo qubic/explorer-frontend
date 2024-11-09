@@ -11,6 +11,7 @@
   "emptyTooltip": "空のティックの数",
   "entityReportsFromRandomPeers": "ランダムなピアからのレポート",
   "epoch": "エポック",
+  "epochTicks": "エポックティック",
   "errorMessage": "ベータ版 - データが不完全であるか、誤りがある可能性があります",
   "executed": "実行済み",
   "id": "ID",

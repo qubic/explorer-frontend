@@ -21,3 +21,13 @@ export interface GetIdentityTransfersResponse {
     transactions: TransactionV2[]
   }[]
 }
+
+export interface GetTickTransactionsArgs {
+  tick: number
+  transfers: boolean
+  approved: boolean
+}
+
+export interface GetTickTransactionsResponse {
+  transactions: TransactionV2[]
+}
