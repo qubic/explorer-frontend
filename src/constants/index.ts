@@ -1,13 +1,16 @@
-export const TRANSACTION_OPTIONS = [
-  { label: 'All transactions', value: 'all' },
-  { label: 'Transfer transactions', value: 'transfer' },
-  { label: 'Approved transactions', value: 'approved' }
+import type { Option } from '@app/components/ui/Select'
+import { TransactionOptionEnum } from '@app/types'
+
+export const TRANSACTION_OPTIONS: Option<TransactionOptionEnum>[] = [
+  { label: 'All transactions', value: TransactionOptionEnum.ALL },
+  { label: 'Transfer transactions', value: TransactionOptionEnum.TRANSFER },
+  { label: 'Approved transactions', value: TransactionOptionEnum.APPROVED }
 ] as const
 
-export const TRANSACTION_OPTIONS_MOBILE = [
-  { label: 'All', value: 'all' },
-  { label: 'Transfer', value: 'transfer' },
-  { label: 'Approved', value: 'approved' }
+export const TRANSACTION_OPTIONS_MOBILE: Option<TransactionOptionEnum>[] = [
+  { label: 'All', value: TransactionOptionEnum.ALL },
+  { label: 'Transfer', value: TransactionOptionEnum.TRANSFER },
+  { label: 'Approved', value: TransactionOptionEnum.APPROVED }
 ] as const
 
 export default { TRANSACTION_OPTIONS, TRANSACTION_OPTIONS_MOBILE }

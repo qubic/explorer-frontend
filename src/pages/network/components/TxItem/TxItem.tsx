@@ -5,7 +5,13 @@ import { ChevronToggleButton } from '@app/components/ui/buttons'
 import type { Transaction } from '@app/services/archiver'
 import { formatString } from '@app/utils'
 import type { AssetTransfer, Transfer } from '@app/utils/qubic-ts'
-import { getAssetsTransfers, getTransfers, isTransferTx, QUTIL_ADDRESS } from '@app/utils/qubic-ts'
+import {
+  getAssetsTransfers,
+  getTransfers,
+  isTransferTx,
+  MAIN_ASSETS_ISSUER,
+  QUTIL_ADDRESS
+} from '@app/utils/qubic-ts'
 import AddressLink from '../AddressLink'
 import CardItem from '../CardItem'
 import TxLink from '../TxLink'
@@ -60,10 +66,11 @@ function TxItem({
         }
       })()
     }
-    if (inputType === 2 && inputHex) {
+    if (destId !== MAIN_ASSETS_ISSUER && inputType === 2 && inputHex) {
       ;(async () => {
         try {
           const assetTransfer = await getAssetsTransfers(inputHex)
+          if (!assetTransfer) return
           setAsset(assetTransfer)
         } catch (error) {
           // eslint-disable-next-line no-console

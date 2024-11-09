@@ -3,6 +3,8 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import type {
   GetIdentityTransfersArgs,
   GetIdentityTransfersResponse,
+  GetTickTransactionsArgs,
+  GetTickTransactionsResponse,
   GetTransactionResponse
 } from './archiver-v2.types'
 
@@ -23,6 +25,14 @@ export const archiverV2Api = createApi({
         `identities/${addressId}/transfers?startTick=${startTick}&endTick=${endTick}`,
       transformResponse: (response: GetIdentityTransfersResponse) =>
         response.transactions.flatMap(({ transactions }) => transactions)
+    }),
+    getTickTransactions: builder.query<
+      GetTickTransactionsResponse['transactions'],
+      GetTickTransactionsArgs
+    >({
+      query: ({ tick, transfers = false, approved = false }) =>
+        `ticks/${tick}/transactions?transfers=${transfers}&approved=${approved}`,
+      transformResponse: (response: GetTickTransactionsResponse) => response.transactions
     })
   })
 })
@@ -30,5 +40,6 @@ export const archiverV2Api = createApi({
 export const {
   useGetTransactionQuery,
   useGetIndentityTransfersQuery,
-  useLazyGetIndentityTransfersQuery
+  useLazyGetIndentityTransfersQuery,
+  useGetTickTransactionsQuery
 } = archiverV2Api
