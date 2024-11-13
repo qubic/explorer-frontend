@@ -28,11 +28,12 @@ const metricsApiService = {
     return fetchData<{ data: QubicStats[] }>(`${url}?range=${range || 'ALL'}`)
   },
   getQubicLiquidityScoresStats: async (
-    range: string | null
+    range: string | null,
+    timeline: 'hourly' | 'daily' | 'weekly' = 'daily'
   ): Promise<{ data: QubicLIScoresStats[] }> => {
     const url = METRICS_API_ENDPOINTS.QUBIC_LI_SCORES_STATS
     return fetchData<{ data: QubicLIScoresStats[]; totalCount: number }>(
-      `${url}?range=${range || 'ALL'}`
+      `${url}/${timeline}?range=${range || 'ALL'}`
     )
   },
   getGithubStatsOverview: async (range: string | null): Promise<{ data: GithubStatsOverview }> => {
