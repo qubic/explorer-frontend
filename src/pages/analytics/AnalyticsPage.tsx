@@ -4,8 +4,8 @@ import HistoryCharts from './components/HistoryCharts'
 import ReposOverview from './components/ReposOverview'
 
 import ScoresHistoryCharts from './components/ScoresHistoryCharts'
+import SolutionsChart from './components/SolutionsChart'
 import SolutionsPerHourChart from './components/SolutionsPerHourChart'
-import SolutionsPerWeekChart from './components/SolutionsPerWeekChart'
 
 export default function AnalyticsPage() {
   return (
@@ -14,8 +14,8 @@ export default function AnalyticsPage() {
         <DateRangeSelector />
         <HistoryCharts />
         <ScoresHistoryCharts />
+        <SolutionsChart />
         <SolutionsPerHourChart />
-        <SolutionsPerWeekChart />
       </div>
 
       <ReposOverview />
