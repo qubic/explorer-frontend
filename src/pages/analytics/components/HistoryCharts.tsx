@@ -6,7 +6,6 @@ import { ComboChart } from '@app/components/tremor/ComboChart'
 import metricsApiService from '@app/services/metrics/metricsApiService'
 import type { QubicStats } from '@app/services/metrics/types'
 
-import { AreaChart } from '@app/components/tremor/AreaChart'
 import CardItem from './CardItem'
 import ChartContainer from './ChartContainer'
 
@@ -100,28 +99,6 @@ export default function HistoryCharts() {
                 valueFormatter: (value) => `$${value.toFixed(8)}`
               }}
               enableBiaxial
-            />
-          </div>
-        </CardItem>
-        <CardItem className="px-24 py-20">
-          <div className="flex flex-col gap-20">
-            <div className="flex flex-col justify-between gap-20 sm:flex-row sm:gap-8 md:gap-10 lg:gap-20">
-              <div className="flex items-center justify-between gap-8 sm:justify-start">
-                <p className="font-space text-22 font-500">{t('epoch')}</p>
-                <p className="align-middle font-space text-14 text-gray-50">
-                  {calculateVariance(overviewStats, 'epoch')}
-                </p>
-              </div>
-            </div>
-
-            <AreaChart
-              showLegend={false}
-              className="h-320"
-              data={overviewStats || []}
-              index="date"
-              categories={['epoch']}
-              colors={['primary']}
-              valueFormatter={(value) => `${value.toFixed(0)}`}
             />
           </div>
         </CardItem>
