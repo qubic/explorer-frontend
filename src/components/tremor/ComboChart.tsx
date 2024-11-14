@@ -466,14 +466,14 @@ const ChartTooltip = ({
         <div className={clsxTwMerge('space-y-1 px-4 py-2')}>
           {filteredPayload.map(({ value, category, barColor, lineColor, chartType }, index) => (
             <div key={`id-${index}`} className="flex items-center justify-between space-x-8">
-              <div className="flex items-center space-x-2">
-                <div className="flex w-5 items-center justify-center">
+              <div className="flex items-center space-x-4">
+                <div className="flex w-8 items-center justify-center">
                   <span
                     aria-hidden="true"
                     className={clsxTwMerge(
-                      { 'size-2 rounded-sm': chartType === 'bar' },
+                      { 'size-6': chartType === 'bar' },
                       {
-                        'h-[3px] w-3.5 shrink-0 rounded-full': chartType === 'line'
+                        'size-6 shrink-0 rounded-full': chartType === 'line'
                       },
                       'shrink-0',
                       getColorClassName(chartType === 'bar' ? barColor : lineColor, 'bg')

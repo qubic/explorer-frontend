@@ -11,7 +11,7 @@ import ChartContainer from './ChartContainer'
 
 async function getData(range: string | null) {
   const [overviewStats] = await Promise.all([
-    metricsApiService.getQubicLiquidityScoresStats(range, 'hourly')
+    metricsApiService.getQubicLiquidityScoresHistory(range, 'hourly')
   ])
   return { ...overviewStats }
 }
@@ -38,7 +38,7 @@ export default function SolutionsPerHourChart() {
         <div className="flex flex-col gap-20">
           <div className="flex flex-col justify-between gap-20 sm:flex-row sm:gap-8 md:gap-10 lg:gap-20">
             <div className="flex items-center justify-between gap-8 sm:justify-start">
-              <p className="font-space text-22 font-500">{t('totalSolutionsPerHour')}</p>
+              <p className="font-space text-22 font-500">{t('totalSolutionsByHour')}</p>
               {/* <p className="align-middle font-space text-14 text-gray-50">
                 ({calculateVariance(data, 'solutionsPerHour')})
               </p> */}

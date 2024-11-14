@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 import metricsApiService from '@app/services/metrics/metricsApiService'
 import type { QubicLIScoresStats } from '@app/services/metrics/types'
 
-import { AreaChart } from '@app/components/tremor/AreaChart'
+import { ComboChart } from '@app/components/tremor/ComboChart'
 import CardItem from './CardItem'
 import ChartContainer from './ChartContainer'
 
@@ -50,20 +50,28 @@ export default function ScoresHistoryCharts() {
         <div className="flex flex-col gap-20">
           <div className="flex flex-col justify-between gap-20 sm:flex-row sm:gap-8 md:gap-10 lg:gap-20">
             <div className="flex items-center justify-between gap-8 sm:justify-start">
-              <p className="font-space text-22 font-500">{t('averageScore')}</p>
+              <p className="font-space text-22 font-500">{t('scoresWeekly')}</p>
               <p className="align-middle font-space text-14 text-gray-50">
                 ({calculateVariance(data, 'averageScore')})
               </p>
             </div>
           </div>
-          <AreaChart
+          <ComboChart
             showLegend={false}
             className="h-320"
             data={data || []}
             index="date"
-            categories={['averageScore', 'maxScore']}
-            colors={['primary', 'gray']}
-            valueFormatter={(value) => `${value.toFixed(0)}`}
+            lineSeries={{
+              categories: ['averageScore', 'maxScore'],
+              colors: ['primary', 'gray'],
+              valueFormatter: (value) => `${value.toFixed(0)}`
+            }}
+            barSeries={{
+              categories: ['difficulty'],
+              colors: ['gray'],
+              valueFormatter: (value) => `${value.toFixed(0)}`
+            }}
+            enableBiaxial
           />
         </div>
       </CardItem>
