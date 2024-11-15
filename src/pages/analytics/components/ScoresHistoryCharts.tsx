@@ -10,7 +10,9 @@ import CardItem from './CardItem'
 import ChartContainer from './ChartContainer'
 
 async function getData(range: string | null) {
-  const [overviewStats] = await Promise.all([metricsApiService.getQubicLiquidityScoresStats(range)])
+  const [overviewStats] = await Promise.all([
+    metricsApiService.getQubicLiquidityScoresStats(range, 'weekly')
+  ])
   return { ...overviewStats }
 }
 
@@ -50,7 +52,7 @@ export default function ScoresHistoryCharts() {
         <div className="flex flex-col gap-20">
           <div className="flex flex-col justify-between gap-20 sm:flex-row sm:gap-8 md:gap-10 lg:gap-20">
             <div className="flex items-center justify-between gap-8 sm:justify-start">
-              <p className="font-space text-22 font-500">{t('scoresWeekly')}</p>
+              <p className="font-space text-22 font-500">{t('weeklyScores')}</p>
               <p className="align-middle font-space text-14 text-gray-50">
                 ({calculateVariance(data, 'averageScore')})
               </p>
