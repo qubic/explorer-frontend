@@ -14,6 +14,7 @@ import {
   StarsIcon,
   WalletIcon
 } from '@app/assets/icons'
+import { withHelmet } from '@app/components/hocs'
 import { PaginationBar, Skeleton, Tooltip } from '@app/components/ui'
 import { LinearProgress } from '@app/components/ui/loaders'
 import { useGetLatestStatsQuery } from '@app/store/apis/archiver-v1.api'
@@ -36,7 +37,7 @@ const TicksSkeleton = memo(() =>
   ))
 )
 
-export default function OverviewPage() {
+function OverviewPage() {
   const { t } = useTranslation('network-page')
   const [page, setPage] = useState(1)
   const {
@@ -231,3 +232,9 @@ export default function OverviewPage() {
     </div>
   )
 }
+
+const OverviewPageWithHelmet = withHelmet(OverviewPage, {
+  title: 'Overview | Qubic Explorer'
+})
+
+export default OverviewPageWithHelmet
