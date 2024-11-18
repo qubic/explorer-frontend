@@ -96,6 +96,7 @@ export default function TickTransactions({ tick }: Props) {
         loader={<TickTransactionsSkeleton />}
         error={tickTransactionsError && formatRTKError(tickTransactionsError)}
         replaceContentOnLoading
+        replaceContentOnError
         endMessage={
           <p className="py-32 text-center text-sm text-gray-50">
             {displayTransactions.length === 0 ? t('noTransactions') : t('allTransactionsLoaded')}
