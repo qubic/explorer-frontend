@@ -18,6 +18,7 @@ type InfiniteScrollProps<T> = Readonly<{
   isLoading?: boolean // Boolean indicating if loading (can be controlled externally)
   error?: string | null // Error message to display (can be controlled externally)
   replaceContentOnLoading?: boolean // Boolean indicating if content should be replaced on loading
+  replaceContentOnError?: boolean // Boolean indicating if content should be replaced on error
 }>
 
 export default function InfiniteScroll<T>({
@@ -31,7 +32,8 @@ export default function InfiniteScroll<T>({
   isLoading: externalIsLoading,
   className,
   error: externalError,
-  replaceContentOnLoading = false
+  replaceContentOnLoading = false,
+  replaceContentOnError = false
 }: InfiniteScrollProps<T>) {
   const observer = useRef<IntersectionObserver | null>(null)
   const [internalIsLoading, setInternalIsLoading] = useState<boolean>(false)
@@ -101,7 +103,7 @@ export default function InfiniteScroll<T>({
   }, [error, isLoading, loader, hasMore, endMessage])
 
   const renderContent = useCallback(() => {
-    if (replaceContentOnLoading && isLoading) {
+    if ((replaceContentOnLoading && isLoading) || (replaceContentOnError && error)) {
       return renderStatus()
     }
 
@@ -128,7 +130,9 @@ export default function InfiniteScroll<T>({
     className,
     lastElementRef,
     renderStatus,
-    replaceContentOnLoading
+    replaceContentOnLoading,
+    replaceContentOnError,
+    error
   ])
 
   return (
