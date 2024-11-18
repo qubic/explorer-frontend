@@ -38,7 +38,7 @@ export const archiverV2Api = createApi({
     }),
     getEpochTicks: builder.query<GetEpochTicksResponse, GetEpochTicksArgs>({
       query: ({ epoch, pageSize, page }) =>
-        `epochs/${epoch}/ticks?pageSize=${pageSize}&page=${page}`
+        `epochs/${epoch}/ticks?desc=true&pageSize=${pageSize}&page=${page}`
     })
   })
 })
