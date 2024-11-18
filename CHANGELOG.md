@@ -1,3 +1,10 @@
+# [1.9.0-rc.2](https://github.com/qubic/explorer-frontend/compare/v1.9.0-rc.1...v1.9.0-rc.2) (2024-11-18)
+
+
+### Features
+
+* add replaceContentOnError prop to InfiniteScroll for improved error handling ([0b77898](https://github.com/qubic/explorer-frontend/commit/0b7789869e56d9debe22982809477cd5cbe21c7b))
+
 # [1.9.0-rc.1](https://github.com/qubic/explorer-frontend/compare/v1.8.2...v1.9.0-rc.1) (2024-11-18)
 
 
