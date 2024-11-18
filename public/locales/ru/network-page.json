@@ -11,6 +11,7 @@
   "emptyTooltip": "Количество пустых тиков",
   "entityReportsFromRandomPeers": "Отчеты от случайных пиров",
   "epoch": "Эпоха",
+  "epochTicks": "Тики эпохи",
   "errorMessage": "Бета - данные могут быть неполными или содержать ошибки",
   "executed": "Выполнено",
   "id": "ID",

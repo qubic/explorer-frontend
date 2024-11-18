@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 
+import { withHelmet } from '@app/components/hocs'
 import { Alert, Breadcrumbs } from '@app/components/ui'
 import { ChevronToggleButton, CopyTextButton } from '@app/components/ui/buttons'
 import { LinearProgress } from '@app/components/ui/loaders'
@@ -13,7 +14,7 @@ import { MAIN_ASSETS_ISSUER } from '@app/utils/qubic-ts'
 import { AddressLink, CardItem, HomeLink } from '../components'
 import { AddressDetails, TransactionsOverview } from './components'
 
-export default function AddressPage() {
+function AddressPage() {
   const { t } = useTranslation('network-page')
   const dispatch = useAppDispatch()
   const { addressId = '' } = useParams()
@@ -104,3 +105,10 @@ export default function AddressPage() {
     </div>
   )
 }
+
+const AddressPageWithHelmet = withHelmet(AddressPage, {
+  title: 'Address | Qubic Explorer',
+  meta: [{ name: 'description', content: 'Check the details of an address in Qubic Network' }]
+})
+
+export default AddressPageWithHelmet

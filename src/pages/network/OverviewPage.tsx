@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { memo, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import {
@@ -14,10 +14,11 @@ import {
   StarsIcon,
   WalletIcon
 } from '@app/assets/icons'
-import { PaginationBar, Tooltip } from '@app/components/ui'
+import { withHelmet } from '@app/components/hocs'
+import { PaginationBar, Skeleton, Tooltip } from '@app/components/ui'
 import { LinearProgress } from '@app/components/ui/loaders'
-import { useAppDispatch, useAppSelector } from '@app/hooks/redux'
-import { getOverview, selectOverview } from '@app/store/network/overviewSlice'
+import { useGetLatestStatsQuery } from '@app/store/apis/archiver-v1.api'
+import { useGetEpochTicksQuery } from '@app/store/apis/archiver-v2.api'
 import { clsxTwMerge, formatString } from '@app/utils'
 import { CardItem, OverviewCardItem, TickLink } from './components'
 
@@ -30,22 +31,31 @@ function getTickQuality(tickQuality: number | undefined) {
 
 const PAGE_SIZE = 120
 
-export default function OverviewPage() {
-  const { overview, isLoading } = useAppSelector(selectOverview)
+const TicksSkeleton = memo(() =>
+  Array.from({ length: PAGE_SIZE }).map((_, index) => (
+    <Skeleton key={String(`${index}`)} className="h-16 w-64 rounded-sm" />
+  ))
+)
+
+function OverviewPage() {
   const { t } = useTranslation('network-page')
-  const dispatch = useAppDispatch()
   const [page, setPage] = useState(1)
-
-  useEffect(() => {
-    dispatch(getOverview())
-  }, [dispatch])
-
-  const ticks = useMemo(() => overview?.ticks || [], [overview?.ticks])
-  const pageCount = Math.ceil(ticks.length / PAGE_SIZE)
-  const startIndex = useMemo(() => (page - 1) * PAGE_SIZE, [page])
-  const displayedTicks = useMemo(
-    () => ticks.slice(startIndex, startIndex + PAGE_SIZE),
-    [startIndex, ticks]
+  const {
+    data: latestStats,
+    isFetching: isLatestStatsLoading,
+    isError: isLatestStatsError
+  } = useGetLatestStatsQuery()
+  const {
+    data: epochTicks,
+    isFetching: isEpochTicksLoading,
+    isError: isEpochTicksError
+  } = useGetEpochTicksQuery(
+    {
+      epoch: latestStats?.epoch ?? 0,
+      pageSize: PAGE_SIZE,
+      page
+    },
+    { skip: !latestStats }
   )
 
   const handlePageChange = useCallback((value: number) => {
@@ -58,49 +68,49 @@ export default function OverviewPage() {
         id: 'price',
         icon: DollarCoinIcon,
         label: t('price'),
-        value: `$${overview?.price}`
+        value: `$${latestStats?.price ?? 0}`
       },
       {
         id: 'market-cap',
         icon: CoinsStackIcon,
         label: t('marketCap'),
-        value: `$${formatString(overview?.marketCapitalization)}`
+        value: `$${formatString(latestStats?.marketCap)}`
       },
       {
         id: 'current-epoch',
         icon: SandClockIcon,
         label: t('epoch'),
-        value: formatString(overview?.currentEpoch)
+        value: formatString(latestStats?.epoch)
       },
       {
         id: 'circulating-supply',
         icon: CirculatingCoinsIcon,
         label: t('circulatingSupply'),
-        value: formatString(overview?.supply)
+        value: formatString(latestStats?.circulatingSupply)
       },
       {
         id: 'burned-supply',
         icon: FireIcon,
         label: t('burnedSupply'),
-        value: formatString(overview?.burnedQus)
+        value: formatString(latestStats?.burnedQus)
       },
       {
         id: 'active-addresses',
         icon: WalletIcon,
         label: t('activeAddresses'),
-        value: formatString(overview?.numberOfEntities)
+        value: formatString(latestStats?.activeAddresses)
       },
       {
         id: 'current-tick',
         icon: CurrentTickIcon,
         label: t('currentTick'),
-        value: formatString(overview?.currentTick)
+        value: formatString(latestStats?.currentTick)
       },
       {
         id: 'ticks-this-epoch',
         icon: EpochTicksIcon,
         label: t('ticksThisEpoch'),
-        value: formatString(overview?.numberOfTicks)
+        value: formatString(latestStats?.ticksInCurrentEpoch)
       },
       {
         id: 'empty-ticks',
@@ -113,19 +123,34 @@ export default function OverviewPage() {
             </Tooltip>
           </span>
         ),
-        value: formatString(overview?.numberOfEmptyTicks)
+        value: formatString(latestStats?.emptyTicksInCurrentEpoch)
       },
       {
         id: 'tick-quality',
         icon: StarsIcon,
         label: t('tickQuality'),
-        value: getTickQuality(overview?.epochTickQuality)
+        value: getTickQuality(latestStats?.epochTickQuality)
       }
     ],
-    [t, overview]
+    [t, latestStats]
   )
 
-  if (isLoading) {
+  const tickRange = useMemo(
+    () => ({
+      firstTick: formatString(epochTicks?.ticks?.[0].tickNumber ?? 0),
+      lastTick: formatString(epochTicks?.ticks?.at(-1)?.tickNumber ?? 0)
+    }),
+    [epochTicks]
+  )
+
+  // Triggering error boundary due to data fetch failure.
+  if (isLatestStatsError || isEpochTicksError) {
+    throw new Error(
+      'OverviewPage data load failure: Unable to fetch latest stats or epoch ticks. Please check the network or API status.'
+    )
+  }
+
+  if (isLatestStatsLoading) {
     return <LinearProgress />
   }
 
@@ -169,27 +194,36 @@ export default function OverviewPage() {
               <div className="flex items-center justify-between gap-8 sm:justify-start">
                 <p className="font-space text-22 font-500">{t('ticks')}</p>
                 <p className="align-middle font-space text-14 text-gray-50">
-                  ( {formatString(overview && overview.ticks[0].tick)} -{' '}
-                  {formatString(overview && overview.ticks[overview.ticks.length - 1].tick)} )
+                  ( {tickRange.firstTick} - {tickRange.lastTick} )
+                </p>
+              </div>
+              <div className="flex items-center justify-between gap-8 sm:justify-start">
+                <p className="font-space text-22 font-500">{t('epochTicks')}</p>
+                <p className="align-baseline font-space text-sm text-gray-50">
+                  ( {epochTicks?.pagination.totalRecords} )
                 </p>
               </div>
             </div>
-            <div className="grid grid-cols-3 gap-12 xs:grid-cols-4 sm:grid-cols-6 md:grid-cols-10">
-              {displayedTicks.map((item) => (
-                <TickLink
-                  key={item.tick}
-                  value={item.tick}
-                  className={clsxTwMerge(
-                    'font-space text-xs',
-                    item.arbitrated ? 'text-error-40' : 'text-gray-50'
-                  )}
-                />
-              ))}
-            </div>
+            <ul className="grid grid-cols-3 gap-12 xs:grid-cols-4 sm:grid-cols-6 md:grid-cols-10">
+              {isEpochTicksLoading ? (
+                <TicksSkeleton />
+              ) : (
+                epochTicks?.ticks.map((item) => (
+                  <TickLink
+                    key={item.tickNumber}
+                    value={item.tickNumber}
+                    className={clsxTwMerge(
+                      'w-fit font-space text-xs',
+                      item.isEmpty ? 'text-error-40' : 'text-gray-50'
+                    )}
+                  />
+                ))
+              )}
+            </ul>
             <PaginationBar
               className="mt-16 justify-center gap-10"
-              pageCount={pageCount}
-              page={page}
+              pageCount={epochTicks?.pagination.totalPages ?? 1}
+              page={epochTicks?.pagination.currentPage ?? 1}
               onPageChange={handlePageChange}
             />
           </div>
@@ -198,3 +232,9 @@ export default function OverviewPage() {
     </div>
   )
 }
+
+const OverviewPageWithHelmet = withHelmet(OverviewPage, {
+  title: 'Overview | Qubic Explorer'
+})
+
+export default OverviewPageWithHelmet

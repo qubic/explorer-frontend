@@ -5,6 +5,7 @@ interface ImportMetaEnv {
   readonly VITE_ENABLE_PROXY: string
   readonly VITE_QLI_API_URL: string
   readonly VITE_ARCHIVER_API_URL: string
+  readonly VITE_QUBIC_API_URL: string
 }
 
 interface ImportMeta {
