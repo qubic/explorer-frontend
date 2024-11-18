@@ -1,3 +1,22 @@
+# [1.9.0-rc.2](https://github.com/qubic/explorer-frontend/compare/v1.9.0-rc.1...v1.9.0-rc.2) (2024-11-18)
+
+
+### Features
+
+* add replaceContentOnError prop to InfiniteScroll for improved error handling ([0b77898](https://github.com/qubic/explorer-frontend/commit/0b7789869e56d9debe22982809477cd5cbe21c7b))
+
+# [1.9.0-rc.1](https://github.com/qubic/explorer-frontend/compare/v1.8.2...v1.9.0-rc.1) (2024-11-18)
+
+
+### Features
+
+* add Skeleton component ([b7951fd](https://github.com/qubic/explorer-frontend/commit/b7951fd11840c8001a619a1cd49072cee4c311d0))
+* enhance InfiniteScroll and Select components ([f5af1fb](https://github.com/qubic/explorer-frontend/commit/f5af1fb9f3f5ac631b0f95fbd98fbbc8573b2eed))
+* integrate react-helmet-async for improved SEO and page metadata management ([8cbde2e](https://github.com/qubic/explorer-frontend/commit/8cbde2e531661af9bafef040a5934f617142002a))
+* migrate Tick Page to archiver endpoints and improve UX ([af6a55b](https://github.com/qubic/explorer-frontend/commit/af6a55bb01f5d7efba46f7ec06d7a9a5ce4c8e0c))
+* update Overview Page to use new API's and enhance UX ([30c078f](https://github.com/qubic/explorer-frontend/commit/30c078f44dbcdb92c6d3277c43c4888345edac45))
+* update Overview Page to use new API's and enhance UX ([4543ed7](https://github.com/qubic/explorer-frontend/commit/4543ed7731c60d904bc4c2f81feb4ddf16b76b29))
+
 ## [1.8.2](https://github.com/qubic/explorer-frontend/compare/v1.8.1...v1.8.2) (2024-10-27)
 
 

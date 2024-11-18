@@ -11,6 +11,7 @@
   "emptyTooltip": "Number of empty ticks",
   "entityReportsFromRandomPeers": "Reports from random peers",
   "epoch": "Epoch",
+  "epochTicks": "Epoch Ticks",
   "errorMessage": "Beta - Data may be incomplete or erroneous",
   "executed": "Executed",
   "id": "ID",

@@ -2,6 +2,7 @@ import { useCallback, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 
+import { withHelmet } from '@app/components/hocs'
 import { Alert, Breadcrumbs } from '@app/components/ui'
 import { LinearProgress } from '@app/components/ui/loaders'
 import { useAppDispatch, useAppSelector } from '@app/hooks/redux'
@@ -13,7 +14,7 @@ import { formatEllipsis } from '@app/utils'
 import { HomeLink, TickLink, TxItem } from './components'
 import { useValidatedTxEra } from './hooks'
 
-export default function TxPage() {
+function TxPage() {
   const { t } = useTranslation('network-page')
   const dispatch = useAppDispatch()
   const { txWithStatus, isLoading } = useAppSelector(selectTx)
@@ -75,3 +76,9 @@ export default function TxPage() {
     </div>
   )
 }
+
+const TxPageWithHelmet = withHelmet(TxPage, {
+  title: 'Transaction | Qubic Explorer'
+})
+
+export default TxPageWithHelmet

@@ -11,6 +11,7 @@
   "emptyTooltip": "空滴答的数量",
   "entityReportsFromRandomPeers": "来自随机节点的报告",
   "epoch": "纪元",
+  "epochTicks": "纪元滴答",
   "errorMessage": "测试版 - 数据可能不完整或有误",
   "executed": "已执行",
   "id": "标识",

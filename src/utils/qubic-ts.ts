@@ -32,11 +32,15 @@ export const getTransfers = async (data: string): Promise<Transfer[]> => {
   return standardizedData
 }
 
-export const getAssetsTransfers = async (data: string): Promise<AssetTransfer> => {
+export const getAssetsTransfers = async (data: string): Promise<AssetTransfer | null> => {
   const decoder = new TextDecoder()
   const binaryData = new Uint8Array(data.match(/.{1,2}/g)?.map((pair) => parseInt(pair, 16)) ?? [])
 
   const parsedPayload = await new QubicTransferAssetPayload().parse(binaryData)
+
+  if (!parsedPayload) {
+    return null
+  }
 
   const assetName = decoder.decode(parsedPayload.getAssetName()).replace(/\0/g, '')
   const units = parsedPayload.getNumberOfUnits().getNumber().toString()

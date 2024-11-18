@@ -6,7 +6,7 @@ import { Alert } from '@app/components/ui'
 import { DotsLoader } from '@app/components/ui/loaders'
 import { clsxTwMerge } from '@app/utils'
 
-interface InfiniteScrollProps<T> {
+type InfiniteScrollProps<T> = Readonly<{
   items: T[] // Array of items to display
   loadMore: () => void | Promise<void> // Function to load more items
   hasMore: boolean // Boolean indicating if more items can be loaded
@@ -17,7 +17,9 @@ interface InfiniteScrollProps<T> {
   className?: string // Custom class name for list container
   isLoading?: boolean // Boolean indicating if loading (can be controlled externally)
   error?: string | null // Error message to display (can be controlled externally)
-}
+  replaceContentOnLoading?: boolean // Boolean indicating if content should be replaced on loading
+  replaceContentOnError?: boolean // Boolean indicating if content should be replaced on error
+}>
 
 export default function InfiniteScroll<T>({
   items,
@@ -29,7 +31,9 @@ export default function InfiniteScroll<T>({
   threshold = 0,
   isLoading: externalIsLoading,
   className,
-  error: externalError
+  error: externalError,
+  replaceContentOnLoading = false,
+  replaceContentOnError = false
 }: InfiniteScrollProps<T>) {
   const observer = useRef<IntersectionObserver | null>(null)
   const [internalIsLoading, setInternalIsLoading] = useState<boolean>(false)
@@ -87,26 +91,53 @@ export default function InfiniteScroll<T>({
   }, [handleScroll])
 
   const renderStatus = useCallback(() => {
-    if (error) return <Alert variant="error">{error}</Alert>
+    if (error)
+      return (
+        <Alert variant="error" className="my-12">
+          {error}
+        </Alert>
+      )
     if (isLoading) return loader
     if (!hasMore && endMessage) return endMessage
     return null
   }, [error, isLoading, loader, hasMore, endMessage])
 
+  const renderContent = useCallback(() => {
+    if ((replaceContentOnLoading && isLoading) || (replaceContentOnError && error)) {
+      return renderStatus()
+    }
+
+    return (
+      <>
+        <ul className={clsxTwMerge('space-y-12', className)}>
+          {items.map((item, index) => (
+            <li
+              key={JSON.stringify(item)}
+              ref={index === items.length - 1 ? lastElementRef : undefined}
+            >
+              {renderItem(item, index)}
+            </li>
+          ))}
+        </ul>
+
+        {renderStatus()}
+      </>
+    )
+  }, [
+    isLoading,
+    items,
+    renderItem,
+    className,
+    lastElementRef,
+    renderStatus,
+    replaceContentOnLoading,
+    replaceContentOnError,
+    error
+  ])
+
   return (
     <div className="relative">
-      <ul className={clsxTwMerge('space-y-12', className)}>
-        {items.map((item, index) => (
-          <li
-            key={JSON.stringify(item)}
-            ref={index === items.length - 1 ? lastElementRef : undefined}
-          >
-            {renderItem(item, index)}
-          </li>
-        ))}
-      </ul>
-
-      {renderStatus()}
+      {renderContent()}
 
       {showScrollToTop && (
         <button

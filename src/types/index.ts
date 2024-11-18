@@ -19,3 +19,9 @@ export type TransactionWithStatus = {
   status: TransactionStatus & { txType: TxType }
   timestamp?: string
 }
+
+export enum TransactionOptionEnum {
+  ALL = 'ALL',
+  TRANSFER = 'TRANSFER',
+  APPROVED = 'APPROVED'
+}
