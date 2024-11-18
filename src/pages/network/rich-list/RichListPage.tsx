@@ -1,6 +1,7 @@
 import { useAppDispatch, useAppSelector } from '@app/hooks/redux'
 import { useTranslation } from 'react-i18next'
 
+import { withHelmet } from '@app/components/hocs'
 import { Breadcrumbs, PaginationBar } from '@app/components/ui'
 import { useTailwindBreakpoint } from '@app/hooks'
 import { getRichList, selectRichList } from '@app/store/network/richListSlice'
@@ -16,7 +17,7 @@ const RichListLoadingRows = memo(() => {
   ))
 })
 
-export default function RichListPage() {
+function RichListPage() {
   const { t } = useTranslation('network-page')
   const dispatch = useAppDispatch()
   const { entities, paginationInfo, isLoading, error } = useAppSelector(selectRichList)
@@ -95,3 +96,10 @@ export default function RichListPage() {
     </div>
   )
 }
+
+const RichListPageWithHelmet = withHelmet(RichListPage, {
+  title: 'Rich List | Qubic Explorer',
+  meta: [{ name: 'description', content: 'Check the addresses rich list of Qubic Network' }]
+})
+
+export default RichListPageWithHelmet
