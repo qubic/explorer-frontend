@@ -11,7 +11,7 @@ import ChartContainer from './ChartContainer'
 
 async function getData(range: string | null) {
   const [overviewStats] = await Promise.all([
-    metricsApiService.getQubicLiquidityScoresStats(range, 'daily')
+    metricsApiService.getQubicLiquidityScoresStats(range, 'minute')
   ])
   return { ...overviewStats }
 }

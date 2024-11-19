@@ -29,7 +29,7 @@ const metricsApiService = {
   },
   getQubicLiquidityScoresStats: async (
     range: string | null,
-    timeline: 'hourly' | 'daily' | 'weekly' | '5min' = 'daily'
+    timeline: 'hourly' | 'daily' | 'weekly' | 'minute' = 'minute'
   ): Promise<{ data: QubicLIScoresStats[] }> => {
     const url = METRICS_API_ENDPOINTS.QUBIC_LI_STATS
     return fetchData<{ data: QubicLIScoresStats[]; totalCount: number }>(
