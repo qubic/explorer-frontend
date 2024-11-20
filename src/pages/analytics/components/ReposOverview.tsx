@@ -1,10 +1,9 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { XmarkIcon } from '@app/assets/icons'
 import { LinearProgress } from '@app/components/ui/loaders'
-import metricsApiService from '@app/services/metrics/metricsApiService'
-import type { GithubStatsOverview } from '@app/services/metrics/types'
+
 import { formatString } from '@app/utils'
 import {
   RiExportLine,
@@ -16,30 +15,19 @@ import {
   RiStarLine
 } from '@remixicon/react'
 import { useQueryState } from 'nuqs'
+
+import { useGetGithubStatsOverviewQuery } from '@app/store/apis/metrics-v1.api'
+
 import CardItem from './CardItem'
 import OverviewCardItem from './OverviewCardItem'
 import ReposHistoryChart from './ReposHistoryChart'
-
-async function getData(range: string | null) {
-  const [overviewStats] = await Promise.all([metricsApiService.getGithubStatsOverview(range)])
-  return { ...overviewStats }
-}
 
 export default function OOSOverviewPage() {
   const { t } = useTranslation('global')
 
   const [range] = useQueryState('range')
 
-  const [overviewStats, setOverviewStats] = useState<GithubStatsOverview>()
-  const [isLoading, setIsLoading] = useState(true)
-
-  useEffect(() => {
-    getData(range)
-      .then((data) => {
-        setOverviewStats(data.data)
-      })
-      .finally(() => setIsLoading(false))
-  }, [range])
+  const { data: overviewStats, isLoading } = useGetGithubStatsOverviewQuery(range)
 
   const cardData = useMemo(
     () => [

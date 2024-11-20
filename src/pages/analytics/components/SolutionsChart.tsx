@@ -1,36 +1,20 @@
 import { useQueryState } from 'nuqs'
-import { useEffect, useState } from 'react'
+
 import { useTranslation } from 'react-i18next'
 
-import metricsApiService from '@app/services/metrics/metricsApiService'
-import type { QubicLIScoresStats } from '@app/services/metrics/types'
+import { useGetQubicLIScoresHistoryQuery } from '@app/store/apis/metrics-v1.api'
 
 import { AreaChart } from '@app/components/tremor/AreaChart'
+
 import CardItem from './CardItem'
 import ChartContainer from './ChartContainer'
-
-async function getData(range: string | null) {
-  const [overviewStats] = await Promise.all([
-    metricsApiService.getQubicLiquidityScoresHistory(range, '5min')
-  ])
-  return { ...overviewStats }
-}
 
 export default function SolutionsChart() {
   const { t } = useTranslation('analytics-page')
 
-  const [data, setData] = useState<QubicLIScoresStats[]>([])
-  const [isLoading, setIsLoading] = useState(true)
   const [range] = useQueryState('range')
 
-  useEffect(() => {
-    setIsLoading(true)
-    getData(range)
-      .then((response) => {
-        setData(response.data)
-      })
-      .finally(() => setIsLoading(false))
-  }, [range])
+  const { data, isLoading } = useGetQubicLIScoresHistoryQuery({ range, timeline: '5min' })
 
   return (
     <ChartContainer isLoading={isLoading}>

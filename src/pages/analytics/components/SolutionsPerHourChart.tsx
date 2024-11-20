@@ -1,36 +1,20 @@
 import { useQueryState } from 'nuqs'
-import { useEffect, useState } from 'react'
+
 import { useTranslation } from 'react-i18next'
 
-import metricsApiService from '@app/services/metrics/metricsApiService'
-import type { QubicLIScoresStats } from '@app/services/metrics/types'
+import { useGetQubicLIStatsQuery } from '@app/store/apis/metrics-v1.api'
 
 import { AreaChart } from '@app/components/tremor/AreaChart'
+
 import CardItem from './CardItem'
 import ChartContainer from './ChartContainer'
-
-async function getData(range: string | null) {
-  const [overviewStats] = await Promise.all([
-    metricsApiService.getQubicLiquidityScoresStats(range, 'minute')
-  ])
-  return { ...overviewStats }
-}
 
 export default function SolutionsPerHourChart() {
   const { t } = useTranslation('analytics-page')
 
-  const [data, setData] = useState<QubicLIScoresStats[]>([])
-  const [isLoading, setIsLoading] = useState(true)
   const [range] = useQueryState('range')
 
-  useEffect(() => {
-    setIsLoading(true)
-    getData(range)
-      .then((response) => {
-        setData(response.data)
-      })
-      .finally(() => setIsLoading(false))
-  }, [range])
+  const { data, isLoading } = useGetQubicLIStatsQuery({ range })
 
   return (
     <ChartContainer isLoading={isLoading}>
@@ -48,7 +32,7 @@ export default function SolutionsPerHourChart() {
             index="date"
             categories={['solutionsPerHour', 'allTimeSolutionsPerHour']}
             colors={['primary', 'red']}
-            valueFormatter={(value) => `${value.toFixed(0)} solution/hour`}
+            valueFormatter={(value) => `${value.toFixed(0)}`}
             yAxisWidth={100}
           />
         </div>

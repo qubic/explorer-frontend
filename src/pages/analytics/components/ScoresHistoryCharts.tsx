@@ -1,25 +1,15 @@
 import { useQueryState } from 'nuqs'
-import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import metricsApiService from '@app/services/metrics/metricsApiService'
-import type { QubicLIScoresStats } from '@app/services/metrics/types'
+import { useGetQubicLIStatsQuery } from '@app/store/apis/metrics-v1.api'
+import type { QubicLIStats } from '@app/store/apis/metrics-v1.types'
 
 import { ComboChart } from '@app/components/tremor/ComboChart'
+
 import CardItem from './CardItem'
 import ChartContainer from './ChartContainer'
 
-async function getData(range: string | null) {
-  const [overviewStats] = await Promise.all([
-    metricsApiService.getQubicLiquidityScoresStats(range, 'weekly')
-  ])
-  return { ...overviewStats }
-}
-
-function calculateVariance<K extends keyof QubicLIScoresStats>(
-  stats: QubicLIScoresStats[],
-  key: K
-): string {
+function calculateVariance<K extends keyof QubicLIStats>(stats: QubicLIStats[], key: K): string {
   if (stats.length < 2) return '0%'
   const firstValue = stats[0][key]
   const lastValue = stats[stats.length - 1][key]
@@ -33,18 +23,9 @@ function calculateVariance<K extends keyof QubicLIScoresStats>(
 export default function ScoresHistoryCharts() {
   const { t } = useTranslation('analytics-page')
 
-  const [data, setData] = useState<QubicLIScoresStats[]>([])
-  const [isLoading, setIsLoading] = useState(true)
   const [range] = useQueryState('range')
 
-  useEffect(() => {
-    setIsLoading(true)
-    getData(range)
-      .then((response) => {
-        setData(response.data)
-      })
-      .finally(() => setIsLoading(false))
-  }, [range])
+  const { data = [], isLoading } = useGetQubicLIStatsQuery({ range, timeline: 'weekly' })
 
   return (
     <ChartContainer isLoading={isLoading}>
