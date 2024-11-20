@@ -17,6 +17,7 @@ import { AxisDomain } from 'recharts/types/util/types'
 
 import { useOnWindowResize } from '@app/hooks/useOnWindowResize'
 import { clsxTwMerge } from '@app/utils/styles'
+import { useTranslation } from 'react-i18next'
 import {
   AvailableChartColors,
   AvailableChartColorsKeys,
@@ -37,6 +38,7 @@ interface LegendItemProps {
 
 const LegendItem = ({ name, color, onClick, activeLegend }: LegendItemProps) => {
   const hasOnValueChange = !!onClick
+  const { t } = useTranslation('analytics-page')
   return (
     <li
       className={clsxTwMerge(
@@ -53,7 +55,7 @@ const LegendItem = ({ name, color, onClick, activeLegend }: LegendItemProps) => 
     >
       <span
         className={clsxTwMerge(
-          'h-[3px] w-3.5 shrink-0 rounded-full',
+          'size-6 shrink-0 rounded-full',
           getColorClassName(color, 'bg'),
           activeLegend && activeLegend !== name ? 'opacity-40' : 'opacity-100'
         )}
@@ -69,7 +71,7 @@ const LegendItem = ({ name, color, onClick, activeLegend }: LegendItemProps) => 
           activeLegend && activeLegend !== name ? 'opacity-40' : 'opacity-100'
         )}
       >
-        {name}
+        {t(name)}
       </p>
     </li>
   )
@@ -363,6 +365,8 @@ interface ChartTooltipProps {
 }
 
 const ChartTooltip = ({ active, payload, label, valueFormatter }: ChartTooltipProps) => {
+  const { t } = useTranslation('analytics-page')
+
   if (active && payload && payload.length) {
     return (
       <div
@@ -384,7 +388,7 @@ const ChartTooltip = ({ active, payload, label, valueFormatter }: ChartTooltipPr
               'text-gray-900 dark:text-gray-50'
             )}
           >
-            {label}
+            {t(label)}
           </p>
         </div>
         <div className={clsxTwMerge('space-y-1 px-4 py-2')}>
@@ -394,7 +398,7 @@ const ChartTooltip = ({ active, payload, label, valueFormatter }: ChartTooltipPr
                 <span
                   aria-hidden="true"
                   className={clsxTwMerge(
-                    'h-[3px] w-3.5 shrink-0 rounded-full',
+                    'size-6 shrink-0 rounded-full',
                     getColorClassName(color, 'bg')
                   )}
                 />
@@ -406,7 +410,7 @@ const ChartTooltip = ({ active, payload, label, valueFormatter }: ChartTooltipPr
                     'text-gray-700 dark:text-gray-300'
                   )}
                 >
-                  {category}
+                  {t(category)}
                 </p>
               </div>
               <p

@@ -437,7 +437,7 @@ const ChartTooltip = ({
   barValueFormatter = (value: number): string => value.toString(),
   lineValueFormatter = (value: number): string => value.toString()
 }: ChartTooltipProps) => {
-  const { t } = useTranslation('global')
+  const { t } = useTranslation('analytics-page')
   if (active && payload && payload.length) {
     const filteredPayload = payload.filter((item: any) => item.type !== 'none')
     return (
