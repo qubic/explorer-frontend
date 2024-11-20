@@ -1,0 +1,19 @@
+{
+  "commits": "Commits",
+  "contributors": "Contributors",
+  "openIssues": "Open Issues",
+  "closedIssues": "Closed Issues",
+  "branches": "Branches",
+  "releases": "Releases",
+  "starsCount": "Stars",
+  "watchersCount": "Watchers",
+  "history": "History",
+  "weeklyScores": "Weekly Scores",
+  "totalSolutions": "Total Solutions",
+  "solutionsPerHour": "Solutions Per Hour",
+  "difficulty": "Difficulty",
+  "avgScore": "Average Score",
+  "minScore": "Min Score",
+  "maxScore": "Max Score",
+  "sum": "Total Sum"
+}

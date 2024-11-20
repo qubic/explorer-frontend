@@ -31,7 +31,7 @@ function calculateVariance<K extends keyof QubicLIScoresStats>(
 }
 
 export default function ScoresHistoryCharts() {
-  const { t } = useTranslation('global')
+  const { t } = useTranslation('analytics-page')
 
   const [data, setData] = useState<QubicLIScoresStats[]>([])
   const [isLoading, setIsLoading] = useState(true)

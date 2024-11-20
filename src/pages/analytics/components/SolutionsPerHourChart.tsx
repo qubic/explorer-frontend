@@ -17,7 +17,7 @@ async function getData(range: string | null) {
 }
 
 export default function SolutionsPerHourChart() {
-  const { t } = useTranslation('global')
+  const { t } = useTranslation('analytics-page')
 
   const [data, setData] = useState<QubicLIScoresStats[]>([])
   const [isLoading, setIsLoading] = useState(true)
@@ -38,7 +38,7 @@ export default function SolutionsPerHourChart() {
         <div className="flex flex-col gap-20">
           <div className="flex flex-col justify-between gap-20 sm:flex-row sm:gap-8 md:gap-10 lg:gap-20">
             <div className="flex items-center justify-between gap-8 sm:justify-start">
-              <p className="font-space text-22 font-500">{t('dailySolutionRatePerHour')}</p>
+              <p className="font-space text-22 font-500">{t('solutionsPerHour')}</p>
               {/* <p className="align-middle font-space text-14 text-gray-50">
                 ({calculateVariance(data, 'solutionsPerHour')})
               </p> */}
@@ -51,7 +51,7 @@ export default function SolutionsPerHourChart() {
             index="date"
             categories={['solutionsPerHour']}
             colors={['primary', 'gray']}
-            valueFormatter={(value) => `${value.toFixed(0)} / hour`}
+            valueFormatter={(value) => `${value.toFixed(0)} solution/hour`}
           />
         </div>
       </CardItem>

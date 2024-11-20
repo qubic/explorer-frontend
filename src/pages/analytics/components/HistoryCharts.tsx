@@ -26,7 +26,7 @@ function calculateVariance<K extends keyof QubicStats>(stats: QubicStats[], key:
 }
 
 export default function HistoryCharts() {
-  const { t } = useTranslation('global')
+  const { t } = useTranslation('analytics-page')
 
   const [overviewStats, setOverviewStats] = useState<QubicStats[]>([])
   const [isLoading, setIsLoading] = useState(true)

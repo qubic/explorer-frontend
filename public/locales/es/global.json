@@ -7,14 +7,5 @@
   "from": "de",
   "to": "a",
   "transaction": "Transacción",
-  "transactions": "Transacciones",
-  "commits": "Commits",
-  "contributors": "Contribuyentes",
-  "openIssues": "Issues abiertos",
-  "closedIssues": "Issues cerrados",
-  "branches": "Ramas",
-  "releases": "Lanzamientos",
-  "starsCount": "Estrellas",
-  "watchersCount": "Observadores",
-  "history": "Historia"
+  "transactions": "Transacciones"
 }
