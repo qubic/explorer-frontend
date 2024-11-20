@@ -37,4 +37,6 @@ export interface QubicLIScoresStats {
   solutionsPerHour: number
   solutionsPerHourCalculated: number
   difficulty: number
+  allTimeSolutionsPerHour: number
+  allTimeSolutionsPerHourCalculated: number
 }

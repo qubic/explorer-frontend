@@ -39,9 +39,6 @@ export default function SolutionsPerHourChart() {
           <div className="flex flex-col justify-between gap-20 sm:flex-row sm:gap-8 md:gap-10 lg:gap-20">
             <div className="flex items-center justify-between gap-8 sm:justify-start">
               <p className="font-space text-22 font-500">{t('solutionsPerHour')}</p>
-              {/* <p className="align-middle font-space text-14 text-gray-50">
-                ({calculateVariance(data, 'solutionsPerHour')})
-              </p> */}
             </div>
           </div>
           <AreaChart
@@ -49,9 +46,10 @@ export default function SolutionsPerHourChart() {
             className="h-320"
             data={data || []}
             index="date"
-            categories={['solutionsPerHour']}
-            colors={['primary', 'gray']}
+            categories={['solutionsPerHour', 'allTimeSolutionsPerHour']}
+            colors={['primary', 'red']}
             valueFormatter={(value) => `${value.toFixed(0)} solution/hour`}
+            yAxisWidth={100}
           />
         </div>
       </CardItem>

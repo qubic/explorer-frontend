@@ -20,6 +20,12 @@ export const chartColors = {
     stroke: 'stroke-gray-50',
     fill: 'fill-gray-50',
     text: 'text-gray-50'
+  },
+  red: {
+    bg: 'bg-red-500',
+    stroke: 'stroke-red-500',
+    fill: 'fill-red-500',
+    text: 'text-red-500'
   }
 } as const satisfies {
   [color: string]: {
