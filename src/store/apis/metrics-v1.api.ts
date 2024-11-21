@@ -41,7 +41,7 @@ export const metricsV1Api = createApi({
       transformResponse: (response: { data: QubicLIScoresStats[] }) => response.data
     }),
     getGithubStatsOverview: build.query<GithubStatsOverview, string | null>({
-      query: (range) => `/github?range=${range || 'ALL'}`,
+      query: (range) => `/github/overview?range=${range || 'ALL'}`,
       transformResponse: (response: { data: GithubStatsOverview }) => response.data
     }),
     getGithubStatsHistory: build.query<GithubStatsHistory[], string | null>({
