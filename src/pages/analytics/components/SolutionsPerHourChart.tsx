@@ -33,7 +33,6 @@ export default function SolutionsPerHourChart() {
             categories={['solutionsPerHour', 'allTimeSolutionsPerHour']}
             colors={['primary', 'red']}
             valueFormatter={(value) => `${value.toFixed(0)}`}
-            yAxisWidth={100}
           />
         </div>
       </CardItem>
