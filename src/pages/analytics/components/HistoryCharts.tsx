@@ -26,73 +26,71 @@ export default function HistoryCharts() {
 
   const [range] = useQueryState('range')
 
-  const { data, isLoading } = useGetQubicStatsQuery(range)
+  const { data = [], isLoading } = useGetQubicStatsQuery(range)
 
   return (
-    data && (
-      <ChartContainer isLoading={isLoading}>
-        <div className="flex flex-col gap-20">
-          <CardItem className="px-24 py-20">
-            <div className="flex flex-col gap-20">
-              <div className="flex flex-col justify-between gap-20 sm:flex-row sm:gap-8 md:gap-10 lg:gap-20">
-                <div className="flex items-center justify-between gap-8 sm:justify-start">
-                  <p className="font-space text-22 font-500">{t('marketCap')}</p>
-                  <p className="align-middle font-space text-14 text-gray-50">
-                    ({calculateVariance(data, 'marketCap')})
-                  </p>
-                </div>
+    <ChartContainer isLoading={isLoading}>
+      <div className="flex flex-col gap-20">
+        <CardItem className="px-24 py-20">
+          <div className="flex flex-col gap-20">
+            <div className="flex flex-col justify-between gap-20 sm:flex-row sm:gap-8 md:gap-10 lg:gap-20">
+              <div className="flex items-center justify-between gap-8 sm:justify-start">
+                <p className="font-space text-22 font-500">{t('marketCap')}</p>
+                <p className="align-middle font-space text-14 text-gray-50">
+                  ({calculateVariance(data, 'marketCap')})
+                </p>
               </div>
-              <ComboChart
-                showLegend={false}
-                className="h-320"
-                data={data || []}
-                index="date"
-                barSeries={{
-                  categories: ['marketCap'],
-                  colors: ['primary'],
-                  valueFormatter: (value) => `$${value.toFixed(0)}`
-                }}
-                lineSeries={{
-                  categories: ['btcMarketCap'],
-                  colors: ['gray'],
-                  valueFormatter: (value) => `$${value.toFixed(0)}`
-                }}
-                enableBiaxial
-              />
             </div>
-          </CardItem>
-          <CardItem className="px-24 py-20">
-            <div className="flex flex-col gap-20">
-              <div className="flex flex-col justify-between gap-20 sm:flex-row sm:gap-8 md:gap-10 lg:gap-20">
-                <div className="flex items-center justify-between gap-8 sm:justify-start">
-                  <p className="font-space text-22 font-500">{t('price')}</p>
-                  <p className="align-middle font-space text-14 text-gray-50">
-                    {calculateVariance(data, 'price')}
-                  </p>
-                </div>
+            <ComboChart
+              showLegend={false}
+              className="h-320"
+              data={data || []}
+              index="date"
+              barSeries={{
+                categories: ['marketCap'],
+                colors: ['primary'],
+                valueFormatter: (value) => `$${value.toFixed(0)}`
+              }}
+              lineSeries={{
+                categories: ['btcMarketCap'],
+                colors: ['gray'],
+                valueFormatter: (value) => `$${value.toFixed(0)}`
+              }}
+              enableBiaxial
+            />
+          </div>
+        </CardItem>
+        <CardItem className="px-24 py-20">
+          <div className="flex flex-col gap-20">
+            <div className="flex flex-col justify-between gap-20 sm:flex-row sm:gap-8 md:gap-10 lg:gap-20">
+              <div className="flex items-center justify-between gap-8 sm:justify-start">
+                <p className="font-space text-22 font-500">{t('price')}</p>
+                <p className="align-middle font-space text-14 text-gray-50">
+                  {calculateVariance(data, 'price')}
+                </p>
               </div>
+            </div>
 
-              <ComboChart
-                showLegend={false}
-                className="h-320"
-                data={data || []}
-                index="date"
-                barSeries={{
-                  categories: ['price'],
-                  colors: ['primary'],
-                  valueFormatter: (value) => `$${value.toFixed(8)}`
-                }}
-                lineSeries={{
-                  categories: ['btcPrice'],
-                  colors: ['gray'],
-                  valueFormatter: (value) => `$${value.toFixed(8)}`
-                }}
-                enableBiaxial
-              />
-            </div>
-          </CardItem>
-        </div>
-      </ChartContainer>
-    )
+            <ComboChart
+              showLegend={false}
+              className="h-320"
+              data={data || []}
+              index="date"
+              barSeries={{
+                categories: ['price'],
+                colors: ['primary'],
+                valueFormatter: (value) => `$${value.toFixed(8)}`
+              }}
+              lineSeries={{
+                categories: ['btcPrice'],
+                colors: ['gray'],
+                valueFormatter: (value) => `$${value.toFixed(8)}`
+              }}
+              enableBiaxial
+            />
+          </div>
+        </CardItem>
+      </div>
+    </ChartContainer>
   )
 }
