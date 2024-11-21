@@ -23,7 +23,7 @@ import OverviewCardItem from './OverviewCardItem'
 import ReposHistoryChart from './ReposHistoryChart'
 
 export default function OOSOverviewPage() {
-  const { t } = useTranslation('global')
+  const { t } = useTranslation('analytics-page')
 
   const [range] = useQueryState('range')
 

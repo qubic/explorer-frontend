@@ -13,7 +13,10 @@
   "solutionsPerHour": "Soluciones por Hora",
   "difficulty": "Dificultad",
   "avgScore": "Promedio",
+  "averageScore": "Promedio",
   "minScore": "Minimo",
   "maxScore": "Maximo",
-  "sum": "Suma Total"
+  "sum": "Suma Total",
+  "btcMarketCap": "Capitalización de mercado BTC",
+  "btcPrice": "Precio BTC"
 }
