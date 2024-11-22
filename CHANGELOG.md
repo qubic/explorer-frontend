@@ -1,3 +1,15 @@
+# [1.10.0-rc.1](https://github.com/qubic/explorer-frontend/compare/v1.9.0...v1.10.0-rc.1) (2024-11-22)
+
+
+### Bug Fixes
+
+* **i18n:** update Chinese translations for network page ([b9cff09](https://github.com/qubic/explorer-frontend/commit/b9cff095d42a49d6c0e221d48ad53523c906c114))
+
+
+### Features
+
+* **env:** add VITE_QUBIC_API_URL to example environment file ([1b32494](https://github.com/qubic/explorer-frontend/commit/1b324946ab0c6f707edb7b7752f369c40fefb6f5))
+
 # [1.9.0](https://github.com/qubic/explorer-frontend/compare/v1.8.2...v1.9.0) (2024-11-18)
 
 
