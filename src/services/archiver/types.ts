@@ -138,15 +138,3 @@ export interface GetTransactionResponse {
 export interface GetTransactionStatusResponse {
   transactionStatus: TransactionStatus
 }
-
-export interface GetEpochComputorsResponse {
-  computors: Computor
-}
-
-export interface GetRichListResponse {
-  pagination: PaginationInfo
-  epoch: number
-  richList: {
-    entities: Entity[]
-  }
-}

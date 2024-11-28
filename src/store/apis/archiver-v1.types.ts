@@ -1,3 +1,5 @@
+import type { Entity, PaginationInfo } from '@app/services/archiver'
+
 export interface GetEpochComputorsResponse {
   computors: {
     epoch: number
@@ -19,5 +21,13 @@ export interface GetLatestStatsResponse {
     emptyTicksInCurrentEpoch: number
     epochTickQuality: number
     burnedQus: string
+  }
+}
+
+export interface GetRichListResponse {
+  pagination: PaginationInfo
+  epoch: number
+  richList: {
+    entities: Entity[]
   }
 }
