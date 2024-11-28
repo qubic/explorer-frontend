@@ -1,4 +1,10 @@
-import type { Entity, PaginationInfo } from '@app/services/archiver'
+import type { Entity } from '@app/services/archiver'
+
+export interface PaginationInfo {
+  totalRecords: number
+  currentPage: number
+  totalPages: number
+}
 
 export interface GetEpochComputorsResponse {
   computors: {

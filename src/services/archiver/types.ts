@@ -74,12 +74,6 @@ export interface Entity {
   balance: string
 }
 
-export interface PaginationInfo {
-  totalRecords: number
-  currentPage: number
-  totalPages: number
-}
-
 export interface GetStatusResponse {
   lastProcessedTick: LastProcessedTick
   lastProcessedTicksPerEpoch: LastProcessedTicksPerEpoch
@@ -103,14 +97,6 @@ export interface GetLatestStatsResponse {
   }
 }
 
-export interface GetAddressTransferTransactionsResponse {
-  transferTransactionsPerTick: {
-    tickNumber: number
-    identity: string
-    transactions: Transaction[]
-  }[]
-}
-
 export interface GetBalanceResponse {
   balance: Balance
 }
@@ -119,22 +105,6 @@ export interface GetTickDataResponse {
   tickData: TickData
 }
 
-export interface GetTickTransactionsResponse {
-  transactions: Transaction[]
-}
-
-export interface GetTickTransferTransactionsResponse {
-  transactions: Transaction[]
-}
-
-export interface GetTickApprovedTransactionsResponse {
-  approvedTransactions: Transaction[]
-}
-
 export interface GetTransactionResponse {
   transaction: Transaction
-}
-
-export interface GetTransactionStatusResponse {
-  transactionStatus: TransactionStatus
 }
