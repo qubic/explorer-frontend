@@ -1,3 +1,17 @@
+## [1.9.1](https://github.com/qubic/explorer-frontend/compare/v1.9.0...v1.9.1) (2024-11-28)
+
+
+### Bug Fixes
+
+* **i18n:** update chinese translations ([08c5dc1](https://github.com/qubic/explorer-frontend/commit/08c5dc128cbb918835c58573f5d41b3312d5eee6))
+
+## [1.9.1-rc.1](https://github.com/qubic/explorer-frontend/compare/v1.9.0...v1.9.1-rc.1) (2024-11-28)
+
+
+### Bug Fixes
+
+* **i18n:** update chinese translations ([08c5dc1](https://github.com/qubic/explorer-frontend/commit/08c5dc128cbb918835c58573f5d41b3312d5eee6))
+
 # [1.9.0](https://github.com/qubic/explorer-frontend/compare/v1.8.2...v1.9.0) (2024-11-18)
 
 
