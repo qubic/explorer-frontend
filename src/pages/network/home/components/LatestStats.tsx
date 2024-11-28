@@ -15,7 +15,7 @@ import {
   WalletIcon
 } from '@app/assets/icons'
 import { Alert, Skeleton, Tooltip } from '@app/components/ui'
-import type { GetLatestStatsResponse } from '@app/services/archiver'
+import type { GetLatestStatsResponse } from '@app/store/apis/archiver-v1.types'
 import { formatString } from '@app/utils'
 import OverviewCardItem from './OverviewCardItem'
 
