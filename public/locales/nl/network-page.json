@@ -57,5 +57,6 @@
   "richListWarning": "Rijkelijstgegevens worden aan het begin van elke epoche bijgewerkt",
   "timestamp": "Tijdstempel",
   "fee": "Kosten",
-  "assetTransferWarning": "Dit transactieoverzicht is momenteel alleen zichtbaar voor de afzender. De ontvanger heeft op dit moment geen toegang tot deze transactiegegevens in zijn administratie."
+  "assetTransferWarning": "Dit transactieoverzicht is momenteel alleen zichtbaar voor de afzender. De ontvanger heeft op dit moment geen toegang tot deze transactiegegevens in zijn administratie.",
+  "ticksLoadFailed": "Fout: Het laden van ticks is mislukt. Vernieuw de pagina of probeer het later opnieuw. Als het woensdag is, wacht dan tot de volgende tijdperk begint."
 }

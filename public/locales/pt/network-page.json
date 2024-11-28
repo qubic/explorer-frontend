@@ -57,5 +57,6 @@
   "richListWarning": "Os dados da lista de ricos são atualizados no início de cada época",
   "timestamp": "Carimbo de tempo",
   "fee": "Taxa",
-  "assetTransferWarning": "Este registro de transação está atualmente visível apenas para o remetente. O destinatário não terá acesso a esses dados de transação em seus registros neste momento."
+  "assetTransferWarning": "Este registro de transação está atualmente visível apenas para o remetente. O destinatário não terá acesso a esses dados de transação em seus registros neste momento.",
+  "ticksLoadFailed": "Erro: Falha ao carregar ticks. Por favor, atualize a página ou tente novamente mais tarde. Se for quarta-feira, aguarde até o início da próxima época."
 }

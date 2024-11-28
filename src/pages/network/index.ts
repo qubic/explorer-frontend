@@ -1,6 +1,6 @@
 import { lazy } from 'react'
 
-export { default as OverviewPage } from './OverviewPage'
+export { default as OverviewPage } from './home/OverviewPage'
 
 export const AddressPageLazy = lazy(() => import('./address/AddressPage'))
 export const TickPageLazy = lazy(() => import('./tick/TickPage'))

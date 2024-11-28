@@ -57,5 +57,6 @@
   "richListWarning": "Die Daten der Reichenliste werden zu Beginn jeder Epoche aktualisiert",
   "timestamp": "Zeitstempel",
   "fee": "Gebühr",
-  "assetTransferWarning": "Dieser Transaktionsdatensatz ist derzeit nur für den Absender sichtbar. Der Empfänger hat zu diesem Zeitpunkt keinen Zugriff auf diese Transaktionsdaten in seinen Aufzeichnungen."
+  "assetTransferWarning": "Dieser Transaktionsdatensatz ist derzeit nur für den Absender sichtbar. Der Empfänger hat zu diesem Zeitpunkt keinen Zugriff auf diese Transaktionsdaten in seinen Aufzeichnungen.",
+  "ticksLoadFailed": "Fehler: Konnte Ticks nicht laden. Bitte aktualisieren Sie die Seite oder versuchen Sie es später erneut. Wenn heute Mittwoch ist, warten Sie bitte, bis die nächste Epoche beginnt."
 }
