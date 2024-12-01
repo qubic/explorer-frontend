@@ -1,13 +1,16 @@
-import { useCallback, useState } from 'react'
+import { useCallback } from 'react'
 
 import { withHelmet } from '@app/components/hocs'
 import { useGetLatestStatsQuery } from '@app/store/apis/archiver-v1.api'
 import { useGetEpochTicksQuery } from '@app/store/apis/archiver-v2.api'
+import { useSearchParams } from 'react-router-dom'
 import { LatestStats, TickList } from './components'
 import { TICKS_PAGE_SIZE } from './constants'
 
 function OverviewPage() {
-  const [page, setPage] = useState(1)
+  const [searchParams, setSearchParams] = useSearchParams()
+  const page = parseInt(searchParams.get('ticksPage') || '1', 10)
+
   const latestStats = useGetLatestStatsQuery()
   const epochTicks = useGetEpochTicksQuery(
     {
@@ -18,9 +21,12 @@ function OverviewPage() {
     { skip: !latestStats.data }
   )
 
-  const handlePageChange = useCallback((value: number) => {
-    setPage(value)
-  }, [])
+  const handlePageChange = useCallback(
+    (value: number) => {
+      setSearchParams({ ticksPage: value.toString() })
+    },
+    [setSearchParams]
+  )
 
   return (
     <div className="w-full py-32">
