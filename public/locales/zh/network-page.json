@@ -57,5 +57,6 @@
   "richListWarning": "富豪榜数据会在每个纪元开始时更新",
   "timestamp": "时间戳",
   "fee": "费用",
-  "assetTransferWarning": "此交易当前仅发送方可见，接收方暂时无法查看"
+  "assetTransferWarning": "此交易当前仅发送方可见，接收方暂时无法查看",
+  "ticksLoadFailed": "错误：无法加载滴答数据。请刷新页面或稍后再试。如果今天是星期三，请等到下一个纪元开始。"
 }

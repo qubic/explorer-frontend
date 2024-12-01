@@ -1,11 +1,10 @@
-import { useAppDispatch, useAppSelector } from '@app/hooks/redux'
-import { useTranslation } from 'react-i18next'
-
 import { withHelmet } from '@app/components/hocs'
 import { Breadcrumbs, PaginationBar } from '@app/components/ui'
 import { useTailwindBreakpoint } from '@app/hooks'
-import { getRichList, selectRichList } from '@app/store/network/richListSlice'
-import { memo, useCallback, useEffect, useMemo, useState } from 'react'
+import { useGetRickListQuery } from '@app/store/apis/archiver-v1.api'
+import { memo, useCallback, useEffect, useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
+import { useSearchParams } from 'react-router-dom'
 import { HomeLink } from '../components'
 import { RichListErrorRow, RichListRow, RichListSkeletonRow } from './components'
 
@@ -19,30 +18,40 @@ const RichListLoadingRows = memo(() => {
 
 function RichListPage() {
   const { t } = useTranslation('network-page')
-  const dispatch = useAppDispatch()
-  const { entities, paginationInfo, isLoading, error } = useAppSelector(selectRichList)
-  const [page, setPage] = useState(1)
   const { isMobile } = useTailwindBreakpoint()
+  const [searchParams, setSearchParams] = useSearchParams()
 
-  const handlePageChange = useCallback((value: number) => {
-    setPage(value)
-  }, [])
+  const page = parseInt(searchParams.get('page') || '1', 10)
+
+  const { data, isFetching, error } = useGetRickListQuery({
+    page,
+    pageSize: PAGE_SIZE
+  })
+
+  const handlePageChange = useCallback(
+    (value: number) => {
+      setSearchParams({ page: value.toString() })
+    },
+    [setSearchParams]
+  )
 
   const entitiesWithRank = useMemo(
     () =>
-      entities?.map((entity, index) => ({
+      data?.richList.entities?.map((entity, index) => ({
         ...entity,
-        rank: (paginationInfo.currentPage - 1) * PAGE_SIZE + index + 1
+        rank: (data.pagination.currentPage - 1) * PAGE_SIZE + index + 1
       })),
-    [entities, paginationInfo]
+    [data]
   )
 
   useEffect(() => {
-    dispatch(getRichList({ page, pageSize: PAGE_SIZE }))
-  }, [dispatch, page])
+    if (!searchParams.has('page')) {
+      setSearchParams({ page: '1' })
+    }
+  }, [searchParams, setSearchParams])
 
   const renderTableContent = useCallback(() => {
-    if (isLoading) return <RichListLoadingRows />
+    if (isFetching) return <RichListLoadingRows />
 
     if (error || entitiesWithRank?.length === 0) {
       return <RichListErrorRow />
@@ -51,7 +60,7 @@ function RichListPage() {
     return entitiesWithRank?.map((entity) => (
       <RichListRow key={entity.identity} entity={entity} isMobile={isMobile} />
     ))
-  }, [entitiesWithRank, isLoading, error, isMobile])
+  }, [entitiesWithRank, isFetching, error, isMobile])
 
   return (
     <div className="w-full">
@@ -86,8 +95,8 @@ function RichListPage() {
             </div>
             <PaginationBar
               className="mx-auto w-fit gap-8 p-20"
-              pageCount={paginationInfo.totalPages}
-              page={paginationInfo.currentPage}
+              pageCount={data?.pagination.totalPages ?? 0}
+              page={page}
               onPageChange={handlePageChange}
             />
           </div>
