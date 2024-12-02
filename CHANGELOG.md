@@ -1,3 +1,19 @@
+# [1.10.0](https://github.com/qubic/explorer-frontend/compare/v1.9.1...v1.10.0) (2024-12-02)
+
+
+### Bug Fixes
+
+* **env:** add VITE_QUBIC_API_URL to example environment file ([3795c49](https://github.com/qubic/explorer-frontend/commit/3795c497484bc6dc21027611ff15c26c47c7b4ee))
+* **i18n:** update Chinese translations for network page ([b9cff09](https://github.com/qubic/explorer-frontend/commit/b9cff095d42a49d6c0e221d48ad53523c906c114))
+* update import path for GetLatestStatsResponse ([0d574b5](https://github.com/qubic/explorer-frontend/commit/0d574b538cb9329b71988b597acc2e9ac426df5d))
+
+
+### Features
+
+* enhance OverviewPage improving UX ([2c2fb85](https://github.com/qubic/explorer-frontend/commit/2c2fb857da181bac7f397da06af34d6087aa1dfb))
+* enhance RichListPage to use new API and improve UX ([2abef91](https://github.com/qubic/explorer-frontend/commit/2abef9184936d97de4c752d6215fbbfd92c883c5))
+* update OverviewPage to use search parameters for ticks table pagination ([c7633a3](https://github.com/qubic/explorer-frontend/commit/c7633a3abad3f75f533b204835216df27e3ec4e0))
+
 # [1.10.0-rc.1](https://github.com/qubic/explorer-frontend/compare/v1.9.1...v1.10.0-rc.1) (2024-12-01)
 
 
