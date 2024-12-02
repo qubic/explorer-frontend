@@ -1,19 +1,16 @@
 import { clsxTwMerge } from '@app/utils'
 import type { FC } from 'react'
-import CardItem from './CardItem'
+import CardItem from '../../components/CardItem'
 
-export default function OverviewCardItem({
-  icon: Icon,
-  label,
-  value,
-  variant = 'normal'
-}: {
+type Props = Readonly<{
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   icon: FC<any>
   label: string | JSX.Element
   value: string
   variant?: 'normal' | 'small'
-}) {
+}>
+
+export default function OverviewCardItem({ icon: Icon, label, value, variant = 'normal' }: Props) {
   const LabelTag = typeof label === 'string' ? 'p' : 'div'
 
   return (

@@ -57,5 +57,6 @@
   "richListWarning": "Les données de la liste des riches sont mises à jour au début de chaque époque",
   "timestamp": "Horodatage",
   "fee": "Frais",
-  "assetTransferWarning": "Cet enregistrement de transaction est actuellement visible uniquement par l'expéditeur. Le destinataire n'aura pas accès à ces données de transaction dans ses enregistrements pour le moment."
+  "assetTransferWarning": "Cet enregistrement de transaction est actuellement visible uniquement par l'expéditeur. Le destinataire n'aura pas accès à ces données de transaction dans ses enregistrements pour le moment.",
+  "ticksLoadFailed": "Erreur : Échec du chargement des ticks. Veuillez actualiser la page ou réessayer plus tard. Si nous sommes mercredi, veuillez attendre le début de la prochaine époque."
 }
