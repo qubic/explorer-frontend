@@ -58,5 +58,7 @@
   "timestamp": "Tijdstempel",
   "fee": "Kosten",
   "assetTransferWarning": "Dit transactieoverzicht is momenteel alleen zichtbaar voor de afzender. De ontvanger heeft op dit moment geen toegang tot deze transactiegegevens in zijn administratie.",
-  "ticksLoadFailed": "Fout: Het laden van ticks is mislukt. Vernieuw de pagina of probeer het later opnieuw. Als het woensdag is, wacht dan tot de volgende tijdperk begint."
+  "ticksLoadFailed": "Fout: Het laden van ticks is mislukt. Vernieuw de pagina of probeer het later opnieuw. Als het woensdag is, wacht dan tot de volgende tijdperk begint.",
+  "showItemsPerPage": "{{count}} items weergeven",
+  "itemsPerPage": "Items per pagina"
 }
