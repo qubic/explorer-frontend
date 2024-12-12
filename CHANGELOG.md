@@ -1,3 +1,14 @@
+# [1.11.0](https://github.com/qubic/explorer-frontend/compare/v1.10.0...v1.11.0) (2024-12-12)
+
+
+### Features
+
+* add page size selection on rich list page ([36becb9](https://github.com/qubic/explorer-frontend/commit/36becb98571f28a1264f4a932d0b01c266f4b6ac))
+* add responsive size prop to Select component in TickTransactions ([1bb597d](https://github.com/qubic/explorer-frontend/commit/1bb597d23803732ccaf1eabffdb9672cdb8a4133))
+* add size prop to Select component for customizable styling ([36646ea](https://github.com/qubic/explorer-frontend/commit/36646ea51772ab9e7ff58aef89840db075eb41ce))
+* remove data status field on tick status component ([6d2efcd](https://github.com/qubic/explorer-frontend/commit/6d2efcd3f9ff46a8c54bda41d2e0fb5103060e0b))
+* update TxItem to use QX_ADDRESS for asset transfer condition ([7f988ac](https://github.com/qubic/explorer-frontend/commit/7f988ac44e4d18b18b98c09462bb6976f0b3e690))
+
 # [1.11.0-rc.1](https://github.com/qubic/explorer-frontend/compare/v1.10.0...v1.11.0-rc.1) (2024-12-12)
 
 
