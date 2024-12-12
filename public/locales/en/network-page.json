@@ -58,5 +58,7 @@
   "timestamp": "Timestamp",
   "fee": "Fee",
   "assetTransferWarning": "This transaction record is currently visible only to the sender. The recipient will not have access to this transaction data in their records at this time.",
-  "ticksLoadFailed": "Error: Failed to load ticks. Please refresh the page or try again later. If it's Wendesday, please wait until the next epoch starts."
+  "ticksLoadFailed": "Error: Failed to load ticks. Please refresh the page or try again later. If it's Wendesday, please wait until the next epoch starts.",
+  "showItemsPerPage": "Show {{count}} items",
+  "itemsPerPage": "Items per page"
 }

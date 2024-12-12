@@ -58,5 +58,7 @@
   "timestamp": "Zaman damgası",
   "fee": "Ücret",
   "assetTransferWarning": "Bu işlem kaydı şu anda yalnızca gönderen tarafından görülebilir. Alıcı, şu anda bu işlem verilerine kayıtlarında erişemeyecektir.",
-  "ticksLoadFailed": "Hata: Tikler yüklenemedi. Lütfen sayfayı yenileyin veya daha sonra tekrar deneyin. Eğer bugün çarşamba ise, lütfen bir sonraki dönemin başlamasını bekleyin."
+  "ticksLoadFailed": "Hata: Tikler yüklenemedi. Lütfen sayfayı yenileyin veya daha sonra tekrar deneyin. Eğer bugün çarşamba ise, lütfen bir sonraki dönemin başlamasını bekleyin.",
+  "showItemsPerPage": "{{count}} öğeyi göster",
+  "itemsPerPage": "Sayfa başına öğe"
 }

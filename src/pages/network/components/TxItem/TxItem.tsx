@@ -9,8 +9,8 @@ import {
   getAssetsTransfers,
   getTransfers,
   isTransferTx,
-  MAIN_ASSETS_ISSUER,
-  QUTIL_ADDRESS
+  QUTIL_ADDRESS,
+  QX_ADDRESS
 } from '@app/utils/qubic-ts'
 import AddressLink from '../AddressLink'
 import CardItem from '../CardItem'
@@ -66,7 +66,7 @@ function TxItem({
         }
       })()
     }
-    if (destId !== MAIN_ASSETS_ISSUER && inputType === 2 && inputHex) {
+    if (destId === QX_ADDRESS && inputType === 2 && inputHex) {
       ;(async () => {
         try {
           const assetTransfer = await getAssetsTransfers(inputHex)
