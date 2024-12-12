@@ -2,7 +2,7 @@ import { QubicDefinitions } from '@qubic-lib/qubic-ts-library/dist/QubicDefiniti
 import { QubicTransferAssetPayload } from '@qubic-lib/qubic-ts-library/dist/qubic-types/transacion-payloads/QubicTransferAssetPayload'
 import { QubicTransferSendManyPayload } from '@qubic-lib/qubic-ts-library/dist/qubic-types/transacion-payloads/QubicTransferSendManyPayload'
 
-export const { QUTIL_ADDRESS, ARBITRATOR, EMPTY_ADDRESS } = QubicDefinitions
+export const { QUTIL_ADDRESS, ARBITRATOR, EMPTY_ADDRESS, QX_ADDRESS } = QubicDefinitions
 
 export const MAIN_ASSETS_ISSUER = 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFXIB'
 
