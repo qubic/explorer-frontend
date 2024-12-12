@@ -58,5 +58,7 @@
   "timestamp": "Fecha",
   "fee": "Tarifa",
   "assetTransferWarning": "Este registro de transacción es actualmente visible solo para el remitente. El destinatario no tendrá acceso a estos datos de la transacción en sus registros en este momento.",
-  "ticksLoadFailed": "Error: No se pudieron cargar los ticks. Por favor, actualiza la página o inténtalo de nuevo más tarde. Si es miércoles, espera hasta que comience la próxima época."
+  "ticksLoadFailed": "Error: No se pudieron cargar los ticks. Por favor, actualiza la página o inténtalo de nuevo más tarde. Si es miércoles, espera hasta que comience la próxima época.",
+  "showItemsPerPage": "Mostrar {{count}} elementos",
+  "itemsPerPage": "Elementos por página"
 }

@@ -82,6 +82,7 @@ export default function TickTransactions({ tick }: Props) {
         <Select
           label="Transactions Type"
           className="w-[150px] sm:w-[225px]"
+          size={isMobile ? 'sm' : 'lg'}
           options={selectOptions}
           onSelect={handleOnSelect}
           defaultValue={TRANSACTION_OPTIONS.find((o) => o.value === option)}

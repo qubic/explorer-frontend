@@ -58,5 +58,7 @@
   "timestamp": "Horodatage",
   "fee": "Frais",
   "assetTransferWarning": "Cet enregistrement de transaction est actuellement visible uniquement par l'expéditeur. Le destinataire n'aura pas accès à ces données de transaction dans ses enregistrements pour le moment.",
-  "ticksLoadFailed": "Erreur : Échec du chargement des ticks. Veuillez actualiser la page ou réessayer plus tard. Si nous sommes mercredi, veuillez attendre le début de la prochaine époque."
+  "ticksLoadFailed": "Erreur : Échec du chargement des ticks. Veuillez actualiser la page ou réessayer plus tard. Si nous sommes mercredi, veuillez attendre le début de la prochaine époque.",
+  "showItemsPerPage": "Afficher {{count}} éléments",
+  "itemsPerPage": "Éléments par page"
 }

@@ -42,20 +42,13 @@ export default function TickStatus({ dataStatus, tickStatus, transactions }: Pro
     : `${t('empty')} / ${t('unexecuted')}`
 
   return (
-    <CardItem className="px-24 py-16">
-      <div className="flex flex-wrap gap-24 md:gap-52">
-        <StatusItem
-          label={t('dataStatus')}
-          value={dataStatus ? t('complete') : t('incomplete')}
-          isSuccess={dataStatus}
-        />
-        {dataStatus && (
-          <>
-            <StatusItem label={t('tickStatus')} value={tickStatusText} isSuccess={tickStatus} />
-            <StatusItem label={t('numberOfTransactions')} value={formatString(transactions)} />
-          </>
-        )}
-      </div>
-    </CardItem>
+    dataStatus && (
+      <CardItem className="px-24 py-16">
+        <div className="flex flex-wrap gap-24 md:gap-52">
+          <StatusItem label={t('tickStatus')} value={tickStatusText} isSuccess={tickStatus} />
+          <StatusItem label={t('numberOfTransactions')} value={formatString(transactions)} />
+        </div>
+      </CardItem>
+    )
   )
 }

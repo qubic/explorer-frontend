@@ -52,6 +52,7 @@ module.exports = {
       {
         extensions: ['.ts', '.tsx']
       }
-    ]
+    ],
+    'react/prop-types': 'off'
   }
 }
