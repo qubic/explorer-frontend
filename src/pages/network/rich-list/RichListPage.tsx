@@ -75,9 +75,9 @@ function RichListPage() {
     () =>
       data?.richList.entities?.map((entity, index) => ({
         ...entity,
-        rank: (data.pagination.currentPage - 1) * DEFAULT_PAGE_SIZE + index + 1
+        rank: (data.pagination.currentPage - 1) * pageSize + index + 1
       })),
-    [data]
+    [data, pageSize]
   )
 
   useEffect(() => {
