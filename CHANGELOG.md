@@ -1,3 +1,10 @@
+## [1.11.1](https://github.com/qubic/explorer-frontend/compare/v1.11.0...v1.11.1) (2024-12-14)
+
+
+### Bug Fixes
+
+* update rank calculation to use dynamic page size ([9049ee2](https://github.com/qubic/explorer-frontend/commit/9049ee22eb7ac0b8e9d07a5a31cb8ceb99eca1ed))
+
 # [1.11.0](https://github.com/qubic/explorer-frontend/compare/v1.10.0...v1.11.0) (2024-12-12)
 
 
