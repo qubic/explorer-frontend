@@ -2,8 +2,12 @@ import { envConfig } from '@app/configs'
 import type { GetTickDataResponse } from '@app/services/archiver'
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import type {
+  GetAddressBalancesResponse,
   GetEpochComputorsResponse,
+  GetIssuedAssetsResponse,
   GetLatestStatsResponse,
+  GetOwnedAssetsResponse,
+  GetPossessedAssetsResponse,
   GetRichListResponse
 } from './archiver-v1.types'
 
@@ -27,6 +31,30 @@ export const archiverV1Api = createApi({
     }),
     getRickList: build.query<GetRichListResponse, { page: number; pageSize: number }>({
       query: ({ page, pageSize }) => `/rich-list?page=${page}&pageSize=${pageSize}`
+    }),
+    // Address
+    getAddressBalances: build.query<GetAddressBalancesResponse['balance'], { address: string }>({
+      query: ({ address }) => `/balances/${address}`,
+      transformResponse: (response: GetAddressBalancesResponse) => response.balance
+    }),
+    // Address Assets
+    getAddressIssuedAssets: build.query<
+      GetIssuedAssetsResponse['issuedAssets'],
+      { address: string }
+    >({
+      query: ({ address }) => `/assets/${address}/issued`,
+      transformResponse: (response: GetIssuedAssetsResponse) => response.issuedAssets
+    }),
+    getAddressOwnedAssets: build.query<GetOwnedAssetsResponse['ownedAssets'], { address: string }>({
+      query: ({ address }) => `/assets/${address}/owned`,
+      transformResponse: (response: GetOwnedAssetsResponse) => response.ownedAssets
+    }),
+    getAddressPossessedAssets: build.query<
+      GetPossessedAssetsResponse['possessedAssets'],
+      { address: string }
+    >({
+      query: ({ address }) => `/assets/${address}/possessed`,
+      transformResponse: (response: GetPossessedAssetsResponse) => response.possessedAssets
     })
   })
 })
@@ -35,5 +63,11 @@ export const {
   useGetLatestStatsQuery,
   useGetTickDataQuery,
   useGetEpochComputorsQuery,
-  useGetRickListQuery
+  useGetRickListQuery,
+  // Address
+  useGetAddressBalancesQuery,
+  // Address Assets
+  useGetAddressIssuedAssetsQuery,
+  useGetAddressOwnedAssetsQuery,
+  useGetAddressPossessedAssetsQuery
 } = archiverV1Api

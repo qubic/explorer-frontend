@@ -1,6 +1,6 @@
+import type { GetAddressBalancesResponse } from '@app/store/apis/archiver-v1.types'
 import { useLazyGetIndentityTransfersQuery } from '@app/store/apis/archiver-v2.api'
 import type { TransactionV2 } from '@app/store/apis/archiver-v2.types'
-import type { Address } from '@app/store/network/addressSlice'
 import { useCallback, useEffect, useState } from 'react'
 
 const BATCH_SIZE = 50
@@ -16,7 +16,7 @@ export interface UseLatestTransactionsResult {
 
 export default function useLatestTransactions(
   addressId: string,
-  addressEndTick: Address['endTick']
+  addressEndTick: GetAddressBalancesResponse['balance']['validForTick']
 ): UseLatestTransactionsResult {
   const [startTick, setStartTick] = useState(Math.max(0, addressEndTick - TICK_SIZE))
   const [transactions, setTransactions] = useState<TransactionV2[]>([])

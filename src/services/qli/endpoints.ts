@@ -7,11 +7,8 @@ export const QLI_API_ENDPOINTS = {
   // NETWORK
   TICK_OVERVIEW: `${BASE_URL}/Network/TickOverview`,
   TX: (txId: string) => `${BASE_URL}/Network/tx/${txId}`,
-  ADDRESS: (addressId: string) => `${BASE_URL}/Network/Id/${addressId}`,
   ADDRESS_HISTORY: (addressId: string, page = 1, pageSize = 50) =>
-    `${BASE_URL}/Network/IdHistory/${addressId}?page=${page}&pageSize=${pageSize}`,
-  // WALLET
-  ADDRESS_ASSETS: `${BASE_URL}/Wallet/Assets`
+    `${BASE_URL}/Network/IdHistory/${addressId}?page=${page}&pageSize=${pageSize}`
 } as const
 
 export default QLI_API_ENDPOINTS

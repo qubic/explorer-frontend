@@ -1,53 +1,122 @@
-import type { Address } from '@app/store/network/addressSlice'
-import { formatString } from '@app/utils'
+import type { GetAddressBalancesResponse } from '@app/store/apis/archiver-v1.types'
+import { clsxTwMerge, formatString } from '@app/utils'
+import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { CardItem, TickLink } from '../../components'
 
 type Props = {
-  address: Address
+  address: GetAddressBalancesResponse['balance']
+  price: number
+  isVisible: boolean
 }
 
-export default function AddressDetails({ address }: Props) {
+function AmountDetails({
+  title,
+  amount,
+  amountUsd,
+  className
+}: {
+  title: string
+  amount: string
+  amountUsd: string
+  className: string
+}) {
+  return (
+    <div className={`space-y-2 text-gray-50 ${className}`}>
+      <p>{title}</p>
+      <p className="text-sm font-500 text-white sm:text-base">
+        {amount} <span>QUBIC</span>
+      </p>
+      <p className="text-xs sm:text-sm">${amountUsd}</p>
+    </div>
+  )
+}
+
+function TransferDetails({
+  title,
+  label,
+  transfersCount,
+  latestTransferTick,
+  className
+}: {
+  title: string
+  label: string
+  transfersCount: number
+  latestTransferTick: number
+  className: string
+}) {
+  return (
+    <div className={`space-y-2 text-gray-50 ${className}`}>
+      <p>{title}</p>
+      <p className="text-xs sm:text-sm">
+        <span className="text-sm text-white sm:text-base"> {transfersCount} </span>
+        {latestTransferTick > 0 && (
+          <>
+            ({label}: <TickLink value={latestTransferTick} className="text-primary-30" />)
+          </>
+        )}
+      </p>
+    </div>
+  )
+}
+
+export default function AddressDetails({ address, price, isVisible }: Props) {
   const { t } = useTranslation('network-page')
 
+  const {
+    formattedIncomingAmount,
+    formattedIncomingAmountUsd,
+    formattedOutgoingAmount,
+    formattedOutgoingAmountUsd
+  } = useMemo(
+    () => ({
+      formattedIncomingAmount: formatString(address.incomingAmount),
+      formattedIncomingAmountUsd: formatString(+address.incomingAmount * price),
+      formattedOutgoingAmount: formatString(address.outgoingAmount),
+      formattedOutgoingAmountUsd: formatString(+address.outgoingAmount * price)
+    }),
+    [address.incomingAmount, address.outgoingAmount, price]
+  )
+
   return (
-    <div className="grid gap-16 pt-12 948px:grid-cols-3">
-      {(Object.entries(address.reportedValues) || []).map(([ip, details]) => (
-        <CardItem className="p-16" key={ip}>
-          <div className="mb-16 flex justify-between">
-            <div className="">
-              <p className="font-space text-14 leading-18 text-gray-50">{t('value')}</p>
-              <p className="font-space text-16 font-500 leading-20">
-                {formatString(details.incomingAmount - details.outgoingAmount)}{' '}
-                <span className="text-gray-50">QUBIC</span>
-              </p>
-            </div>
-            <p className="font-space text-14 leading-18 text-gray-50">{ip}</p>
-          </div>
-          <div className="flex flex-col items-center gap-8 948px:items-start">
-            <p className="font-space text-14 leading-18 text-gray-50">
-              {t('incoming')}:
-              <span className="text-white"> {details.numberOfIncomingTransfers} </span>(
-              {t('latest')}:{' '}
-              <TickLink
-                value={details.latestIncomingTransferTick}
-                className="break-all text-primary-30"
-              />
-              )
-            </p>
-            <p className="font-space text-14 leading-18 text-gray-50">
-              {t('outgoing')}:
-              <span className="text-white"> {details.numberOfOutgoingTransfers} </span>(
-              {t('latest')}:{' '}
-              <TickLink
-                value={details.latestOutgoingTransferTick}
-                className="break-all text-primary-30"
-              />
-              )
-            </p>
-          </div>
-        </CardItem>
-      ))}
+    <div
+      className={clsxTwMerge(
+        'overflow-hidden transition-all duration-500 ease-in-out',
+        isVisible ? 'max-h-320 translate-y-0 opacity-100' : 'max-h-0 -translate-y-5 opacity-0'
+      )}
+    >
+      <CardItem className="p-16">
+        <div className="mb-16 grid justify-between gap-16 font-space text-sm xs:[grid-template-areas:'incoming-amount_incoming-transfers''outgoing-amount_outgoing-transfers'] md:[grid-template-areas:'incoming-amount_outgoing-amount_incoming-transfers_outgoing-transfers']">
+          <AmountDetails
+            title={t('incomingAmount')}
+            amount={formattedIncomingAmount}
+            amountUsd={formattedIncomingAmountUsd}
+            className="md:[grid-area:incoming-amount]"
+          />
+
+          <TransferDetails
+            title={t('incomingTransfers')}
+            label={t('latest')}
+            transfersCount={address.numberOfIncomingTransfers}
+            latestTransferTick={address.latestIncomingTransferTick}
+            className="md:[grid-area:incoming-transfers]"
+          />
+
+          <AmountDetails
+            title={t('outgoingAmount')}
+            amount={formattedOutgoingAmount}
+            amountUsd={formattedOutgoingAmountUsd}
+            className="md:[grid-area:outgoing-amount]"
+          />
+          <TransferDetails
+            title={t('outgoingTransfers')}
+            label={t('latest')}
+            transfersCount={address.numberOfOutgoingTransfers}
+            latestTransferTick={address.latestOutgoingTransferTick}
+            className="md:[grid-area:outgoing-transfers]"
+          />
+        </div>
+      </CardItem>
     </div>
   )
 }

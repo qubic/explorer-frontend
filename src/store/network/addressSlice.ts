@@ -1,38 +1,10 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 
-import type { Balance } from '@app/services/archiver'
-import { archiverApiService } from '@app/services/archiver'
-import type { Asset, ReportedValues } from '@app/services/qli'
 import { qliApiService } from '@app/services/qli'
 import type { RootState } from '@app/store'
 import type { TransactionWithStatus } from '@app/types'
 import { handleThunkError } from '@app/utils/error-handlers'
 import { convertHistoricalTxToTxWithStatus } from './adapters'
-
-export const getAddress = createAsyncThunk(
-  'network/address',
-  async (addressId: string, { rejectWithValue }) => {
-    try {
-      const [{ reportedValues }, { lastProcessedTick }, { balance }, addressAssets] =
-        await Promise.all([
-          qliApiService.getAddress(addressId),
-          archiverApiService.getStatus(),
-          archiverApiService.getBalance(addressId),
-          qliApiService.getAddressAssets(addressId)
-        ])
-
-      return {
-        addressId,
-        reportedValues,
-        endTick: lastProcessedTick.tickNumber,
-        balance,
-        assets: addressAssets
-      }
-    } catch (error) {
-      return rejectWithValue(handleThunkError(error))
-    }
-  }
-)
 
 export const getHistoricalTxs = createAsyncThunk<
   TransactionWithStatus[],
@@ -60,16 +32,7 @@ export const getHistoricalTxs = createAsyncThunk<
   }
 )
 
-export type Address = {
-  addressId: string
-  reportedValues: ReportedValues
-  endTick: number
-  balance: Balance
-  assets: Asset[]
-}
-
 export interface AddressState {
-  address: Address | null
   isLoading: boolean
   error: string | null
   historicalTxs: {
@@ -82,7 +45,6 @@ export interface AddressState {
 }
 
 const initialState: AddressState = {
-  address: null,
   isLoading: false,
   error: null,
   historicalTxs: {
@@ -104,19 +66,6 @@ const addressSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      // getAddress
-      .addCase(getAddress.pending, (state) => {
-        state.isLoading = true
-        state.error = null
-      })
-      .addCase(getAddress.fulfilled, (state, action) => {
-        state.isLoading = false
-        state.address = action.payload
-      })
-      .addCase(getAddress.rejected, (state, action) => {
-        state.isLoading = false
-        state.error = action.error.message ?? 'Unknown error'
-      })
       // getHistoricalTxs
       .addCase(getHistoricalTxs.pending, (state) => {
         state.historicalTxs.isLoading = true
@@ -141,7 +90,6 @@ const addressSlice = createSlice({
 })
 
 // Selectors
-export const selectAddress = (state: RootState) => state.network.address
 export const selectHistoricalTxs = (state: RootState) => state.network.address.historicalTxs
 
 // actions
