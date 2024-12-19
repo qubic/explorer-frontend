@@ -1,27 +1,27 @@
-import { useCallback, useEffect } from 'react'
+import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 
 import { withHelmet } from '@app/components/hocs'
 import { Alert, Breadcrumbs } from '@app/components/ui'
 import { LinearProgress } from '@app/components/ui/loaders'
-import { useAppDispatch, useAppSelector } from '@app/hooks/redux'
 import type { TransactionStatus } from '@app/services/archiver'
 import { useGetTransactionQuery } from '@app/store/apis/archiver-v2.api'
-import { convertTxV2ToTxWithStatus } from '@app/store/network/adapters'
-import { getTx, selectTx } from '@app/store/network/txSlice'
+import { useGetQliTransactionQuery } from '@app/store/apis/qli'
 import { formatEllipsis } from '@app/utils'
 import { HomeLink, TickLink, TxItem } from './components'
 import { useValidatedTxEra } from './hooks'
 
 function TxPage() {
   const { t } = useTranslation('network-page')
-  const dispatch = useAppDispatch()
-  const { txWithStatus, isLoading } = useAppSelector(selectTx)
-  const { txId } = useParams()
+  const { txId = '' } = useParams()
   const txEra = useValidatedTxEra()
-  const { data, isFetching } = useGetTransactionQuery(txId ?? '', {
+
+  const archiverTx = useGetTransactionQuery(txId, {
     skip: !txId || txEra === 'historical'
+  })
+  const qliTx = useGetQliTransactionQuery(txId, {
+    skip: !txId || txEra === 'latest'
   })
 
   const getNonExecutedTxIds = useCallback(
@@ -29,13 +29,9 @@ function TxPage() {
     []
   )
 
-  const transaction = txWithStatus || (data && convertTxV2ToTxWithStatus(data))
+  const transaction = archiverTx.data ?? qliTx.data
 
-  useEffect(() => {
-    dispatch(getTx({ txId, txEra }))
-  }, [txId, txEra, dispatch])
-
-  if (isLoading || isFetching) {
+  if (archiverTx.isFetching || qliTx.isFetching) {
     return <LinearProgress />
   }
 
