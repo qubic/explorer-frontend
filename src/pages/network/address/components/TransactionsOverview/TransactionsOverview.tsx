@@ -1,9 +1,9 @@
+import { memo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Tabs } from '@app/components/ui'
 import type { GetAddressBalancesResponse } from '@app/store/apis/archiver-v1.types'
-import { memo } from 'react'
-import { useLatestTransactions } from '../../hooks'
+import { useHistoricalTransactions, useLatestTransactions } from '../../hooks'
 import HistoricalTxs from './HistoricalTxs'
 import LatestTransactions from './LatestTransactions'
 
@@ -18,6 +18,13 @@ function TransactionsOverview({ address, addressId }: Props) {
     addressId,
     address.validForTick
   )
+  const {
+    historicalTransactions,
+    loadMoreTransactions: loadMoreHistoricalTxs,
+    hasMore: hasMoreHistoricalTxs,
+    isLoading: isHistoricalTxsLoading,
+    error: historicalTxsError
+  } = useHistoricalTransactions(addressId)
 
   return (
     <div className="mt-40">
@@ -39,7 +46,14 @@ function TransactionsOverview({ address, addressId }: Props) {
             />
           </Tabs.Panel>
           <Tabs.Panel>
-            <HistoricalTxs addressId={addressId} />
+            <HistoricalTxs
+              addressId={addressId}
+              transactions={historicalTransactions}
+              loadMore={loadMoreHistoricalTxs}
+              hasMore={hasMoreHistoricalTxs}
+              isLoading={isHistoricalTxsLoading}
+              error={historicalTxsError}
+            />
           </Tabs.Panel>
         </Tabs.Panels>
       </Tabs>

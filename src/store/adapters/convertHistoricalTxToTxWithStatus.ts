@@ -1,4 +1,4 @@
-import type { HistoricalTx } from '@app/services/qli'
+import type { HistoricalTx } from '@app/store/apis/qli'
 import { type TransactionWithStatus } from '@app/types'
 import { getTxType } from '@app/utils'
 import convertHistoricalTxToLatestTx from './convertHistoricalTxToLatestTx'

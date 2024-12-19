@@ -1,7 +1,8 @@
-import type { GetAddressBalancesResponse } from '@app/store/apis/archiver-v1.types'
-import { clsxTwMerge, formatString } from '@app/utils'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
+
+import type { GetAddressBalancesResponse } from '@app/store/apis/archiver-v1.types'
+import { clsxTwMerge, formatString } from '@app/utils'
 import { CardItem, TickLink } from '../../components'
 
 type Props = {
@@ -48,12 +49,12 @@ function TransferDetails({
   return (
     <div className={`space-y-2 text-gray-50 ${className}`}>
       <p>{title}</p>
-      <p className="text-xs sm:text-sm">
-        <span className="text-sm text-white sm:text-base"> {transfersCount} </span>
+      <p className="mt-2 flex items-baseline gap-4">
+        <span className="text-sm text-white sm:text-base">{transfersCount} </span>
         {latestTransferTick > 0 && (
-          <>
-            ({label}: <TickLink value={latestTransferTick} className="text-primary-30" />)
-          </>
+          <span className="text-xs sm:text-sm">
+            {label}: <TickLink value={latestTransferTick} className="text-primary-30" />
+          </span>
         )}
       </p>
     </div>
