@@ -5,8 +5,8 @@ import { InfiniteScroll, Select, Skeleton } from '@app/components/ui'
 import type { Option } from '@app/components/ui/Select'
 import { TRANSACTION_OPTIONS, TRANSACTION_OPTIONS_MOBILE } from '@app/constants'
 import { useTailwindBreakpoint } from '@app/hooks'
-import { useGetTickTransactionsQuery } from '@app/store/apis/archiver-v2.api'
-import type { TransactionV2 } from '@app/store/apis/archiver-v2.types'
+import type { Transaction } from '@app/store/apis/archiver-v2'
+import { useGetTickTransactionsQuery } from '@app/store/apis/archiver-v2'
 import { TransactionOptionEnum } from '@app/types'
 import { formatRTKError } from '@app/utils/rtk'
 import { TxItem } from '../../components'
@@ -28,7 +28,7 @@ type Props = Readonly<{
 export default function TickTransactions({ tick }: Props) {
   const { t } = useTranslation('network-page')
   const [option, setOption] = useState<TransactionOptionEnum>(TransactionOptionEnum.ALL)
-  const [displayTransactions, setDisplayTransactions] = useState<TransactionV2[]>([])
+  const [displayTransactions, setDisplayTransactions] = useState<Transaction[]>([])
   const [hasMore, setHasMore] = useState(true)
 
   const { isMobile } = useTailwindBreakpoint()

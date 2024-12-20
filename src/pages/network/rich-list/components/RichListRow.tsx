@@ -1,7 +1,7 @@
 import { memo } from 'react'
 
 import { AddressLink } from '@app/pages/network/components'
-import type { Entity } from '@app/services/archiver'
+import type { Entity } from '@app/store/apis/archiver-v1'
 import { formatString } from '@app/utils'
 
 type Props = {

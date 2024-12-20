@@ -1,9 +1,9 @@
 import { useCallback } from 'react'
+import { useSearchParams } from 'react-router-dom'
 
 import { withHelmet } from '@app/components/hocs'
-import { useGetLatestStatsQuery } from '@app/store/apis/archiver-v1.api'
-import { useGetEpochTicksQuery } from '@app/store/apis/archiver-v2.api'
-import { useSearchParams } from 'react-router-dom'
+import { useGetLatestStatsQuery } from '@app/store/apis/archiver-v1'
+import { useGetEpochTicksQuery } from '@app/store/apis/archiver-v2'
 import { LatestStats, TickList } from './components'
 import { TICKS_PAGE_SIZE } from './constants'
 

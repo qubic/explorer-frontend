@@ -1,13 +1,14 @@
 import { envConfig } from '@app/configs'
+import type { TransactionWithType } from '@app/types'
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+import { convertArchiverTxToTxWithType } from './archiver-v2.adapters'
 import type {
   GetEpochTicksArgs,
   GetEpochTicksResponse,
   GetIdentityTransfersArgs,
   GetIdentityTransfersResponse,
   GetTickTransactionsArgs,
-  GetTickTransactionsResponse,
-  GetTransactionResponse
+  GetTickTransactionsResponse
 } from './archiver-v2.types'
 
 const BASE_URL = `${envConfig.ARCHIVER_API_URL}/v2`
@@ -16,9 +17,12 @@ export const archiverV2Api = createApi({
   reducerPath: 'archiverV2Api',
   baseQuery: fetchBaseQuery({ baseUrl: BASE_URL }),
   endpoints: (builder) => ({
-    getTransaction: builder.query<GetTransactionResponse, string>({
-      query: (txId) => `transactions/${txId}`
+    // Transactions
+    getTransaction: builder.query<TransactionWithType, string>({
+      query: (txId) => `transactions/${txId}`,
+      transformResponse: convertArchiverTxToTxWithType
     }),
+    // Identity Transfers
     getIndentityTransfers: builder.query<
       GetIdentityTransfersResponse['transactions'][0]['transactions'],
       GetIdentityTransfersArgs
@@ -28,6 +32,7 @@ export const archiverV2Api = createApi({
       transformResponse: (response: GetIdentityTransfersResponse) =>
         response.transactions.flatMap(({ transactions }) => transactions)
     }),
+    // Tick Transactions
     getTickTransactions: builder.query<
       GetTickTransactionsResponse['transactions'],
       GetTickTransactionsArgs
@@ -36,6 +41,7 @@ export const archiverV2Api = createApi({
         `ticks/${tick}/transactions?transfers=${transfers}&approved=${approved}`,
       transformResponse: (response: GetTickTransactionsResponse) => response.transactions
     }),
+    // Epoch Ticks
     getEpochTicks: builder.query<GetEpochTicksResponse, GetEpochTicksArgs>({
       query: ({ epoch, pageSize, page }) =>
         `epochs/${epoch}/ticks?desc=true&pageSize=${pageSize}&page=${page}`
@@ -44,9 +50,13 @@ export const archiverV2Api = createApi({
 })
 
 export const {
+  // Transactions
   useGetTransactionQuery,
+  // Identity Transfers
   useGetIndentityTransfersQuery,
   useLazyGetIndentityTransfersQuery,
+  // Tick Transactions
   useGetTickTransactionsQuery,
+  // Epoch Ticks
   useGetEpochTicksQuery
 } = archiverV2Api

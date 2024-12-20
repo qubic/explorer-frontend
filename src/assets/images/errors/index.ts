@@ -1,2 +1,4 @@
-export { default as GenericError } from './error.svg?react'
-export { default as Error404 } from './error404.svg?react'
+import { lazy } from 'react'
+
+export const GenericError = lazy(() => import('./error.svg?react'))
+export const Error404 = lazy(() => import('./error404.svg?react'))

@@ -1,14 +1,13 @@
-import { archiverApiService } from '@app/services/archiver'
-import type {
-  GetBalanceResponse,
-  GetTickDataResponse,
-  GetTransactionResponse
-} from '@app/services/archiver/types'
-import type { RootState } from '@app/store'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 
-type HandlerResponse = GetBalanceResponse | GetTickDataResponse | GetTransactionResponse
+import type { AppDispatch, RootState } from '@app/store'
+import type { TransactionWithType } from '@app/types'
+import type { GetAddressBalancesResponse, GetTickDataResponse } from './apis/archiver-v1'
+import { archiverV1Api } from './apis/archiver-v1'
+import { archiverV2Api } from './apis/archiver-v2'
+
+type HandlerResponse = GetAddressBalancesResponse | GetTickDataResponse | TransactionWithType
 
 export interface SearchState {
   result: HandlerResponse | null
@@ -22,25 +21,50 @@ const initialState: SearchState = {
   error: null
 }
 
-interface SearchQuery {
-  query: string
-  type: 'address' | 'tx' | 'tick' | null
+export enum SearchType {
+  ADDRESS = 'address',
+  TX = 'tx',
+  TICK = 'tick'
 }
 
-const searchHandlers: Record<string, (query: string) => Promise<HandlerResponse>> = {
-  address: archiverApiService.getBalance,
-  tx: archiverApiService.getTransaction,
-  tick: archiverApiService.getTickData
+interface SearchQuery {
+  query: string
+  type: SearchType | null
 }
+
+const makeSearchHandlers = (
+  dispatch: AppDispatch
+): Record<SearchType, (query: string) => Promise<HandlerResponse>> => ({
+  [SearchType.TICK]: async (query) => {
+    const tickData = await dispatch(
+      archiverV1Api.endpoints.getTickData.initiate({ tick: parseInt(query, 10) })
+    ).unwrap()
+    return { tickData }
+  },
+  [SearchType.ADDRESS]: async (query) => {
+    const balance = await dispatch(
+      archiverV1Api.endpoints.getAddressBalances.initiate({ address: query })
+    ).unwrap()
+    return { balance }
+  },
+  [SearchType.TX]: async (query) => {
+    const transaction = await dispatch(
+      archiverV2Api.endpoints.getTransaction.initiate(query)
+    ).unwrap()
+    return transaction
+  }
+})
 
 export const getSearch = createAsyncThunk<
   SearchState['result'],
   SearchQuery,
-  { rejectValue: string }
->('search', async ({ query, type }, { rejectWithValue }) => {
-  if (!type || type in searchHandlers === false) {
+  { dispatch: AppDispatch; rejectValue: string }
+>('search', async ({ query, type }, { dispatch, rejectWithValue }) => {
+  if (!type || !Object.values(SearchType).includes(type)) {
     return rejectWithValue('Invalid search type')
   }
+
+  const searchHandlers = makeSearchHandlers(dispatch)
 
   return searchHandlers[type](query)
 })

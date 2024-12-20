@@ -1,11 +1,19 @@
 import react from '@vitejs/plugin-react'
+import { visualizer } from 'rollup-plugin-visualizer'
 import type { UserConfig } from 'vite'
 import { defineConfig, loadEnv } from 'vite'
 import svgr from 'vite-plugin-svgr'
 import { archiverApiProxy, qliApiProxy } from './dev-proxy.config'
 
 const defaultConfig: UserConfig = {
-  plugins: [react(), svgr()],
+  plugins: [
+    react(),
+    svgr(),
+    visualizer({
+      filename: './dist/stats.html',
+      open: true
+    })
+  ],
   define: {
     __APP_VERSION__: JSON.stringify(process.env.npm_package_version)
   },
@@ -13,6 +21,17 @@ const defaultConfig: UserConfig = {
   resolve: {
     alias: {
       '@app': '/src'
+    }
+  },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom'],
+          lottie: ['lottie-react'],
+          qubicLib: ['@qubic-lib/qubic-ts-library']
+        }
+      }
     }
   }
 }

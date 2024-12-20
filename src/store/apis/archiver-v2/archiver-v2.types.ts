@@ -1,12 +1,20 @@
-import type { Transaction } from '@app/services/archiver'
-
-export interface TransactionV2 {
-  transaction: Transaction
+export interface Transaction {
+  transaction: {
+    txId: string
+    sourceId: string
+    destId: string
+    amount: string
+    tickNumber: number
+    inputType: number
+    inputSize: number
+    inputHex: string
+    signatureHex: string
+  }
   timestamp: string
   moneyFlew: boolean
 }
 
-export type GetTransactionResponse = TransactionV2
+export type GetTransactionResponse = Transaction
 
 export interface GetIdentityTransfersArgs {
   addressId: string
@@ -18,7 +26,7 @@ export interface GetIdentityTransfersResponse {
   transactions: {
     identity: string
     tickNumber: number
-    transactions: TransactionV2[]
+    transactions: Transaction[]
   }[]
 }
 
@@ -29,7 +37,7 @@ export interface GetTickTransactionsArgs {
 }
 
 export interface GetTickTransactionsResponse {
-  transactions: TransactionV2[]
+  transactions: Transaction[]
 }
 
 export interface GetEpochTicksArgs {

@@ -4,7 +4,7 @@ import { QubicTransferSendManyPayload } from '@qubic-lib/qubic-ts-library/dist/q
 
 export const { QUTIL_ADDRESS, ARBITRATOR, EMPTY_ADDRESS, QX_ADDRESS } = QubicDefinitions
 
-export const MAIN_ASSETS_ISSUER = 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFXIB'
+export const ASSETS_ISSUER_ADDRESS = 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFXIB'
 
 export type Transfer = {
   amount: string
@@ -63,3 +63,5 @@ export const isTransferTx = (
 ): boolean => {
   return !isProtocolMessage(sourceId) && !isProtocolMessage(destId) && Number(amount) > 0
 }
+
+export const isAssetsIssuerAddress = (address: string): boolean => address === ASSETS_ISSUER_ADDRESS

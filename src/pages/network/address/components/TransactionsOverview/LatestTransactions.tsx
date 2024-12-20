@@ -1,14 +1,14 @@
+import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { InfiniteScroll } from '@app/components/ui'
 import { DotsLoader } from '@app/components/ui/loaders'
-import type { TransactionV2 } from '@app/store/apis/archiver-v2.types'
-import { useCallback } from 'react'
+import type { Transaction } from '@app/store/apis/archiver-v2'
 import { TxItem } from '../../../components'
 
 type Props = {
   addressId: string
-  transactions: TransactionV2[]
+  transactions: Transaction[]
   loadMore: () => Promise<void>
   hasMore: boolean
   isLoading: boolean
@@ -26,7 +26,7 @@ export default function LatestTransactions({
   const { t } = useTranslation('network-page')
 
   const renderTxItem = useCallback(
-    ({ transaction, moneyFlew, timestamp }: TransactionV2) => (
+    ({ transaction, moneyFlew, timestamp }: Transaction) => (
       <TxItem
         key={transaction.txId}
         tx={transaction}
