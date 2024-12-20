@@ -4,12 +4,12 @@ import { useTranslation } from 'react-i18next'
 import { Infocon } from '@app/assets/icons'
 import { InfiniteScroll } from '@app/components/ui'
 import { DotsLoader } from '@app/components/ui/loaders'
-import type { TransactionWithStatus } from '@app/types'
+import type { TransactionWithType } from '@app/types'
 import { TxItem } from '../../../components'
 
 type Props = {
   addressId: string
-  transactions: TransactionWithStatus[]
+  transactions: TransactionWithType[]
   loadMore: () => Promise<void>
   hasMore: boolean
   isLoading: boolean
@@ -27,14 +27,14 @@ export default function HistoricalTxs({
   const { t } = useTranslation('network-page')
 
   const renderTxItem = useCallback(
-    ({ tx, status }: TransactionWithStatus) => (
+    ({ transaction, moneyFlew }: TransactionWithType) => (
       <TxItem
-        key={tx.txId}
-        tx={tx}
+        key={transaction.txId}
+        tx={transaction}
         identity={addressId}
         variant="primary"
         isHistoricalTx
-        nonExecutedTxIds={status?.moneyFlew ? [] : [status?.txId]}
+        nonExecutedTxIds={moneyFlew ? [] : [transaction?.txId]}
       />
     ),
     [addressId]

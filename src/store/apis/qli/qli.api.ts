@@ -1,6 +1,6 @@
-import { convertHistoricalTxToTxWithStatus } from '@app/store/adapters'
-import type { TransactionWithStatus } from '@app/types'
+import type { TransactionWithType } from '@app/types'
 import { createApi } from '@reduxjs/toolkit/query/react'
+import { convertQliTxToTxWithType } from './qli.adapters'
 import { qliBaseQuery } from './qli.base-query'
 import type { GetAddressHistoryQueryParams, HistoricalTx } from './qli.types'
 
@@ -9,16 +9,15 @@ export const qliApi = createApi({
   baseQuery: qliBaseQuery,
   endpoints: (build) => ({
     // Transaction
-    getQliTransaction: build.query<TransactionWithStatus, string>({
+    getQliTransaction: build.query<TransactionWithType, string>({
       query: (txId) => `Network/tx/${txId}`,
-      transformResponse: convertHistoricalTxToTxWithStatus
+      transformResponse: convertQliTxToTxWithType
     }),
     // Address
-    getAddressHistory: build.query<TransactionWithStatus[], GetAddressHistoryQueryParams>({
+    getAddressHistory: build.query<TransactionWithType[], GetAddressHistoryQueryParams>({
       query: ({ addressId, page, pageSize }) =>
         `Network/IdHistory/${addressId}?page=${page}&pageSize=${pageSize}`,
-      transformResponse: (response: HistoricalTx[]) =>
-        response.map(convertHistoricalTxToTxWithStatus)
+      transformResponse: (response: HistoricalTx[]) => response.map(convertQliTxToTxWithType)
     })
   })
 })

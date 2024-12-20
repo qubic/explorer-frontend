@@ -1,11 +1,11 @@
 import { useLazyGetAddressHistoryQuery } from '@app/store/apis/qli'
-import type { TransactionWithStatus } from '@app/types'
+import type { TransactionWithType } from '@app/types'
 import { useCallback, useEffect, useState } from 'react'
 
 const PAGE_SIZE = 50
 
 export interface UseHistoricalTransactionsOutput {
-  historicalTransactions: TransactionWithStatus[]
+  historicalTransactions: TransactionWithType[]
   loadMoreTransactions: () => Promise<void>
   hasMore: boolean
   isLoading: boolean
@@ -17,7 +17,7 @@ export default function useHistoricalTransactions(
 ): UseHistoricalTransactionsOutput {
   const [triggerGetHistory, { isFetching, error }] = useLazyGetAddressHistoryQuery()
 
-  const [historicalTxs, setHistoricalTxs] = useState<TransactionWithStatus[]>([])
+  const [historicalTxs, setHistoricalTxs] = useState<TransactionWithType[]>([])
   const [page, setPage] = useState<number>(0)
   const [hasMore, setHasMore] = useState<boolean>(true)
 
@@ -29,8 +29,8 @@ export default function useHistoricalTransactions(
 
       if (result?.length) {
         setHistoricalTxs((prev) => {
-          const txIdSet = new Set(prev.map((tx) => tx.tx.txId))
-          const uniqueTxs = result.filter((tx) => !txIdSet.has(tx.tx.txId))
+          const txIdSet = new Set(prev.map(({ transaction }) => transaction.txId))
+          const uniqueTxs = result.filter(({ transaction }) => !txIdSet.has(transaction.txId))
           return [...prev, ...uniqueTxs]
         })
 

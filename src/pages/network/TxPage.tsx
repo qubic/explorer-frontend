@@ -1,12 +1,10 @@
-import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 
 import { withHelmet } from '@app/components/hocs'
 import { Alert, Breadcrumbs } from '@app/components/ui'
 import { LinearProgress } from '@app/components/ui/loaders'
-import type { TransactionStatus } from '@app/services/archiver'
-import { useGetTransactionQuery } from '@app/store/apis/archiver-v2.api'
+import { useGetTransactionQuery } from '@app/store/apis/archiver-v2'
 import { useGetQliTransactionQuery } from '@app/store/apis/qli'
 import { formatEllipsis } from '@app/utils'
 import { HomeLink, TickLink, TxItem } from './components'
@@ -24,12 +22,7 @@ function TxPage() {
     skip: !txId || txEra === 'latest'
   })
 
-  const getNonExecutedTxIds = useCallback(
-    (status: TransactionStatus) => (status?.moneyFlew ? [] : [status?.txId]),
-    []
-  )
-
-  const transaction = archiverTx.data ?? qliTx.data
+  const { transaction, moneyFlew, timestamp } = archiverTx.data ?? qliTx.data ?? {}
 
   if (archiverTx.isFetching || qliTx.isFetching) {
     return <LinearProgress />
@@ -54,19 +47,16 @@ function TxPage() {
         <Breadcrumbs aria-label="breadcrumb">
           <HomeLink />
           <p className="font-space text-xs text-gray-50">
-            {t('tick')}{' '}
-            <TickLink className="text-xs text-gray-50" value={transaction.tx.tickNumber} />
+            {t('tick')} <TickLink className="text-xs text-gray-50" value={transaction.tickNumber} />
           </p>
-          <p className="font-space text-xs text-primary-30">
-            {formatEllipsis(transaction.tx.txId)}
-          </p>
+          <p className="font-space text-xs text-primary-30">{formatEllipsis(transaction.txId)}</p>
         </Breadcrumbs>
         <p className="my-16 font-space text-24 leading-28">{t('transactionPreview')}</p>
         <TxItem
-          tx={transaction.tx}
-          nonExecutedTxIds={getNonExecutedTxIds(transaction.status)}
+          tx={transaction}
+          nonExecutedTxIds={moneyFlew ? [] : [transaction.txId]}
           variant="secondary"
-          timestamp={transaction.timestamp}
+          timestamp={timestamp}
         />
       </div>
     </div>

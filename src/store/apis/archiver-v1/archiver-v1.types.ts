@@ -1,4 +1,7 @@
-import type { Entity } from '@app/services/archiver'
+export interface Entity {
+  identity: string
+  balance: string
+}
 
 export interface PaginationInfo {
   totalRecords: number
@@ -104,4 +107,20 @@ export interface GetPossessedAssetsResponse {
     data: PossessedAsset
     info: AssetInfo
   }>
+}
+
+export interface TickData {
+  computorIndex: number
+  epoch: number
+  tickNumber: number
+  timestamp: string
+  varStruct: string
+  timeLock: string
+  transactionIds: string[]
+  contractFees: []
+  signatureHex: string
+}
+
+export interface GetTickDataResponse {
+  tickData: TickData
 }

@@ -1,6 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit'
-import { archiverV1Api } from './apis/archiver-v1.api'
-import { archiverV2Api } from './apis/archiver-v2.api'
+
+import { archiverV1Api } from './apis/archiver-v1'
+import { archiverV2Api } from './apis/archiver-v2'
 import { qliApi } from './apis/qli'
 import localeReducer from './localeSlice'
 import searchReducer from './searchSlice'

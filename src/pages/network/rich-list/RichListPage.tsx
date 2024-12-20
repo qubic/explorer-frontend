@@ -1,12 +1,13 @@
-import { withHelmet } from '@app/components/hocs'
-import { Breadcrumbs, PaginationBar, Select } from '@app/components/ui'
-import type { Option } from '@app/components/ui/Select'
-import { useTailwindBreakpoint } from '@app/hooks'
-import { useGetRickListQuery } from '@app/store/apis/archiver-v1.api'
 import type { TFunction } from 'i18next'
 import { memo, useCallback, useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router-dom'
+
+import { withHelmet } from '@app/components/hocs'
+import { Breadcrumbs, PaginationBar, Select } from '@app/components/ui'
+import type { Option } from '@app/components/ui/Select'
+import { useTailwindBreakpoint } from '@app/hooks'
+import { useGetRichListQuery } from '@app/store/apis/archiver-v1'
 import { HomeLink } from '../components'
 import { RichListErrorRow, RichListRow, RichListSkeletonRow } from './components'
 
@@ -45,7 +46,7 @@ function RichListPage() {
     [pageSizeOptions, pageSize]
   )
 
-  const { data, isFetching, error } = useGetRickListQuery({
+  const { data, isFetching, error } = useGetRichListQuery({
     page,
     pageSize
   })

@@ -1,7 +1,8 @@
-import { useGetAddressOwnedAssetsQuery } from '@app/store/apis/archiver-v1.api'
+import { animated, useSpring, useTransition } from '@react-spring/web'
+
+import { useGetAddressOwnedAssetsQuery } from '@app/store/apis/archiver-v1'
 import { formatString } from '@app/utils'
 import { isAssetsIssuerAddress } from '@app/utils/qubic-ts'
-import { animated, useSpring, useTransition } from '@react-spring/web'
 import { AddressLink, CardItem } from '../../components'
 
 type Props = {

@@ -2,7 +2,7 @@ import { memo, useEffect, useMemo, useState } from 'react'
 
 import { ArrowDownIcon, ArrowUpIcon } from '@app/assets/icons'
 import { ChevronToggleButton } from '@app/components/ui/buttons'
-import type { Transaction } from '@app/services/archiver'
+import type { Transaction } from '@app/store/apis/archiver-v2'
 import { formatString } from '@app/utils'
 import type { AssetTransfer, Transfer } from '@app/utils/qubic-ts'
 import {
@@ -20,7 +20,7 @@ import TransactionDetails from './TransactionDetails'
 import type { TxItemVariant } from './TxItem.types'
 
 type Props = {
-  readonly tx: Omit<Transaction, 'inputSize' | 'signatureHex'>
+  readonly tx: Omit<Transaction['transaction'], 'inputSize' | 'signatureHex'>
   readonly identity?: string
   readonly nonExecutedTxIds: string[]
   readonly variant?: TxItemVariant

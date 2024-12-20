@@ -1,5 +1,4 @@
 import { envConfig } from '@app/configs'
-import type { GetTickDataResponse } from '@app/services/archiver'
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import type {
   GetAddressBalancesResponse,
@@ -8,7 +7,8 @@ import type {
   GetLatestStatsResponse,
   GetOwnedAssetsResponse,
   GetPossessedAssetsResponse,
-  GetRichListResponse
+  GetRichListResponse,
+  GetTickDataResponse
 } from './archiver-v1.types'
 
 const BASE_URL = `${envConfig.ARCHIVER_API_URL}/v1`
@@ -17,20 +17,23 @@ export const archiverV1Api = createApi({
   reducerPath: 'archiverV1Api',
   baseQuery: fetchBaseQuery({ baseUrl: BASE_URL }),
   endpoints: (build) => ({
+    // General
     getLatestStats: build.query<GetLatestStatsResponse['data'], void>({
       query: () => '/latest-stats',
       transformResponse: (response: GetLatestStatsResponse) => response.data
     }),
+    getRichList: build.query<GetRichListResponse, { page: number; pageSize: number }>({
+      query: ({ page, pageSize }) => `/rich-list?page=${page}&pageSize=${pageSize}`
+    }),
+    // Tick
     getTickData: build.query<GetTickDataResponse['tickData'], { tick: number }>({
       query: ({ tick }) => `/ticks/${tick}/tick-data`,
       transformResponse: (response: GetTickDataResponse) => response.tickData
     }),
+    // Epoch
     getEpochComputors: build.query<GetEpochComputorsResponse['computors'], { epoch: number }>({
       query: ({ epoch }) => `/epochs/${epoch}/computors`,
       transformResponse: (response: GetEpochComputorsResponse) => response.computors
-    }),
-    getRickList: build.query<GetRichListResponse, { page: number; pageSize: number }>({
-      query: ({ page, pageSize }) => `/rich-list?page=${page}&pageSize=${pageSize}`
     }),
     // Address
     getAddressBalances: build.query<GetAddressBalancesResponse['balance'], { address: string }>({
@@ -60,10 +63,13 @@ export const archiverV1Api = createApi({
 })
 
 export const {
+  // General
   useGetLatestStatsQuery,
+  useGetRichListQuery,
+  // Tick
   useGetTickDataQuery,
+  // Epoch
   useGetEpochComputorsQuery,
-  useGetRickListQuery,
   // Address
   useGetAddressBalancesQuery,
   // Address Assets

@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 
 import { Alert } from '@app/components/ui'
-import type { Transaction } from '@app/services/archiver'
+import type { Transaction } from '@app/store/apis/archiver-v2/archiver-v2.types'
 import { clsxTwMerge, formatDate, formatString } from '@app/utils'
 import type { AssetTransfer, Transfer } from '@app/utils/qubic-ts'
 import { useMemo } from 'react'
@@ -13,7 +13,7 @@ import TransferList from './TransferList/TransferList'
 import type { TxItemVariant } from './TxItem.types'
 
 type Props = {
-  readonly txDetails: Omit<Transaction, 'inputSize' | 'signatureHex' | 'inputHex'>
+  readonly txDetails: Omit<Transaction['transaction'], 'inputSize' | 'signatureHex' | 'inputHex'>
   readonly entries: Transfer[]
   readonly isHistoricalTx?: boolean
   readonly variant?: TxItemVariant

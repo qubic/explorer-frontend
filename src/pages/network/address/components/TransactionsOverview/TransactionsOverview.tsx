@@ -2,7 +2,7 @@ import { memo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Tabs } from '@app/components/ui'
-import type { GetAddressBalancesResponse } from '@app/store/apis/archiver-v1.types'
+import type { GetAddressBalancesResponse } from '@app/store/apis/archiver-v1'
 import { useHistoricalTransactions, useLatestTransactions } from '../../hooks'
 import HistoricalTxs from './HistoricalTxs'
 import LatestTransactions from './LatestTransactions'

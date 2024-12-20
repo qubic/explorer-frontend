@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom'
 import { CameraIcon, GridAddIcon, MagnifyIcon, XmarkIcon } from '@app/assets/icons'
 import { useAppDispatch, useAppSelector } from '@app/hooks/redux'
 import { Routes } from '@app/router'
-import { getSearch, resetSearch, selectSearch } from '@app/store/searchSlice'
+import { getSearch, resetSearch, SearchType, selectSearch } from '@app/store/searchSlice'
 import { formatBase64, formatDate, formatString } from '@app/utils'
 import Alert from '../Alert'
 import { ErrorBoundary } from '../error-boundaries'
@@ -13,17 +13,17 @@ import { LinearProgress } from '../loaders'
 import Modal from '../Modal'
 import ResultItem from './ResultItem'
 
-const evaluateSearchType = (keyword: string) => {
+const evaluateSearchType = (keyword: string): SearchType | null => {
   const trimmedKeyword = keyword.trim()
   if (trimmedKeyword.length === 60) {
     if (/^[A-Z\s]+$/.test(trimmedKeyword)) {
-      return 'address'
+      return SearchType.ADDRESS
     }
     if (/^[a-z]+$/.test(trimmedKeyword)) {
-      return 'tx'
+      return SearchType.TX
     }
   } else if (parseInt(keyword.replace(/,/g, ''), 10).toString().length === 8) {
-    return 'tick'
+    return SearchType.TICK
   }
   return null
 }
