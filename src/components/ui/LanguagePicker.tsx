@@ -41,11 +41,11 @@ export default function LanguagePicker() {
       <DropdownMenu show={showDropdown}>
         <DropdownMenu.Trigger
           onToggle={handleDropdownToggle}
-          className="rounded-full p-8 hover:bg-primary-60/80"
+          className="rounded-full p-8 transition-colors duration-500 ease-in-out hover:bg-primary-70"
         >
-          <GlobeGrayIcon className="h-24 w-24" />
+          <GlobeGrayIcon className="h-18 w-18" />
         </DropdownMenu.Trigger>
-        <DropdownMenu.Content>
+        <DropdownMenu.Content className="left-auto right-0">
           <ul className="grid" ref={dropdownRef}>
             {LANGUAGES.map((lng, index) => (
               <li key={lng.id}>

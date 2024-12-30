@@ -62,5 +62,17 @@
   "assetTransferWarning": "Bu işlem kaydı şu anda yalnızca gönderen tarafından görülebilir. Alıcı, şu anda bu işlem verilerine kayıtlarında erişemeyecektir.",
   "ticksLoadFailed": "Hata: Tikler yüklenemedi. Lütfen sayfayı yenileyin veya daha sonra tekrar deneyin. Eğer bugün çarşamba ise, lütfen bir sonraki dönemin başlamasını bekleyin.",
   "showItemsPerPage": "{{count}} öğeyi göster",
-  "itemsPerPage": "Sayfa başına öğe"
+  "itemsPerPage": "Sayfa başına öğe",
+  "latestStatsLoadFailed": "Hata: En son istatistikler yüklenemedi. Lütfen sayfayı yenileyin veya daha sonra tekrar deneyin.",
+  "errorLoadingPrice": "Hata: Fiyat yüklenemedi. Lütfen sayfayı yenileyin veya daha sonra tekrar deneyin.",
+  "exchange": "Borsa",
+  "exchanges": "Borsalar",
+  "tokens": "Jetonlar",
+  "smartContracts": "Akıllı Sözleşmeler",
+  "tokenLoadFailed": "Hata: Jetonlar yüklenemedi. Lütfen sayfayı yenileyin veya daha sonra tekrar deneyin.",
+  "smartContractsLoadFailed": "Hata: Akıllı sözleşmeler yüklenemedi. Lütfen sayfayı yenileyin veya daha sonra tekrar deneyin.",
+  "issuer": "Yayımlayan",
+  "name": "Ad",
+  "wallets": "Cüzdanlar",
+  "assets": "Varlıklar"
 }

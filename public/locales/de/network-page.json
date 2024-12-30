@@ -62,5 +62,17 @@
   "assetTransferWarning": "Dieser Transaktionsdatensatz ist derzeit nur für den Absender sichtbar. Der Empfänger hat zu diesem Zeitpunkt keinen Zugriff auf diese Transaktionsdaten in seinen Aufzeichnungen.",
   "ticksLoadFailed": "Fehler: Konnte Ticks nicht laden. Bitte aktualisieren Sie die Seite oder versuchen Sie es später erneut. Wenn heute Mittwoch ist, warten Sie bitte, bis die nächste Epoche beginnt.",
   "showItemsPerPage": "{{count}} Elemente anzeigen",
-  "itemsPerPage": "Elemente pro Seite"
+  "itemsPerPage": "Elemente pro Seite",
+  "latestStatsLoadFailed": "Fehler: Laden der neuesten Statistiken fehlgeschlagen. Bitte aktualisieren Sie die Seite oder versuchen Sie es später erneut.",
+  "errorLoadingPrice": "Fehler: Laden des Preises fehlgeschlagen. Bitte aktualisieren Sie die Seite oder versuchen Sie es später erneut.",
+  "exchange": "Börse",
+  "exchanges": "Börsen",
+  "tokens": "Token",
+  "smartContracts": "Smart Contracts",
+  "tokenLoadFailed": "Fehler: Laden der Token fehlgeschlagen. Bitte aktualisieren Sie die Seite oder versuchen Sie es später erneut.",
+  "smartContractsLoadFailed": "Fehler: Laden der Smart Contracts fehlgeschlagen. Bitte aktualisieren Sie die Seite oder versuchen Sie es später erneut.",
+  "issuer": "Emittent",
+  "name": "Name",
+  "wallets": "Wallets",
+  "assets": "Vermögenswerte"
 }

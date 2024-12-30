@@ -1,3 +1,4 @@
+export { default as Bars3Icon } from './bars-3.svg?react'
 export { default as CameraIcon } from './camera.svg?react'
 export { default as CheckCircleIcon } from './check-circle.svg?react'
 export { default as CheckIcon } from './check.svg?react'

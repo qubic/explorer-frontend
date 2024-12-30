@@ -77,16 +77,16 @@ export default function SearchBar() {
     <ErrorBoundary fallback={<Alert variant="error" className="mx-5 my-2.5" />}>
       <button
         type="button"
-        className="rounded-full p-8 hover:bg-primary-60/80"
+        className="rounded-full p-8 transition-colors duration-500 ease-in-out hover:bg-primary-70"
         onClick={() => setOpen(true)}
         aria-label="search-button"
       >
-        <MagnifyIcon className="h-24 w-24" />
+        <MagnifyIcon className="h-18 w-18" />
       </button>
       <Modal
         id="search-modal"
         isOpen={open}
-        className="top-60"
+        className="top-40"
         closeOnOutsideClick
         onClose={handleCloseCallback}
       >

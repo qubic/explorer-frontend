@@ -62,5 +62,17 @@
   "assetTransferWarning": "Este registro de transacción es actualmente visible solo para el remitente. El destinatario no tendrá acceso a estos datos de la transacción en sus registros en este momento.",
   "ticksLoadFailed": "Error: No se pudieron cargar los ticks. Por favor, actualiza la página o inténtalo de nuevo más tarde. Si es miércoles, espera hasta que comience la próxima época.",
   "showItemsPerPage": "Mostrar {{count}} elementos",
-  "itemsPerPage": "Elementos por página"
+  "itemsPerPage": "Elementos por página",
+  "latestStatsLoadFailed": "Error: No se pudieron cargar las estadísticas más recientes. Por favor, actualiza la página o inténtalo de nuevo más tarde.",
+  "errorLoadingPrice": "Error: No se pudo cargar el precio. Por favor, actualiza la página o inténtalo de nuevo más tarde.",
+  "exchange": "Intercambio",
+  "exchanges": "Intercambios",
+  "tokens": "Tokens",
+  "smartContracts": "Contratos inteligentes",
+  "tokenLoadFailed": "Error: No se pudieron cargar los tokens. Por favor, actualiza la página o inténtalo de nuevo más tarde.",
+  "smartContractsLoadFailed": "Error: No se pudieron cargar los contratos inteligentes. Por favor, actualiza la página o inténtalo de nuevo más tarde.",
+  "issuer": "Emisor",
+  "name": "Nombre",
+  "wallets": "Carteras",
+  "assets": "Activos"
 }

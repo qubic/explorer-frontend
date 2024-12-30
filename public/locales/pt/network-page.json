@@ -62,5 +62,17 @@
   "assetTransferWarning": "Este registro de transação está atualmente visível apenas para o remetente. O destinatário não terá acesso a esses dados de transação em seus registros neste momento.",
   "ticksLoadFailed": "Erro: Falha ao carregar ticks. Por favor, atualize a página ou tente novamente mais tarde. Se for quarta-feira, aguarde até o início da próxima época.",
   "showItemsPerPage": "Mostrar {{count}} itens",
-  "itemsPerPage": "Itens por página"
+  "itemsPerPage": "Itens por página",
+  "latestStatsLoadFailed": "Erro: Falha ao carregar as estatísticas mais recentes. Por favor, atualize a página ou tente novamente mais tarde.",
+  "errorLoadingPrice": "Erro: Falha ao carregar o preço. Por favor, atualize a página ou tente novamente mais tarde.",
+  "exchange": "Câmbio",
+  "exchanges": "Câmbios",
+  "tokens": "Tokens",
+  "smartContracts": "Contratos Inteligentes",
+  "tokenLoadFailed": "Erro: Falha ao carregar os tokens. Por favor, atualize a página ou tente novamente mais tarde.",
+  "smartContractsLoadFailed": "Erro: Falha ao carregar os contratos inteligentes. Por favor, atualize a página ou tente novamente mais tarde.",
+  "issuer": "Emissor",
+  "name": "Nome",
+  "wallets": "Carteiras",
+  "assets": "Ativos"
 }

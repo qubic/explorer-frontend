@@ -12,12 +12,12 @@ type Variant = 'info' | 'warning' | 'error' | 'success'
 
 type Size = 'sm' | 'md' | 'lg'
 
-type Props = {
+type Props = Readonly<{
   variant?: Variant
   size?: Size
   children?: React.ReactNode
   className?: string
-}
+}>
 
 const variantClasses = {
   info: {
@@ -75,9 +75,11 @@ function Alert({ children, variant = 'info', size = 'md', className }: Props) {
     >
       <IconComponent
         aria-label={`${variant} icon`}
-        className={clsxTwMerge('flex-shrink-0', iconClass, iconSize)}
+        className={clsxTwMerge('shrink-0', iconClass, iconSize)}
       />
-      {children && <div className={clsxTwMerge('font-sans', textColor, textSize)}>{children}</div>}
+      {children && (
+        <p className={clsxTwMerge('text-start font-sans', textColor, textSize)}>{children}</p>
+      )}
     </div>
   )
 }

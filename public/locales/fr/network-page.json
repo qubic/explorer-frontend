@@ -62,5 +62,17 @@
   "assetTransferWarning": "Cet enregistrement de transaction est actuellement visible uniquement par l'expéditeur. Le destinataire n'aura pas accès à ces données de transaction dans ses enregistrements pour le moment.",
   "ticksLoadFailed": "Erreur : Échec du chargement des ticks. Veuillez actualiser la page ou réessayer plus tard. Si nous sommes mercredi, veuillez attendre le début de la prochaine époque.",
   "showItemsPerPage": "Afficher {{count}} éléments",
-  "itemsPerPage": "Éléments par page"
+  "itemsPerPage": "Éléments par page",
+  "latestStatsLoadFailed": "Erreur : Échec du chargement des statistiques récentes. Veuillez actualiser la page ou réessayer plus tard.",
+  "errorLoadingPrice": "Erreur : Échec du chargement du prix. Veuillez actualiser la page ou réessayer plus tard.",
+  "exchange": "Échange",
+  "exchanges": "Échanges",
+  "tokens": "Jetons",
+  "smartContracts": "Contrats intelligents",
+  "tokenLoadFailed": "Erreur : Échec du chargement des jetons. Veuillez actualiser la page ou réessayer plus tard.",
+  "smartContractsLoadFailed": "Erreur : Échec du chargement des contrats intelligents. Veuillez actualiser la page ou réessayer plus tard.",
+  "issuer": "Émetteur",
+  "name": "Nom",
+  "wallets": "Portefeuilles",
+  "assets": "Actifs"
 }

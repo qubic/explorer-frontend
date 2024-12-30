@@ -62,5 +62,17 @@
   "assetTransferWarning": "Dit transactieoverzicht is momenteel alleen zichtbaar voor de afzender. De ontvanger heeft op dit moment geen toegang tot deze transactiegegevens in zijn administratie.",
   "ticksLoadFailed": "Fout: Het laden van ticks is mislukt. Vernieuw de pagina of probeer het later opnieuw. Als het woensdag is, wacht dan tot de volgende tijdperk begint.",
   "showItemsPerPage": "{{count}} items weergeven",
-  "itemsPerPage": "Items per pagina"
+  "itemsPerPage": "Items per pagina",
+  "latestStatsLoadFailed": "Fout: Het laden van de nieuwste statistieken is mislukt. Vernieuw de pagina of probeer het later opnieuw.",
+  "errorLoadingPrice": "Fout: Het laden van de prijs is mislukt. Vernieuw de pagina of probeer het later opnieuw.",
+  "exchange": "Beurs",
+  "exchanges": "Beurzen",
+  "tokens": "Tokens",
+  "smartContracts": "Slimme Contracten",
+  "tokenLoadFailed": "Fout: Het laden van tokens is mislukt. Vernieuw de pagina of probeer het later opnieuw.",
+  "smartContractsLoadFailed": "Fout: Het laden van slimme contracten is mislukt. Vernieuw de pagina of probeer het later opnieuw.",
+  "issuer": "Uitgever",
+  "name": "Naam",
+  "wallets": "Portefeuilles",
+  "assets": "Activa"
 }

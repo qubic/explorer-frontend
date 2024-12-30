@@ -62,5 +62,17 @@
   "assetTransferWarning": "此交易当前仅发送方可见，接收方暂时无法查看",
   "ticksLoadFailed": "错误：无法加载滴答数据。请刷新页面或稍后再试。如果今天是星期三，请等到下一个纪元开始。",
   "showItemsPerPage": "显示 {{count}} 项",
-  "itemsPerPage": "每页项数"
+  "itemsPerPage": "每页项数",
+  "latestStatsLoadFailed": "错误：无法加载最新统计数据。请刷新页面或稍后再试。",
+  "errorLoadingPrice": "错误：无法加载价格。请刷新页面或稍后再试。",
+  "exchange": "交易所",
+  "exchanges": "交易所",
+  "tokens": "代币",
+  "smartContracts": "智能合约",
+  "tokenLoadFailed": "错误：无法加载代币。请刷新页面或稍后再试。",
+  "smartContractsLoadFailed": "错误：无法加载智能合约。请刷新页面或稍后再试。",
+  "issuer": "发行人",
+  "name": "名称",
+  "wallets": "钱包",
+  "assets": "资产"
 }
