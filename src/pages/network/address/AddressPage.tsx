@@ -3,8 +3,10 @@ import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 
 import { withHelmet } from '@app/components/hocs'
-import { Alert, Breadcrumbs } from '@app/components/ui'
+import { Breadcrumbs } from '@app/components/ui'
 import { ChevronToggleButton, CopyTextButton } from '@app/components/ui/buttons'
+import { ErrorFallback } from '@app/components/ui/error-boundaries'
+import { PageLayout } from '@app/components/ui/layouts'
 import { LinearProgress } from '@app/components/ui/loaders'
 import { useGetAddressBalancesQuery, useGetLatestStatsQuery } from '@app/store/apis/archiver-v1'
 import { formatEllipsis, formatString } from '@app/utils'
@@ -33,15 +35,11 @@ function AddressPage() {
   }
 
   if (!addressBalances.data) {
-    return (
-      <div className="mx-auto my-32 max-w-[960px] px-12">
-        <Alert variant="error">{t('addressNotFoundError')}</Alert>
-      </div>
-    )
+    return <ErrorFallback message={t('addressNotFoundError')} />
   }
 
   return (
-    <div className="mx-auto max-w-[960px] px-12 py-16">
+    <PageLayout>
       <Breadcrumbs aria-label="breadcrumbs">
         <HomeLink />
         <p className="font-space text-xs text-primary-30">
@@ -80,7 +78,7 @@ function AddressPage() {
       </div>
 
       <TransactionsOverview address={addressBalances.data} addressId={addressId} />
-    </div>
+    </PageLayout>
   )
 }
 

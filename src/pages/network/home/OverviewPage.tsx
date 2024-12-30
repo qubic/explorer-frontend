@@ -2,6 +2,7 @@ import { useCallback } from 'react'
 import { useSearchParams } from 'react-router-dom'
 
 import { withHelmet } from '@app/components/hocs'
+import { PageLayout } from '@app/components/ui/layouts'
 import { useGetLatestStatsQuery } from '@app/store/apis/archiver-v1'
 import { useGetEpochTicksQuery } from '@app/store/apis/archiver-v2'
 import { LatestStats, TickList } from './components'
@@ -29,21 +30,19 @@ function OverviewPage() {
   )
 
   return (
-    <div className="w-full py-32">
-      <div className="mx-auto flex max-w-[960px] flex-1 flex-col gap-16 px-16">
-        <LatestStats
-          latestStats={latestStats.data}
-          isLoading={latestStats.isFetching}
-          isError={latestStats.isError}
-        />
-        <TickList
-          data={epochTicks.data}
-          isLoading={latestStats.isFetching || epochTicks.isFetching}
-          isError={epochTicks.isError}
-          onPageChange={handlePageChange}
-        />
-      </div>
-    </div>
+    <PageLayout className="flex flex-1 flex-col gap-16">
+      <LatestStats
+        latestStats={latestStats.data}
+        isLoading={latestStats.isFetching}
+        isError={latestStats.isError}
+      />
+      <TickList
+        data={epochTicks.data}
+        isLoading={latestStats.isFetching || epochTicks.isFetching}
+        isError={epochTicks.isError}
+        onPageChange={handlePageChange}
+      />
+    </PageLayout>
   )
 }
 
