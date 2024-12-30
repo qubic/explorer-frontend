@@ -18,6 +18,7 @@ export const NAVIGATION_MENU_ITEMS: NavigationMenuItem[] = [
   },
   {
     i18nKey: 'assets',
+    className: 'left-auto right-0 lg:right-auto lg:left-0',
     items: [
       {
         i18nKey: 'tokens',

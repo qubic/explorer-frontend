@@ -7,7 +7,9 @@ import {
   ExchangesPageLazy,
   OverviewPage,
   RichListPageLazy,
+  SmartContractsPageLazy,
   TickPageLazy,
+  TokensPageLazy,
   TxPageLazy
 } from '@app/pages/network'
 import { Routes } from './routes'
@@ -48,6 +50,14 @@ const router: ReturnType<typeof createBrowserRouter> = createBrowserRouter([
           {
             path: Routes.NETWORK.WALLETS.EXCHANGES,
             element: <ExchangesPageLazy />
+          },
+          {
+            path: Routes.NETWORK.ASSETS.TOKENS,
+            element: <TokensPageLazy />
+          },
+          {
+            path: Routes.NETWORK.ASSETS.SMART_CONTRACTS,
+            element: <SmartContractsPageLazy />
           }
         ]
       }

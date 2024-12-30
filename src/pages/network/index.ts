@@ -8,3 +8,8 @@ export const TxPageLazy = lazy(() => import('./TxPage'))
 // wallets
 export const RichListPageLazy = lazy(() => import('./wallets/rich-list/RichListPage'))
 export const ExchangesPageLazy = lazy(() => import('./wallets/exchanges/ExchangesPage'))
+// Assets
+export const TokensPageLazy = lazy(() => import('./assets/tokens/TokensPage'))
+export const SmartContractsPageLazy = lazy(
+  () => import('./assets/smart-contracts/SmartContractsPage')
+)

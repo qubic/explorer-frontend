@@ -42,6 +42,7 @@ jobs:
         env:
           VITE_QLI_API_URL: ${{ secrets.QLI_API_URL }}
           VITE_ARCHIVER_API_URL: ${{ secrets.QUBIC_RPC_URL }}
+          VITE_QX_API_URL: ${{ secrets.QX_API_URL }}
         run: pnpm run build
 
       - name: 📤 Deploy to the corresponding environment

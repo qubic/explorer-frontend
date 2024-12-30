@@ -38,12 +38,12 @@ function ExchangesPage() {
     <PageLayout className="space-y-20">
       <Breadcrumbs aria-label="breadcrumb">
         <HomeLink />
-        <p className="text-xs text-primary-30">{t('Exchanges')}</p>
+        <p className="text-xs text-primary-30">{t('exchanges')}</p>
       </Breadcrumbs>
       <div className="space-y-14 md:space-y-28">
         <div className="flex flex-col justify-between space-y-10 sm:flex-row sm:items-end">
           <div>
-            <p className="font-space text-24 font-500 leading-26">{t('Exchanges')}</p>
+            <p className="font-space text-24 font-500 leading-26">{t('exchanges')}</p>
           </div>
         </div>
         <div className="w-full rounded-12 border-1 border-primary-60 bg-primary-70">

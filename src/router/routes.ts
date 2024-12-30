@@ -24,6 +24,10 @@ export const Routes = {
     WALLETS: {
       RICH_LIST: '/network/wallets/rich-list',
       EXCHANGES: '/network/wallets/exchanges'
+    },
+    ASSETS: {
+      TOKENS: '/network/assets/tokens',
+      SMART_CONTRACTS: '/network/assets/smart-contracts'
     }
   },
   NOT_FOUND: '/404'
