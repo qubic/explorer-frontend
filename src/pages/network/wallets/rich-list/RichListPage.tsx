@@ -5,10 +5,11 @@ import { useSearchParams } from 'react-router-dom'
 
 import { withHelmet } from '@app/components/hocs'
 import { Breadcrumbs, PaginationBar, Select } from '@app/components/ui'
+import { PageLayout } from '@app/components/ui/layouts'
 import type { Option } from '@app/components/ui/Select'
 import { useTailwindBreakpoint } from '@app/hooks'
 import { useGetRichListQuery } from '@app/store/apis/archiver-v1'
-import { HomeLink } from '../components'
+import { HomeLink } from '../../components'
 import { RichListErrorRow, RichListRow, RichListSkeletonRow } from './components'
 
 const DEFAULT_PAGE_SIZE = 15
@@ -105,55 +106,53 @@ function RichListPage() {
   }, [entitiesWithRank, isFetching, error, isMobile, pageSize])
 
   return (
-    <div className="w-full">
-      <div className="mx-auto max-w-[960px] space-y-20 px-20 py-32 md:space-y-40">
-        <Breadcrumbs aria-label="breadcrumb">
-          <HomeLink />
-          <p className="text-xs text-primary-30">{t('richList')}</p>
-        </Breadcrumbs>
-        <div className="space-y-14 md:space-y-28">
-          <div className="flex flex-col justify-between space-y-10 sm:flex-row sm:items-end">
-            <div>
-              <p className="font-space text-24 font-500 leading-26">{t('richList')}</p>
-              <p className="text-left text-sm text-gray-50">{t('richListWarning')}</p>
-            </div>
-            <Select
-              className="w-[170px] justify-self-end"
-              label={t('itemsPerPage')}
-              defaultValue={defaultPageSizeOption}
-              onSelect={handlePageSizeChange}
-              options={pageSizeOptions}
-            />
+    <PageLayout className="space-y-20">
+      <Breadcrumbs aria-label="breadcrumb">
+        <HomeLink />
+        <p className="text-xs text-primary-30">{t('richList')}</p>
+      </Breadcrumbs>
+      <div className="space-y-14 md:space-y-28">
+        <div className="flex flex-col justify-between space-y-10 sm:flex-row sm:items-end">
+          <div>
+            <p className="font-space text-24 font-500 leading-26">{t('richList')}</p>
+            <p className="text-left text-sm text-gray-50">{t('richListWarning')}</p>
           </div>
-          <div className="w-full rounded-12 border-1 border-primary-60 bg-primary-70">
-            <div className="overflow-x-scroll">
-              <table className="w-full">
-                <thead className="border-b-1 border-primary-60 text-left font-space text-sm text-gray-50">
-                  <tr>
-                    <th className="p-16 text-center font-400 sm:w-72">
-                      <span className="hidden text-gray-50 sm:block">{t('rank')}</span>
-                    </th>
-                    <th className="p-16 font-400">
-                      <span className="text-gray-50">{t('addressID')}</span>
-                    </th>
-                    <th className="p-16 text-right font-400">
-                      <span className="text-gray-50">{t('amount')} (QUBIC)</span>
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>{renderTableContent()}</tbody>
-              </table>
-            </div>
-            <PaginationBar
-              className="mx-auto w-fit gap-8 p-20"
-              pageCount={data?.pagination.totalPages ?? 0}
-              page={page}
-              onPageChange={handlePageChange}
-            />
+          <Select
+            className="w-[170px] justify-self-end"
+            label={t('itemsPerPage')}
+            defaultValue={defaultPageSizeOption}
+            onSelect={handlePageSizeChange}
+            options={pageSizeOptions}
+          />
+        </div>
+        <div className="w-full rounded-12 border-1 border-primary-60 bg-primary-70">
+          <div className="overflow-x-scroll">
+            <table className="w-full">
+              <thead className="border-b-1 border-primary-60 text-left font-space text-sm text-gray-50">
+                <tr>
+                  <th className="p-16 text-center font-400 sm:w-72">
+                    <span className="hidden text-gray-50 sm:block">{t('rank')}</span>
+                  </th>
+                  <th className="p-16 font-400">
+                    <span className="text-gray-50">{t('addressID')}</span>
+                  </th>
+                  <th className="p-16 text-right font-400">
+                    <span className="text-gray-50">{t('amount')} (QUBIC)</span>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>{renderTableContent()}</tbody>
+            </table>
           </div>
+          <PaginationBar
+            className="mx-auto w-fit gap-8 p-20"
+            pageCount={data?.pagination.totalPages ?? 0}
+            page={page}
+            onPageChange={handlePageChange}
+          />
         </div>
       </div>
-    </div>
+    </PageLayout>
   )
 }
 

@@ -67,6 +67,7 @@
   "errorLoadingPrice": "错误：无法加载价格。请刷新页面或稍后再试。",
   "exchange": "交易所",
   "exchanges": "交易所",
+  "exchangesLoadFailed": "错误：无法加载交易所。请刷新页面或稍后再试。",
   "tokens": "代币",
   "smartContracts": "智能合约",
   "tokenLoadFailed": "错误：无法加载代币。请刷新页面或稍后再试。",

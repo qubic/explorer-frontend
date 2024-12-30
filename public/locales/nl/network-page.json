@@ -67,6 +67,7 @@
   "errorLoadingPrice": "Fout: Het laden van de prijs is mislukt. Vernieuw de pagina of probeer het later opnieuw.",
   "exchange": "Beurs",
   "exchanges": "Beurzen",
+  "exchangesLoadFailed": "Fout: Het laden van beurzen is mislukt. Vernieuw de pagina of probeer het later opnieuw.",
   "tokens": "Tokens",
   "smartContracts": "Slimme Contracten",
   "tokenLoadFailed": "Fout: Het laden van tokens is mislukt. Vernieuw de pagina of probeer het later opnieuw.",

@@ -67,6 +67,7 @@
   "errorLoadingPrice": "Fehler: Laden des Preises fehlgeschlagen. Bitte aktualisieren Sie die Seite oder versuchen Sie es später erneut.",
   "exchange": "Börse",
   "exchanges": "Börsen",
+  "exchangesLoadFailed": "Fehler: Laden der Börsen fehlgeschlagen. Bitte aktualisieren Sie die Seite oder versuchen Sie es später erneut.",
   "tokens": "Token",
   "smartContracts": "Smart Contracts",
   "tokenLoadFailed": "Fehler: Laden der Token fehlgeschlagen. Bitte aktualisieren Sie die Seite oder versuchen Sie es später erneut.",

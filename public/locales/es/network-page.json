@@ -67,6 +67,7 @@
   "errorLoadingPrice": "Error: No se pudo cargar el precio. Por favor, actualiza la página o inténtalo de nuevo más tarde.",
   "exchange": "Intercambio",
   "exchanges": "Intercambios",
+  "exchangesLoadFailed": "Error: No se pudieron cargar los intercambios. Por favor, actualiza la página o inténtalo de nuevo más tarde.",
   "tokens": "Tokens",
   "smartContracts": "Contratos inteligentes",
   "tokenLoadFailed": "Error: No se pudieron cargar los tokens. Por favor, actualiza la página o inténtalo de nuevo más tarde.",

@@ -72,6 +72,7 @@ export const {
   useGetEpochComputorsQuery,
   // Address
   useGetAddressBalancesQuery,
+  useLazyGetAddressBalancesQuery,
   // Address Assets
   useGetAddressIssuedAssetsQuery,
   useGetAddressOwnedAssetsQuery,

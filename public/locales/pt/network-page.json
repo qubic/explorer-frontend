@@ -67,6 +67,7 @@
   "errorLoadingPrice": "Erro: Falha ao carregar o preço. Por favor, atualize a página ou tente novamente mais tarde.",
   "exchange": "Câmbio",
   "exchanges": "Câmbios",
+  "exchangesLoadFailed": "Erro: Falha ao carregar as câmbios. Por favor, atualize a página ou tente novamente mais tarde.",
   "tokens": "Tokens",
   "smartContracts": "Contratos Inteligentes",
   "tokenLoadFailed": "Erro: Falha ao carregar os tokens. Por favor, atualize a página ou tente novamente mais tarde.",

@@ -67,6 +67,7 @@
   "errorLoadingPrice": "Hata: Fiyat yüklenemedi. Lütfen sayfayı yenileyin veya daha sonra tekrar deneyin.",
   "exchange": "Borsa",
   "exchanges": "Borsalar",
+  "exchangesLoadFailed": "Hata: Borsalar yüklenemedi. Lütfen sayfayı yenileyin veya daha sonra tekrar deneyin.",
   "tokens": "Jetonlar",
   "smartContracts": "Akıllı Sözleşmeler",
   "tokenLoadFailed": "Hata: Jetonlar yüklenemedi. Lütfen sayfayı yenileyin veya daha sonra tekrar deneyin.",

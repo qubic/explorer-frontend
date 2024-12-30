@@ -67,6 +67,7 @@
   "errorLoadingPrice": "Erreur : Échec du chargement du prix. Veuillez actualiser la page ou réessayer plus tard.",
   "exchange": "Échange",
   "exchanges": "Échanges",
+  "exchangesLoadFailed": "Erreur : Échec du chargement des échanges. Veuillez actualiser la page ou réessayer plus tard.",
   "tokens": "Jetons",
   "smartContracts": "Contrats intelligents",
   "tokenLoadFailed": "Erreur : Échec du chargement des jetons. Veuillez actualiser la page ou réessayer plus tard.",
