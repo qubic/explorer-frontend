@@ -10,6 +10,7 @@ import {
   EpochTicksIcon,
   FireIcon,
   Infocon,
+  LockIcon,
   SandClockIcon,
   StarsIcon,
   WalletIcon
@@ -48,11 +49,12 @@ const LatestStatsSkeleton = memo(() => (
 
 type Props = Readonly<{
   latestStats: GetLatestStatsResponse['data'] | undefined
+  totalValueLocked: string
   isLoading: boolean
   isError: boolean
 }>
 
-export default function LatestStats({ latestStats, isLoading, isError }: Props) {
+export default function LatestStats({ latestStats, totalValueLocked, isLoading, isError }: Props) {
   const { t } = useTranslation('network-page')
 
   const cardData = useMemo(
@@ -70,6 +72,12 @@ export default function LatestStats({ latestStats, isLoading, isError }: Props) 
         value: `$${formatString(latestStats?.marketCap)}`
       },
       {
+        id: 'active-addresses',
+        icon: WalletIcon,
+        label: t('activeAddresses'),
+        value: formatString(latestStats?.activeAddresses)
+      },
+      {
         id: 'current-epoch',
         icon: SandClockIcon,
         label: t('epoch'),
@@ -79,7 +87,7 @@ export default function LatestStats({ latestStats, isLoading, isError }: Props) 
         id: 'circulating-supply',
         icon: CirculatingCoinsIcon,
         label: t('circulatingSupply'),
-        value: formatString(latestStats?.circulatingSupply)
+        value: formatString(Number(latestStats?.circulatingSupply ?? 0) - Number(totalValueLocked))
       },
       {
         id: 'burned-supply',
@@ -88,10 +96,10 @@ export default function LatestStats({ latestStats, isLoading, isError }: Props) 
         value: formatString(latestStats?.burnedQus)
       },
       {
-        id: 'active-addresses',
-        icon: WalletIcon,
-        label: t('activeAddresses'),
-        value: formatString(latestStats?.activeAddresses)
+        id: 'totalValueLocked',
+        icon: LockIcon,
+        label: t('Total Value Locked'),
+        value: formatString(totalValueLocked)
       },
       {
         id: 'current-tick',
@@ -125,7 +133,7 @@ export default function LatestStats({ latestStats, isLoading, isError }: Props) 
         value: getTickQuality(latestStats?.epochTickQuality)
       }
     ],
-    [t, latestStats]
+    [t, totalValueLocked, latestStats]
   )
 
   if (isLoading) {
@@ -142,18 +150,18 @@ export default function LatestStats({ latestStats, isLoading, isError }: Props) 
 
   return (
     <>
-      <div className="grid gap-16 md:grid-flow-col">
-        {cardData.slice(0, 3).map((card) => (
+      <div className="grid gap-16 948px:grid-flow-col">
+        {cardData.slice(0, 4).map((card) => (
           <OverviewCardItem key={card.id} icon={card.icon} label={card.label} value={card.value} />
         ))}
       </div>
-      <div className="grid gap-16 827px:grid-flow-col">
-        {cardData.slice(3, 6).map((card) => (
+      <div className="grid gap-16 948px:grid-flow-col">
+        {cardData.slice(4, 7).map((card) => (
           <OverviewCardItem key={card.id} icon={card.icon} label={card.label} value={card.value} />
         ))}
       </div>
-      <div className="grid grid-cols-2 gap-16 827px:grid-cols-4">
-        {cardData.slice(6, 10).map((card) => (
+      <div className="grid grid-cols-2 gap-16 948px:grid-cols-4">
+        {cardData.slice(7, 11).map((card) => (
           <OverviewCardItem
             key={card.id}
             icon={card.icon}
