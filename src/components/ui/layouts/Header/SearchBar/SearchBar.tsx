@@ -3,14 +3,13 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
 import { CameraIcon, GridAddIcon, MagnifyIcon, XmarkIcon } from '@app/assets/icons'
+import { Alert, Modal } from '@app/components/ui'
+import { ErrorBoundary } from '@app/components/ui/error-boundaries'
+import { LinearProgress } from '@app/components/ui/loaders'
 import { useAppDispatch, useAppSelector } from '@app/hooks/redux'
 import { Routes } from '@app/router'
 import { getSearch, resetSearch, SearchType, selectSearch } from '@app/store/searchSlice'
 import { formatBase64, formatDate, formatString } from '@app/utils'
-import Alert from '../Alert'
-import { ErrorBoundary } from '../error-boundaries'
-import { LinearProgress } from '../loaders'
-import Modal from '../Modal'
 import ResultItem from './ResultItem'
 
 const evaluateSearchType = (keyword: string): SearchType | null => {

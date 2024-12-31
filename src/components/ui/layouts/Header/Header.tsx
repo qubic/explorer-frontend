@@ -34,7 +34,7 @@ export default function Header() {
               ))}
             </ul>
           </nav>
-          <div className="absolute right-2 flex items-center gap-8 sm:right-24">
+          <div className="absolute flex items-center gap-8 ltr:right-2 ltr:sm:right-24 rtl:left-2 rtl:sm:left-24">
             <div className="md:hidden">
               <BurgerMenu navigationMenus={NAVIGATION_MENU_ITEMS} activePath={location.pathname} />
             </div>

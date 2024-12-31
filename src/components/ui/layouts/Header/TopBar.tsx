@@ -1,11 +1,10 @@
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { Alert } from '@app/components/ui'
+import { Alert, Skeleton } from '@app/components/ui'
 import { useGetLatestStatsQuery } from '@app/store/apis/archiver-v1'
-import LanguagePicker from '../../LanguagePicker'
-import SearchBar from '../../SearchBar/SearchBar'
-import Skeleton from '../../Skeleton'
+import LanguagePicker from './LanguagePicker'
+import SearchBar from './SearchBar/SearchBar'
 
 export default function TopBar() {
   const { t } = useTranslation('network-page')

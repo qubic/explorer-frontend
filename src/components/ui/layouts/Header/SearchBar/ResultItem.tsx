@@ -1,7 +1,8 @@
-import { CameraIcon } from '@app/assets/icons'
-import { Routes } from '@app/router'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
+
+import { CameraIcon } from '@app/assets/icons'
+import { Routes } from '@app/router'
 
 type Props = {
   icon: React.ReactNode

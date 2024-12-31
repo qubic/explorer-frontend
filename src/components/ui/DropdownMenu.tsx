@@ -54,7 +54,7 @@ DropdownMenu.Content = function DropdownMenuContent({
   return (
     <div
       className={clsxTwMerge(
-        'absolute left-0 top-40 z-50 mt-2 w-fit origin-top-right rounded-md border border-primary-60 bg-primary-70 shadow-lg ring-1 ring-black ring-opacity-5 transition duration-1000 ease-in-out focus:outline-none',
+        'absolute top-40 z-50 mt-2 w-fit origin-top-right rounded-md border border-primary-60 bg-primary-70 shadow-lg ring-1 ring-black ring-opacity-5 transition duration-1000 ease-in-out focus:outline-none ltr:left-0 rtl:right-0',
         className
       )}
       role="menu"
