@@ -1,7 +1,6 @@
 import { Routes } from '@app/router/routes'
 import type { NavigationMenuItem } from './types'
 
-// eslint-disable-next-line import/prefer-default-export
 export const NAVIGATION_MENU_ITEMS: NavigationMenuItem[] = [
   {
     i18nKey: 'wallets',

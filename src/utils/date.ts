@@ -1,4 +1,3 @@
-// eslint-disable-next-line import/prefer-default-export -- Remove this comment when adding more functions
 export function formatDate<T extends boolean = false>(
   dateString: string | undefined,
   options?: { split?: T; includeTimeZone?: boolean; shortDate?: boolean }

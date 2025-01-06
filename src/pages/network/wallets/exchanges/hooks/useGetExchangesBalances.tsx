@@ -1,8 +1,9 @@
 import { useCallback, useEffect, useState } from 'react'
 
+import { EXCHANGES } from '@app/constants/qubic'
 import { useLazyGetAddressBalancesQuery } from '@app/store/apis/archiver-v1'
-import { EXCHANGES } from '../constants'
-import type { ExchangeWallet, ExchangeWalletWithBalance } from '../types'
+import type { ExchangeWallet } from '@app/types'
+import type { ExchangeWalletWithBalance } from '../types'
 
 type UseGetExchangesBalancesOutput = {
   exchangeWallets: ExchangeWalletWithBalance[]

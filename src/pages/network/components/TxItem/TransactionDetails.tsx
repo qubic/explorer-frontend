@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Alert } from '@app/components/ui'
 import type { Transaction } from '@app/store/apis/archiver-v2/archiver-v2.types'
 import { clsxTwMerge, formatDate, formatString } from '@app/utils'
+import { getAddressName } from '@app/utils/qubic'
 import type { AssetTransfer, Transfer } from '@app/utils/qubic-ts'
 import { useMemo } from 'react'
 import AddressLink from '../AddressLink'
@@ -49,6 +50,12 @@ export default function TransactionDetails({
 
   const isSecondaryVariant = variant === 'secondary'
   const { date, time } = useMemo(() => formatDate(timestamp, { split: true }), [timestamp])
+
+  const sourceAddressName = useMemo(() => getAddressName(sourceId)?.name, [sourceId])
+  const destinationAddressName = useMemo(
+    () => getAddressName(assetDetails?.newOwnerAndPossessor ?? destId)?.name,
+    [assetDetails?.newOwnerAndPossessor, destId]
+  )
 
   return (
     <TransactionDetailsWrapper variant={variant}>
@@ -103,14 +110,22 @@ export default function TransactionDetails({
       <SubCardItem
         title={t('source')}
         variant={variant}
-        content={<AddressLink value={sourceId} copy={!isSecondaryVariant} />}
+        content={
+          <AddressLink
+            label={sourceAddressName}
+            showTooltip={!!sourceAddressName}
+            value={sourceId}
+            copy={!isSecondaryVariant}
+          />
+        }
       />
       <SubCardItem
         title={t('destination')}
         variant={variant}
         content={
           <AddressLink
-            // value={destId}
+            label={destinationAddressName}
+            showTooltip={!!destinationAddressName}
             value={assetDetails?.newOwnerAndPossessor ?? destId}
             copy={!isSecondaryVariant}
           />

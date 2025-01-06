@@ -13,7 +13,7 @@ export default function TopBar() {
 
   const renderQubicPrice = useCallback(() => {
     if (isFetching) {
-      return <Skeleton className="h-14 w-80 rounded-md" />
+      return <Skeleton className="h-14 w-80 rounded-md" tag="span" />
     }
 
     if (isError) {

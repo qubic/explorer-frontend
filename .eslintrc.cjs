@@ -54,5 +54,19 @@ module.exports = {
       }
     ],
     'react/prop-types': 'off'
-  }
+  },
+  overrides: [
+    {
+      files: ['src/**/*.tsx'],
+      rules: {
+        'import/prefer-default-export': 'error'
+      }
+    },
+    {
+      files: ['src/**/*.ts', 'src/**/*.js'],
+      rules: {
+        'import/prefer-default-export': 'off'
+      }
+    }
+  ]
 }

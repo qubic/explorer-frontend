@@ -1,4 +1,3 @@
-// eslint-disable-next-line import/prefer-default-export
 export const handleThunkError = (
   error: unknown,
   defaultMessage = 'An unknown error occurred'

@@ -1,7 +1,4 @@
-export type ExchangeWallet = {
-  name: string
-  address: string
-}
+import type { ExchangeWallet } from '@app/types'
 
 export type ExchangeWalletWithBalance = ExchangeWallet & {
   balance: number

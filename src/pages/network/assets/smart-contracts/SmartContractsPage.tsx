@@ -1,43 +1,23 @@
-import { memo, useCallback, useMemo } from 'react'
+import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { withHelmet } from '@app/components/hocs'
 import { Breadcrumbs } from '@app/components/ui'
 import { PageLayout } from '@app/components/ui/layouts'
+import { SMART_CONTRACTS } from '@app/constants/qubic'
 import { useTailwindBreakpoint } from '@app/hooks'
-import { useGetAssetsQuery } from '@app/store/apis/qx'
-import { ASSETS_ISSUER_ADDRESS } from '@app/utils/qubic-ts'
 import { HomeLink } from '../../components'
-import { SmartContractRow, SmartContractsErrorRow, SmartContractSkeletonRow } from './components'
-
-const SmartContractsLoadingRows = memo(() =>
-  Array.from({ length: 10 }).map((_, index) => (
-    <SmartContractSkeletonRow key={String(`${index}`)} />
-  ))
-)
+import { SmartContractRow } from './components'
 
 function SmartContractsPage() {
   const { t } = useTranslation('network-page')
   const { isMobile } = useTailwindBreakpoint()
 
-  const { data = [], isLoading, error } = useGetAssetsQuery()
-
-  const smartContracts = useMemo(
-    () => data.filter(({ issuer }) => issuer === ASSETS_ISSUER_ADDRESS),
-    [data]
-  )
-
   const renderTableContent = useCallback(() => {
-    if (isLoading) return <SmartContractsLoadingRows />
-
-    if (error || smartContracts.length === 0) {
-      return <SmartContractsErrorRow />
-    }
-
-    return smartContracts.map((asset) => (
-      <SmartContractRow key={asset.name} asset={asset} isMobile={isMobile} />
+    return Object.entries(SMART_CONTRACTS).map(([address, details]) => (
+      <SmartContractRow key={address} address={address} details={details} isMobile={isMobile} />
     ))
-  }, [isLoading, error, smartContracts, isMobile])
+  }, [isMobile])
 
   return (
     <PageLayout className="space-y-20">
@@ -60,7 +40,7 @@ function SmartContractsPage() {
                     <span className="text-gray-50">{t('name')}</span>
                   </th>
                   <th className="px-10 py-16 text-xs font-400 sm:p-16 sm:text-sm">
-                    <span className="text-gray-50">{t('issuer')}</span>
+                    <span className="text-gray-50">{t('address')}</span>
                   </th>
                 </tr>
               </thead>

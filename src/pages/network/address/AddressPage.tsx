@@ -3,13 +3,14 @@ import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 
 import { withHelmet } from '@app/components/hocs'
-import { Breadcrumbs } from '@app/components/ui'
+import { Badge, Breadcrumbs } from '@app/components/ui'
 import { ChevronToggleButton, CopyTextButton } from '@app/components/ui/buttons'
 import { ErrorFallback } from '@app/components/ui/error-boundaries'
 import { PageLayout } from '@app/components/ui/layouts'
 import { LinearProgress } from '@app/components/ui/loaders'
 import { useGetAddressBalancesQuery, useGetLatestStatsQuery } from '@app/store/apis/archiver-v1'
 import { formatEllipsis, formatString } from '@app/utils'
+import { getAddressName } from '@app/utils/qubic'
 import { HomeLink } from '../components'
 import { AddressDetails, OwnedAssets, TransactionsOverview } from './components'
 
@@ -30,6 +31,8 @@ function AddressPage() {
     return formatString(+addressBalances.data.balance * (latestStats.data.price ?? 0))
   }, [addressBalances.data, latestStats.data])
 
+  const addressName = useMemo(() => getAddressName(addressId), [addressId])
+
   if (addressBalances.isFetching) {
     return <LinearProgress />
   }
@@ -47,10 +50,21 @@ function AddressPage() {
         </p>
       </Breadcrumbs>
 
-      <div className="flex items-center gap-12 py-16">
+      <div className="flex items-center gap-12 pb-6 pt-16">
         <p className="break-all font-space text-base text-gray-50">{addressId}</p>
         <CopyTextButton text={addressId} />
       </div>
+
+      {addressName && (
+        <div className="flex items-center gap-4 pb-16">
+          <Badge color="primary" size="xs" variant="outlined">
+            {addressName.name}
+          </Badge>
+          <Badge color="primary" size="xs" variant="outlined">
+            {t(addressName.i18nKey)}
+          </Badge>
+        </div>
+      )}
 
       <div>
         <div className="flex flex-col">

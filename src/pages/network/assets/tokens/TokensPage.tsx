@@ -56,7 +56,7 @@ function TokensPage() {
                     <span className="text-gray-50">{t('name')}</span>
                   </th>
                   <th className="px-10 py-16 text-xs font-400 sm:p-16 sm:text-sm">
-                    <span className="text-gray-50">{t('address')}</span>
+                    <span className="text-gray-50">{t('issuer')}</span>
                   </th>
                 </tr>
               </thead>

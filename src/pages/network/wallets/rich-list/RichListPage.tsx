@@ -130,13 +130,16 @@ function RichListPage() {
             <table className="w-full">
               <thead className="border-b-1 border-primary-60 text-left font-space text-sm text-gray-50">
                 <tr>
-                  <th className="p-16 text-center font-400 sm:w-72">
+                  <th className="p-16 text-center font-400 sm:w-52">
                     <span className="hidden text-gray-50 sm:block">{t('rank')}</span>
                   </th>
-                  <th className="p-16 font-400">
-                    <span className="text-gray-50">{t('addressID')}</span>
+                  <th className="p-16 font-400 md:min-w-[581px]">
+                    <span className="whitespace-nowrap text-gray-50">{t('addressID')}</span>
                   </th>
-                  <th className="p-16 text-right font-400">
+                  <th className="p-16 font-400">
+                    <span className="text-gray-50">{t('name')}</span>
+                  </th>
+                  <th className="w-[166px] whitespace-nowrap p-16 text-right font-400">
                     <span className="text-gray-50">{t('amount')} (QUBIC)</span>
                   </th>
                 </tr>

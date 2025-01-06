@@ -4,6 +4,7 @@ import { ArrowDownIcon, ArrowUpIcon } from '@app/assets/icons'
 import { ChevronToggleButton } from '@app/components/ui/buttons'
 import type { Transaction } from '@app/store/apis/archiver-v2'
 import { formatString } from '@app/utils'
+import { getAddressName } from '@app/utils/qubic'
 import type { AssetTransfer, Transfer } from '@app/utils/qubic-ts'
 import {
   getAssetsTransfers,
@@ -53,6 +54,8 @@ function TxItem({
     }
     return identity === sourceId ? destId : sourceId
   }, [asset, identity, sourceId, destId])
+
+  const addressName = useMemo(() => getAddressName(addressLabel)?.name, [addressLabel])
 
   useEffect(() => {
     if (destId === QUTIL_ADDRESS && inputType === 1 && inputHex) {
@@ -119,13 +122,21 @@ function TxItem({
               ) : (
                 <ArrowUpIcon className="size-12 text-success-30" />
               )}
-              <AddressLink className="text-base" value={addressLabel} copy ellipsis />
+              <AddressLink
+                className="text-base"
+                label={addressName}
+                value={addressLabel}
+                showTooltip
+                copy
+                ellipsis
+              />
             </div>
           ) : (
             <TxLink
               isHistoricalTx={isHistoricalTx}
               value={txId}
               className="text-primary-30"
+              showTooltip
               ellipsis
               copy
             />

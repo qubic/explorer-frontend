@@ -21,3 +21,8 @@ export enum TransactionOptionEnum {
   TRANSFER = 'TRANSFER',
   APPROVED = 'APPROVED'
 }
+
+export type ExchangeWallet = {
+  name: string
+  address: string
+}
