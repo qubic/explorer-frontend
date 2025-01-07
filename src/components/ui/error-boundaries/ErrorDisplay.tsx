@@ -1,12 +1,13 @@
-import { Error404, GenericError } from '@app/assets/images/errors'
-import { Alert } from '@app/components/ui'
 import { useTranslation } from 'react-i18next'
 import type { ErrorResponse } from 'react-router-dom'
 
-type ErrorDisplayProps = {
+import { Error404, GenericError } from '@app/assets/images/errors'
+import { Alert } from '@app/components/ui'
+
+type ErrorDisplayProps = Readonly<{
   is404Error?: boolean
   error?: ErrorResponse | Error
-}
+}>
 
 export default function ErrorDisplay({ is404Error = false, error }: ErrorDisplayProps) {
   const { t } = useTranslation('error-404-page')

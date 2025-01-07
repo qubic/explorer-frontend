@@ -1,13 +1,14 @@
-import { useLazyGetIndentityTransfersQuery } from '@app/store/apis/archiver-v2.api'
-import type { TransactionV2 } from '@app/store/apis/archiver-v2.types'
-import type { Address } from '@app/store/network/addressSlice'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
+
+import type { GetAddressBalancesResponse } from '@app/store/apis/archiver-v1'
+import type { Transaction } from '@app/store/apis/archiver-v2'
+import { useLazyGetIndentityTransfersQuery } from '@app/store/apis/archiver-v2'
 
 const BATCH_SIZE = 50
 const TICK_SIZE = 200_000
 
 export interface UseLatestTransactionsResult {
-  transactions: TransactionV2[]
+  transactions: Transaction[]
   loadMoreTransactions: () => Promise<void>
   hasMore: boolean
   isLoading: boolean
@@ -16,12 +17,14 @@ export interface UseLatestTransactionsResult {
 
 export default function useLatestTransactions(
   addressId: string,
-  addressEndTick: Address['endTick']
+  addressEndTick: GetAddressBalancesResponse['balance']['validForTick']
 ): UseLatestTransactionsResult {
   const [startTick, setStartTick] = useState(Math.max(0, addressEndTick - TICK_SIZE))
-  const [transactions, setTransactions] = useState<TransactionV2[]>([])
-  const [txsList, setTxsList] = useState<TransactionV2[]>([])
+  const [transactions, setTransactions] = useState<Transaction[]>([])
+  const [txsList, setTxsList] = useState<Transaction[]>([])
   const [isLoading, setIsLoading] = useState(false)
+  const cancellationRef = useRef(false)
+
   const [getIdentityTransfersQuery, { isFetching, error }] = useLazyGetIndentityTransfersQuery({})
 
   const hasMore = startTick > 0
@@ -40,7 +43,9 @@ export default function useLatestTransactions(
   )
 
   const fetchRecursive = useCallback(
-    async (start: number, end: number, accumulatedData: TransactionV2[] = []) => {
+    async (start: number, end: number, accumulatedData: Transaction[] = []) => {
+      if (cancellationRef.current) return { newTxs: accumulatedData, lastStartTick: start }
+
       const newTxs = await fetchTransfers(start, end)
       const combinedData = [...new Set(accumulatedData.concat(newTxs))]
 
@@ -86,6 +91,7 @@ export default function useLatestTransactions(
 
   useEffect(() => {
     let isMounted = true
+    cancellationRef.current = false
 
     const initialFetch = async () => {
       setIsLoading(true)
@@ -106,6 +112,7 @@ export default function useLatestTransactions(
 
     return () => {
       isMounted = false
+      cancellationRef.current = true
     }
   }, [fetchRecursive, transactions.length, addressEndTick])
 

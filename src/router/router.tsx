@@ -4,9 +4,12 @@ import { AppLayout } from '@app/components/ui/layouts'
 import { Error404Page } from '@app/pages'
 import {
   AddressPageLazy,
+  ExchangesPageLazy,
   OverviewPage,
   RichListPageLazy,
+  SmartContractsPageLazy,
   TickPageLazy,
+  TokensPageLazy,
   TxPageLazy
 } from '@app/pages/network'
 import { Routes } from './routes'
@@ -41,8 +44,20 @@ const router: ReturnType<typeof createBrowserRouter> = createBrowserRouter([
             element: <AddressPageLazy />
           },
           {
-            path: Routes.NETWORK.RICH_LIST,
+            path: Routes.NETWORK.WALLETS.RICH_LIST,
             element: <RichListPageLazy />
+          },
+          {
+            path: Routes.NETWORK.WALLETS.EXCHANGES,
+            element: <ExchangesPageLazy />
+          },
+          {
+            path: Routes.NETWORK.ASSETS.TOKENS,
+            element: <TokensPageLazy />
+          },
+          {
+            path: Routes.NETWORK.ASSETS.SMART_CONTRACTS,
+            element: <SmartContractsPageLazy />
           }
         ]
       }

@@ -1,4 +1,4 @@
-import type { Transaction, TransactionStatus } from '@app/services/archiver'
+import type { Transaction } from '@app/store/apis/archiver-v2'
 
 export type Language = {
   id: string
@@ -14,14 +14,15 @@ export enum TxTypeEnum {
 
 export type TxType = keyof typeof TxTypeEnum
 
-export type TransactionWithStatus = {
-  tx: Transaction
-  status: TransactionStatus & { txType: TxType }
-  timestamp?: string
-}
+export type TransactionWithType = Transaction & { txType: TxType }
 
 export enum TransactionOptionEnum {
   ALL = 'ALL',
   TRANSFER = 'TRANSFER',
   APPROVED = 'APPROVED'
+}
+
+export type ExchangeWallet = {
+  name: string
+  address: string
 }

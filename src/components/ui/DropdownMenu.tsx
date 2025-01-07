@@ -1,6 +1,6 @@
 import { clsxTwMerge } from '@app/utils'
 import type { ReactElement, ReactNode } from 'react'
-import React from 'react'
+import React, { forwardRef } from 'react'
 
 interface DropdownMenuProps {
   children: ReactNode
@@ -37,17 +37,15 @@ function DropdownMenu({ className, children, show }: DropdownMenuProps) {
   )
 }
 
-DropdownMenu.Trigger = function DropdownMenuTrigger({
-  children,
-  onToggle,
-  className
-}: DropdownMenuTriggerProps) {
-  return (
-    <button type="button" onClick={onToggle} className={className}>
-      {children}
-    </button>
-  )
-}
+DropdownMenu.Trigger = forwardRef<HTMLButtonElement, DropdownMenuTriggerProps>(
+  function DropdownMenuTrigger({ children, onToggle, className }, ref) {
+    return (
+      <button type="button" onClick={onToggle} className={className} ref={ref}>
+        {children}
+      </button>
+    )
+  }
+)
 
 DropdownMenu.Content = function DropdownMenuContent({
   children,
@@ -56,7 +54,7 @@ DropdownMenu.Content = function DropdownMenuContent({
   return (
     <div
       className={clsxTwMerge(
-        'absolute right-0 top-40 z-50 mt-2 w-fit origin-top-right rounded-md bg-primary-60 shadow-lg ring-1 ring-black ring-opacity-5 transition duration-1000 ease-in-out focus:outline-none',
+        'absolute top-40 z-50 mt-2 w-fit origin-top-right rounded-md border border-primary-60 bg-primary-70 shadow-lg ring-1 ring-black ring-opacity-5 transition duration-1000 ease-in-out focus:outline-none ltr:left-0 rtl:right-0',
         className
       )}
       role="menu"

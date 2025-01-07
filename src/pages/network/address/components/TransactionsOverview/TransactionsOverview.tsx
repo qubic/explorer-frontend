@@ -1,14 +1,14 @@
+import { memo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Tabs } from '@app/components/ui'
-import type { Address } from '@app/store/network/addressSlice'
-import { memo } from 'react'
-import { useLatestTransactions } from '../../hooks'
+import type { GetAddressBalancesResponse } from '@app/store/apis/archiver-v1'
+import { useHistoricalTransactions, useLatestTransactions } from '../../hooks'
 import HistoricalTxs from './HistoricalTxs'
 import LatestTransactions from './LatestTransactions'
 
 type Props = {
-  address: Address
+  address: GetAddressBalancesResponse['balance']
   addressId: string
 }
 
@@ -16,8 +16,15 @@ function TransactionsOverview({ address, addressId }: Props) {
   const { t } = useTranslation('network-page')
   const { transactions, loadMoreTransactions, hasMore, isLoading, error } = useLatestTransactions(
     addressId,
-    address.endTick
+    address.validForTick
   )
+  const {
+    historicalTransactions,
+    loadMoreTransactions: loadMoreHistoricalTxs,
+    hasMore: hasMoreHistoricalTxs,
+    isLoading: isHistoricalTxsLoading,
+    error: historicalTxsError
+  } = useHistoricalTransactions(addressId)
 
   return (
     <div className="mt-40">
@@ -39,7 +46,14 @@ function TransactionsOverview({ address, addressId }: Props) {
             />
           </Tabs.Panel>
           <Tabs.Panel>
-            <HistoricalTxs addressId={addressId} />
+            <HistoricalTxs
+              addressId={addressId}
+              transactions={historicalTransactions}
+              loadMore={loadMoreHistoricalTxs}
+              hasMore={hasMoreHistoricalTxs}
+              isLoading={isHistoricalTxsLoading}
+              error={historicalTxsError}
+            />
           </Tabs.Panel>
         </Tabs.Panels>
       </Tabs>
