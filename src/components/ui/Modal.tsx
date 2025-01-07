@@ -43,7 +43,7 @@ function ModalOverlayWrapper({
     <>
       <div
         id={id}
-        className={clsxTwMerge('fixed inset-x-0 z-99', className)}
+        className={clsxTwMerge('fixed inset-x-0 z-9999', className)}
         role="dialog"
         aria-labelledby={`${id}-title`}
         aria-modal="true"
@@ -51,7 +51,7 @@ function ModalOverlayWrapper({
       >
         {children}
       </div>
-      <div className="fixed inset-0 z-50 bg-primary-80 bg-opacity-80" />
+      <div className="fixed inset-0 z-999 bg-primary-80 bg-opacity-80" />
     </>
   )
 }

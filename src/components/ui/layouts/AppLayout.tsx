@@ -4,7 +4,7 @@ import { Outlet } from 'react-router-dom'
 import { ErrorBoundary } from '@app/components/ui/error-boundaries'
 import { AppLoader, LinearProgress } from '@app/components/ui/loaders'
 import Footer from './Footer'
-import Header from './Header'
+import { Header } from './Header'
 
 export default function AppLayout() {
   return (

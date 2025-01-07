@@ -1,11 +1,13 @@
 import { clsxTwMerge } from '@app/utils'
 
-type Props = {
-  readonly className?: string
-}
+type Props = Readonly<{
+  className?: string
+  tag?: keyof JSX.IntrinsicElements
+}>
 
-export default function Skeleton({ className }: Props) {
+export default function Skeleton({ className, tag }: Props) {
+  const Component = tag || 'div'
   return (
-    <div className={clsxTwMerge('h-10 w-full animate-pulse rounded-12 bg-gray-60/30', className)} />
+    <Component className={clsxTwMerge('h-10 w-full animate-pulse rounded bg-gray-70', className)} />
   )
 }

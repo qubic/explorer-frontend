@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom'
 import { ChevronLeftIcon, ChevronRightIcon } from '@app/assets/icons'
 import { Skeleton } from '@app/components/ui'
 import { Routes } from '@app/router'
-import { useGetEpochComputorsQuery, useGetTickDataQuery } from '@app/store/apis/archiver-v1.api'
+import { useGetEpochComputorsQuery, useGetTickDataQuery } from '@app/store/apis/archiver-v1'
 import { formatBase64, formatDate, formatString } from '@app/utils'
 import { AddressLink, SubCardItem, TickStatus } from '../../components'
 

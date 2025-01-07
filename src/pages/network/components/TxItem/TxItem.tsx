@@ -2,8 +2,9 @@ import { memo, useEffect, useMemo, useState } from 'react'
 
 import { ArrowDownIcon, ArrowUpIcon } from '@app/assets/icons'
 import { ChevronToggleButton } from '@app/components/ui/buttons'
-import type { Transaction } from '@app/services/archiver'
+import type { Transaction } from '@app/store/apis/archiver-v2'
 import { formatString } from '@app/utils'
+import { getAddressName } from '@app/utils/qubic'
 import type { AssetTransfer, Transfer } from '@app/utils/qubic-ts'
 import {
   getAssetsTransfers,
@@ -20,7 +21,7 @@ import TransactionDetails from './TransactionDetails'
 import type { TxItemVariant } from './TxItem.types'
 
 type Props = {
-  readonly tx: Omit<Transaction, 'inputSize' | 'signatureHex'>
+  readonly tx: Omit<Transaction['transaction'], 'inputSize' | 'signatureHex'>
   readonly identity?: string
   readonly nonExecutedTxIds: string[]
   readonly variant?: TxItemVariant
@@ -53,6 +54,8 @@ function TxItem({
     }
     return identity === sourceId ? destId : sourceId
   }, [asset, identity, sourceId, destId])
+
+  const addressName = useMemo(() => getAddressName(addressLabel)?.name, [addressLabel])
 
   useEffect(() => {
     if (destId === QUTIL_ADDRESS && inputType === 1 && inputHex) {
@@ -115,17 +118,25 @@ function TxItem({
           {identity ? (
             <div className="flex items-center gap-8">
               {identity === sourceId ? (
-                <ArrowDownIcon className="size-12 text-error-30" />
+                <ArrowUpIcon className="size-12 text-error-30" />
               ) : (
-                <ArrowUpIcon className="size-12 text-success-30" />
+                <ArrowDownIcon className="size-12 text-success-30" />
               )}
-              <AddressLink className="text-base" value={addressLabel} copy ellipsis />
+              <AddressLink
+                className="text-base"
+                label={addressName}
+                value={addressLabel}
+                showTooltip
+                copy
+                ellipsis
+              />
             </div>
           ) : (
             <TxLink
               isHistoricalTx={isHistoricalTx}
               value={txId}
               className="text-primary-30"
+              showTooltip
               ellipsis
               copy
             />

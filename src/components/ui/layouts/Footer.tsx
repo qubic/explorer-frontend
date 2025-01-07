@@ -2,7 +2,6 @@ import React, { memo } from 'react'
 import { Link } from 'react-router-dom'
 
 import { QubicExplorerLogoShort } from '@app/assets/icons/logo'
-import { Routes } from '@app/router'
 
 const footerTextClass = 'font-space text-xs text-white'
 
@@ -29,7 +28,6 @@ function FooterLink({ label, to, isInternal }: FooterLinkProps) {
 
 function Footer() {
   const linkItems: FooterLinkProps[] = [
-    { label: 'Rich List', to: Routes.NETWORK.RICH_LIST, isInternal: true },
     { label: 'Terms of Service', to: 'https://qubic.org/Terms-of-service', isInternal: false },
     { label: 'Privacy Policy', to: 'https://qubic.org/Privacy-policy', isInternal: false },
     { label: 'Network Status', to: 'https://status.qubic.li', isInternal: false }

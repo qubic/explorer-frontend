@@ -1,7 +1,6 @@
-// eslint-disable-next-line import/prefer-default-export -- Remove this comment when adding more functions
 export function formatDate<T extends boolean = false>(
   dateString: string | undefined,
-  options?: { split?: T }
+  options?: { split?: T; includeTimeZone?: boolean; shortDate?: boolean }
 ): T extends true ? { date: string; time: string } : string {
   const defaultResult = (options?.split ? { date: '', time: '' } : '') as T extends true
     ? { date: string; time: string }
@@ -11,18 +10,16 @@ export function formatDate<T extends boolean = false>(
 
   if (!dateString) return defaultResult
 
-  const dateOptions: Intl.DateTimeFormatOptions = {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  }
+  const dateOptions: Intl.DateTimeFormatOptions = options?.shortDate
+    ? { year: 'numeric', month: '2-digit', day: '2-digit' }
+    : { year: 'numeric', month: 'long', day: 'numeric' }
 
   const timeOptions: Intl.DateTimeFormatOptions = {
     hour: 'numeric',
     minute: 'numeric',
     second: 'numeric',
-    timeZoneName: 'short',
-    hour12: true
+    timeZoneName: options?.includeTimeZone ? 'short' : undefined,
+    hour12: false
   }
 
   const date = new Date(dateString.includes('T') ? dateString : parseInt(dateString, 10))

@@ -2,7 +2,7 @@ import { memo, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Alert, PaginationBar, Skeleton } from '@app/components/ui'
-import type { GetEpochTicksResponse } from '@app/store/apis/archiver-v2.types'
+import type { GetEpochTicksResponse } from '@app/store/apis/archiver-v2'
 import { clsxTwMerge, formatString } from '@app/utils'
 import { CardItem, TickLink } from '../../components'
 import { TICKS_PAGE_SIZE } from '../constants'

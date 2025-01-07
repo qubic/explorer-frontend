@@ -8,11 +8,13 @@ export const colors: ThemeConfig['colors'] = ({ colors: defaultColors }: PluginU
   white: '#fff',
   primary: {
     20: '#CCFCFF',
+    25: '#B0F9FE',
     30: '#61F0FE',
     40: '#40C4DE',
     50: '#019AB8',
     60: '#202E3C',
     70: '#151E27',
+    75: '#112C35',
     80: '#101820'
   },
   gray: {

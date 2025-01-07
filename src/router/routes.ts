@@ -21,7 +21,14 @@ export const Routes = {
     TX: (txId: string, query: NetworkTxQueryParams = { type: 'latest' }) =>
       buildUrlWithQueryParams(`${Routes.NETWORK.ROOT}/tx/${txId}`, query),
     TICK: (tick: string | number) => `${Routes.NETWORK.ROOT}/tick/${tick}`,
-    RICH_LIST: '/network/rich-list'
+    WALLETS: {
+      RICH_LIST: '/network/wallets/rich-list',
+      EXCHANGES: '/network/wallets/exchanges'
+    },
+    ASSETS: {
+      TOKENS: '/network/assets/tokens',
+      SMART_CONTRACTS: '/network/assets/smart-contracts'
+    }
   },
   NOT_FOUND: '/404'
 } as const
