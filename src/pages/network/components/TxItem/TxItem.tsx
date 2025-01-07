@@ -118,9 +118,9 @@ function TxItem({
           {identity ? (
             <div className="flex items-center gap-8">
               {identity === sourceId ? (
-                <ArrowDownIcon className="size-12 text-error-30" />
+                <ArrowUpIcon className="size-12 text-error-30" />
               ) : (
-                <ArrowUpIcon className="size-12 text-success-30" />
+                <ArrowDownIcon className="size-12 text-success-30" />
               )}
               <AddressLink
                 className="text-base"
