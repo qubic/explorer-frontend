@@ -1,8 +1,9 @@
 {
   "activeAddresses": "Aktive Adressen",
   "amount": "Betrag",
-  "circulatingSupply": "Umlaufende Versorgung",
-  "burnedSupply": "Verbrannte Lieferung",
+  "circulatingSupply": "Umlaufangebot",
+  "burnedSupply": "entfernter Gesamtwert (burned)",
+  "Total Value Locked": "gesperrter Gesamtwert (TVL)",
   "complete": "Vollständig",
   "currentTick": "Aktueller Tick",
   "dataStatus": "Datenstatus",
