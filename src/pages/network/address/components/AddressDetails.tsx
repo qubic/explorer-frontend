@@ -42,21 +42,19 @@ function TransferDetails({
 }: {
   title: string
   label: string
-  transfersCount: number
+  transfersCount: string
   latestTransferTick: number
   className: string
 }) {
   return (
     <div className={`space-y-2 text-gray-50 ${className}`}>
       <p>{title}</p>
-      <p className="mt-2 flex items-baseline gap-4">
-        <span className="text-sm text-white sm:text-base">{transfersCount} </span>
-        {latestTransferTick > 0 && (
-          <span className="text-xs sm:text-sm">
-            {label}: <TickLink value={latestTransferTick} className="text-primary-30" />
-          </span>
-        )}
-      </p>
+      <p className="text-sm font-500 text-white sm:text-base">{transfersCount}</p>
+      {latestTransferTick > 0 && (
+        <p className="text-xs sm:text-sm">
+          {label}: <TickLink value={latestTransferTick} className="text-primary-30" />
+        </p>
+      )}
     </div>
   )
 }
@@ -68,15 +66,25 @@ export default function AddressDetails({ address, price, isVisible }: Props) {
     formattedIncomingAmount,
     formattedIncomingAmountUsd,
     formattedOutgoingAmount,
-    formattedOutgoingAmountUsd
+    formattedOutgoingAmountUsd,
+    formattedNumberOfIncomingTransfers,
+    formattedNumberOfOutgoingTransfers
   } = useMemo(
     () => ({
       formattedIncomingAmount: formatString(address.incomingAmount),
       formattedIncomingAmountUsd: formatString(+address.incomingAmount * price),
       formattedOutgoingAmount: formatString(address.outgoingAmount),
-      formattedOutgoingAmountUsd: formatString(+address.outgoingAmount * price)
+      formattedOutgoingAmountUsd: formatString(+address.outgoingAmount * price),
+      formattedNumberOfIncomingTransfers: formatString(+address.numberOfIncomingTransfers),
+      formattedNumberOfOutgoingTransfers: formatString(+address.numberOfOutgoingTransfers)
     }),
-    [address.incomingAmount, address.outgoingAmount, price]
+    [
+      address.incomingAmount,
+      address.outgoingAmount,
+      address.numberOfIncomingTransfers,
+      address.numberOfOutgoingTransfers,
+      price
+    ]
   )
 
   return (
@@ -98,7 +106,7 @@ export default function AddressDetails({ address, price, isVisible }: Props) {
           <TransferDetails
             title={t('incomingTransfers')}
             label={t('latest')}
-            transfersCount={address.numberOfIncomingTransfers}
+            transfersCount={formattedNumberOfIncomingTransfers}
             latestTransferTick={address.latestIncomingTransferTick}
             className="md:[grid-area:incoming-transfers]"
           />
@@ -112,7 +120,7 @@ export default function AddressDetails({ address, price, isVisible }: Props) {
           <TransferDetails
             title={t('outgoingTransfers')}
             label={t('latest')}
-            transfersCount={address.numberOfOutgoingTransfers}
+            transfersCount={formattedNumberOfOutgoingTransfers}
             latestTransferTick={address.latestOutgoingTransferTick}
             className="md:[grid-area:outgoing-transfers]"
           />
