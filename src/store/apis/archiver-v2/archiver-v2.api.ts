@@ -28,7 +28,7 @@ export const archiverV2Api = createApi({
       GetIdentityTransfersArgs
     >({
       query: ({ addressId, startTick, endTick }) =>
-        `identities/${addressId}/transfers?startTick=${startTick}&endTick=${endTick}`,
+        `identities/${addressId}/transfers?startTick=${startTick}&endTick=${endTick}&pageSize=250`,
       transformResponse: (response: GetIdentityTransfersResponse) =>
         response.transactions.flatMap(({ transactions }) => transactions)
     }),
