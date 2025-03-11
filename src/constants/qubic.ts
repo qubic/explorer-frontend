@@ -92,8 +92,12 @@ export const EXCHANGES: ExchangeWallet[] = [
     address: 'VUEYKUCYYHXKDGOSCWAIEECECDBCXVUSUAJRVXUQVAQPGIOABLGGLXDAXTNK'
   },
   {
-    name: 'Bitget',
+    name: 'Bitget 1',
     address: 'EXNRRBDPYFQPXFPXCMUHZVEEBRQCBEAUDYUBHKGTRCKHVSRAQXWHQCXDLZXL'
+  },
+  {
+    name: 'Bitget 2',
+    address: 'XYXGGGOWOYILTAAGGACSRWSANJJCKJQPEAECEYWKDDZDIYELTJPTDIVEHIUA'
   },
   {
     name: 'Tradeogre 1',
@@ -138,5 +142,13 @@ export const EXCHANGES: ExchangeWallet[] = [
   {
     name: 'Safetrade 5',
     address: 'CORSXCFMCTVSECCTNFEERFVUPTKDRGKALTIOWKLXSBQCSIGNTUGEKOXDNUGK'
+  },
+  {
+    name: 'CoinEx',
+    address: 'RGTOAPIIMQMFMDPQOIYLFEXOVNZAQRWMIMKMRVSKGFFIRMXXQPWQPRWAGHHI'
+  },
+  {
+    name: 'Seven Seas',
+    address: 'LZLDOEIBQWIUGGMZGOISLOAACDGAFVAMAYXSSJMLQBHSHWDBPMSDFTGAYRMN'
   }
 ]
