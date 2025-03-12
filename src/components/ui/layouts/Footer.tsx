@@ -28,8 +28,8 @@ function FooterLink({ label, to, isInternal }: FooterLinkProps) {
 
 function Footer() {
   const linkItems: FooterLinkProps[] = [
-    { label: 'Terms of Service', to: 'https://qubic.org/Terms-of-service', isInternal: false },
-    { label: 'Privacy Policy', to: 'https://qubic.org/Privacy-policy', isInternal: false },
+    { label: 'Terms of Service', to: 'https://qubic.org/terms-of-service', isInternal: false },
+    { label: 'Privacy Policy', to: 'https://qubic.org/privacy-policy', isInternal: false },
     { label: 'Network Status', to: 'https://status.qubic.li', isInternal: false }
   ]
 
