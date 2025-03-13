@@ -77,5 +77,6 @@
   "issuer": "الجهة المُصدرة",
   "name": "الاسم",
   "wallets": "المحافظ",
-  "assets": "الأصول"
+  "assets": "الأصول",
+  "totalValueLocked": "إجمالي القيمة المقفلة (TVL)"
 }

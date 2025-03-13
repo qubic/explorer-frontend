@@ -1,8 +1,8 @@
 {
   "activeAddresses": "Aktive Adressen",
   "amount": "Betrag",
-  "circulatingSupply": "Umlaufende Versorgung",
-  "burnedSupply": "Verbrannte Lieferung",
+  "circulatingSupply": "Umlaufangebot",
+  "burnedSupply": "Verbrannte Versorgung",
   "complete": "Vollständig",
   "currentTick": "Aktueller Tick",
   "dataStatus": "Datenstatus",
@@ -77,5 +77,6 @@
   "issuer": "Emittent",
   "name": "Name",
   "wallets": "Wallets",
-  "assets": "Vermögenswerte"
+  "assets": "Vermögenswerte",
+  "totalValueLocked": "Gesamter gesperrter Wert (TVL)"
 }

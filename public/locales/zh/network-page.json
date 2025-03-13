@@ -77,5 +77,6 @@
   "issuer": "发行人",
   "name": "名称",
   "wallets": "钱包",
-  "assets": "资产"
+  "assets": "资产",
+  "totalValueLocked": "总锁定价值 (TVL)"
 }

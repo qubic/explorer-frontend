@@ -77,5 +77,6 @@
   "issuer": "Émetteur",
   "name": "Nom",
   "wallets": "Portefeuilles",
-  "assets": "Actifs"
+  "assets": "Actifs",
+  "totalValueLocked": "Valeur Totale Verrouillée (TVL)"
 }

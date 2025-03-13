@@ -77,5 +77,6 @@
   "issuer": "Emissor",
   "name": "Nome",
   "wallets": "Carteiras",
-  "assets": "Ativos"
+  "assets": "Ativos",
+  "totalValueLocked": "Valor Total Bloqueado (TVL)"
 }

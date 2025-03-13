@@ -77,5 +77,6 @@
   "issuer": "発行者",
   "name": "名前",
   "wallets": "ウォレット",
-  "assets": "資産"
+  "assets": "資産",
+  "totalValueLocked": "総ロック価値 (TVL)"
 }

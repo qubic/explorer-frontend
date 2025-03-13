@@ -77,5 +77,6 @@
   "issuer": "Issuer",
   "name": "Name",
   "wallets": "Wallets",
-  "assets": "Assets"
+  "assets": "Assets",
+  "totalValueLocked": "Total Value Locked (TVL)"
 }

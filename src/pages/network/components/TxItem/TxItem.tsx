@@ -93,7 +93,12 @@ function TxItem({
               isTransferTx={isTransferTransaction}
             />
           </div>
-          <TxLink isHistoricalTx={isHistoricalTx} className="text-base text-gray-50" value={txId} />
+          <TxLink
+            isHistoricalTx={isHistoricalTx}
+            className="text-base text-gray-50"
+            value={txId}
+            copy
+          />
         </div>
         <TransactionDetails
           txDetails={{ txId, sourceId, tickNumber, destId, inputType, amount }}
