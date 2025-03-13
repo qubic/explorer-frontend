@@ -1,3 +1,23 @@
+# [1.13.0](https://github.com/qubic/explorer-frontend/compare/v1.12.0...v1.13.0) (2025-03-13)
+
+
+### Bug Fixes
+
+* update footer links to use correct URL paths ([14a4e97](https://github.com/qubic/explorer-frontend/commit/14a4e974f5f2adbb38f6209436aa0c250836cc9c))
+* update pnpm version range in package.json ([05c0369](https://github.com/qubic/explorer-frontend/commit/05c0369e31df5cf7211a83e87e9a27de565418df))
+
+
+### Features
+
+* add additional exchange entries to the constants ([282e337](https://github.com/qubic/explorer-frontend/commit/282e337bdb3a13fbf5fb422b566e7c4da349eadc))
+* add MSVault to SmartContracts ([ce6d72e](https://github.com/qubic/explorer-frontend/commit/ce6d72ea240347b20643acecf61b7f99482530bf))
+* add scroll to top on route change in AppLayout component ([388fd5d](https://github.com/qubic/explorer-frontend/commit/388fd5d0dad478f717110df2b30a00593586ff97))
+* add total value locked (TVL) translations ([3bba913](https://github.com/qubic/explorer-frontend/commit/3bba91366c0e561b7d1e877fa786f2c65169de4d))
+* enhance identity transfers API with pagination support ([56ea55f](https://github.com/qubic/explorer-frontend/commit/56ea55f0f1a6eae3d4f64ebdf33d2e7041ecac49))
+* implement pagination for identity transfers in useLatestTransactions hook ([49a4505](https://github.com/qubic/explorer-frontend/commit/49a4505323e793ab9f57bd565b006fd3f924670a))
+* ui small improvements for identify page ([5a95609](https://github.com/qubic/explorer-frontend/commit/5a956098a1def88aa9353075f25000f317c03313))
+* update copy actions in the transaction details page ([b3befe6](https://github.com/qubic/explorer-frontend/commit/b3befe61ce66ee2b9a4658bd3f869f331983b0cf))
+
 # [1.13.0-rc.1](https://github.com/qubic/explorer-frontend/compare/v1.12.0...v1.13.0-rc.1) (2025-03-13)
 
 
