@@ -1,3 +1,12 @@
+export interface PaginationV2 {
+  totalRecords: number
+  currentPage: number
+  totalPages: number
+  pageSize: number
+  nextPage: number
+  previousPage: number
+}
+
 export interface Transaction {
   transaction: {
     txId: string
@@ -20,9 +29,12 @@ export interface GetIdentityTransfersArgs {
   addressId: string
   startTick: number
   endTick: number
+  page: number
+  pageSize: number
 }
 
 export interface GetIdentityTransfersResponse {
+  pagination: PaginationV2
   transactions: {
     identity: string
     tickNumber: number
@@ -47,13 +59,6 @@ export interface GetEpochTicksArgs {
 }
 
 export interface GetEpochTicksResponse {
-  pagination: {
-    totalRecords: number
-    currentPage: number
-    totalPages: number
-    pageSize: number
-    nextPage: number
-    previousPage: number
-  }
+  pagination: PaginationV2
   ticks: { tickNumber: number; isEmpty: boolean }[]
 }

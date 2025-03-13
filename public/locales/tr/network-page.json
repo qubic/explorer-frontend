@@ -77,5 +77,6 @@
   "issuer": "Yayımlayan",
   "name": "Ad",
   "wallets": "Cüzdanlar",
-  "assets": "Varlıklar"
+  "assets": "Varlıklar",
+  "totalValueLocked": "Toplam Kilitli Değer (TVL)"
 }

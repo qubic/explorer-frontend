@@ -77,5 +77,6 @@
   "issuer": "Uitgever",
   "name": "Naam",
   "wallets": "Portefeuilles",
-  "assets": "Activa"
+  "assets": "Activa",
+  "totalValueLocked": "Totale Vergrendelde Waarde (TVL)"
 }
