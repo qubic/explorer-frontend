@@ -1,3 +1,53 @@
+# [1.12.0](https://github.com/qubic/explorer-frontend/compare/v1.11.1...v1.12.0) (2025-01-07)
+
+
+### Bug Fixes
+
+* correct typo in ticksLoadFailed message in network-page localization ([d9bf5e4](https://github.com/qubic/explorer-frontend/commit/d9bf5e462a61711b6b018c6d3c940c4401f6894c))
+* extend twMerge to support custom Tailwind scales and classes ([457d8c8](https://github.com/qubic/explorer-frontend/commit/457d8c893669585145935b8fe039e508185f9c5e))
+* swap arrow icons in TxItem component for transaction direction ([ab19bdc](https://github.com/qubic/explorer-frontend/commit/ab19bdc208def5efba19221e828697fad9729f02))
+
+
+### Features
+
+* add assets tokens and smart contracts pages with corresponding components and API integration ([b8a15f0](https://github.com/qubic/explorer-frontend/commit/b8a15f0771a7b8725cde0c2651b4a113f5fda0a2))
+* add exchanges page and relocate rich list under wallets path ([da0c5b9](https://github.com/qubic/explorer-frontend/commit/da0c5b9a48f28b74822517325a24631be2aa4da6))
+* add exchanges, tokens and sc badges on address and transactions pages ([6771d6a](https://github.com/qubic/explorer-frontend/commit/6771d6a77424f753f69bf1106903f97e31d9c4b7))
+* enhance address page with new components and optimizations ([1cadda9](https://github.com/qubic/explorer-frontend/commit/1cadda9198964a4591954b996999cac4c3244d60))
+* enhance formatDate function with options for short date format and time zone inclusion ([e2040a0](https://github.com/qubic/explorer-frontend/commit/e2040a024d84137105d33891b4cf8ff1949bf705))
+* enhance header layout and add navigation menu components ([34e274a](https://github.com/qubic/explorer-frontend/commit/34e274aaf0df2b807d54ffa473697b660fe26f68))
+* implement PageLayout and error fallback component and refactor error handling in network pages ([f42b2a9](https://github.com/qubic/explorer-frontend/commit/f42b2a9623cb1354c7d307b9592f7889b1956e41))
+* integrate total value locked in overview page ([0e2d36f](https://github.com/qubic/explorer-frontend/commit/0e2d36f5cf3777cbbc24ce483fdb52048a144f4e))
+* migrate historical transactions to rtk query ([0f4d4e8](https://github.com/qubic/explorer-frontend/commit/0f4d4e83070a7d40af5ac53cd4843c095a56d6dd))
+* migrate search slice to rtk query and improve architecture ([8dfbd63](https://github.com/qubic/explorer-frontend/commit/8dfbd63903eeaf441ed5b84380867139bbb34144))
+* migrate transactions to rtk query ([4680e38](https://github.com/qubic/explorer-frontend/commit/4680e3804c1462c1e262bf96efeea3d311b1ae59))
+* refactor header components for improved layout and RTL support ([f1332e3](https://github.com/qubic/explorer-frontend/commit/f1332e33fccd452f2061c8067163a8a116f2e46b))
+
+# [1.12.0-rc.1](https://github.com/qubic/explorer-frontend/compare/v1.11.1...v1.12.0-rc.1) (2025-01-07)
+
+
+### Bug Fixes
+
+* correct typo in ticksLoadFailed message in network-page localization ([d9bf5e4](https://github.com/qubic/explorer-frontend/commit/d9bf5e462a61711b6b018c6d3c940c4401f6894c))
+* extend twMerge to support custom Tailwind scales and classes ([457d8c8](https://github.com/qubic/explorer-frontend/commit/457d8c893669585145935b8fe039e508185f9c5e))
+* swap arrow icons in TxItem component for transaction direction ([ab19bdc](https://github.com/qubic/explorer-frontend/commit/ab19bdc208def5efba19221e828697fad9729f02))
+
+
+### Features
+
+* add assets tokens and smart contracts pages with corresponding components and API integration ([b8a15f0](https://github.com/qubic/explorer-frontend/commit/b8a15f0771a7b8725cde0c2651b4a113f5fda0a2))
+* add exchanges page and relocate rich list under wallets path ([da0c5b9](https://github.com/qubic/explorer-frontend/commit/da0c5b9a48f28b74822517325a24631be2aa4da6))
+* add exchanges, tokens and sc badges on address and transactions pages ([6771d6a](https://github.com/qubic/explorer-frontend/commit/6771d6a77424f753f69bf1106903f97e31d9c4b7))
+* enhance address page with new components and optimizations ([1cadda9](https://github.com/qubic/explorer-frontend/commit/1cadda9198964a4591954b996999cac4c3244d60))
+* enhance formatDate function with options for short date format and time zone inclusion ([e2040a0](https://github.com/qubic/explorer-frontend/commit/e2040a024d84137105d33891b4cf8ff1949bf705))
+* enhance header layout and add navigation menu components ([34e274a](https://github.com/qubic/explorer-frontend/commit/34e274aaf0df2b807d54ffa473697b660fe26f68))
+* implement PageLayout and error fallback component and refactor error handling in network pages ([f42b2a9](https://github.com/qubic/explorer-frontend/commit/f42b2a9623cb1354c7d307b9592f7889b1956e41))
+* integrate total value locked in overview page ([0e2d36f](https://github.com/qubic/explorer-frontend/commit/0e2d36f5cf3777cbbc24ce483fdb52048a144f4e))
+* migrate historical transactions to rtk query ([0f4d4e8](https://github.com/qubic/explorer-frontend/commit/0f4d4e83070a7d40af5ac53cd4843c095a56d6dd))
+* migrate search slice to rtk query and improve architecture ([8dfbd63](https://github.com/qubic/explorer-frontend/commit/8dfbd63903eeaf441ed5b84380867139bbb34144))
+* migrate transactions to rtk query ([4680e38](https://github.com/qubic/explorer-frontend/commit/4680e3804c1462c1e262bf96efeea3d311b1ae59))
+* refactor header components for improved layout and RTL support ([f1332e3](https://github.com/qubic/explorer-frontend/commit/f1332e33fccd452f2061c8067163a8a116f2e46b))
+
 ## [1.11.1](https://github.com/qubic/explorer-frontend/compare/v1.11.0...v1.11.1) (2024-12-14)
 
 
