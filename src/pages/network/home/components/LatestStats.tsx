@@ -98,7 +98,7 @@ export default function LatestStats({ latestStats, totalValueLocked, isLoading, 
       {
         id: 'totalValueLocked',
         icon: LockIcon,
-        label: t('Total Value Locked'),
+        label: t('totalValueLocked'),
         value: formatString(totalValueLocked)
       },
       {
