@@ -4,6 +4,7 @@ import { AppLayout } from '@app/components/ui/layouts'
 import { Error404Page } from '@app/pages'
 import {
   AddressPageLazy,
+  AssetsRichListPageLazy,
   ExchangesPageLazy,
   OverviewPage,
   RichListPageLazy,
@@ -58,6 +59,10 @@ const router: ReturnType<typeof createBrowserRouter> = createBrowserRouter([
           {
             path: Routes.NETWORK.ASSETS.SMART_CONTRACTS,
             element: <SmartContractsPageLazy />
+          },
+          {
+            path: Routes.NETWORK.ASSETS.RICH_LIST,
+            element: <AssetsRichListPageLazy />
           }
         ]
       }

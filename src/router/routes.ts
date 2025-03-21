@@ -27,7 +27,8 @@ export const Routes = {
     },
     ASSETS: {
       TOKENS: '/network/assets/tokens',
-      SMART_CONTRACTS: '/network/assets/smart-contracts'
+      SMART_CONTRACTS: '/network/assets/smart-contracts',
+      RICH_LIST: '/network/assets/rich-list'
     }
   },
   NOT_FOUND: '/404'

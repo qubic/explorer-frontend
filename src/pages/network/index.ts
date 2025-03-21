@@ -13,3 +13,4 @@ export const TokensPageLazy = lazy(() => import('./assets/tokens/TokensPage'))
 export const SmartContractsPageLazy = lazy(
   () => import('./assets/smart-contracts/SmartContractsPage')
 )
+export const AssetsRichListPageLazy = lazy(() => import('./assets/rich-list/AssetsRichListPage'))
