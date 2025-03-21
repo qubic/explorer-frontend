@@ -78,5 +78,10 @@
   "name": "名前",
   "wallets": "ウォレット",
   "assets": "資産",
-  "totalValueLocked": "総ロック価値 (TVL)"
+  "totalValueLocked": "総ロック価値 (TVL)",
+  "noEntries": "表示するエントリがありません",
+  "assetsRichList": "アセット保有ランキング",
+  "assetsRichListDesc": "アセット保有ランキングでは各アセットの上位保有者を表示します。",
+  "developers": "開発者",
+  "hackathon": "ハッカソン"
 }

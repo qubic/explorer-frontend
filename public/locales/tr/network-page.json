@@ -78,5 +78,10 @@
   "name": "Ad",
   "wallets": "Cüzdanlar",
   "assets": "Varlıklar",
-  "totalValueLocked": "Toplam Kilitli Değer (TVL)"
+  "totalValueLocked": "Toplam Kilitli Değer (TVL)",
+  "noEntries": "Gösterilecek giriş yok",
+  "assetsRichList": "Varlık Zenginler Listesi",
+  "assetsRichListDesc": "Bu liste, her varlığın en büyük sahiplerini gösterir.",
+  "developers": "Geliştiriciler",
+  "hackathon": "Hackathon"
 }
