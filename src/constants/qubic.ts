@@ -1,5 +1,11 @@
 import type { ExchangeWallet } from '@app/types'
 
+export const QUBIC_PROJECTS_URLS = {
+  QX: 'https://qx.qubic.org',
+  QUOTTERY: 'https://quottery.org',
+  QEARN: 'https://qearn.org'
+} as const
+
 export enum SmartContracts {
   Qx = 'BAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAARMID',
   Quottery = 'CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACNKL',
@@ -14,14 +20,19 @@ export enum SmartContracts {
   MSVault = 'LAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAKPTJ'
 }
 
-export const SMART_CONTRACTS: Record<SmartContracts, { name: string; label: string }> = {
+export const SMART_CONTRACTS: Record<
+  SmartContracts,
+  { name: string; label: string; website?: string }
+> = {
   [SmartContracts.Qx]: {
     name: 'QX',
-    label: 'Qx'
+    label: 'Qx',
+    website: QUBIC_PROJECTS_URLS.QX
   },
   [SmartContracts.Quottery]: {
     name: 'QTRY',
-    label: 'Quottery'
+    label: 'Quottery',
+    website: QUBIC_PROJECTS_URLS.QUOTTERY
   },
   [SmartContracts.Random]: {
     name: 'RANDOM',
@@ -49,7 +60,8 @@ export const SMART_CONTRACTS: Record<SmartContracts, { name: string; label: stri
   },
   [SmartContracts.QEarn]: {
     name: 'QEARN',
-    label: 'QEarn'
+    label: 'QEarn',
+    website: QUBIC_PROJECTS_URLS.QEARN
   },
   [SmartContracts.QVault]: {
     name: 'QVAULT',
