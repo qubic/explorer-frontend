@@ -1,3 +1,15 @@
+# [1.14.0-rc.1](https://github.com/qubic/explorer-frontend/compare/v1.13.0...v1.14.0-rc.1) (2025-03-21)
+
+
+### Features
+
+* add Hackathon page and testnet Qubic RPC API integration ([156e458](https://github.com/qubic/explorer-frontend/commit/156e458d1a1a03e53a8d9df0774dac0671671f14))
+* add NetworkSelector component and add testnet configuration support ([a3a2551](https://github.com/qubic/explorer-frontend/commit/a3a2551c0344462eb30e80cb87f85066140a9c73))
+* add testnet support in deployment workflow ([7922dc0](https://github.com/qubic/explorer-frontend/commit/7922dc0cccaf1d679ee8de4982c1b57d693d0a5f))
+* add website links to smart contracts and update address page display ([e734a40](https://github.com/qubic/explorer-frontend/commit/e734a400a82d8e1193a879b8fea305a83b72612d))
+* enhance Button component with loading state and add LoadingSpinner ([7f5f968](https://github.com/qubic/explorer-frontend/commit/7f5f968c2db4a07f48abf0e7db66766c116dee40))
+* integrate assets rich list page ([d430a06](https://github.com/qubic/explorer-frontend/commit/d430a06db2ca271d3392d39b77a5d6cb10273584))
+
 # [1.13.0](https://github.com/qubic/explorer-frontend/compare/v1.12.0...v1.13.0) (2025-03-13)
 
 
