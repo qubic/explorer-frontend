@@ -170,7 +170,7 @@ function AssetsRichListPage() {
                     <span className="text-gray-50">{t('name')}</span>
                   </th>
                   <th className="w-[166px] whitespace-nowrap p-16 text-right font-400">
-                    <span className="text-gray-50">{t('amount')} (QUBIC)</span>
+                    <span className="text-gray-50">{t('amount')}</span>
                   </th>
                 </tr>
               </thead>
