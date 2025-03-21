@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { Alert, Skeleton } from '@app/components/ui'
 import { useGetLatestStatsQuery } from '@app/store/apis/archiver-v1'
 import LanguagePicker from './LanguagePicker'
+import NetworkSelector from './NetworkSelector'
 import SearchBar from './SearchBar/SearchBar'
 
 export default function TopBar() {
@@ -36,6 +37,8 @@ export default function TopBar() {
           <SearchBar />
 
           <LanguagePicker />
+
+          <NetworkSelector />
         </div>
       </div>
     </section>
