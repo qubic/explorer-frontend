@@ -4,6 +4,7 @@ import { archiverV1Api } from './apis/archiver-v1'
 import { archiverV2Api } from './apis/archiver-v2'
 import { qliApi } from './apis/qli'
 import { qxApi } from './apis/qx'
+import { testnetQubicRpcV1 } from './apis/testnet-qubic-rpc-v1'
 import localeReducer from './localeSlice'
 import searchReducer from './searchSlice'
 
@@ -14,6 +15,7 @@ export const store = configureStore({
     [qliApi.reducerPath]: qliApi.reducer,
     [archiverV1Api.reducerPath]: archiverV1Api.reducer,
     [archiverV2Api.reducerPath]: archiverV2Api.reducer,
+    [testnetQubicRpcV1.reducerPath]: testnetQubicRpcV1.reducer,
     [qxApi.reducerPath]: qxApi.reducer
   },
 
@@ -22,6 +24,7 @@ export const store = configureStore({
       .concat(qliApi.middleware)
       .concat(archiverV1Api.middleware)
       .concat(archiverV2Api.middleware)
+      .concat(testnetQubicRpcV1.middleware)
       .concat(qxApi.middleware)
 })
 

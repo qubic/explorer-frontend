@@ -78,5 +78,10 @@
   "name": "Name",
   "wallets": "Wallets",
   "assets": "Vermögenswerte",
-  "totalValueLocked": "Gesamter gesperrter Wert (TVL)"
+  "totalValueLocked": "Gesamter gesperrter Wert (TVL)",
+  "noEntries": "Keine Einträge zum Anzeigen",
+  "assetsRichList": "Vermögens-Ranglisten",
+  "assetsRichListDesc": "Die Vermögens-Rangliste zeigt die größten Inhaber jedes Vermögenswerts.",
+  "developers": "Entwickler",
+  "hackathon": "Hackathon"
 }
