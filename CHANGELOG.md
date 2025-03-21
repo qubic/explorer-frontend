@@ -1,3 +1,10 @@
+# [1.14.0-rc.2](https://github.com/qubic/explorer-frontend/compare/v1.14.0-rc.1...v1.14.0-rc.2) (2025-03-21)
+
+
+### Bug Fixes
+
+* remove currency label from amount header in AssetsRichListPage ([b2bcb66](https://github.com/qubic/explorer-frontend/commit/b2bcb66f10bc6362818b0342280da4ee2e50d886))
+
 # [1.14.0-rc.1](https://github.com/qubic/explorer-frontend/compare/v1.13.0...v1.14.0-rc.1) (2025-03-21)
 
 
