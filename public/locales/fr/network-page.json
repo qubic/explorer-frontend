@@ -78,5 +78,10 @@
   "name": "Nom",
   "wallets": "Portefeuilles",
   "assets": "Actifs",
-  "totalValueLocked": "Valeur Totale Verrouillée (TVL)"
+  "totalValueLocked": "Valeur Totale Verrouillée (TVL)",
+  "noEntries": "Aucune entrée à afficher",
+  "assetsRichList": "Liste des détenteurs d’actifs",
+  "assetsRichListDesc": "La liste des détenteurs montre les plus grands détenteurs de chaque actif.",
+  "developers": "Développeurs",
+  "hackathon": "Hackathon"
 }

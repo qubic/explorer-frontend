@@ -10,6 +10,7 @@ enum AddressType {
 type GetAddressNameResult = {
   name: string
   type: AddressType
+  website?: string
   i18nKey: string
 }
 
@@ -21,6 +22,7 @@ export const getAddressName = (address: string): GetAddressNameResult | undefine
     return {
       name: SMART_CONTRACTS[address as SmartContracts].name,
       type: AddressType.SmartContract,
+      website: SMART_CONTRACTS[address as SmartContracts].website,
       i18nKey: 'smartContract'
     }
   }

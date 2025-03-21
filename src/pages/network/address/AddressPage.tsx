@@ -1,7 +1,8 @@
 import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 
+import { ArrowTopRightOnSquareIcon } from '@app/assets/icons'
 import { withHelmet } from '@app/components/hocs'
 import { Badge, Breadcrumbs } from '@app/components/ui'
 import { ChevronToggleButton, CopyTextButton } from '@app/components/ui/buttons'
@@ -9,7 +10,7 @@ import { ErrorFallback } from '@app/components/ui/error-boundaries'
 import { PageLayout } from '@app/components/ui/layouts'
 import { LinearProgress } from '@app/components/ui/loaders'
 import { useGetAddressBalancesQuery, useGetLatestStatsQuery } from '@app/store/apis/archiver-v1'
-import { formatEllipsis, formatString } from '@app/utils'
+import { clsxTwMerge, formatEllipsis, formatString } from '@app/utils'
 import { getAddressName } from '@app/utils/qubic'
 import { HomeLink } from '../components'
 import { AddressDetails, OwnedAssets, TransactionsOverview } from './components'
@@ -57,8 +58,25 @@ function AddressPage() {
 
       {addressName && (
         <div className="flex items-center gap-4 pb-16">
-          <Badge color="primary" size="xs" variant="outlined">
-            {addressName.name}
+          <Badge
+            color="primary"
+            size="xs"
+            variant="outlined"
+            className={clsxTwMerge({ 'hover:bg-primary-60': addressName.website })}
+          >
+            {addressName.website ? (
+              <Link
+                to={addressName.website}
+                target="_blank"
+                rel="noreferrer"
+                className="flex items-center"
+              >
+                {addressName.name}
+                <ArrowTopRightOnSquareIcon className="mb-1.5 ml-4 size-12 text-primary-20" />
+              </Link>
+            ) : (
+              addressName.name
+            )}
           </Badge>
           <Badge color="primary" size="xs" variant="outlined">
             {t(addressName.i18nKey)}

@@ -6,6 +6,7 @@ on:
       - dev
       - staging
       - main
+      - testnet
   pull_request:
     types:
       - closed
@@ -36,12 +37,13 @@ jobs:
         run: pnpm run release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/staging' # Only run for main or staging
+        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/staging'
 
       - name: 🏗️ Build app
         env:
+          VITE_NETWORK: ${{ github.ref == 'refs/heads/testnet' && 'testnet' || 'mainnet' }}
           VITE_QLI_API_URL: ${{ secrets.QLI_API_URL }}
-          VITE_ARCHIVER_API_URL: ${{ secrets.QUBIC_RPC_URL }}
+          VITE_QUBIC_RPC_URL: ${{ github.ref == 'refs/heads/testnet' && secrets.QUBIC_RPC_URL_TESTNET || secrets.QUBIC_RPC_URL }}
           VITE_QX_API_URL: ${{ secrets.QX_API_URL }}
         run: pnpm run build
 
@@ -52,12 +54,14 @@ jobs:
           username: |
             ${{
               github.ref == 'refs/heads/main' && secrets.FTP_USERNAME_PROD ||
+              github.ref == 'refs/heads/testnet' && secrets.FTP_USERNAME_TESTNET ||
               github.ref == 'refs/heads/staging' && secrets.FTP_USERNAME_STAGING ||
               secrets.FTP_USERNAME_DEV
             }}
           password: |
             ${{
               github.ref == 'refs/heads/main' && secrets.FTP_PASSWORD_PROD ||
+              github.ref == 'refs/heads/testnet' && secrets.FTP_PASSWORD_TESTNET ||
               github.ref == 'refs/heads/staging' && secrets.FTP_PASSWORD_STAGING ||
               secrets.FTP_PASSWORD_DEV
             }}

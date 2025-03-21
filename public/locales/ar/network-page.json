@@ -78,5 +78,10 @@
   "name": "الاسم",
   "wallets": "المحافظ",
   "assets": "الأصول",
-  "totalValueLocked": "إجمالي القيمة المقفلة (TVL)"
+  "totalValueLocked": "إجمالي القيمة المقفلة (TVL)",
+  "noEntries": "لا توجد بيانات للعرض",
+  "assetsRichList": "قائمة الأغنياء بالأصول",
+  "assetsRichListDesc": "تعرض قائمة الأغنياء بالأصول أعلى الحائزين على كل أصل.",
+  "developers": "المطورون",
+  "hackathon": "هاكاثون"
 }

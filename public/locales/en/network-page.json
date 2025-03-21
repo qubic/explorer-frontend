@@ -78,5 +78,10 @@
   "name": "Name",
   "wallets": "Wallets",
   "assets": "Assets",
-  "totalValueLocked": "Total Value Locked (TVL)"
+  "totalValueLocked": "Total Value Locked (TVL)",
+  "noEntries": "No entries to show",
+  "assetsRichList": "Assets Rich Lists",
+  "assetsRichListDesc": "The assets rich list shows the top holders of each asset.",
+  "developers": "Developers",
+  "hackathon": "Hackathon"
 }

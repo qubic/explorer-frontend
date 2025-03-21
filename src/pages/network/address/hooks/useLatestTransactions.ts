@@ -26,7 +26,7 @@ export default function useLatestTransactions(
   const [hasMore, setHasMore] = useState(true)
   const cancellationRef = useRef(false)
 
-  const [getIdentityTransfersQuery, { isFetching, error }] = useLazyGetIndentityTransfersQuery({})
+  const [getIdentityTransfersQuery, { isFetching, error }] = useLazyGetIndentityTransfersQuery()
 
   const fetchTransfers = useCallback(async () => {
     const result = await getIdentityTransfersQuery({
@@ -70,7 +70,7 @@ export default function useLatestTransactions(
       }
     }
 
-    if (txsList.length === 0) {
+    if (txsList.length === 0 && hasMore) {
       initialFetch()
     }
 
@@ -78,7 +78,7 @@ export default function useLatestTransactions(
       isMounted = false
       cancellationRef.current = true
     }
-  }, [addressEndTick, fetchTransfers, txsList.length])
+  }, [addressEndTick, fetchTransfers, hasMore, nextPage, txsList.length])
 
   useEffect(() => {
     return () => {

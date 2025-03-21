@@ -2,10 +2,13 @@ import { memo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Tabs } from '@app/components/ui'
+import { envConfig } from '@app/configs'
 import type { GetAddressBalancesResponse } from '@app/store/apis/archiver-v1'
 import { useHistoricalTransactions, useLatestTransactions } from '../../hooks'
 import HistoricalTxs from './HistoricalTxs'
 import LatestTransactions from './LatestTransactions'
+
+const isTestnet = envConfig.NETWORK === 'testnet'
 
 type Props = {
   address: GetAddressBalancesResponse['balance']
@@ -24,7 +27,7 @@ function TransactionsOverview({ address, addressId }: Props) {
     hasMore: hasMoreHistoricalTxs,
     isLoading: isHistoricalTxsLoading,
     error: historicalTxsError
-  } = useHistoricalTransactions(addressId)
+  } = useHistoricalTransactions(addressId, { skip: isTestnet })
 
   return (
     <div className="mt-40">
@@ -32,7 +35,7 @@ function TransactionsOverview({ address, addressId }: Props) {
       <Tabs>
         <Tabs.List>
           <Tabs.Tab>{t('latest')}</Tabs.Tab>
-          <Tabs.Tab>{t('historical')}</Tabs.Tab>
+          {!isTestnet && <Tabs.Tab>{t('historical')}</Tabs.Tab>}
         </Tabs.List>
         <Tabs.Panels>
           <Tabs.Panel>
@@ -45,16 +48,18 @@ function TransactionsOverview({ address, addressId }: Props) {
               error={error}
             />
           </Tabs.Panel>
-          <Tabs.Panel>
-            <HistoricalTxs
-              addressId={addressId}
-              transactions={historicalTransactions}
-              loadMore={loadMoreHistoricalTxs}
-              hasMore={hasMoreHistoricalTxs}
-              isLoading={isHistoricalTxsLoading}
-              error={historicalTxsError}
-            />
-          </Tabs.Panel>
+          {!isTestnet && (
+            <Tabs.Panel>
+              <HistoricalTxs
+                addressId={addressId}
+                transactions={historicalTransactions}
+                loadMore={loadMoreHistoricalTxs}
+                hasMore={hasMoreHistoricalTxs}
+                isLoading={isHistoricalTxsLoading}
+                error={historicalTxsError}
+              />
+            </Tabs.Panel>
+          )}
         </Tabs.Panels>
       </Tabs>
     </div>

@@ -78,5 +78,10 @@
   "name": "Naam",
   "wallets": "Portefeuilles",
   "assets": "Activa",
-  "totalValueLocked": "Totale Vergrendelde Waarde (TVL)"
+  "totalValueLocked": "Totale Vergrendelde Waarde (TVL)",
+  "noEntries": "Geen items om weer te geven",
+  "assetsRichList": "Ranglijsten voor Activa",
+  "assetsRichListDesc": "De ranglijst toont de grootste bezitters van elk activum.",
+  "developers": "Ontwikkelaars",
+  "hackathon": "Hackathon"
 }
