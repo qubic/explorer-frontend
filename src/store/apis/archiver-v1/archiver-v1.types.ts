@@ -3,10 +3,16 @@ export interface Entity {
   balance: string
 }
 
+export interface Owner {
+  identity: string
+  numberOfShares: number
+}
+
 export interface PaginationInfo {
   totalRecords: number
   currentPage: number
   totalPages: number
+  pageSize: number
 }
 
 export interface GetEpochComputorsResponse {
@@ -39,6 +45,12 @@ export interface GetRichListResponse {
   richList: {
     entities: Entity[]
   }
+}
+
+export interface GetAssetsRichListResponse {
+  pagination: PaginationInfo
+  tick: number
+  owners: Owner[]
 }
 
 export interface GetAddressBalancesResponse {

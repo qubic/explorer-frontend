@@ -78,5 +78,10 @@
   "name": "Nome",
   "wallets": "Carteiras",
   "assets": "Ativos",
-  "totalValueLocked": "Valor Total Bloqueado (TVL)"
+  "totalValueLocked": "Valor Total Bloqueado (TVL)",
+  "noEntries": "Nenhuma entrada para mostrar",
+  "assetsRichList": "Lista de Ricos em Ativos",
+  "assetsRichListDesc": "A lista mostra os principais detentores de cada ativo.",
+  "developers": "Desenvolvedores",
+  "hackathon": "Hackathon"
 }

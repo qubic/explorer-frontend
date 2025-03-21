@@ -11,7 +11,7 @@ import type {
   GetTickTransactionsResponse
 } from './archiver-v2.types'
 
-const BASE_URL = `${envConfig.ARCHIVER_API_URL}/v2`
+const BASE_URL = `${envConfig.QUBIC_RPC_URL}/v2`
 
 export const archiverV2Api = createApi({
   reducerPath: 'archiverV2Api',
