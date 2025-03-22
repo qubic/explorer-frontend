@@ -1,3 +1,10 @@
+## [1.14.1](https://github.com/qubic/explorer-frontend/compare/v1.14.0...v1.14.1) (2025-03-22)
+
+
+### Bug Fixes
+
+* update dependency array in useEffect for AssetsRichListPage ([c5b3fb6](https://github.com/qubic/explorer-frontend/commit/c5b3fb6f72dd40c25f6c94cde50ac33afa282c2e))
+
 # [1.14.0](https://github.com/qubic/explorer-frontend/compare/v1.13.0...v1.14.0) (2025-03-21)
 
 
