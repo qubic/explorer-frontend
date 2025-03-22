@@ -109,8 +109,7 @@ function AssetsRichListPage() {
       params.set('asset', SMART_CONTRACTS[SmartContracts.Qx].name)
     }
     setSearchParams(params)
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- We only want to run this effect once
-  }, [])
+  }, [searchParams, setSearchParams])
 
   const renderTableContent = useCallback(() => {
     if (isFetching) return <RichListLoadingRows pageSize={pageSize} />
