@@ -5,7 +5,7 @@ import { withHelmet } from '@app/components/hocs'
 import { Breadcrumbs } from '@app/components/ui'
 import { PageLayout } from '@app/components/ui/layouts'
 import { useTailwindBreakpoint } from '@app/hooks'
-import { useGetAssetsQuery } from '@app/store/apis/qx'
+import { useGetAssetsIssuancesQuery } from '@app/store/apis/archiver-v1'
 import { ASSETS_ISSUER_ADDRESS } from '@app/utils/qubic-ts'
 import { HomeLink } from '../../components'
 import { TokenRow, TokensErrorRow, TokenSkeletonRow } from './components'
@@ -18,10 +18,12 @@ function TokensPage() {
   const { t } = useTranslation('network-page')
   const { isMobile } = useTailwindBreakpoint()
 
-  const { data = [], isLoading, error } = useGetAssetsQuery()
+  const { data, isLoading, error } = useGetAssetsIssuancesQuery()
 
   const tokens = useMemo(
-    () => data.filter(({ issuer }) => issuer !== ASSETS_ISSUER_ADDRESS),
+    () =>
+      data?.assets.filter(({ data: asset }) => asset.issuerIdentity !== ASSETS_ISSUER_ADDRESS) ??
+      [],
     [data]
   )
 
@@ -32,7 +34,9 @@ function TokensPage() {
       return <TokensErrorRow />
     }
 
-    return tokens.map((asset) => <TokenRow key={asset.name} asset={asset} isMobile={isMobile} />)
+    return tokens.map(({ data: tokenAsset }) => (
+      <TokenRow key={tokenAsset.issuerIdentity} asset={tokenAsset} isMobile={isMobile} />
+    ))
   }, [isLoading, error, tokens, isMobile])
 
   return (
