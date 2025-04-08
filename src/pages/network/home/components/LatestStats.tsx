@@ -119,7 +119,7 @@ export default function LatestStats({ latestStats, totalValueLocked, isLoading, 
         label: (
           <span className="flex items-center gap-4 text-inherit">
             {t('empty')}
-            <Tooltip content={t('emptyTooltip')}>
+            <Tooltip tooltipId="empty-ticks" content={t('emptyTooltip')}>
               <Infocon className="size-16 shrink-0" />
             </Tooltip>
           </span>

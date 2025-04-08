@@ -62,7 +62,7 @@ const router: ReturnType<typeof createBrowserRouter> = createBrowserRouter([
             element: <SmartContractsPageLazy />
           },
           {
-            path: Routes.NETWORK.ASSETS.RICH_LIST,
+            path: Routes.NETWORK.ASSETS.RICH_LIST(),
             element: <AssetsRichListPageLazy />
           },
           {

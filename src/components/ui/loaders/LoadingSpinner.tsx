@@ -1,6 +1,10 @@
-export default function LoadingSpinner() {
+type Props = {
+  className?: string
+}
+
+export default function LoadingSpinner({ className }: Props) {
   return (
-    <output>
+    <output className={className}>
       <svg
         aria-hidden="true"
         className="size-20 animate-spin fill-primary-60 text-gray-200 dark:text-gray-600"

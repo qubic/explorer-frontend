@@ -83,5 +83,14 @@
   "assetsRichList": "قائمة الأغنياء بالأصول",
   "assetsRichListDesc": "تعرض قائمة الأغنياء بالأصول أعلى الحائزين على كل أصل.",
   "developers": "المطورون",
-  "hackathon": "هاكاثون"
+  "hackathon": "هاكاثون",
+  "contractName": "اسم العقد",
+  "shareholders": "المساهمون",
+  "checkContractShareholders": "التحقق من مساهمي العقد",
+  "checkSourceCode": "عرض الشيفرة المصدرية",
+  "checkContractProposal": "عرض مقترح العقد",
+  "smartContractCodeLoadError": "خطأ: فشل تحميل شيفرة العقد الذكي. يرجى تحديث الصفحة أو المحاولة لاحقًا.",
+  "contract": "عقد",
+  "copied": "تم النسخ",
+  "copyToClipboard": "نسخ إلى الحافظة"
 }

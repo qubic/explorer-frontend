@@ -1,18 +1,33 @@
 import type { SmartContracts, Tokens } from '@app/constants/qubic'
 import { EXCHANGES, SMART_CONTRACTS, TOKENS } from '@app/constants/qubic'
 
-enum AddressType {
+export enum AddressType {
   Exchange = 'EXCHANGE',
   SmartContract = 'SMART_CONTRACT',
   Token = 'TOKEN'
 }
 
-type GetAddressNameResult = {
-  name: string
-  type: AddressType
-  website?: string
-  i18nKey: string
-}
+export type GetAddressNameResult =
+  | {
+      name: string
+      type: AddressType.Exchange
+      i18nKey: string
+      website?: string
+    }
+  | {
+      name: string
+      type: AddressType.Token
+      i18nKey: string
+      website?: string
+    }
+  | {
+      name: string
+      type: AddressType.SmartContract
+      i18nKey: string
+      website?: string
+      githubUrl: string
+      proposalUrl?: string
+    }
 
 export const getAddressName = (address: string): GetAddressNameResult | undefined => {
   const exchange = EXCHANGES.find(({ address: exAddress }) => exAddress === address)?.name
@@ -22,8 +37,10 @@ export const getAddressName = (address: string): GetAddressNameResult | undefine
     return {
       name: SMART_CONTRACTS[address as SmartContracts].name,
       type: AddressType.SmartContract,
+      i18nKey: 'smartContract',
       website: SMART_CONTRACTS[address as SmartContracts].website,
-      i18nKey: 'smartContract'
+      githubUrl: SMART_CONTRACTS[address as SmartContracts].githubUrl,
+      proposalUrl: SMART_CONTRACTS[address as SmartContracts].proposalUrl
     }
   }
 

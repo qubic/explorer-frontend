@@ -83,5 +83,14 @@
   "assetsRichList": "Liste des détenteurs d’actifs",
   "assetsRichListDesc": "La liste des détenteurs montre les plus grands détenteurs de chaque actif.",
   "developers": "Développeurs",
-  "hackathon": "Hackathon"
+  "hackathon": "Hackathon",
+  "contractName": "Nom du contrat",
+  "shareholders": "Actionnaires",
+  "checkContractShareholders": "Voir les actionnaires du contrat",
+  "checkSourceCode": "Voir le code source",
+  "checkContractProposal": "Voir la proposition de contrat",
+  "smartContractCodeLoadError": "Erreur : Échec du chargement du code du contrat intelligent. Veuillez actualiser la page ou réessayer plus tard.",
+  "contract": "Contrat",
+  "copied": "Copié",
+  "copyToClipboard": "Copier dans le presse-papiers"
 }
