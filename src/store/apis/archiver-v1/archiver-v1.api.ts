@@ -2,6 +2,7 @@ import { envConfig } from '@app/configs'
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import type {
   GetAddressBalancesResponse,
+  GetAssetsIssuancesResponse,
   GetAssetsRichListResponse,
   GetEpochComputorsResponse,
   GetIssuedAssetsResponse,
@@ -67,6 +68,16 @@ export const archiverV1Api = createApi({
     >({
       query: ({ address }) => `/assets/${address}/possessed`,
       transformResponse: (response: GetPossessedAssetsResponse) => response.possessedAssets
+    }),
+    // Assets
+    getAssetsIssuances: build.query<
+      GetAssetsIssuancesResponse,
+      { issuerIdentity?: string; assetName?: string } | void
+    >({
+      query: ({ issuerIdentity, assetName } = {}) => ({
+        url: `/assets/issuances`,
+        params: { issuerIdentity, assetName }
+      })
     })
   })
 })
@@ -87,5 +98,7 @@ export const {
   // Address Assets
   useGetAddressIssuedAssetsQuery,
   useGetAddressOwnedAssetsQuery,
-  useGetAddressPossessedAssetsQuery
+  useGetAddressPossessedAssetsQuery,
+  // Assets
+  useGetAssetsIssuancesQuery
 } = archiverV1Api

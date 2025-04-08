@@ -4,8 +4,8 @@ import { useSearchParams } from 'react-router-dom'
 
 import { Skeleton } from '@app/components/ui'
 import { Button } from '@app/components/ui/buttons'
-import type { Asset } from '@app/store/apis/qx'
-import { useGetAssetsQuery } from '@app/store/apis/qx'
+import type { IssuedAsset } from '@app/store/apis/archiver-v1'
+import { useGetAssetsIssuancesQuery } from '@app/store/apis/archiver-v1'
 import { clsxTwMerge } from '@app/utils'
 import { ASSETS_ISSUER_ADDRESS } from '@app/utils/qubic-ts'
 
@@ -24,11 +24,11 @@ function AssetsTabsSection({
   selectedAsset
 }: {
   title: string
-  assets: Asset[]
+  assets: IssuedAsset[]
   isLoading?: boolean
   skeletonItems?: number
-  onTabChange: (asset: Asset) => void
-  selectedAsset?: Asset
+  onTabChange: (asset: IssuedAsset) => void
+  selectedAsset?: Pick<IssuedAsset, 'name' | 'issuerIdentity'>
 }) {
   return (
     <section className="flex flex-col gap-10">
@@ -39,7 +39,8 @@ function AssetsTabsSection({
         ) : (
           assets?.map((asset) => {
             const isSelected =
-              selectedAsset?.issuer === asset.issuer && selectedAsset?.name === asset.name
+              selectedAsset?.issuerIdentity === asset.issuerIdentity &&
+              selectedAsset?.name === asset.name
             return (
               <li key={asset.name}>
                 <Button
@@ -70,18 +71,18 @@ export default function AssetsTabs() {
 
   const selectedAsset = useMemo(
     () => ({
-      issuer: issuerParam,
+      issuerIdentity: issuerParam,
       name: assetParam
     }),
     [assetParam, issuerParam]
   )
-  const { data = [], isFetching } = useGetAssetsQuery()
+  const { data, isFetching } = useGetAssetsIssuancesQuery()
 
   const handleAssetChange = useCallback(
-    ({ issuer, name }: Asset) => {
+    ({ issuerIdentity, name }: IssuedAsset) => {
       setSearchParams((prev) => ({
         ...Object.fromEntries(prev.entries()),
-        issuer,
+        issuer: issuerIdentity,
         asset: name,
         page: '1'
       }))
@@ -91,10 +92,11 @@ export default function AssetsTabs() {
 
   const { smartContractShares, tokens } = useMemo(
     () =>
-      data.reduce(
-        (acc: { smartContractShares: Asset[]; tokens: Asset[] }, asset) => {
-          const key = asset.issuer === ASSETS_ISSUER_ADDRESS ? 'smartContractShares' : 'tokens'
-          acc[key].push(asset)
+      [...(data?.assets ?? [])].reduce(
+        (acc: { smartContractShares: IssuedAsset[]; tokens: IssuedAsset[] }, asset) => {
+          const key =
+            asset.data.issuerIdentity === ASSETS_ISSUER_ADDRESS ? 'smartContractShares' : 'tokens'
+          acc[key].push(asset.data)
           return acc
         },
         { smartContractShares: [], tokens: [] }

@@ -47,7 +47,13 @@ export default function AddressLink({
 
   return (
     <div className="flex items-center gap-10">
-      {showTooltip ? <Tooltip content={value}>{linkElement}</Tooltip> : linkElement}
+      {showTooltip ? (
+        <Tooltip tooltipId="address-link" content={value}>
+          {linkElement}
+        </Tooltip>
+      ) : (
+        linkElement
+      )}
       {copy && <CopyTextButton text={value} />}
     </div>
   )

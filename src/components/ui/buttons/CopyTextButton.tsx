@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { CheckIcon, CopyTextIcon } from '@app/assets/icons'
 import { clsxTwMerge, copyText } from '@app/utils'
@@ -10,6 +11,7 @@ type Props = {
 }
 
 export default function CopyTextButton({ text, className }: Props) {
+  const { t } = useTranslation('network-page')
   const [isCopied, setIsCopied] = useState(false)
 
   const handleCopy = () => {
@@ -19,7 +21,7 @@ export default function CopyTextButton({ text, className }: Props) {
   }
 
   return (
-    <Tooltip content={isCopied ? 'Copied' : 'Copy to clipboard'}>
+    <Tooltip content={isCopied ? t('copied') : t('copyToClipboard')} tooltipId="copy-text-button">
       <button
         type="button"
         className={clsxTwMerge(

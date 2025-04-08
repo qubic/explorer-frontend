@@ -1,3 +1,15 @@
+# [1.15.0-rc.1](https://github.com/qubic/explorer-frontend/compare/v1.14.1...v1.15.0-rc.1) (2025-04-08)
+
+
+### Features
+
+* add polling interval for overview data queries ([41cd7f2](https://github.com/qubic/explorer-frontend/commit/41cd7f2e53fe332ff38efa2584df229421b1c0c7))
+* add Qbay smart contract to qubic constants ([89c7883](https://github.com/qubic/explorer-frontend/commit/89c7883281bad40c600a854b35546bc7febc78d4))
+* enhance dropdown component and update integrations ([afc492a](https://github.com/qubic/explorer-frontend/commit/afc492ac0716377bc846a193c82eee810a77d64e))
+* enhance Tabs component ([dd14305](https://github.com/qubic/explorer-frontend/commit/dd1430598e06e092b2f7d0076793f85245040196))
+* install and integrate react-tooltip ([99c5b7e](https://github.com/qubic/explorer-frontend/commit/99c5b7ed71d92f32ed1c2c0c1447f3ef6583c328))
+* integrate smart contract code and info display on address page ([077efb1](https://github.com/qubic/explorer-frontend/commit/077efb1f93a5f4ab3f88287216cc3e0e1570cab7))
+
 ## [1.14.1](https://github.com/qubic/explorer-frontend/compare/v1.14.0...v1.14.1) (2025-03-22)
 
 

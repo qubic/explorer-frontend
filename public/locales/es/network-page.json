@@ -83,5 +83,14 @@
   "assetsRichList": "Listas de Riqueza de Activos",
   "assetsRichListDesc": "La lista de riqueza muestra los principales poseedores de cada activo.",
   "developers": "Desarrolladores",
-  "hackathon": "Hackathon"
+  "hackathon": "Hackathon",
+  "contractName": "Nombre del contrato",
+  "shareholders": "Accionistas",
+  "checkContractShareholders": "Ver accionistas del contrato",
+  "checkSourceCode": "Ver código fuente",
+  "checkContractProposal": "Ver propuesta del contrato",
+  "smartContractCodeLoadError": "Error: No se pudo cargar el código del contrato inteligente. Por favor, actualiza la página o inténtalo más tarde.",
+  "contract": "Contrato",
+  "copied": "Copiado",
+  "copyToClipboard": "Copiar al portapapeles"
 }

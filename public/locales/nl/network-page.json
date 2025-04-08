@@ -83,5 +83,14 @@
   "assetsRichList": "Ranglijsten voor Activa",
   "assetsRichListDesc": "De ranglijst toont de grootste bezitters van elk activum.",
   "developers": "Ontwikkelaars",
-  "hackathon": "Hackathon"
+  "hackathon": "Hackathon",
+  "contractName": "Contractnaam",
+  "shareholders": "Aandeelhouders",
+  "checkContractShareholders": "Bekijk contractaandeelhouders",
+  "checkSourceCode": "Bekijk broncode",
+  "checkContractProposal": "Bekijk contractvoorstel",
+  "smartContractCodeLoadError": "Fout: Het laden van de smartcontractcode is mislukt. Vernieuw de pagina of probeer het later opnieuw.",
+  "contract": "Contract",
+  "copied": "Gekopieerd",
+  "copyToClipboard": "Kopiëren naar klembord"
 }

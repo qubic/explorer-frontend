@@ -1,13 +1,20 @@
 import type { TxEra } from '@app/types'
 
-function buildUrlWithQueryParams<T extends Record<string, string>>(
+function buildUrlWithQueryParams<T extends Record<string, string | undefined>>(
   path: string,
   queryParams?: T
 ): string {
   if (!queryParams) return path
-  const queryString = new URLSearchParams(queryParams).toString()
 
-  return `${path}?${queryString}`
+  const params = new URLSearchParams()
+  Object.entries(queryParams).forEach(([key, value]) => {
+    if (value !== undefined) {
+      params.append(key, value)
+    }
+  })
+
+  const queryString = params.toString()
+  return queryString ? `${path}?${queryString}` : path
 }
 
 export type NetworkTxQueryParams = {
@@ -28,7 +35,8 @@ export const Routes = {
     ASSETS: {
       TOKENS: '/network/assets/tokens',
       SMART_CONTRACTS: '/network/assets/smart-contracts',
-      RICH_LIST: '/network/assets/rich-list'
+      RICH_LIST: (issuer?: string, asset?: string) =>
+        buildUrlWithQueryParams(`${Routes.NETWORK.ROOT}/assets/rich-list`, { issuer, asset })
     },
     DEVELOPERS: {
       HACKATHON: '/network/developers/hackathon'

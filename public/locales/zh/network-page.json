@@ -83,5 +83,14 @@
   "assetsRichList": "资产富豪榜",
   "assetsRichListDesc": "资产富豪榜显示每种资产的前持有者。",
   "developers": "开发者",
-  "hackathon": "黑客松"
+  "hackathon": "黑客松",
+  "contractName": "合约名称",
+  "shareholders": "股东",
+  "checkContractShareholders": "查看合约股东",
+  "checkSourceCode": "查看源代码",
+  "checkContractProposal": "查看合约提案",
+  "smartContractCodeLoadError": "错误：加载智能合约代码失败。请刷新页面或稍后再试。",
+  "contract": "合约",
+  "copied": "已复制",
+  "copyToClipboard": "复制到剪贴板"
 }
