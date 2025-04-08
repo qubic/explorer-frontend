@@ -19,7 +19,7 @@ export default function CopyTextButton({ text, className }: Props) {
   }
 
   return (
-    <Tooltip content={isCopied ? 'Copied' : 'Copy to clipboard'}>
+    <Tooltip content={isCopied ? 'Copied' : 'Copy to clipboard'} tooltipId="copy-text-button">
       <button
         type="button"
         className={clsxTwMerge(
