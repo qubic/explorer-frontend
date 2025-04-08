@@ -83,5 +83,14 @@
   "assetsRichList": "Assets Rich Lists",
   "assetsRichListDesc": "The assets rich list shows the top holders of each asset.",
   "developers": "Developers",
-  "hackathon": "Hackathon"
+  "hackathon": "Hackathon",
+  "contractName": "Contract Name",
+  "shareholders": "Shareholders",
+  "checkContractShareholders": "Check Contract Shareholders",
+  "checkSourceCode": "Check Source Code",
+  "checkContractProposal": "Check Contract Proposal",
+  "smartContractCodeLoadError": "Error: Failed to load smart contract code. Please refresh the page or try again later.",
+  "contract": "Contract",
+  "copied": "Copied",
+  "copyToClipboard": "Copy to clipboard"
 }

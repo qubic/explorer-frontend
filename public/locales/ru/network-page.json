@@ -83,5 +83,14 @@
   "assetsRichList": "Рейтинг держателей активов",
   "assetsRichListDesc": "Рейтинг показывает крупнейших держателей каждого актива.",
   "developers": "Разработчики",
-  "hackathon": "Хакатон"
+  "hackathon": "Хакатон",
+  "contractName": "Название контракта",
+  "shareholders": "Акционеры",
+  "checkContractShareholders": "Посмотреть акционеров контракта",
+  "checkSourceCode": "Посмотреть исходный код",
+  "checkContractProposal": "Посмотреть предложение контракта",
+  "smartContractCodeLoadError": "Ошибка: Не удалось загрузить код смарт-контракта. Обновите страницу или попробуйте позже.",
+  "contract": "Контракт",
+  "copied": "Скопировано",
+  "copyToClipboard": "Скопировать в буфер обмена"
 }

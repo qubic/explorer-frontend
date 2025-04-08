@@ -25,7 +25,9 @@ export const createProxyConfig = (
         }
 
         // eslint-disable-next-line no-console
-        console.log(`[${label}] - API CALL - [${req.method}] ${options.target}${req.url}`)
+        console.log(
+          `[${label}] - API CALL - [${req.method}] ${typeof options.target === 'string' ? options.target : JSON.stringify(options.target)}${req.url}`
+        )
         proxyReq.setHeader('Authorization', req.headers.authorization || '')
       })
 

@@ -83,5 +83,14 @@
   "assetsRichList": "Varlık Zenginler Listesi",
   "assetsRichListDesc": "Bu liste, her varlığın en büyük sahiplerini gösterir.",
   "developers": "Geliştiriciler",
-  "hackathon": "Hackathon"
+  "hackathon": "Hackathon",
+  "contractName": "Sözleşme Adı",
+  "shareholders": "Hissedarlar",
+  "checkContractShareholders": "Sözleşme Hissedarlarını Görüntüle",
+  "checkSourceCode": "Kaynak Kodunu Görüntüle",
+  "checkContractProposal": "Sözleşme Önerisini Görüntüle",
+  "smartContractCodeLoadError": "Hata: Akıllı sözleşme kodu yüklenemedi. Lütfen sayfayı yenileyin veya daha sonra tekrar deneyin.",
+  "contract": "Sözleşme",
+  "copied": "Kopyalandı",
+  "copyToClipboard": "Panoya kopyala"
 }
