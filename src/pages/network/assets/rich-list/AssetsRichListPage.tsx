@@ -66,21 +66,27 @@ function AssetsRichListPage() {
 
   const handlePageChange = useCallback(
     (value: number) => {
-      setSearchParams((prev) => ({
-        ...Object.fromEntries(prev.entries()),
-        page: value.toString()
-      }))
+      setSearchParams(
+        (prev) => ({
+          ...Object.fromEntries(prev.entries()),
+          page: value.toString()
+        }),
+        { replace: true }
+      )
     },
     [setSearchParams]
   )
 
   const handlePageSizeChange = useCallback(
     (option: Option) => {
-      setSearchParams((prev) => ({
-        ...Object.fromEntries(prev.entries()),
-        pageSize: option.value,
-        page: '1'
-      }))
+      setSearchParams(
+        (prev) => ({
+          ...Object.fromEntries(prev.entries()),
+          pageSize: option.value,
+          page: '1'
+        }),
+        { replace: true }
+      )
     },
     [setSearchParams]
   )
@@ -108,7 +114,7 @@ function AssetsRichListPage() {
     if (!params.has('asset')) {
       params.set('asset', SMART_CONTRACTS[SmartContracts.Qx].name)
     }
-    setSearchParams(params)
+    setSearchParams(params, { replace: true })
   }, [searchParams, setSearchParams])
 
   const renderTableContent = useCallback(() => {

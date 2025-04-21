@@ -83,5 +83,14 @@
   "assetsRichList": "Vermögens-Ranglisten",
   "assetsRichListDesc": "Die Vermögens-Rangliste zeigt die größten Inhaber jedes Vermögenswerts.",
   "developers": "Entwickler",
-  "hackathon": "Hackathon"
+  "hackathon": "Hackathon",
+  "contractName": "Vertragsname",
+  "shareholders": "Aktionäre",
+  "checkContractShareholders": "Vertragsaktionäre prüfen",
+  "checkSourceCode": "Quellcode anzeigen",
+  "checkContractProposal": "Vertragsvorschlag anzeigen",
+  "smartContractCodeLoadError": "Fehler: Der Smart-Contract-Code konnte nicht geladen werden. Bitte lade die Seite neu oder versuche es später erneut.",
+  "contract": "Vertrag",
+  "copied": "Kopiert",
+  "copyToClipboard": "In die Zwischenablage kopieren"
 }

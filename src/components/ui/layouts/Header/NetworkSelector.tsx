@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useState } from 'react'
 
 import { QubicWhiteLogo } from '@app/assets/icons'
 import { Alert, DropdownMenu } from '@app/components/ui'
@@ -9,34 +9,17 @@ import { clsxTwMerge } from '@app/utils'
 
 export default function NetworkSelector() {
   const [showDropdown, setShowDropdown] = useState(false)
-  const dropdownRef = useRef<HTMLUListElement>(null)
 
   const handleDropdownToggle = () => setShowDropdown((prev) => !prev)
 
-  const handleClickOutside = (event: MouseEvent) => {
-    if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-      setShowDropdown(false)
-    }
-  }
-
-  useEffect(() => {
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
-    }
-  }, [])
-
   return (
     <ErrorBoundary fallback={<Alert variant="error" className="mx-5 my-2.5" />}>
-      <DropdownMenu show={showDropdown}>
-        <DropdownMenu.Trigger
-          onToggle={handleDropdownToggle}
-          className="rounded-full p-8 transition-colors duration-500 ease-in-out hover:bg-primary-70"
-        >
+      <DropdownMenu show={showDropdown} onToggle={handleDropdownToggle}>
+        <DropdownMenu.Trigger className="rounded-full p-8 transition-colors duration-500 ease-in-out hover:bg-primary-70">
           <QubicWhiteLogo className="size-28 shrink-0 rounded border border-primary-60 p-4" />
         </DropdownMenu.Trigger>
         <DropdownMenu.Content className="ltr:left-auto ltr:right-0">
-          <ul className="grid gap-2 p-10" ref={dropdownRef}>
+          <ul className="grid gap-2 p-10">
             {Object.values(EXPLORER_NETWORK_URLS).map(({ networkId, label, url }) => (
               <li key={networkId} className="flex">
                 <a

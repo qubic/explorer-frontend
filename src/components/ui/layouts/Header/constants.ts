@@ -39,7 +39,7 @@ export const NAVIGATION_MENU_ITEMS: NavigationMenuItem[] = [
       },
       {
         i18nKey: 'richList',
-        href: Routes.NETWORK.ASSETS.RICH_LIST
+        href: Routes.NETWORK.ASSETS.RICH_LIST()
       }
     ]
   }

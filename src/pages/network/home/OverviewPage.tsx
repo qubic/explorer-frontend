@@ -3,6 +3,7 @@ import { useSearchParams } from 'react-router-dom'
 
 import { withHelmet } from '@app/components/hocs'
 import { PageLayout } from '@app/components/ui/layouts'
+import { OVERVIEW_DATA_POLLING_INTERVAL_MS } from '@app/constants'
 import { SmartContracts } from '@app/constants/qubic'
 import { useGetAddressBalancesQuery, useGetLatestStatsQuery } from '@app/store/apis/archiver-v1'
 import { useGetEpochTicksQuery } from '@app/store/apis/archiver-v2'
@@ -13,8 +14,13 @@ function OverviewPage() {
   const [searchParams, setSearchParams] = useSearchParams()
   const page = parseInt(searchParams.get('ticksPage') || '1', 10)
 
-  const latestStats = useGetLatestStatsQuery()
-  const qEarnBalance = useGetAddressBalancesQuery({ address: SmartContracts.QEarn })
+  const latestStats = useGetLatestStatsQuery(undefined, {
+    pollingInterval: OVERVIEW_DATA_POLLING_INTERVAL_MS
+  })
+  const qEarnBalance = useGetAddressBalancesQuery(
+    { address: SmartContracts.QEarn },
+    { pollingInterval: OVERVIEW_DATA_POLLING_INTERVAL_MS }
+  )
 
   const epochTicks = useGetEpochTicksQuery(
     {
@@ -22,7 +28,7 @@ function OverviewPage() {
       pageSize: TICKS_PAGE_SIZE,
       page
     },
-    { skip: !latestStats.data }
+    { skip: !latestStats.data, pollingInterval: OVERVIEW_DATA_POLLING_INTERVAL_MS }
   )
 
   const handlePageChange = useCallback(
@@ -37,12 +43,12 @@ function OverviewPage() {
       <LatestStats
         latestStats={latestStats.data}
         totalValueLocked={qEarnBalance.data?.balance ?? ''}
-        isLoading={latestStats.isFetching || qEarnBalance.isFetching}
-        isError={latestStats.isError || qEarnBalance.isError}
+        isLoading={latestStats.isLoading || qEarnBalance.isLoading}
+        isError={latestStats.isError}
       />
       <TickList
         data={epochTicks.data}
-        isLoading={latestStats.isFetching || epochTicks.isFetching}
+        isLoading={latestStats.isLoading || epochTicks.isLoading}
         isError={epochTicks.isError}
         onPageChange={handlePageChange}
       />

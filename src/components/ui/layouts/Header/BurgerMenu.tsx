@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Bars3Icon, XmarkIcon } from '@app/assets/icons'
@@ -16,34 +16,14 @@ type Props = Readonly<{
 export default function BurgerMenu({ navigationMenus, activePath }: Props) {
   const [showMenu, setShowMenu] = useState(false)
   const { t } = useTranslation()
-  const menuRef = useRef<HTMLUListElement>(null)
-  const triggerRef = useRef<HTMLButtonElement>(null)
 
   const handleToggleMenu = useCallback(() => {
     setShowMenu((prev) => !prev)
   }, [])
 
-  const handleClickOutside = useCallback((event: MouseEvent) => {
-    const target = event.target as Node
-    if (!menuRef.current?.contains(target) && !triggerRef.current?.contains(target)) {
-      setShowMenu(false)
-    }
-  }, [])
-
-  useEffect(() => {
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
-    }
-  }, [handleClickOutside])
-
   return (
-    <DropdownMenu show={showMenu}>
-      <DropdownMenu.Trigger
-        onToggle={handleToggleMenu}
-        className="rounded-full p-8 transition-colors duration-500 ease-in-out hover:bg-primary-60/80"
-        ref={triggerRef}
-      >
+    <DropdownMenu show={showMenu} onToggle={handleToggleMenu}>
+      <DropdownMenu.Trigger className="rounded-full p-8 transition-colors duration-500 ease-in-out hover:bg-primary-60/80">
         <div className="relative size-24">
           <XmarkIcon
             className={clsxTwMerge(
@@ -60,7 +40,7 @@ export default function BurgerMenu({ navigationMenus, activePath }: Props) {
         </div>
       </DropdownMenu.Trigger>
       <DropdownMenu.Content className="min-w-256 ltr:left-auto ltr:right-0">
-        <ul className="grid gap-8 p-16" ref={menuRef}>
+        <ul className="grid gap-8 p-16">
           {navigationMenus.map(({ i18nKey, items }) => (
             <Accordion key={i18nKey} as="li" label={t(i18nKey)}>
               <ul className="mt-4">

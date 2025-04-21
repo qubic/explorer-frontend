@@ -1,3 +1,6 @@
 export { default as AddressDetails } from './AddressDetails'
+export { default as ContractOverview } from './ContractOverview'
 export { default as OwnedAssets } from './OwnedAssets'
+export { default as HistoricalTxs } from './TransactionsOverview/HistoricalTxs'
+export { default as LatestTransactions } from './TransactionsOverview/LatestTransactions'
 export { default as TransactionsOverview } from './TransactionsOverview/TransactionsOverview'

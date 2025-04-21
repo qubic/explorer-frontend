@@ -30,39 +30,36 @@ function TransactionsOverview({ address, addressId }: Props) {
   } = useHistoricalTransactions(addressId, { skip: isTestnet })
 
   return (
-    <div className="mt-40">
-      <p className="my-10 font-space text-20 font-500 leading-26">{t('transactions')}</p>
-      <Tabs>
-        <Tabs.List>
-          <Tabs.Tab>{t('latest')}</Tabs.Tab>
-          {!isTestnet && <Tabs.Tab>{t('historical')}</Tabs.Tab>}
-        </Tabs.List>
-        <Tabs.Panels>
+    <Tabs className="rounded-lg border border-primary-60">
+      <Tabs.List>
+        <Tabs.Tab>{t('latest')}</Tabs.Tab>
+        {!isTestnet && <Tabs.Tab>{t('historical')}</Tabs.Tab>}
+      </Tabs.List>
+      <Tabs.Panels className="px-16 py-20">
+        <Tabs.Panel>
+          <LatestTransactions
+            addressId={addressId}
+            transactions={transactions}
+            loadMore={loadMoreTransactions}
+            hasMore={hasMore}
+            isLoading={isLoading}
+            error={error}
+          />
+        </Tabs.Panel>
+        {!isTestnet && (
           <Tabs.Panel>
-            <LatestTransactions
+            <HistoricalTxs
               addressId={addressId}
-              transactions={transactions}
-              loadMore={loadMoreTransactions}
-              hasMore={hasMore}
-              isLoading={isLoading}
-              error={error}
+              transactions={historicalTransactions}
+              loadMore={loadMoreHistoricalTxs}
+              hasMore={hasMoreHistoricalTxs}
+              isLoading={isHistoricalTxsLoading}
+              error={historicalTxsError}
             />
           </Tabs.Panel>
-          {!isTestnet && (
-            <Tabs.Panel>
-              <HistoricalTxs
-                addressId={addressId}
-                transactions={historicalTransactions}
-                loadMore={loadMoreHistoricalTxs}
-                hasMore={hasMoreHistoricalTxs}
-                isLoading={isHistoricalTxsLoading}
-                error={historicalTxsError}
-              />
-            </Tabs.Panel>
-          )}
-        </Tabs.Panels>
-      </Tabs>
-    </div>
+        )}
+      </Tabs.Panels>
+    </Tabs>
   )
 }
 

@@ -83,5 +83,14 @@
   "assetsRichList": "アセット保有ランキング",
   "assetsRichListDesc": "アセット保有ランキングでは各アセットの上位保有者を表示します。",
   "developers": "開発者",
-  "hackathon": "ハッカソン"
+  "hackathon": "ハッカソン",
+  "contractName": "コントラクト名",
+  "shareholders": "株主",
+  "checkContractShareholders": "コントラクトの株主を確認",
+  "checkSourceCode": "ソースコードを確認",
+  "checkContractProposal": "コントラクトの提案を確認",
+  "smartContractCodeLoadError": "エラー：スマートコントラクトのコードを読み込めませんでした。ページを更新するか、後でもう一度お試しください。",
+  "contract": "契約",
+  "copied": "コピー済み",
+  "copyToClipboard": "クリップボードにコピー"
 }
