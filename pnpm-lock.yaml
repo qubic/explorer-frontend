@@ -12,8 +12,8 @@ importers:
         specifier: ^2.1.2
         version: 2.1.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@qubic-lib/qubic-ts-library':
-        specifier: 0.1.4
-        version: 0.1.4
+        specifier: 0.1.6
+        version: 0.1.6
       '@react-spring/web':
         specifier: ^9.7.5
         version: 9.7.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -679,8 +679,8 @@ packages:
     resolution: {integrity: sha512-c83qWb22rNRuB0UaVCI0uRPNRr8Z0FWnEIvT47jiHAmOIUHbBOg5XvV7pM5x+rKn9HRpjxquDbXYSXr3fAKFcw==}
     engines: {node: '>=12'}
 
-  '@qubic-lib/qubic-ts-library@0.1.4':
-    resolution: {integrity: sha512-4yAdC1pJzqtEvA4aTEGZVnNKs7Lj3l5Rm5KbJM68+BQ5SUP5XqVuFIliVDnHnUNOz9WYdwUMd9Ebqor2MQY8mQ==}
+  '@qubic-lib/qubic-ts-library@0.1.6':
+    resolution: {integrity: sha512-VbiJxFgmOpSKCgJkvPbUUFG/d8wcOYnh9pci1MXhINvUTD9i9twBKZv2SRc3v0fOTiasvaBeiz3HtUSy0oJfEA==}
 
   '@react-aria/focus@3.18.1':
     resolution: {integrity: sha512-N0Cy61WCIv+57mbqC7hiZAsB+3rF5n4JKabxUmg/2RTJL6lq7hJ5N4gx75ymKxkN8GnVDwt4pKZah48Wopa5jw==}
@@ -4516,7 +4516,7 @@ snapshots:
       '@pnpm/network.ca-file': 1.0.2
       config-chain: 1.1.13
 
-  '@qubic-lib/qubic-ts-library@0.1.4':
+  '@qubic-lib/qubic-ts-library@0.1.6':
     dependencies:
       bignumber.js: 9.1.2
       net: 1.0.2
