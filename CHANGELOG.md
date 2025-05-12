@@ -1,3 +1,10 @@
+# [1.16.0-rc.3](https://github.com/qubic/explorer-frontend/compare/v1.16.0-rc.2...v1.16.0-rc.3) (2025-05-12)
+
+
+### Bug Fixes
+
+* overview tooltips text wrapping ([2351a35](https://github.com/qubic/explorer-frontend/commit/2351a35ff47633d65cf86c18e87cce423b7a24bb))
+
 # [1.16.0-rc.2](https://github.com/qubic/explorer-frontend/compare/v1.16.0-rc.1...v1.16.0-rc.2) (2025-05-12)
 
 
