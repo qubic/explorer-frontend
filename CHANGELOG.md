@@ -1,3 +1,10 @@
+# [1.16.0-rc.2](https://github.com/qubic/explorer-frontend/compare/v1.16.0-rc.1...v1.16.0-rc.2) (2025-05-12)
+
+
+### Features
+
+* tooltip text added for tickQuality, ticksThisEpoch and lastNTickQuality cards ([1eda0bf](https://github.com/qubic/explorer-frontend/commit/1eda0bf4c9594d90681e7441853bdbcc64083d8f))
+
 # [1.16.0-rc.1](https://github.com/qubic/explorer-frontend/compare/v1.15.0...v1.16.0-rc.1) (2025-05-12)
 
 
