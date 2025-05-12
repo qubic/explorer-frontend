@@ -1,7 +1,7 @@
 {
   "name": "explorer-frontend",
   "private": true,
-  "version": "1.15.0",
+  "version": "1.16.0-rc.3",
   "type": "module",
   "engines": {
     "node": "^20.17.0",
@@ -20,7 +20,7 @@
   },
   "dependencies": {
     "@headlessui/react": "^2.1.2",
-    "@qubic-lib/qubic-ts-library": "0.1.4",
+    "@qubic-lib/qubic-ts-library": "0.1.6",
     "@react-spring/web": "^9.7.5",
     "@reduxjs/toolkit": "^2.2.6",
     "@tailwindcss/aspect-ratio": "^0.4.2",

@@ -33,3 +33,14 @@ export interface HistoricalTx {
   moneyFlew: boolean
   data: string
 }
+
+export interface TickQualityResponse {
+  created: string
+  calculationTick: number
+  epochTicksEmpty: number
+  epochTicksNonEmpty: number
+  last3000Empty: number
+  last3000NonEmpty: number
+  last10000Empty: number
+  last10000NonEmpty: number
+}
