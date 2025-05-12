@@ -4,7 +4,7 @@ import { QubicTransferSendManyPayload } from '@qubic-lib/qubic-ts-library/dist/q
 
 export const { QUTIL_ADDRESS, ARBITRATOR, EMPTY_ADDRESS, QX_ADDRESS } = QubicDefinitions
 
-export const ASSETS_ISSUER_ADDRESS = 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFXIB'
+export const ASSETS_ISSUER_ADDRESS = EMPTY_ADDRESS
 
 export type Transfer = {
   amount: string
@@ -55,6 +55,9 @@ export const getAssetsTransfers = async (data: string): Promise<AssetTransfer | 
 
 export const isProtocolMessage = (address: string): boolean =>
   [ARBITRATOR, EMPTY_ADDRESS].includes(address)
+
+export const isSmartContractTx = (destination: string, inputType: number): boolean =>
+  !isProtocolMessage(destination) && inputType > 0
 
 export const isTransferTx = (
   sourceId: string,
