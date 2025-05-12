@@ -6,17 +6,16 @@ import {
   CoinsStackIcon,
   CurrentTickIcon,
   DollarCoinIcon,
-  EmptyTicksIcon,
   EpochTicksIcon,
   FireIcon,
-  Infocon,
   LockIcon,
   SandClockIcon,
   StarsIcon,
   WalletIcon
 } from '@app/assets/icons'
-import { Alert, Skeleton, Tooltip } from '@app/components/ui'
+import { Alert, Skeleton } from '@app/components/ui'
 import type { GetLatestStatsResponse } from '@app/store/apis/archiver-v1'
+import type { TickQualityResponse } from '@app/store/apis/qli'
 import { formatString } from '@app/utils'
 import OverviewCardItem from './OverviewCardItem'
 
@@ -25,6 +24,18 @@ function getTickQuality(tickQuality: number | undefined) {
     return '0%'
   }
   return `${formatString(tickQuality)}%`
+}
+
+function calculateTickQuality(
+  nonEmpty: number | undefined,
+  empty: number | undefined
+): number | undefined {
+  if (nonEmpty !== undefined && empty !== undefined) {
+    const total = empty + nonEmpty
+    if (total === 0) return undefined // avoid division by 0
+    return (nonEmpty / total) * 100
+  }
+  return undefined
 }
 
 const LatestStatsSkeleton = memo(() => (
@@ -50,11 +61,18 @@ const LatestStatsSkeleton = memo(() => (
 type Props = Readonly<{
   latestStats: GetLatestStatsResponse['data'] | undefined
   totalValueLocked: string
+  tickQuality: TickQualityResponse | undefined
   isLoading: boolean
   isError: boolean
 }>
 
-export default function LatestStats({ latestStats, totalValueLocked, isLoading, isError }: Props) {
+export default function LatestStats({
+  latestStats,
+  totalValueLocked,
+  tickQuality,
+  isLoading,
+  isError
+}: Props) {
   const { t } = useTranslation('network-page')
 
   const cardData = useMemo(
@@ -111,29 +129,24 @@ export default function LatestStats({ latestStats, totalValueLocked, isLoading, 
         id: 'ticks-this-epoch',
         icon: EpochTicksIcon,
         label: t('ticksThisEpoch'),
-        value: formatString(latestStats?.ticksInCurrentEpoch)
-      },
-      {
-        id: 'empty-ticks',
-        icon: EmptyTicksIcon,
-        label: (
-          <span className="flex items-center gap-4 text-inherit">
-            {t('empty')}
-            <Tooltip tooltipId="empty-ticks" content={t('emptyTooltip')}>
-              <Infocon className="size-16 shrink-0" />
-            </Tooltip>
-          </span>
-        ),
-        value: formatString(latestStats?.emptyTicksInCurrentEpoch)
+        value: `${formatString(latestStats?.ticksInCurrentEpoch)} (${formatString(latestStats?.emptyTicksInCurrentEpoch)})`
       },
       {
         id: 'tick-quality',
         icon: StarsIcon,
         label: t('tickQuality'),
         value: getTickQuality(latestStats?.epochTickQuality)
+      },
+      {
+        id: 'last-n-tick-quality',
+        icon: StarsIcon,
+        label: t('lastNTickQuality'),
+        value: getTickQuality(
+          calculateTickQuality(tickQuality?.last10000NonEmpty, tickQuality?.last10000Empty)
+        )
       }
     ],
-    [t, totalValueLocked, latestStats]
+    [t, totalValueLocked, latestStats, tickQuality]
   )
 
   if (isLoading) {
