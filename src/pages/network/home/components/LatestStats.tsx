@@ -8,12 +8,13 @@ import {
   DollarCoinIcon,
   EpochTicksIcon,
   FireIcon,
+  Infocon,
   LockIcon,
   SandClockIcon,
   StarsIcon,
   WalletIcon
 } from '@app/assets/icons'
-import { Alert, Skeleton } from '@app/components/ui'
+import { Alert, Skeleton, Tooltip } from '@app/components/ui'
 import type { GetLatestStatsResponse } from '@app/store/apis/archiver-v1'
 import type { TickQualityResponse } from '@app/store/apis/qli'
 import { formatString } from '@app/utils'
@@ -128,19 +129,40 @@ export default function LatestStats({
       {
         id: 'ticks-this-epoch',
         icon: EpochTicksIcon,
-        label: t('ticksThisEpoch'),
+        label: (
+          <span className="flex items-center gap-4 text-inherit">
+            {t('ticksThisEpoch')}
+            <Tooltip tooltipId="ticks-this-epoch" content={t('ticksThisEpochTooltip')}>
+              <Infocon className="size-16 shrink-0" />
+            </Tooltip>
+          </span>
+        ),
         value: `${formatString(latestStats?.ticksInCurrentEpoch)} (${formatString(latestStats?.emptyTicksInCurrentEpoch)})`
       },
       {
         id: 'tick-quality',
         icon: StarsIcon,
-        label: t('tickQuality'),
+        label: (
+          <span className="flex items-center gap-4 text-inherit">
+            {t('tickQuality')}
+            <Tooltip tooltipId="tick-quality" content={t('tickQualityTooltip')}>
+              <Infocon className="size-16 shrink-0" />
+            </Tooltip>
+          </span>
+        ),
         value: getTickQuality(latestStats?.epochTickQuality)
       },
       {
         id: 'last-n-tick-quality',
         icon: StarsIcon,
-        label: t('lastNTickQuality'),
+        label: (
+          <span className="flex items-center gap-4 text-inherit">
+            {t('lastNTickQuality')}
+            <Tooltip tooltipId="last-n-tick-quality" content={t('lastNTickQualityTooltip')}>
+              <Infocon className="size-16 shrink-0" />
+            </Tooltip>
+          </span>
+        ),
         value: getTickQuality(
           calculateTickQuality(tickQuality?.last10000NonEmpty, tickQuality?.last10000Empty)
         )
