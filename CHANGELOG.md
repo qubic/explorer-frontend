@@ -1,3 +1,12 @@
+## [1.16.1-rc.1](https://github.com/qubic/explorer-frontend/compare/v1.16.0...v1.16.1-rc.1) (2025-05-14)
+
+
+### Bug Fixes
+
+* fetch current tick from v1//tick-info endpoint ([58e74dc](https://github.com/qubic/explorer-frontend/commit/58e74dc7e9cd88daef8e6c136cd346ac5963feec))
+* remove 'type' modifier on a named import when 'import type' is used ([852f3b3](https://github.com/qubic/explorer-frontend/commit/852f3b3e7b53e4c7d6dff42b58309b1356e2e88f))
+* updates on tooltips text for german ([572c3c6](https://github.com/qubic/explorer-frontend/commit/572c3c6d480a11ef3c42bdeed1c1c83c20d29ba4))
+
 # [1.16.0](https://github.com/qubic/explorer-frontend/compare/v1.15.0...v1.16.0) (2025-05-13)
 
 
