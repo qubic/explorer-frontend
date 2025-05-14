@@ -147,3 +147,12 @@ export interface GetRichListResponse {
     entities: Entity[]
   }
 }
+
+export interface GetTickInfoResponse {
+  tickInfo: {
+    tick: number
+    duration: number
+    epoch: number
+    initialTick: number
+  }
+}

@@ -1,16 +1,17 @@
 import { envConfig } from '@app/configs'
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import type {
-  GetAddressBalancesResponse,
-  GetAssetsIssuancesResponse,
-  GetAssetsRichListResponse,
-  GetEpochComputorsResponse,
-  GetIssuedAssetsResponse,
-  GetLatestStatsResponse,
-  GetOwnedAssetsResponse,
-  GetPossessedAssetsResponse,
-  GetRichListResponse,
-  GetTickDataResponse
+  GetTickInfoResponse,
+  type GetAddressBalancesResponse,
+  type GetAssetsIssuancesResponse,
+  type GetAssetsRichListResponse,
+  type GetEpochComputorsResponse,
+  type GetIssuedAssetsResponse,
+  type GetLatestStatsResponse,
+  type GetOwnedAssetsResponse,
+  type GetPossessedAssetsResponse,
+  type GetRichListResponse,
+  type GetTickDataResponse
 } from './archiver-v1.types'
 
 const BASE_URL = `${envConfig.QUBIC_RPC_URL}/v1`
@@ -75,9 +76,13 @@ export const archiverV1Api = createApi({
       { issuerIdentity?: string; assetName?: string } | void
     >({
       query: ({ issuerIdentity, assetName } = {}) => ({
-        url: `/assets/issuances`,
+        url: '/assets/issuances',
         params: { issuerIdentity, assetName }
       })
+    }),
+    getTickInfo: build.query<GetTickInfoResponse['tickInfo'], void>({
+      query: () => '/tick-info',
+      transformResponse: (response: GetTickInfoResponse) => response.tickInfo
     })
   })
 })
@@ -100,5 +105,7 @@ export const {
   useGetAddressOwnedAssetsQuery,
   useGetAddressPossessedAssetsQuery,
   // Assets
-  useGetAssetsIssuancesQuery
+  useGetAssetsIssuancesQuery,
+  // tick info
+  useGetTickInfoQuery
 } = archiverV1Api
