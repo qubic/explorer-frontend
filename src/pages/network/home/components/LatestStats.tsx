@@ -15,7 +15,7 @@ import {
   WalletIcon
 } from '@app/assets/icons'
 import { Alert, Skeleton, Tooltip } from '@app/components/ui'
-import type { GetLatestStatsResponse } from '@app/store/apis/archiver-v1'
+import type { GetLatestStatsResponse, GetTickInfoResponse } from '@app/store/apis/archiver-v1'
 import type { TickQualityResponse } from '@app/store/apis/qli'
 import { formatString } from '@app/utils'
 import OverviewCardItem from './OverviewCardItem'
@@ -63,6 +63,7 @@ type Props = Readonly<{
   latestStats: GetLatestStatsResponse['data'] | undefined
   totalValueLocked: string
   tickQuality: TickQualityResponse | undefined
+  tickInfo: GetTickInfoResponse['tickInfo'] | undefined
   isLoading: boolean
   isError: boolean
 }>
@@ -71,6 +72,7 @@ export default function LatestStats({
   latestStats,
   totalValueLocked,
   tickQuality,
+  tickInfo,
   isLoading,
   isError
 }: Props) {
@@ -124,7 +126,7 @@ export default function LatestStats({
         id: 'current-tick',
         icon: CurrentTickIcon,
         label: t('currentTick'),
-        value: formatString(latestStats?.currentTick)
+        value: formatString(tickInfo?.tick)
       },
       {
         id: 'ticks-this-epoch',
@@ -168,7 +170,7 @@ export default function LatestStats({
         )
       }
     ],
-    [t, totalValueLocked, latestStats, tickQuality]
+    [t, totalValueLocked, latestStats, tickQuality, tickInfo]
   )
 
   if (isLoading) {
