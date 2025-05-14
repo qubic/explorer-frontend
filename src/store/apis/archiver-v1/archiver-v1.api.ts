@@ -1,17 +1,17 @@
 import { envConfig } from '@app/configs'
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import type {
-  GetTickInfoResponse,
-  type GetAddressBalancesResponse,
-  type GetAssetsIssuancesResponse,
-  type GetAssetsRichListResponse,
-  type GetEpochComputorsResponse,
-  type GetIssuedAssetsResponse,
-  type GetLatestStatsResponse,
-  type GetOwnedAssetsResponse,
-  type GetPossessedAssetsResponse,
-  type GetRichListResponse,
-  type GetTickDataResponse
+  GetAddressBalancesResponse,
+  GetAssetsIssuancesResponse,
+  GetAssetsRichListResponse,
+  GetEpochComputorsResponse,
+  GetIssuedAssetsResponse,
+  GetLatestStatsResponse,
+  GetOwnedAssetsResponse,
+  GetPossessedAssetsResponse,
+  GetRichListResponse,
+  GetTickDataResponse,
+  GetTickInfoResponse
 } from './archiver-v1.types'
 
 const BASE_URL = `${envConfig.QUBIC_RPC_URL}/v1`
