@@ -1,3 +1,17 @@
+# [1.16.0](https://github.com/qubic/explorer-frontend/compare/v1.15.0...v1.16.0) (2025-05-13)
+
+
+### Bug Fixes
+
+* display Standard for transactions to empty address ([f0722b7](https://github.com/qubic/explorer-frontend/commit/f0722b71419247064374017aee60517945b7f956))
+* overview tooltips text wrapping ([2351a35](https://github.com/qubic/explorer-frontend/commit/2351a35ff47633d65cf86c18e87cce423b7a24bb))
+
+
+### Features
+
+* display last 10k ticks quality ([a21e9b0](https://github.com/qubic/explorer-frontend/commit/a21e9b084d1b2faec5bbedac97de82b19e05ad7c))
+* tooltip text added for tickQuality, ticksThisEpoch and lastNTickQuality cards ([1eda0bf](https://github.com/qubic/explorer-frontend/commit/1eda0bf4c9594d90681e7441853bdbcc64083d8f))
+
 # [1.16.0-rc.3](https://github.com/qubic/explorer-frontend/compare/v1.16.0-rc.2...v1.16.0-rc.3) (2025-05-12)
 
 
