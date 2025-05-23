@@ -1,10 +1,11 @@
 import type { SmartContracts, Tokens } from '@app/constants/qubic'
-import { EXCHANGES, SMART_CONTRACTS, TOKENS } from '@app/constants/qubic'
+import { ADDRESS_BOOK, EXCHANGES, SMART_CONTRACTS, TOKENS } from '@app/constants/qubic'
 
 export enum AddressType {
   Exchange = 'EXCHANGE',
   SmartContract = 'SMART_CONTRACT',
-  Token = 'TOKEN'
+  Token = 'TOKEN',
+  NamedAddress = 'NAMED_ADDRESS'
 }
 
 export type GetAddressNameResult =
@@ -28,6 +29,11 @@ export type GetAddressNameResult =
       githubUrl: string
       proposalUrl?: string
     }
+  | {
+      name: string
+      type: AddressType.NamedAddress
+      website?: string
+    }
 
 export const getAddressName = (address: string): GetAddressNameResult | undefined => {
   const exchange = EXCHANGES.find(({ address: exAddress }) => exAddress === address)?.name
@@ -50,6 +56,11 @@ export const getAddressName = (address: string): GetAddressNameResult | undefine
       type: AddressType.Token,
       i18nKey: 'token'
     }
+  }
+
+  const namedAddress = ADDRESS_BOOK.find((item) => item.address === address)?.label
+  if (namedAddress) {
+    return { name: namedAddress, type: AddressType.NamedAddress }
   }
 
   return undefined

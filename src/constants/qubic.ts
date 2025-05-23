@@ -201,3 +201,15 @@ export const EXCHANGES: ExchangeWallet[] = [
     address: 'LZLDOEIBQWIUGGMZGOISLOAACDGAFVAMAYXSSJMLQBHSHWDBPMSDFTGAYRMN'
   }
 ]
+
+export const ADDRESS_BOOK = [
+  {
+    label: 'Marketing (Matilda)',
+
+    address: 'JICUNOMUXDPNPGBVDQAQVEKVNBRCKZMDCPHMXZSWTGOVATZLCZSMVXMBZPCM'
+  },
+  {
+    label: 'Liquidity Pool (Matilda)',
+    address: 'UFMYCIGCNBKEWDUTVOOOIXJOLBHCAHBVACLFFOBZEDKDWACOPWRBLFOGPYIL'
+  }
+]
