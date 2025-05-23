@@ -79,9 +79,11 @@ function AddressPage() {
               addressName.name
             )}
           </Badge>
-          <Badge color="primary" size="xs" variant="outlined">
-            {t(addressName.i18nKey)}
-          </Badge>
+          {'i18nKey' in addressName && (
+            <Badge color="primary" size="xs" variant="outlined">
+              {t(addressName.i18nKey)}
+            </Badge>
+          )}
         </div>
       )}
 
