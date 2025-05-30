@@ -1,3 +1,17 @@
+# [1.17.0](https://github.com/qubic/explorer-frontend/compare/v1.16.1...v1.17.0) (2025-05-23)
+
+
+### Features
+
+* implement named addresses for matilda ([c07676b](https://github.com/qubic/explorer-frontend/commit/c07676b98ec6c341e37f98685f554ef6c6594782))
+
+# [1.17.0-rc.1](https://github.com/qubic/explorer-frontend/compare/v1.16.1...v1.17.0-rc.1) (2025-05-23)
+
+
+### Features
+
+* implement named addresses for matilda ([c07676b](https://github.com/qubic/explorer-frontend/commit/c07676b98ec6c341e37f98685f554ef6c6594782))
+
 ## [1.16.1](https://github.com/qubic/explorer-frontend/compare/v1.16.0...v1.16.1) (2025-05-20)
 
 
