@@ -1,7 +1,7 @@
 {
   "name": "explorer-frontend",
   "private": true,
-  "version": "1.17.0",
+  "version": "1.17.1-rc.1",
   "type": "module",
   "engines": {
     "node": "^20.17.0",
