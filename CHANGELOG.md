@@ -1,3 +1,10 @@
+## [1.17.1](https://github.com/qubic/explorer-frontend/compare/v1.17.0...v1.17.1) (2025-05-30)
+
+
+### Bug Fixes
+
+* add matilda token constant ([6465608](https://github.com/qubic/explorer-frontend/commit/64656087f4e905513ba048da7e6b52d601e97cd1))
+
 ## [1.17.1-rc.1](https://github.com/qubic/explorer-frontend/compare/v1.17.0...v1.17.1-rc.1) (2025-05-30)
 
 
