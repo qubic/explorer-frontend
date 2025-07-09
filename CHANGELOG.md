@@ -1,3 +1,10 @@
+## [1.17.2](https://github.com/qubic/explorer-frontend/compare/v1.17.1...v1.17.2) (2025-07-08)
+
+
+### Bug Fixes
+
+* update Qbay smart contract address ([40b8566](https://github.com/qubic/explorer-frontend/commit/40b8566c93bce5db5634121155cb4c9536ce7ef7))
+
 ## [1.17.1](https://github.com/qubic/explorer-frontend/compare/v1.17.0...v1.17.1) (2025-05-30)
 
 
