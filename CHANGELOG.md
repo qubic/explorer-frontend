@@ -1,3 +1,10 @@
+# [1.18.0](https://github.com/qubic/explorer-frontend/compare/v1.17.2...v1.18.0) (2025-07-16)
+
+
+### Features
+
+* add qxmr, qxtrade and coded token constants ([7a17c4d](https://github.com/qubic/explorer-frontend/commit/7a17c4d5b0a21b0442cc7a3001d5ed0dc826e917))
+
 # [1.18.0-rc.1](https://github.com/qubic/explorer-frontend/compare/v1.17.2...v1.18.0-rc.1) (2025-07-16)
 
 
