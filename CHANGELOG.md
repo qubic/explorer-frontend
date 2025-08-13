@@ -1,3 +1,10 @@
+## [1.19.1](https://github.com/qubic/explorer-frontend/compare/v1.19.0...v1.19.1) (2025-08-13)
+
+
+### Bug Fixes
+
+* update OVERVIEW_DATA_POLLING_INTERVAL_MS to 60 seconds ([36e2dc0](https://github.com/qubic/explorer-frontend/commit/36e2dc0333923b254b0999f9f78708e711ec42a1))
+
 # [1.19.0](https://github.com/qubic/explorer-frontend/compare/v1.18.0...v1.19.0) (2025-08-13)
 
 
