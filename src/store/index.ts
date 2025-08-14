@@ -6,11 +6,13 @@ import { qliApi } from './apis/qli'
 import { testnetQubicRpcV1 } from './apis/testnet-qubic-rpc-v1'
 import localeReducer from './localeSlice'
 import searchReducer from './searchSlice'
+import turnstileReducer from './turnstileSlice'
 
 export const store = configureStore({
   reducer: {
     locale: localeReducer,
     search: searchReducer,
+    turnstile: turnstileReducer,
     [qliApi.reducerPath]: qliApi.reducer,
     [archiverV1Api.reducerPath]: archiverV1Api.reducer,
     [archiverV2Api.reducerPath]: archiverV2Api.reducer,

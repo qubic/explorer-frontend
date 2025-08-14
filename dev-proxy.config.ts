@@ -18,6 +18,10 @@ export const createProxyConfig = (
           req.headers['access-control-request-headers'] || ''
         )
 
+        // Remove referer and referrer headers to avoid being blocked
+        proxyReq.removeHeader('referer')
+        proxyReq.removeHeader('referrer')
+
         if (req.method === 'OPTIONS') {
           res.writeHead(200)
           res.end()
