@@ -1,7 +1,7 @@
 import type { Option } from '@app/components/ui/Select'
 import { TransactionOptionEnum } from '@app/types'
 
-export const OVERVIEW_DATA_POLLING_INTERVAL_MS = 10000
+export const OVERVIEW_DATA_POLLING_INTERVAL_MS = 60_000
 
 export const TRANSACTION_OPTIONS: Option<TransactionOptionEnum>[] = [
   { label: 'All transactions', value: TransactionOptionEnum.ALL },
