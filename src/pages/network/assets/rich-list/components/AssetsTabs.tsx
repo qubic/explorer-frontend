@@ -45,7 +45,9 @@ function AssetsTabsSection({
               <li key={asset.name}>
                 <Button
                   className={clsxTwMerge(
-                    isSelected && 'bg-primary-30 text-primary-80 hover:text-primary-30'
+                    isSelected
+                      ? 'bg-primary-30 text-primary-80 hover:bg-primary-30 hover:text-primary-80'
+                      : 'hover:text-primary-30'
                   )}
                   variant="outlined"
                   size="xs"

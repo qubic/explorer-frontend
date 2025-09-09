@@ -1,3 +1,16 @@
+# [1.20.0-rc.1](https://github.com/qubic/explorer-frontend/compare/v1.19.1...v1.20.0-rc.1) (2025-09-09)
+
+
+### Bug Fixes
+
+* update selected style of button when viewing the rich list ([17da8a6](https://github.com/qubic/explorer-frontend/commit/17da8a6226ea00258dddbdf6cecc7aa7597f5968))
+
+
+### Features
+
+* integrate Turnstile for enhanced verification ([19157fc](https://github.com/qubic/explorer-frontend/commit/19157fc3a31f688ea7b34b34d312011442eada25))
+* qswap and nostromo contracts added ([ceae318](https://github.com/qubic/explorer-frontend/commit/ceae31854758ef8e70c755e212e484cbdc8ea66d))
+
 ## [1.19.1](https://github.com/qubic/explorer-frontend/compare/v1.19.0...v1.19.1) (2025-08-13)
 
 

@@ -23,7 +23,9 @@ export enum SmartContracts {
   QEarn = 'JAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAVKHO',
   QVault = 'KAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAXIUO',
   MSVault = 'LAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAKPTJ',
-  Qbay = 'MAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWLWD'
+  Qbay = 'MAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWLWD',
+  QSwap = 'NAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMAML',
+  Nost = 'OAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAZTPD'
 }
 
 export const SMART_CONTRACTS: Record<
@@ -102,6 +104,20 @@ export const SMART_CONTRACTS: Record<
     githubUrl: 'https://github.com/qubic/core/blob/main/src/contracts/Qbay.h',
     proposalUrl:
       'https://github.com/qubic/proposal/blob/e305392f2084dc72b4958c1a62d5af9cfa55785f/SmartContracts/2025-03-11-Qbay.md'
+  },
+  [SmartContracts.QSwap]: {
+    name: 'QSWAP',
+    label: 'QSwap',
+    githubUrl: 'https://github.com/qubic/core/blob/main/src/contracts/Qswap.h',
+    proposalUrl:
+      'https://github.com/qubic/proposal/blob/4c2bf93d8eeaebcfdc7b5723a01149b559a52ac5/SmartContracts/2025-07-11-QSwap.md'
+  },
+  [SmartContracts.Nost]: {
+    name: 'NOST',
+    label: 'Nostromo',
+    githubUrl: 'https://github.com/qubic/core/blob/main/src/contracts/Nostromo.h',
+    proposalUrl:
+      'https://github.com/qubic/proposal/blob/d6addfa293b2fea19ecde3727f5e6e229388beb2/SmartContracts/2025-07-19-Nostromo.md'
   }
 } as const
 
