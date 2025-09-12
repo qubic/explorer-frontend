@@ -95,5 +95,11 @@
   "smartContractCodeLoadError": "Fout: Het laden van de smartcontractcode is mislukt. Vernieuw de pagina of probeer het later opnieuw.",
   "contract": "Contract",
   "copied": "Gekopieerd",
-  "copyToClipboard": "Kopiëren naar klembord"
+  "copyToClipboard": "Kopiëren naar klembord",
+  "filterAllTransactions": "Alle transacties",
+  "filterTransferTransactions": "Overboekingen",
+  "filterApprovedTransactions": "Goedgekeurde transacties",
+  "filterAll": "Alle",
+  "filterTransfer": "Overboekingen",
+  "filterApproved": "Goedgekeurd"
 }
