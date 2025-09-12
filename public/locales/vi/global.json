@@ -1,0 +1,11 @@
+{
+  "address": "Địa chỉ",
+  "balance": "Số dư",
+  "noResult": "Không có kết quả",
+  "search": "Tìm kiếm",
+  "tick": "Tick",
+  "from": "từ",
+  "to": "đến",
+  "transaction": "Giao dịch",
+  "transactions": "Các giao dịch"
+}
