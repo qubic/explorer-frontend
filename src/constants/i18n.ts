@@ -11,7 +11,8 @@ export const LANGUAGES: Language[] = [
   { id: 'tr', label: 'Türkçe' },
   { id: 'zh', label: '中文' },
   { id: 'ja', label: '日本語' },
-  { id: 'ar', label: 'العربية' }
+  { id: 'ar', label: 'العربية' },
+  { id: 'vi', label: 'Tiếng Việt' }
 ]
 
 export default { LANGUAGES }
