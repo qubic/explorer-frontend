@@ -95,5 +95,11 @@
   "smartContractCodeLoadError": "Fehler: Der Smart-Contract-Code konnte nicht geladen werden. Bitte lade die Seite neu oder versuche es später erneut.",
   "contract": "Vertrag",
   "copied": "Kopiert",
-  "copyToClipboard": "In die Zwischenablage kopieren"
+  "copyToClipboard": "In die Zwischenablage kopieren",
+  "filterAllTransactions": "Alle Transaktionen",
+  "filterTransferTransactions": "Überweisungen",
+  "filterApprovedTransactions": "Genehmigte Transaktionen",
+  "filterAll": "Alle",
+  "filterTransfer": "Überweisungen",
+  "filterApproved": "Genehmigt"
 }

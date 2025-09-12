@@ -95,5 +95,11 @@
   "smartContractCodeLoadError": "Hata: Akıllı sözleşme kodu yüklenemedi. Lütfen sayfayı yenileyin veya daha sonra tekrar deneyin.",
   "contract": "Sözleşme",
   "copied": "Kopyalandı",
-  "copyToClipboard": "Panoya kopyala"
+  "copyToClipboard": "Panoya kopyala",
+  "filterAllTransactions": "Tüm işlemler",
+  "filterTransferTransactions": "Transfer işlemleri",
+  "filterApprovedTransactions": "Onaylanmış işlemler",
+  "filterAll": "Tümü",
+  "filterTransfer": "Transferler",
+  "filterApproved": "Onaylı"
 }

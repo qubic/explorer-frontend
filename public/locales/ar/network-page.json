@@ -95,5 +95,11 @@
   "smartContractCodeLoadError": "خطأ: فشل تحميل شيفرة العقد الذكي. يرجى تحديث الصفحة أو المحاولة لاحقًا.",
   "contract": "عقد",
   "copied": "تم النسخ",
-  "copyToClipboard": "نسخ إلى الحافظة"
+  "copyToClipboard": "نسخ إلى الحافظة",
+  "filterAllTransactions": "جميع المعاملات",
+  "filterTransferTransactions": "معاملات التحويل",
+  "filterApprovedTransactions": "المعاملات المعتمدة",
+  "filterAll": "الكل",
+  "filterTransfer": "التحويلات",
+  "filterApproved": "معتمد"
 }

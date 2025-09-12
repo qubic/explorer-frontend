@@ -95,5 +95,11 @@
   "smartContractCodeLoadError": "Erro: Falha ao carregar o código do contrato inteligente. Por favor, atualize a página ou tente novamente mais tarde.",
   "contract": "Contrato",
   "copied": "Copiado",
-  "copyToClipboard": "Copiar para a área de transferência"
+  "copyToClipboard": "Copiar para a área de transferência",
+  "filterAllTransactions": "Todas as transações",
+  "filterTransferTransactions": "Transações de transferência",
+  "filterApprovedTransactions": "Transações aprovadas",
+  "filterAll": "Todas",
+  "filterTransfer": "Transferências",
+  "filterApproved": "Aprovadas"
 }

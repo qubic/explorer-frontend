@@ -95,5 +95,11 @@
   "smartContractCodeLoadError": "错误：加载智能合约代码失败。请刷新页面或稍后再试。",
   "contract": "合约",
   "copied": "已复制",
-  "copyToClipboard": "复制到剪贴板"
+  "copyToClipboard": "复制到剪贴板",
+  "filterAllTransactions": "所有交易",
+  "filterTransferTransactions": "轉帳交易",
+  "filterApprovedTransactions": "已核准交易",
+  "filterAll": "全部",
+  "filterTransfer": "轉帳交易",
+  "filterApproved": "已核准"
 }
