@@ -2,22 +2,18 @@ import { memo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Tabs } from '@app/components/ui'
-import type { GetAddressBalancesResponse } from '@app/store/apis/archiver-v1'
 import { useHistoricalTransactions, useLatestTransactions } from '../../hooks'
 import HistoricalTxs from './HistoricalTxs'
 import LatestTransactions from './LatestTransactions'
 
 type Props = {
-  address: GetAddressBalancesResponse['balance']
   addressId: string
 }
 
-function TransactionsOverview({ address, addressId }: Props) {
+function TransactionsOverview({ addressId }: Props) {
   const { t } = useTranslation('network-page')
-  const { transactions, loadMoreTransactions, hasMore, isLoading, error } = useLatestTransactions(
-    addressId,
-    address.validForTick
-  )
+  const { transactions, loadMoreTransactions, hasMore, isLoading, error } =
+    useLatestTransactions(addressId)
   const {
     historicalTransactions,
     loadMoreTransactions: loadMoreHistoricalTxs,

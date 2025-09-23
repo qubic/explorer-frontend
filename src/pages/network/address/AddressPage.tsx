@@ -91,7 +91,7 @@ function AddressPage() {
         <OwnedAssets addressId={addressId} />
       </div>
 
-      <TransactionsOverview address={addressBalances.data} addressId={addressId} />
+      <TransactionsOverview addressId={addressId} />
     </PageLayout>
   )
 }

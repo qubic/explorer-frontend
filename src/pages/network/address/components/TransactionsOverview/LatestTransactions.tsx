@@ -3,12 +3,12 @@ import { useTranslation } from 'react-i18next'
 
 import { InfiniteScroll } from '@app/components/ui'
 import { DotsLoader } from '@app/components/ui/loaders'
-import type { Transaction } from '@app/store/apis/archiver-v2'
+import type { QueryServiceTransaction } from '@app/store/apis/query-service/query-service.types'
 import { TxItem } from '../../../components'
 
 type Props = {
   addressId: string
-  transactions: Transaction[]
+  transactions: QueryServiceTransaction[]
   loadMore: () => Promise<void>
   hasMore: boolean
   isLoading: boolean
@@ -26,14 +26,22 @@ export default function LatestTransactions({
   const { t } = useTranslation('network-page')
 
   const renderTxItem = useCallback(
-    ({ transaction, moneyFlew, timestamp }: Transaction) => (
+    (tx: QueryServiceTransaction) => (
       <TxItem
-        key={transaction.txId}
-        tx={transaction}
+        key={tx.hash}
+        tx={{
+          txId: tx.hash,
+          sourceId: tx.source,
+          destId: tx.destination,
+          amount: tx.amount,
+          tickNumber: tx.tickNumber,
+          inputType: tx.inputType,
+          inputHex: tx.inputData
+        }}
         identity={addressId}
         variant="primary"
-        nonExecutedTxIds={moneyFlew ? [] : [transaction.txId]}
-        timestamp={timestamp}
+        nonExecutedTxIds={tx.moneyFlew ? [] : [tx.hash]}
+        timestamp={tx.timestamp}
       />
     ),
     [addressId]
