@@ -1,97 +1,105 @@
+import { useGetTransactionsForIdentityMutation } from '@app/store/apis/query-service/query-service.api'
+import type {
+  QueryServiceResponse,
+  QueryServiceTransaction
+} from '@app/store/apis/query-service/query-service.types'
 import { useCallback, useEffect, useRef, useState } from 'react'
 
-import type { GetAddressBalancesResponse } from '@app/store/apis/rpc-live'
-import type { Transaction } from '@app/store/apis/archiver-v2'
-import { useLazyGetIndentityTransfersQuery } from '@app/store/apis/archiver-v2'
-
 const PAGE_SIZE = 50
-const START_TICK = 1
-const END_TICK = 999_999_999 // Endpoint has now pagination but we still have to provide an end tick, we set it to a very large number
+const MAX_RESULTS = 10_000 // query service limit
 
 export interface UseLatestTransactionsResult {
-  transactions: Transaction[]
+  transactions: QueryServiceTransaction[]
   loadMoreTransactions: () => Promise<void>
   hasMore: boolean
   isLoading: boolean
   error: string | null
 }
 
-export default function useLatestTransactions(
-  addressId: string,
-  addressEndTick: GetAddressBalancesResponse['balance']['validForTick']
-): UseLatestTransactionsResult {
-  const [txsList, setTxsList] = useState<Transaction[]>([])
+export default function useLatestTransactions(addressId: string): UseLatestTransactionsResult {
+  const [transactions, setTransactions] = useState<QueryServiceTransaction[]>([])
+  const [offset, setOffset] = useState(0)
   const [isLoading, setIsLoading] = useState(false)
-  const [nextPage, setNextPage] = useState(1)
-  const [hasMore, setHasMore] = useState(true)
   const cancellationRef = useRef(false)
+  const [reachedEnd, setReachedEnd] = useState(false)
 
-  const [getIdentityTransfersQuery, { isFetching, error }] = useLazyGetIndentityTransfersQuery()
+  const [getTransactionsForIdentity, { error }] = useGetTransactionsForIdentityMutation()
 
-  const fetchTransfers = useCallback(async () => {
-    const result = await getIdentityTransfersQuery({
-      addressId,
-      startTick: START_TICK,
-      endTick: END_TICK,
-      page: nextPage,
-      pageSize: PAGE_SIZE
-    }).unwrap()
+  const hasMore = !reachedEnd && offset < MAX_RESULTS
 
-    return result
-  }, [getIdentityTransfersQuery, addressId, nextPage])
+  const fetchPage = useCallback(
+    async (currentOffset: number) => {
+      const result: QueryServiceResponse = await getTransactionsForIdentity({
+        identity: addressId,
+        pagination: {
+          offset: currentOffset,
+          size: PAGE_SIZE
+        }
+      }).unwrap()
+
+      return result?.transactions ?? []
+    },
+    [getTransactionsForIdentity, addressId]
+  )
 
   const loadMoreTransactions = useCallback(async () => {
-    if (isLoading || isFetching || !hasMore) return
-
+    if (isLoading || !hasMore) return
     setIsLoading(true)
+
     try {
-      const { pagination, transactions } = await fetchTransfers()
-      setNextPage(pagination.nextPage)
-      setTxsList((prev) => [...prev, ...transactions])
-      setHasMore(pagination.nextPage !== -1)
+      const newTxs = await fetchPage(offset)
+      if (!cancellationRef.current) {
+        if (newTxs.length > 0) {
+          setTransactions((prev) => [...prev, ...newTxs])
+          setOffset((prev) => prev + PAGE_SIZE)
+        }
+        if (newTxs.length < PAGE_SIZE) {
+          setReachedEnd(true)
+        }
+      }
     } finally {
-      setIsLoading(false)
-    }
-  }, [isLoading, isFetching, hasMore, fetchTransfers])
-
-  useEffect(() => {
-    let isMounted = true
-    cancellationRef.current = false
-
-    const initialFetch = async () => {
-      setIsLoading(true)
-      const { pagination, transactions } = await fetchTransfers()
-
-      if (isMounted) {
-        setNextPage(pagination.nextPage)
-        setTxsList((prev) => [...prev, ...transactions])
-        setHasMore(pagination.nextPage !== -1)
+      if (!cancellationRef.current) {
         setIsLoading(false)
       }
     }
+  }, [isLoading, hasMore, offset, fetchPage])
 
-    if (txsList.length === 0 && hasMore) {
+  // Initial fetch
+  useEffect(() => {
+    cancellationRef.current = false
+    setTransactions([])
+    setOffset(0)
+    setReachedEnd(false)
+
+    const initialFetch = async () => {
+      setIsLoading(true)
+      try {
+        const firstPage = await fetchPage(0)
+        if (!cancellationRef.current) {
+          setTransactions(firstPage)
+          setOffset(PAGE_SIZE)
+          if (firstPage.length < PAGE_SIZE) {
+            setReachedEnd(true)
+          }
+        }
+      } finally {
+        if (!cancellationRef.current) {
+          setIsLoading(false)
+        }
+      }
+    }
+
+    if (addressId) {
       initialFetch()
     }
 
     return () => {
-      isMounted = false
       cancellationRef.current = true
     }
-  }, [addressEndTick, fetchTransfers, hasMore, nextPage, txsList.length])
-
-  useEffect(() => {
-    return () => {
-      if (addressId) {
-        setTxsList([])
-        setHasMore(true)
-        setNextPage(1)
-      }
-    }
-  }, [addressId])
+  }, [addressId, fetchPage])
 
   return {
-    transactions: txsList,
+    transactions,
     loadMoreTransactions,
     hasMore,
     isLoading,

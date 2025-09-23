@@ -1,17 +1,14 @@
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { ChevronDownIcon } from '@app/assets/icons'
 import { InfiniteScroll } from '@app/components/ui'
-import { Button } from '@app/components/ui/buttons'
 import { DotsLoader } from '@app/components/ui/loaders'
-import { useTransactionExpandCollapse } from '@app/hooks'
-import type { Transaction } from '@app/store/apis/archiver-v2'
+import type { QueryServiceTransaction } from '@app/store/apis/query-service/query-service.types'
 import { TxItem } from '../../../components'
 
 type Props = {
   addressId: string
-  transactions: Transaction[]
+  transactions: QueryServiceTransaction[]
   loadMore: () => Promise<void>
   hasMore: boolean
   isLoading: boolean
@@ -28,59 +25,42 @@ export default function LatestTransactions({
 }: Props) {
   const { t } = useTranslation('network-page')
 
-  // Use shared expand/collapse hook
-  const { expandAll, expandedTxIds, handleExpandAllChange, handleTxToggle } =
-    useTransactionExpandCollapse({
-      transactions,
-      resetDependency: addressId
-    })
-
   const renderTxItem = useCallback(
-    ({ transaction, moneyFlew, timestamp }: Transaction) => (
+    (tx: QueryServiceTransaction) => (
       <TxItem
-        key={transaction.txId}
-        tx={transaction}
+        key={tx.hash}
+        tx={{
+          txId: tx.hash,
+          sourceId: tx.source,
+          destId: tx.destination,
+          amount: tx.amount,
+          tickNumber: tx.tickNumber,
+          inputType: tx.inputType,
+          inputHex: tx.inputData
+        }}
         identity={addressId}
         variant="primary"
-        nonExecutedTxIds={moneyFlew ? [] : [transaction.txId]}
-        timestamp={timestamp}
-        isExpanded={expandedTxIds.has(transaction.txId)}
-        onToggle={handleTxToggle}
+        nonExecutedTxIds={tx.moneyFlew ? [] : [tx.hash]}
+        timestamp={tx.timestamp}
       />
     ),
-    [addressId, expandedTxIds, handleTxToggle]
+    [addressId]
   )
 
   return (
-    <div className="flex w-full flex-col gap-10">
-      {transactions.length > 0 && (
-        <Button
-          variant="link"
-          size="sm"
-          onClick={() => handleExpandAllChange(!expandAll)}
-          className="ml-auto w-fit gap-6 pb-8"
-        >
-          <ChevronDownIcon
-            className={`h-16 w-16 transition-transform duration-300 ${expandAll ? 'rotate-180' : 'rotate-0'}`}
-          />
-          {expandAll ? t('collapseAll') : t('expandAll')}
-        </Button>
-      )}
-
-      <InfiniteScroll
-        items={transactions}
-        loadMore={loadMore}
-        hasMore={hasMore}
-        isLoading={isLoading}
-        loader={<DotsLoader showLoadingText />}
-        error={error && t('loadingTransactionsError')}
-        endMessage={
-          <p className="py-32 text-center text-sm text-gray-50">
-            {transactions.length === 0 ? t('noTransactions') : t('allTransactionsLoaded')}
-          </p>
-        }
-        renderItem={renderTxItem}
-      />
-    </div>
+    <InfiniteScroll
+      items={transactions}
+      loadMore={loadMore}
+      hasMore={hasMore}
+      isLoading={isLoading}
+      loader={<DotsLoader showLoadingText />}
+      error={error && t('loadingTransactionsError')}
+      endMessage={
+        <p className="py-32 text-center text-sm text-gray-50">
+          {transactions.length === 0 ? t('noTransactions') : t('allTransactionsLoaded')}
+        </p>
+      }
+      renderItem={renderTxItem}
+    />
   )
 }

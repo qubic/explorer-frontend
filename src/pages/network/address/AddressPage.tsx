@@ -179,7 +179,7 @@ function AddressPage() {
         </Tabs.List>
         <Tabs.Panels>
           <Tabs.Panel>
-            <TransactionsOverview address={addressBalances.data} addressId={addressId} />
+            <TransactionsOverview addressId={addressId} />
           </Tabs.Panel>
           {isSmartContract && smartContractDetails && (
             <Tabs.Panel>
