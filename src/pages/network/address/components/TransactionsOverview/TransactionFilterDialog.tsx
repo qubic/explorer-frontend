@@ -1,7 +1,26 @@
 import { Modal } from '@app/components/ui'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { TransactionFilters } from '../../hooks/useLatestTransactions'
+import FilterInput from './FilterInput'
+
+interface ValidationErrors {
+  source?: string
+  destination?: string
+  amount?: string
+  inputType?: string
+}
+
+const defaultFilters: TransactionFilters = {
+  source: undefined,
+  destination: undefined,
+  amount: undefined,
+  inputType: undefined
+}
+
+// Validation helpers
+const isValidAddress = (value?: string): boolean => !value || value.length >= 60
+const isValidNumber = (value?: string): boolean => !value || /^\d+$/.test(value)
 
 type Props = {
   isOpen: boolean
@@ -18,16 +37,58 @@ export default function TransactionFilterDialog({
 }: Props) {
   const { t } = useTranslation('network-page')
   const [filters, setFilters] = useState<TransactionFilters>(activeFilters)
+  const [errors, setErrors] = useState<ValidationErrors>({})
 
-  // Reset filters when dialog opens with active filters
+  // Reset filters and errors when dialog opens with active filters
   useEffect(() => {
     setFilters(activeFilters)
+    setErrors({})
   }, [activeFilters, isOpen])
+
+  const validateField = useCallback(
+    (field: keyof TransactionFilters, value?: string): string | undefined => {
+      if (!value) return undefined
+
+      switch (field) {
+        case 'source':
+        case 'destination':
+          return !isValidAddress(value)
+            ? t(`${field}Validation`) || `${field} address must be at least 60 characters`
+            : undefined
+        case 'amount':
+        case 'inputType':
+          return !isValidNumber(value)
+            ? t(`${field}Validation`) || `${field} must be a valid number`
+            : undefined
+        default:
+          return undefined
+      }
+    },
+    [t]
+  )
+
+  const validateFilters = useCallback((): boolean => {
+    const newErrors: ValidationErrors = {
+      source: validateField('source', filters.source),
+      destination: validateField('destination', filters.destination),
+      amount: validateField('amount', filters.amount),
+      inputType: validateField('inputType', filters.inputType)
+    }
+
+    const filteredErrors = Object.fromEntries(
+      Object.entries(newErrors).filter(([, value]) => value !== undefined)
+    ) as ValidationErrors
+
+    setErrors(filteredErrors)
+    return Object.keys(filteredErrors).length === 0
+  }, [filters, validateField])
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    onApplyFilters(filters)
-    onClose()
+    if (validateFilters()) {
+      onApplyFilters(filters)
+      onClose()
+    }
   }
 
   return (
@@ -59,68 +120,76 @@ export default function TransactionFilterDialog({
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-16">
-          <div>
-            <label htmlFor="source" className="mb-4 block text-sm text-gray-50">
-              {t('source')}
-            </label>
-            <input
-              id="source"
-              type="text"
-              value={filters.source || ''}
-              onChange={(e) => setFilters((prev) => ({ ...prev, source: e.target.value }))}
-              className="w-full rounded bg-primary-60 px-12 py-8 text-sm text-white placeholder-gray-50 focus:outline-none focus:ring-2 focus:ring-primary-30"
-              placeholder={t('enterSource') || 'Enter source address'}
-            />
-          </div>
+          <FilterInput
+            id="source"
+            label="source"
+            value={filters.source}
+            error={errors.source}
+            placeholder="enterSource"
+            onChange={(value) => {
+              setFilters((prev) => ({ ...prev, source: value }))
+              setErrors((prev) => ({ ...prev, source: undefined }))
+            }}
+            onBlur={() => {
+              const error = validateField('source', filters.source)
+              setErrors((prev) => ({ ...prev, source: error }))
+            }}
+          />
 
-          <div>
-            <label htmlFor="destination" className="mb-4 block text-sm text-gray-50">
-              {t('destination')}
-            </label>
-            <input
-              id="destination"
-              type="text"
-              value={filters.destination || ''}
-              onChange={(e) => setFilters((prev) => ({ ...prev, destination: e.target.value }))}
-              className="w-full rounded bg-primary-60 px-12 py-8 text-sm text-white placeholder-gray-50 focus:outline-none focus:ring-2 focus:ring-primary-30"
-              placeholder={t('enterDestination') || 'Enter destination address'}
-            />
-          </div>
+          <FilterInput
+            id="destination"
+            label="destination"
+            value={filters.destination}
+            error={errors.destination}
+            placeholder="enterDestination"
+            onChange={(value) => {
+              setFilters((prev) => ({ ...prev, destination: value }))
+              setErrors((prev) => ({ ...prev, destination: undefined }))
+            }}
+            onBlur={() => {
+              const error = validateField('destination', filters.destination)
+              setErrors((prev) => ({ ...prev, destination: error }))
+            }}
+          />
 
-          <div>
-            <label htmlFor="amount" className="mb-4 block text-sm text-gray-50">
-              {t('amount')}
-            </label>
-            <input
-              id="amount"
-              type="text"
-              value={filters.amount || ''}
-              onChange={(e) => setFilters((prev) => ({ ...prev, amount: e.target.value }))}
-              className="w-full rounded bg-primary-60 px-12 py-8 text-sm text-white placeholder-gray-50 focus:outline-none focus:ring-2 focus:ring-primary-30"
-              placeholder={t('enterAmount') || 'Enter amount'}
-            />
-          </div>
+          <FilterInput
+            id="amount"
+            label="amount"
+            value={filters.amount}
+            error={errors.amount}
+            placeholder="enterAmount"
+            onChange={(value) => {
+              setFilters((prev) => ({ ...prev, amount: value }))
+              setErrors((prev) => ({ ...prev, amount: undefined }))
+            }}
+            onBlur={() => {
+              const error = validateField('amount', filters.amount)
+              setErrors((prev) => ({ ...prev, amount: error }))
+            }}
+          />
 
-          <div>
-            <label htmlFor="inputType" className="mb-4 block text-sm text-gray-50">
-              {t('inputType')}
-            </label>
-            <input
-              id="inputType"
-              type="text"
-              value={filters.inputType || ''}
-              onChange={(e) => setFilters((prev) => ({ ...prev, inputType: e.target.value }))}
-              className="w-full rounded bg-primary-60 px-12 py-8 text-sm text-white placeholder-gray-50 focus:outline-none focus:ring-2 focus:ring-primary-30"
-              placeholder={t('enterInputType') || 'Enter input type'}
-            />
-          </div>
+          <FilterInput
+            id="inputType"
+            label="inputType"
+            value={filters.inputType}
+            error={errors.inputType}
+            placeholder="enterInputType"
+            onChange={(value) => {
+              setFilters((prev) => ({ ...prev, inputType: value }))
+              setErrors((prev) => ({ ...prev, inputType: undefined }))
+            }}
+            onBlur={() => {
+              const error = validateField('inputType', filters.inputType)
+              setErrors((prev) => ({ ...prev, inputType: error }))
+            }}
+          />
 
           <div className="flex gap-8 pt-16">
             <button
               type="button"
               onClick={() => {
-                setFilters({})
-                onApplyFilters({})
+                setFilters(defaultFilters)
+                onApplyFilters(defaultFilters)
                 onClose()
               }}
               className="flex-1 rounded border border-primary-30 px-16 py-8 text-sm text-primary-30 transition-colors hover:bg-primary-60"
