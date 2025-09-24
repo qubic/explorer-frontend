@@ -13,6 +13,10 @@ export interface TransactionFilters {
   destination?: string
   amount?: string
   inputType?: string
+  tickNumberRange?: {
+    start?: string
+    end?: string
+  }
 }
 
 export interface UseLatestTransactionsResult {
@@ -43,15 +47,33 @@ export default function useLatestTransactions(addressId: string): UseLatestTrans
     async (currentOffset: number, filters: TransactionFilters = {}) => {
       // Clean up filters - remove empty strings and undefined values
       const cleanFilters = Object.entries(filters).reduce((acc, [key, value]) => {
-        if (value && value.trim() !== '') {
+        if (key === 'tickNumberRange') {
+          return acc
+        }
+        if (typeof value === 'string' && value.trim() !== '') {
           return { ...acc, [key]: value.trim() }
         }
         return acc
       }, {} as TransactionFilters)
 
+      const ranges =
+        filters.tickNumberRange?.start || filters.tickNumberRange?.end
+          ? {
+              tickNumber: {
+                ...(filters.tickNumberRange.start && filters.tickNumberRange.start.trim() !== ''
+                  ? { gte: filters.tickNumberRange.start.trim() }
+                  : {}),
+                ...(filters.tickNumberRange.end && filters.tickNumberRange.end.trim() !== ''
+                  ? { lte: filters.tickNumberRange.end.trim() }
+                  : {})
+              }
+            }
+          : undefined
+
       const result: QueryServiceResponse = await getTransactionsForIdentity({
         identity: addressId,
         filters: Object.keys(cleanFilters).length > 0 ? cleanFilters : undefined,
+        ranges,
         pagination: {
           offset: currentOffset,
           size: PAGE_SIZE

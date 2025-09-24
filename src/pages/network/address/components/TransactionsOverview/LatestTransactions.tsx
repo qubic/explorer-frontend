@@ -61,12 +61,19 @@ export default function LatestTransactions({
     [addressId]
   )
 
-  const hasActiveFilters = Object.values(activeFilters).some(
-    (value) => value && value.trim() !== ''
-  )
-  const activeFilterCount = Object.values(activeFilters).filter(
-    (value) => value && value.trim() !== ''
-  ).length
+  const hasActiveFilters = Object.entries(activeFilters).some(([key, value]) => {
+    if (key === 'tickNumberRange') {
+      return value && (value.start || value.end)
+    }
+    return typeof value === 'string' && value.trim() !== ''
+  })
+
+  const activeFilterCount = Object.entries(activeFilters).filter(([key, value]) => {
+    if (key === 'tickNumberRange') {
+      return value && (value.start || value.end)
+    }
+    return typeof value === 'string' && value.trim() !== ''
+  }).length
 
   return (
     <>
