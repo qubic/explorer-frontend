@@ -3,6 +3,7 @@ import { configureStore } from '@reduxjs/toolkit'
 import { archiverV1Api } from './apis/archiver-v1'
 import { archiverV2Api } from './apis/archiver-v2'
 import { qliApi } from './apis/qli'
+import { queryServiceApi } from './apis/query-service/query-service.api'
 import { qubicStaticApi } from './apis/qubic-static'
 import { rpcLiveApi } from './apis/rpc-live'
 import { rpcStatsApi } from './apis/rpc-stats'
@@ -17,6 +18,7 @@ export const store = configureStore({
     [qliApi.reducerPath]: qliApi.reducer,
     [archiverV1Api.reducerPath]: archiverV1Api.reducer,
     [archiverV2Api.reducerPath]: archiverV2Api.reducer,
+    [queryServiceApi.reducerPath]: queryServiceApi.reducer,
     [rpcLiveApi.reducerPath]: rpcLiveApi.reducer,
     [rpcStatsApi.reducerPath]: rpcStatsApi.reducer,
     [testnetQubicRpcV1.reducerPath]: testnetQubicRpcV1.reducer,
@@ -28,6 +30,7 @@ export const store = configureStore({
       .concat(qliApi.middleware)
       .concat(archiverV1Api.middleware)
       .concat(archiverV2Api.middleware)
+      .concat(queryServiceApi.middleware)
       .concat(rpcLiveApi.middleware)
       .concat(rpcStatsApi.middleware)
       .concat(testnetQubicRpcV1.middleware)

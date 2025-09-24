@@ -9,18 +9,28 @@ interface ValidationErrors {
   destination?: string
   amount?: string
   inputType?: string
+  tickNumberStart?: string
+  tickNumberEnd?: string
 }
 
 const defaultFilters: TransactionFilters = {
   source: undefined,
   destination: undefined,
   amount: undefined,
-  inputType: undefined
+  inputType: undefined,
+  tickNumberRange: undefined
 }
 
 // Validation helpers
 const isValidAddress = (value?: string): boolean => !value || value.length >= 60
 const isValidNumber = (value?: string): boolean => !value || /^\d+$/.test(value)
+const isValidTickNumber = (start?: string, end?: string): boolean => {
+  if (!start && !end) return true
+  if (start && !isValidNumber(start)) return false
+  if (end && !isValidNumber(end)) return false
+  if (start && end && Number(start) > Number(end)) return false
+  return true
+}
 
 type Props = {
   isOpen: boolean
@@ -46,7 +56,7 @@ export default function TransactionFilterDialog({
   }, [activeFilters, isOpen])
 
   const validateField = useCallback(
-    (field: keyof TransactionFilters, value?: string): string | undefined => {
+    (field: keyof ValidationErrors, value?: string): string | undefined => {
       if (!value) return undefined
 
       switch (field) {
@@ -60,11 +70,27 @@ export default function TransactionFilterDialog({
           return !isValidNumber(value)
             ? t(`${field}Validation`) || `${field} must be a valid number`
             : undefined
+        case 'tickNumberStart':
+        case 'tickNumberEnd':
+          if (!isValidNumber(value)) {
+            return t('invalidTickNumber') || 'Invalid tick number'
+          }
+          if (
+            !isValidTickNumber(
+              field === 'tickNumberStart' ? value : filters.tickNumberRange?.start,
+              field === 'tickNumberEnd' ? value : filters.tickNumberRange?.end
+            )
+          ) {
+            return (
+              t('invalidTickNumberRange') || 'Start tick must be less than or equal to end tick'
+            )
+          }
+          return undefined
         default:
           return undefined
       }
     },
-    [t]
+    [t, filters.tickNumberRange]
   )
 
   const validateFilters = useCallback((): boolean => {
@@ -72,7 +98,9 @@ export default function TransactionFilterDialog({
       source: validateField('source', filters.source),
       destination: validateField('destination', filters.destination),
       amount: validateField('amount', filters.amount),
-      inputType: validateField('inputType', filters.inputType)
+      inputType: validateField('inputType', filters.inputType),
+      tickNumberStart: validateField('tickNumberStart', filters.tickNumberRange?.start),
+      tickNumberEnd: validateField('tickNumberEnd', filters.tickNumberRange?.end)
     }
 
     const filteredErrors = Object.fromEntries(
@@ -167,6 +195,72 @@ export default function TransactionFilterDialog({
               setErrors((prev) => ({ ...prev, amount: error }))
             }}
           />
+
+          <div className="space-y-0">
+            <label htmlFor="tickNumberStart" className="mb-4 block text-sm text-gray-50">
+              {t('tickNumber')}
+            </label>
+            <div className="flex gap-8">
+              <div className="flex-1">
+                <FilterInput
+                  id="tickNumberStart"
+                  label=""
+                  value={filters.tickNumberRange?.start}
+                  error={errors.tickNumberStart}
+                  placeholder={t('startTick') || 'Start tick'}
+                  onChange={(value) => {
+                    setFilters((prev) => ({
+                      ...prev,
+                      tickNumberRange: { ...prev.tickNumberRange, start: value }
+                    }))
+                    setErrors((prev) => ({ ...prev, tickNumberStart: undefined }))
+                  }}
+                  onBlur={() => {
+                    if (
+                      !isValidTickNumber(
+                        filters.tickNumberRange?.start,
+                        filters.tickNumberRange?.end
+                      )
+                    ) {
+                      setErrors((prev) => ({
+                        ...prev,
+                        tickNumberStart: t('invalidTickNumberRange') || 'Invalid tick number range'
+                      }))
+                    }
+                  }}
+                />
+              </div>
+              <div className="flex-1">
+                <FilterInput
+                  id="tickNumberEnd"
+                  label=""
+                  value={filters.tickNumberRange?.end}
+                  error={errors.tickNumberEnd}
+                  placeholder={t('endTick') || 'End tick'}
+                  onChange={(value) => {
+                    setFilters((prev) => ({
+                      ...prev,
+                      tickNumberRange: { ...prev.tickNumberRange, end: value }
+                    }))
+                    setErrors((prev) => ({ ...prev, tickNumberEnd: undefined }))
+                  }}
+                  onBlur={() => {
+                    if (
+                      !isValidTickNumber(
+                        filters.tickNumberRange?.start,
+                        filters.tickNumberRange?.end
+                      )
+                    ) {
+                      setErrors((prev) => ({
+                        ...prev,
+                        tickNumberEnd: t('invalidTickNumberRange') || 'Invalid tick number range'
+                      }))
+                    }
+                  }}
+                />
+              </div>
+            </div>
+          </div>
 
           <FilterInput
             id="inputType"
