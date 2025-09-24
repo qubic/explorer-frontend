@@ -12,8 +12,17 @@ type Props = {
 
 function TransactionsOverview({ addressId }: Props) {
   const { t } = useTranslation('network-page')
-  const { transactions, loadMoreTransactions, hasMore, isLoading, error } =
-    useLatestTransactions(addressId)
+  const {
+    transactions,
+    loadMoreTransactions,
+    hasMore,
+    isLoading,
+    error,
+    applyFilters,
+    clearFilters,
+    activeFilters
+  } = useLatestTransactions(addressId)
+
   const {
     historicalTransactions,
     loadMoreTransactions: loadMoreHistoricalTxs,
@@ -39,6 +48,9 @@ function TransactionsOverview({ addressId }: Props) {
               hasMore={hasMore}
               isLoading={isLoading}
               error={error}
+              onApplyFilters={applyFilters}
+              onClearFilters={clearFilters}
+              activeFilters={activeFilters}
             />
           </Tabs.Panel>
           <Tabs.Panel>

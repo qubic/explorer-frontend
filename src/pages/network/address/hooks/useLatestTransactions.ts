@@ -8,28 +8,49 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 const PAGE_SIZE = 50
 const MAX_RESULTS = 10_000 // query service limit
 
+export interface TransactionFilters {
+  source?: string
+  destination?: string
+  amount?: string
+  inputType?: string
+}
+
 export interface UseLatestTransactionsResult {
   transactions: QueryServiceTransaction[]
   loadMoreTransactions: () => Promise<void>
   hasMore: boolean
   isLoading: boolean
   error: string | null
+  applyFilters: (filters: TransactionFilters) => void
+  clearFilters: () => void
+  activeFilters: TransactionFilters
 }
 
 export default function useLatestTransactions(addressId: string): UseLatestTransactionsResult {
   const [transactions, setTransactions] = useState<QueryServiceTransaction[]>([])
   const [offset, setOffset] = useState(0)
   const [isLoading, setIsLoading] = useState(false)
+  const [activeFilters, setActiveFilters] = useState<TransactionFilters>({})
   const cancellationRef = useRef(false)
+  const [reachedEnd, setReachedEnd] = useState(false)
 
   const [getTransactionsForIdentity, { error }] = useGetTransactionsForIdentityMutation()
 
-  const hasMore = offset < MAX_RESULTS
+  const hasMore = !reachedEnd && offset < MAX_RESULTS
 
   const fetchPage = useCallback(
-    async (currentOffset: number) => {
+    async (currentOffset: number, filters: TransactionFilters = {}) => {
+      // Clean up filters - remove empty strings and undefined values
+      const cleanFilters = Object.entries(filters).reduce((acc, [key, value]) => {
+        if (value && value.trim() !== '') {
+          return { ...acc, [key]: value.trim() }
+        }
+        return acc
+      }, {} as TransactionFilters)
+
       const result: QueryServiceResponse = await getTransactionsForIdentity({
         identity: addressId,
+        filters: Object.keys(cleanFilters).length > 0 ? cleanFilters : undefined,
         pagination: {
           offset: currentOffset,
           size: PAGE_SIZE
@@ -46,31 +67,60 @@ export default function useLatestTransactions(addressId: string): UseLatestTrans
     setIsLoading(true)
 
     try {
-      const newTxs = await fetchPage(offset)
-      if (!cancellationRef.current && newTxs.length > 0) {
-        setTransactions((prev) => [...prev, ...newTxs])
-        setOffset((prev) => prev + PAGE_SIZE)
+      const newTxs = await fetchPage(offset, activeFilters)
+      if (!cancellationRef.current) {
+        if (newTxs.length > 0) {
+          setTransactions((prev) => [...prev, ...newTxs])
+          setOffset((prev) => prev + PAGE_SIZE)
+        }
+        // If we get less than PAGE_SIZE transactions, we know we've reached the end
+        if (newTxs.length < PAGE_SIZE) {
+          setReachedEnd(true)
+        }
       }
     } finally {
       if (!cancellationRef.current) {
         setIsLoading(false)
       }
     }
-  }, [isLoading, hasMore, offset, fetchPage])
+  }, [isLoading, hasMore, offset, fetchPage, activeFilters])
 
-  // Initial fetch
+  const applyFilters = useCallback((filters: TransactionFilters) => {
+    setActiveFilters(filters)
+    setTransactions([])
+    setOffset(0)
+    setReachedEnd(false)
+  }, [])
+
+  const clearFilters = useCallback(() => {
+    setActiveFilters({})
+    setTransactions([])
+    setOffset(0)
+    setReachedEnd(false)
+  }, [])
+
+  // Initial fetch and refetch when filters change
   useEffect(() => {
     cancellationRef.current = false
     setTransactions([])
     setOffset(0)
+    setReachedEnd(false)
 
     const initialFetch = async () => {
       setIsLoading(true)
-      const firstPage = await fetchPage(0)
-      if (!cancellationRef.current) {
-        setTransactions(firstPage)
-        setOffset(PAGE_SIZE)
-        setIsLoading(false)
+      try {
+        const firstPage = await fetchPage(0, activeFilters)
+        if (!cancellationRef.current) {
+          setTransactions(firstPage)
+          setOffset(PAGE_SIZE)
+          if (firstPage.length < PAGE_SIZE) {
+            setReachedEnd(true)
+          }
+        }
+      } finally {
+        if (!cancellationRef.current) {
+          setIsLoading(false)
+        }
       }
     }
 
@@ -81,13 +131,16 @@ export default function useLatestTransactions(addressId: string): UseLatestTrans
     return () => {
       cancellationRef.current = true
     }
-  }, [addressId, fetchPage])
+  }, [addressId, fetchPage, activeFilters])
 
   return {
     transactions,
     loadMoreTransactions,
     hasMore,
     isLoading,
-    error: error ? String(error) : null
+    error: error ? String(error) : null,
+    applyFilters,
+    clearFilters,
+    activeFilters
   }
 }
