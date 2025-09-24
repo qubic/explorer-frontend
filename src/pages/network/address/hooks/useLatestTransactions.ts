@@ -33,10 +33,11 @@ export default function useLatestTransactions(addressId: string): UseLatestTrans
   const [activeFilters, setActiveFilters] = useState<TransactionFilters>({})
   const cancellationRef = useRef(false)
   const [reachedEnd, setReachedEnd] = useState(false)
+  const [hasError, setHasError] = useState(false)
 
   const [getTransactionsForIdentity, { error }] = useGetTransactionsForIdentityMutation()
 
-  const hasMore = !reachedEnd && offset < MAX_RESULTS
+  const hasMore = !reachedEnd && !hasError && offset < MAX_RESULTS
 
   const fetchPage = useCallback(
     async (currentOffset: number, filters: TransactionFilters = {}) => {
@@ -77,7 +78,13 @@ export default function useLatestTransactions(addressId: string): UseLatestTrans
         if (newTxs.length < PAGE_SIZE) {
           setReachedEnd(true)
         }
+        setHasError(false) // Clear error state on successful fetch
       }
+    } catch (err) {
+      if (!cancellationRef.current) {
+        setHasError(true) // Set error state to prevent further retries
+      }
+      throw err // Re-throw to let InfiniteScroll handle the error display
     } finally {
       if (!cancellationRef.current) {
         setIsLoading(false)
@@ -90,6 +97,7 @@ export default function useLatestTransactions(addressId: string): UseLatestTrans
     setTransactions([])
     setOffset(0)
     setReachedEnd(false)
+    setHasError(false) // Reset error state when applying new filters
   }, [])
 
   const clearFilters = useCallback(() => {
@@ -97,6 +105,7 @@ export default function useLatestTransactions(addressId: string): UseLatestTrans
     setTransactions([])
     setOffset(0)
     setReachedEnd(false)
+    setHasError(false) // Reset error state when clearing filters
   }, [])
 
   // Initial fetch and refetch when filters change
@@ -105,6 +114,7 @@ export default function useLatestTransactions(addressId: string): UseLatestTrans
     setTransactions([])
     setOffset(0)
     setReachedEnd(false)
+    setHasError(false) // Reset error state on initial fetch or dependencies change
 
     const initialFetch = async () => {
       setIsLoading(true)
