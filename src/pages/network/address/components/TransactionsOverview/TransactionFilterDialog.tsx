@@ -11,6 +11,8 @@ interface ValidationErrors {
   inputType?: string
   tickNumberStart?: string
   tickNumberEnd?: string
+  dateStart?: string
+  dateEnd?: string
 }
 
 const defaultFilters: TransactionFilters = {
@@ -18,7 +20,8 @@ const defaultFilters: TransactionFilters = {
   destination: undefined,
   amount: undefined,
   inputType: undefined,
-  tickNumberRange: undefined
+  tickNumberRange: undefined,
+  dateRange: undefined
 }
 
 // Validation helpers
@@ -31,6 +34,13 @@ const isValidTickNumber = (start?: string, end?: string): boolean => {
   if (start && end && Number(start) > Number(end)) return false
   return true
 }
+
+// const isValidDateRange = (start?: string, end?: string): boolean => {
+//     if (!start && !end) return true
+//     const startDate = start ? new Date(start).getTime() : 0
+//     const endDate = end ? new Date(end).getTime() : Infinity
+//     return !Number.isNaN(startDate) && !Number.isNaN(endDate) && startDate <= endDate
+// }
 
 type Props = {
   isOpen: boolean
@@ -86,11 +96,25 @@ export default function TransactionFilterDialog({
             )
           }
           return undefined
+        // case 'dateStart':
+        // case 'dateEnd':
+        //     if (!value || Number.isNaN(new Date(value).getTime())) {
+        //         return t('invalidDate') || 'Invalid date'
+        //     }
+        // if (
+        //     !isValidDateRange(
+        //         field === 'dateStart' ? value : filters.dateRange?.start,
+        //         field === 'dateEnd' ? value : filters.dateRange?.end
+        //     )
+        // ) {
+        //     return t('invalidDateRange') || 'Start date must be before end date'
+        // }
+        // return undefined
         default:
           return undefined
       }
     },
-    [t, filters.tickNumberRange]
+    [t, filters]
   )
 
   const validateFilters = useCallback((): boolean => {
@@ -123,12 +147,12 @@ export default function TransactionFilterDialog({
     <Modal
       id="transaction-filter-modal"
       isOpen={isOpen}
-      className="fixed inset-x-0 top-1/4 mx-auto max-w-md"
+      className="fixed inset-0 flex items-center justify-center"
       closeOnOutsideClick
       onClose={onClose}
     >
-      <div className="rounded-lg bg-primary-70 p-24">
-        <div className="mb-16 flex items-center justify-between">
+      <div className="mx-4 max-h-[80vh] w-full max-w-2xl overflow-y-auto rounded-lg bg-primary-70 p-24">
+        <div className="z-10 -mx-24 -mt-4 mb-16 flex items-center justify-between bg-primary-70 px-24 py-4">
           <h3 className="font-space text-lg font-500">{t('filterTransactions')}</h3>
           <button
             type="button"
@@ -196,7 +220,73 @@ export default function TransactionFilterDialog({
             }}
           />
 
-          <div className="space-y-0">
+          <FilterInput
+            id="inputType"
+            label="inputType"
+            value={filters.inputType}
+            error={errors.inputType}
+            placeholder="enterInputType"
+            onChange={(value) => {
+              setFilters((prev) => ({ ...prev, inputType: value }))
+              setErrors((prev) => ({ ...prev, inputType: undefined }))
+            }}
+            onBlur={() => {
+              const error = validateField('inputType', filters.inputType)
+              setErrors((prev) => ({ ...prev, inputType: error }))
+            }}
+          />
+
+          <div className="space-y-4">
+            <label htmlFor="dateStart" className="mb-4 block text-sm text-gray-50">
+              {t('date') || 'Date'}
+            </label>
+            <div className="flex gap-8">
+              <div className="flex-1">
+                <FilterInput
+                  id="dateStart"
+                  label=""
+                  type="datetime-local"
+                  value={filters.dateRange?.start}
+                  error={errors.dateStart}
+                  placeholder={t('startDate') || 'Start date'}
+                  onChange={(value) => {
+                    setFilters((prev) => ({
+                      ...prev,
+                      dateRange: { ...prev.dateRange, start: value }
+                    }))
+                    setErrors((prev) => ({ ...prev, dateStart: undefined }))
+                  }}
+                  onBlur={() => {
+                    const error = validateField('dateStart', filters.dateRange?.start)
+                    setErrors((prev) => ({ ...prev, dateStart: error }))
+                  }}
+                />
+              </div>
+              <div className="flex-1">
+                <FilterInput
+                  id="dateEnd"
+                  label=""
+                  type="datetime-local"
+                  value={filters.dateRange?.end}
+                  error={errors.dateEnd}
+                  placeholder={t('endDate') || 'End date'}
+                  onChange={(value) => {
+                    setFilters((prev) => ({
+                      ...prev,
+                      dateRange: { ...prev.dateRange, end: value }
+                    }))
+                    setErrors((prev) => ({ ...prev, dateEnd: undefined }))
+                  }}
+                  onBlur={() => {
+                    const error = validateField('dateEnd', filters.dateRange?.end)
+                    setErrors((prev) => ({ ...prev, dateEnd: error }))
+                  }}
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="space-y-4">
             <label htmlFor="tickNumberStart" className="mb-4 block text-sm text-gray-50">
               {t('tickNumber')}
             </label>
@@ -262,23 +352,7 @@ export default function TransactionFilterDialog({
             </div>
           </div>
 
-          <FilterInput
-            id="inputType"
-            label="inputType"
-            value={filters.inputType}
-            error={errors.inputType}
-            placeholder="enterInputType"
-            onChange={(value) => {
-              setFilters((prev) => ({ ...prev, inputType: value }))
-              setErrors((prev) => ({ ...prev, inputType: undefined }))
-            }}
-            onBlur={() => {
-              const error = validateField('inputType', filters.inputType)
-              setErrors((prev) => ({ ...prev, inputType: error }))
-            }}
-          />
-
-          <div className="flex gap-8 pt-16">
+          <div className="sticky bottom-0 z-10 -mx-24 flex gap-8 bg-primary-70 px-24 py-16 pt-16">
             <button
               type="button"
               onClick={() => {

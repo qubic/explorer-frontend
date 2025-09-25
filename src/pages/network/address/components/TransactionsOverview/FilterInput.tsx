@@ -8,6 +8,7 @@ interface FilterInputProps {
   onChange: (value: string) => void
   onBlur?: () => void
   placeholder?: string
+  type?: string // Add type prop for input type
 }
 
 export default function FilterInput({
@@ -17,7 +18,8 @@ export default function FilterInput({
   error,
   onChange,
   onBlur,
-  placeholder
+  placeholder,
+  type = 'text'
 }: FilterInputProps) {
   const { t } = useTranslation('network-page')
 
@@ -28,7 +30,7 @@ export default function FilterInput({
       </label>
       <input
         id={id}
-        type="text"
+        type={type}
         value={value || ''}
         onChange={(e) => onChange(e.target.value)}
         onBlur={onBlur}

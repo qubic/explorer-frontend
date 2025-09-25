@@ -17,6 +17,10 @@ export interface TransactionFilters {
     start?: string
     end?: string
   }
+  dateRange?: {
+    start?: string
+    end?: string
+  }
 }
 
 export interface UseLatestTransactionsResult {
@@ -56,8 +60,8 @@ export default function useLatestTransactions(addressId: string): UseLatestTrans
         return acc
       }, {} as TransactionFilters)
 
-      const ranges =
-        filters.tickNumberRange?.start || filters.tickNumberRange?.end
+      const ranges = {
+        ...(filters.tickNumberRange?.start || filters.tickNumberRange?.end
           ? {
               tickNumber: {
                 ...(filters.tickNumberRange.start && filters.tickNumberRange.start.trim() !== ''
@@ -68,7 +72,20 @@ export default function useLatestTransactions(addressId: string): UseLatestTrans
                   : {})
               }
             }
-          : undefined
+          : {}),
+        ...(filters.dateRange?.start || filters.dateRange?.end
+          ? {
+              timestamp: {
+                ...(filters.dateRange.start
+                  ? { gte: new Date(filters.dateRange.start).getTime().toString() }
+                  : {}),
+                ...(filters.dateRange.end
+                  ? { lte: new Date(filters.dateRange.end).getTime().toString() }
+                  : {})
+              }
+            }
+          : {})
+      }
 
       const result: QueryServiceResponse = await getTransactionsForIdentity({
         identity: addressId,
