@@ -62,7 +62,7 @@ export default function LatestTransactions({
   )
 
   const hasActiveFilters = Object.entries(activeFilters).some(([key, value]) => {
-    if (key === 'tickNumberRange') {
+    if (key === 'tickNumberRange' || key === 'dateRange') {
       return value && (value.start || value.end)
     }
     return typeof value === 'string' && value.trim() !== ''
@@ -145,6 +145,26 @@ export default function LatestTransactions({
               {activeFilters.inputType && (
                 <span className="rounded bg-primary-60 px-8 py-4 text-xs text-primary-30">
                   {t('inputType')}: {activeFilters.inputType}
+                </span>
+              )}
+              {activeFilters.tickNumberRange?.start && (
+                <span className="rounded bg-primary-60 px-8 py-4 text-xs text-primary-30">
+                  {t('startTick')}: {activeFilters.tickNumberRange.start}
+                </span>
+              )}
+              {activeFilters.tickNumberRange?.end && (
+                <span className="rounded bg-primary-60 px-8 py-4 text-xs text-primary-30">
+                  {t('endTick')}: {activeFilters.tickNumberRange.end}
+                </span>
+              )}
+              {activeFilters.dateRange?.start && (
+                <span className="rounded bg-primary-60 px-8 py-4 text-xs text-primary-30">
+                  {t('startDate')}: {new Date(activeFilters.dateRange.start).toLocaleString()}
+                </span>
+              )}
+              {activeFilters.dateRange?.end && (
+                <span className="rounded bg-primary-60 px-8 py-4 text-xs text-primary-30">
+                  {t('endDate')}: {new Date(activeFilters.dateRange.end).toLocaleString()}
                 </span>
               )}
             </div>
