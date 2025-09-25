@@ -83,7 +83,7 @@ export default function TransactionFilterDialog({
         case 'tickNumberStart':
         case 'tickNumberEnd':
           if (!isValidNumber(value)) {
-            return t('invalidTickNumber') || 'Invalid tick number'
+            return t('invalidTickNumber')
           }
           if (
             !isValidTickNumber(
@@ -91,9 +91,7 @@ export default function TransactionFilterDialog({
               field === 'tickNumberEnd' ? value : filters.tickNumberRange?.end
             )
           ) {
-            return (
-              t('invalidTickNumberRange') || 'Start tick must be less than or equal to end tick'
-            )
+            return t('invalidTickNumberRange')
           }
           return undefined
         // case 'dateStart':
@@ -158,7 +156,7 @@ export default function TransactionFilterDialog({
             type="button"
             onClick={onClose}
             className="text-gray-50 hover:text-gray-100"
-            aria-label={t('close') || 'Close'}
+            aria-label={t('close')}
           >
             <svg className="h-16 w-16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path
@@ -238,7 +236,7 @@ export default function TransactionFilterDialog({
 
           <div className="space-y-4">
             <label htmlFor="dateStart" className="mb-4 block text-sm text-gray-50">
-              {t('date') || 'Date'}
+              {t('date')}
             </label>
             <div className="flex gap-8">
               <div className="flex-1">
@@ -248,7 +246,7 @@ export default function TransactionFilterDialog({
                   type="datetime-local"
                   value={filters.dateRange?.start}
                   error={errors.dateStart}
-                  placeholder={t('startDate') || 'Start date'}
+                  placeholder={t('startDate')}
                   onChange={(value) => {
                     setFilters((prev) => ({
                       ...prev,
@@ -269,7 +267,7 @@ export default function TransactionFilterDialog({
                   type="datetime-local"
                   value={filters.dateRange?.end}
                   error={errors.dateEnd}
-                  placeholder={t('endDate') || 'End date'}
+                  placeholder={t('endDate')}
                   onChange={(value) => {
                     setFilters((prev) => ({
                       ...prev,
@@ -297,7 +295,7 @@ export default function TransactionFilterDialog({
                   label=""
                   value={filters.tickNumberRange?.start}
                   error={errors.tickNumberStart}
-                  placeholder={t('startTick') || 'Start tick'}
+                  placeholder={t('startTick')}
                   onChange={(value) => {
                     setFilters((prev) => ({
                       ...prev,
@@ -314,7 +312,7 @@ export default function TransactionFilterDialog({
                     ) {
                       setErrors((prev) => ({
                         ...prev,
-                        tickNumberStart: t('invalidTickNumberRange') || 'Invalid tick number range'
+                        tickNumberStart: t('invalidTickNumberRange')
                       }))
                     }
                   }}
@@ -326,7 +324,7 @@ export default function TransactionFilterDialog({
                   label=""
                   value={filters.tickNumberRange?.end}
                   error={errors.tickNumberEnd}
-                  placeholder={t('endTick') || 'End tick'}
+                  placeholder={t('endTick')}
                   onChange={(value) => {
                     setFilters((prev) => ({
                       ...prev,
@@ -343,7 +341,7 @@ export default function TransactionFilterDialog({
                     ) {
                       setErrors((prev) => ({
                         ...prev,
-                        tickNumberEnd: t('invalidTickNumberRange') || 'Invalid tick number range'
+                        tickNumberEnd: t('invalidTickNumberRange')
                       }))
                     }
                   }}
