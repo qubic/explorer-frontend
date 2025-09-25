@@ -137,9 +137,14 @@ export default function LatestTransactions({
                   {t('destination')}: {activeFilters.destination.slice(0, 8)}...
                 </span>
               )}
-              {activeFilters.amount && (
+              {activeFilters.amountRange?.start && (
                 <span className="rounded bg-primary-60 px-8 py-4 text-xs text-primary-30">
-                  {t('amount')}: {activeFilters.amount}
+                  {t('startAmount')}: {activeFilters.amountRange.start}
+                </span>
+              )}
+              {activeFilters.amountRange?.end && (
+                <span className="rounded bg-primary-60 px-8 py-4 text-xs text-primary-30">
+                  {t('endAmount')}: {activeFilters.amountRange.end}
                 </span>
               )}
               {activeFilters.inputType && (
