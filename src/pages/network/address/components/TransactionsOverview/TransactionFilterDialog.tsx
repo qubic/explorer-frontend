@@ -30,28 +30,6 @@ const defaultFilters: TransactionFilters = {
 // Validation helpers
 const isValidAddress = (value?: string): boolean => !value || value.length >= 60
 const isValidNumber = (value?: string): boolean => !value || /^\d+$/.test(value)
-const isValidTickNumber = (start?: string, end?: string): boolean => {
-  if (!start && !end) return true
-  if (start && !isValidNumber(start)) return false
-  if (end && !isValidNumber(end)) return false
-  if (start && end && Number(start) > Number(end)) return false
-  return true
-}
-
-const isValidAmountRange = (start?: string, end?: string): boolean => {
-  if (!start && !end) return true
-  if (start && !isValidNumber(start)) return false
-  if (end && !isValidNumber(end)) return false
-  if (start && end && Number(start) > Number(end)) return false
-  return true
-}
-
-// const isValidDateRange = (start?: string, end?: string): boolean => {
-//     if (!start && !end) return true
-//     const startDate = start ? new Date(start).getTime() : 0
-//     const endDate = end ? new Date(end).getTime() : Infinity
-//     return !Number.isNaN(startDate) && !Number.isNaN(endDate) && startDate <= endDate
-// }
 
 type Props = {
   isOpen: boolean
@@ -76,6 +54,48 @@ export default function TransactionFilterDialog({
     setErrors({})
   }, [activeFilters, isOpen])
 
+  const validateRangeField = (
+    field:
+      | 'tickNumberStart'
+      | 'tickNumberEnd'
+      | 'dateStart'
+      | 'dateEnd'
+      | 'amountStart'
+      | 'amountEnd',
+    value: string,
+    otherValue: string | undefined,
+    translate: (key: string) => string
+  ): string | undefined => {
+    const isTickField = field.includes('tick')
+    const isAmountField = field.includes('amount')
+    const isDateField = field.includes('date')
+    const isStartField = field.includes('Start')
+
+    if (isTickField && !isValidNumber(value)) {
+      return translate('invalidValue')
+    }
+
+    if (isAmountField && !isValidNumber(value)) {
+      return translate('invalidValue')
+    }
+
+    if (isDateField && (!value || Number.isNaN(new Date(value).getTime()))) {
+      return translate('invalidValue')
+    }
+
+    // Range validation
+    if (otherValue) {
+      const currentVal = isDateField ? new Date(value).getTime() : Number(value)
+      const otherVal = isDateField ? new Date(otherValue).getTime() : Number(otherValue)
+
+      if ((isStartField && currentVal >= otherVal) || (!isStartField && currentVal <= otherVal)) {
+        return translate('invalidRange')
+      }
+    }
+
+    return undefined
+  }
+
   const validateField = useCallback(
     (field: keyof ValidationErrors, value?: string): string | undefined => {
       if (!value) return undefined
@@ -86,58 +106,41 @@ export default function TransactionFilterDialog({
           return !isValidAddress(value)
             ? t(`${field}Validation`) || `${field} address must be at least 60 characters`
             : undefined
-        case 'amount':
         case 'inputType':
           return !isValidNumber(value)
             ? t(`${field}Validation`) || `${field} must be a valid number`
             : undefined
         case 'tickNumberStart':
         case 'tickNumberEnd':
-          if (!isValidNumber(value)) {
-            return t('invalidTickNumber')
-          }
-          if (
-            !isValidTickNumber(
-              field === 'tickNumberStart' ? value : filters.tickNumberRange?.start,
-              field === 'tickNumberEnd' ? value : filters.tickNumberRange?.end
-            )
-          ) {
-            return t('invalidTickNumberRange')
-          }
-          return undefined
+          return validateRangeField(
+            field,
+            value,
+            field === 'tickNumberStart'
+              ? filters.tickNumberRange?.end
+              : filters.tickNumberRange?.start,
+            t
+          )
         case 'amountStart':
         case 'amountEnd':
-          if (!isValidNumber(value)) {
-            return t('invalidAmount')
-          }
-          if (
-            !isValidAmountRange(
-              field === 'amountStart' ? value : filters.amountRange?.start,
-              field === 'amountEnd' ? value : filters.amountRange?.end
-            )
-          ) {
-            return t('invalidAmountRange')
-          }
-          return undefined
-        // case 'dateStart':
-        // case 'dateEnd':
-        //     if (!value || Number.isNaN(new Date(value).getTime())) {
-        //         return t('invalidDate') || 'Invalid date'
-        //     }
-        // if (
-        //     !isValidDateRange(
-        //         field === 'dateStart' ? value : filters.dateRange?.start,
-        //         field === 'dateEnd' ? value : filters.dateRange?.end
-        //     )
-        // ) {
-        //     return t('invalidDateRange') || 'Start date must be before end date'
-        // }
-        // return undefined
+          return validateRangeField(
+            field,
+            value,
+            field === 'amountStart' ? filters.amountRange?.end : filters.amountRange?.start,
+            t
+          )
+        case 'dateStart':
+        case 'dateEnd':
+          return validateRangeField(
+            field,
+            value,
+            field === 'dateStart' ? filters.dateRange?.end : filters.dateRange?.start,
+            t
+          )
         default:
           return undefined
       }
     },
-    [t, filters]
+    [t, filters, validateRangeField]
   )
 
   const validateFilters = useCallback((): boolean => {
@@ -149,7 +152,9 @@ export default function TransactionFilterDialog({
       amountEnd: validateField('amountEnd', filters.amountRange?.end),
       inputType: validateField('inputType', filters.inputType),
       tickNumberStart: validateField('tickNumberStart', filters.tickNumberRange?.start),
-      tickNumberEnd: validateField('tickNumberEnd', filters.tickNumberRange?.end)
+      tickNumberEnd: validateField('tickNumberEnd', filters.tickNumberRange?.end),
+      dateStart: validateField('dateStart', filters.dateRange?.start),
+      dateEnd: validateField('dateEnd', filters.dateRange?.end)
     }
 
     const filteredErrors = Object.fromEntries(
@@ -162,6 +167,23 @@ export default function TransactionFilterDialog({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
+    const hasAnyFilter =
+      filters.source ||
+      filters.destination ||
+      filters.amount ||
+      filters.inputType ||
+      filters.tickNumberRange?.start ||
+      filters.tickNumberRange?.end ||
+      filters.dateRange?.start ||
+      filters.dateRange?.end ||
+      filters.amountRange?.start ||
+      filters.amountRange?.end
+
+    if (!hasAnyFilter) {
+      onClose()
+      return
+    }
+
     if (validateFilters()) {
       onApplyFilters(filters)
       onClose()
@@ -195,7 +217,6 @@ export default function TransactionFilterDialog({
             </svg>
           </button>
         </div>
-
         <form onSubmit={handleSubmit} className="space-y-16">
           <FilterInput
             id="source"
@@ -341,14 +362,8 @@ export default function TransactionFilterDialog({
                 setErrors((prev) => ({ ...prev, tickNumberStart: undefined }))
               }}
               onBlur={() => {
-                if (
-                  !isValidTickNumber(filters.tickNumberRange?.start, filters.tickNumberRange?.end)
-                ) {
-                  setErrors((prev) => ({
-                    ...prev,
-                    tickNumberStart: t('invalidTickNumberRange')
-                  }))
-                }
+                const error = validateField('tickNumberStart', filters.tickNumberRange?.start)
+                setErrors((prev) => ({ ...prev, tickNumberStart: error }))
               }}
             />
             <FilterInput
@@ -365,14 +380,8 @@ export default function TransactionFilterDialog({
                 setErrors((prev) => ({ ...prev, tickNumberEnd: undefined }))
               }}
               onBlur={() => {
-                if (
-                  !isValidTickNumber(filters.tickNumberRange?.start, filters.tickNumberRange?.end)
-                ) {
-                  setErrors((prev) => ({
-                    ...prev,
-                    tickNumberEnd: t('invalidTickNumberRange')
-                  }))
-                }
+                const error = validateField('tickNumberEnd', filters.tickNumberRange?.end)
+                setErrors((prev) => ({ ...prev, tickNumberEnd: error }))
               }}
             />
           </div>
