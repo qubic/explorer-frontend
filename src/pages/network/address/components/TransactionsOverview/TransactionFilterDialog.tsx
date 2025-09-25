@@ -8,6 +8,8 @@ interface ValidationErrors {
   source?: string
   destination?: string
   amount?: string
+  amountStart?: string
+  amountEnd?: string
   inputType?: string
   tickNumberStart?: string
   tickNumberEnd?: string
@@ -19,6 +21,7 @@ const defaultFilters: TransactionFilters = {
   source: undefined,
   destination: undefined,
   amount: undefined,
+  amountRange: undefined,
   inputType: undefined,
   tickNumberRange: undefined,
   dateRange: undefined
@@ -28,6 +31,14 @@ const defaultFilters: TransactionFilters = {
 const isValidAddress = (value?: string): boolean => !value || value.length >= 60
 const isValidNumber = (value?: string): boolean => !value || /^\d+$/.test(value)
 const isValidTickNumber = (start?: string, end?: string): boolean => {
+  if (!start && !end) return true
+  if (start && !isValidNumber(start)) return false
+  if (end && !isValidNumber(end)) return false
+  if (start && end && Number(start) > Number(end)) return false
+  return true
+}
+
+const isValidAmountRange = (start?: string, end?: string): boolean => {
   if (!start && !end) return true
   if (start && !isValidNumber(start)) return false
   if (end && !isValidNumber(end)) return false
@@ -94,6 +105,20 @@ export default function TransactionFilterDialog({
             return t('invalidTickNumberRange')
           }
           return undefined
+        case 'amountStart':
+        case 'amountEnd':
+          if (!isValidNumber(value)) {
+            return t('invalidAmount')
+          }
+          if (
+            !isValidAmountRange(
+              field === 'amountStart' ? value : filters.amountRange?.start,
+              field === 'amountEnd' ? value : filters.amountRange?.end
+            )
+          ) {
+            return t('invalidAmountRange')
+          }
+          return undefined
         // case 'dateStart':
         // case 'dateEnd':
         //     if (!value || Number.isNaN(new Date(value).getTime())) {
@@ -120,6 +145,8 @@ export default function TransactionFilterDialog({
       source: validateField('source', filters.source),
       destination: validateField('destination', filters.destination),
       amount: validateField('amount', filters.amount),
+      amountStart: validateField('amountStart', filters.amountRange?.start),
+      amountEnd: validateField('amountEnd', filters.amountRange?.end),
       inputType: validateField('inputType', filters.inputType),
       tickNumberStart: validateField('tickNumberStart', filters.tickNumberRange?.start),
       tickNumberEnd: validateField('tickNumberEnd', filters.tickNumberRange?.end)
@@ -203,22 +230,6 @@ export default function TransactionFilterDialog({
           />
 
           <FilterInput
-            id="amount"
-            label="amount"
-            value={filters.amount}
-            error={errors.amount}
-            placeholder="enterAmount"
-            onChange={(value) => {
-              setFilters((prev) => ({ ...prev, amount: value }))
-              setErrors((prev) => ({ ...prev, amount: undefined }))
-            }}
-            onBlur={() => {
-              const error = validateField('amount', filters.amount)
-              setErrors((prev) => ({ ...prev, amount: error }))
-            }}
-          />
-
-          <FilterInput
             id="inputType"
             label="inputType"
             value={filters.inputType}
@@ -234,122 +245,137 @@ export default function TransactionFilterDialog({
             }}
           />
 
-          <div className="space-y-4">
-            <label htmlFor="dateStart" className="mb-4 block text-sm text-gray-50">
-              {t('date')}
-            </label>
-            <div className="flex gap-8">
-              <div className="flex-1">
-                <FilterInput
-                  id="dateStart"
-                  label=""
-                  type="datetime-local"
-                  value={filters.dateRange?.start}
-                  error={errors.dateStart}
-                  placeholder={t('startDate')}
-                  onChange={(value) => {
-                    setFilters((prev) => ({
-                      ...prev,
-                      dateRange: { ...prev.dateRange, start: value }
-                    }))
-                    setErrors((prev) => ({ ...prev, dateStart: undefined }))
-                  }}
-                  onBlur={() => {
-                    const error = validateField('dateStart', filters.dateRange?.start)
-                    setErrors((prev) => ({ ...prev, dateStart: error }))
-                  }}
-                />
-              </div>
-              <div className="flex-1">
-                <FilterInput
-                  id="dateEnd"
-                  label=""
-                  type="datetime-local"
-                  value={filters.dateRange?.end}
-                  error={errors.dateEnd}
-                  placeholder={t('endDate')}
-                  onChange={(value) => {
-                    setFilters((prev) => ({
-                      ...prev,
-                      dateRange: { ...prev.dateRange, end: value }
-                    }))
-                    setErrors((prev) => ({ ...prev, dateEnd: undefined }))
-                  }}
-                  onBlur={() => {
-                    const error = validateField('dateEnd', filters.dateRange?.end)
-                    setErrors((prev) => ({ ...prev, dateEnd: error }))
-                  }}
-                />
-              </div>
-            </div>
+          <div className="grid grid-cols-2 gap-16">
+            <FilterInput
+              id="amountStart"
+              label="startAmount"
+              value={filters.amountRange?.start}
+              error={errors.amountStart}
+              placeholder="enterStartAmount"
+              onChange={(value) => {
+                setFilters((prev) => ({
+                  ...prev,
+                  amountRange: { ...prev.amountRange, start: value }
+                }))
+                setErrors((prev) => ({ ...prev, amountStart: undefined }))
+              }}
+              onBlur={() => {
+                const error = validateField('amountStart', filters.amountRange?.start)
+                setErrors((prev) => ({ ...prev, amountStart: error }))
+              }}
+            />
+
+            <FilterInput
+              id="amountEnd"
+              label="endAmount"
+              value={filters.amountRange?.end}
+              error={errors.amountEnd}
+              placeholder="enterEndAmount"
+              onChange={(value) => {
+                setFilters((prev) => ({
+                  ...prev,
+                  amountRange: { ...prev.amountRange, end: value }
+                }))
+                setErrors((prev) => ({ ...prev, amountEnd: undefined }))
+              }}
+              onBlur={() => {
+                const error = validateField('amountEnd', filters.amountRange?.end)
+                setErrors((prev) => ({ ...prev, amountEnd: error }))
+              }}
+            />
           </div>
 
-          <div className="space-y-4">
-            <label htmlFor="tickNumberStart" className="mb-4 block text-sm text-gray-50">
-              {t('tickNumber')}
-            </label>
-            <div className="flex gap-8">
-              <div className="flex-1">
-                <FilterInput
-                  id="tickNumberStart"
-                  label=""
-                  value={filters.tickNumberRange?.start}
-                  error={errors.tickNumberStart}
-                  placeholder={t('startTick')}
-                  onChange={(value) => {
-                    setFilters((prev) => ({
-                      ...prev,
-                      tickNumberRange: { ...prev.tickNumberRange, start: value }
-                    }))
-                    setErrors((prev) => ({ ...prev, tickNumberStart: undefined }))
-                  }}
-                  onBlur={() => {
-                    if (
-                      !isValidTickNumber(
-                        filters.tickNumberRange?.start,
-                        filters.tickNumberRange?.end
-                      )
-                    ) {
-                      setErrors((prev) => ({
-                        ...prev,
-                        tickNumberStart: t('invalidTickNumberRange')
-                      }))
-                    }
-                  }}
-                />
-              </div>
-              <div className="flex-1">
-                <FilterInput
-                  id="tickNumberEnd"
-                  label=""
-                  value={filters.tickNumberRange?.end}
-                  error={errors.tickNumberEnd}
-                  placeholder={t('endTick')}
-                  onChange={(value) => {
-                    setFilters((prev) => ({
-                      ...prev,
-                      tickNumberRange: { ...prev.tickNumberRange, end: value }
-                    }))
-                    setErrors((prev) => ({ ...prev, tickNumberEnd: undefined }))
-                  }}
-                  onBlur={() => {
-                    if (
-                      !isValidTickNumber(
-                        filters.tickNumberRange?.start,
-                        filters.tickNumberRange?.end
-                      )
-                    ) {
-                      setErrors((prev) => ({
-                        ...prev,
-                        tickNumberEnd: t('invalidTickNumberRange')
-                      }))
-                    }
-                  }}
-                />
-              </div>
-            </div>
+          <div className="grid grid-cols-2 gap-16">
+            <FilterInput
+              id="dateStart"
+              label={t('startDate')}
+              type="datetime-local"
+              value={filters.dateRange?.start}
+              error={errors.dateStart}
+              placeholder={t('startDate')}
+              onChange={(value) => {
+                setFilters((prev) => ({
+                  ...prev,
+                  dateRange: { ...prev.dateRange, start: value }
+                }))
+                setErrors((prev) => ({ ...prev, dateStart: undefined }))
+              }}
+              onBlur={() => {
+                const error = validateField('dateStart', filters.dateRange?.start)
+                setErrors((prev) => ({ ...prev, dateStart: error }))
+              }}
+            />
+            <FilterInput
+              id="dateEnd"
+              label={t('endDate')}
+              type="datetime-local"
+              value={filters.dateRange?.end}
+              error={errors.dateEnd}
+              placeholder={t('endDate')}
+              onChange={(value) => {
+                setFilters((prev) => ({
+                  ...prev,
+                  dateRange: { ...prev.dateRange, end: value }
+                }))
+                setErrors((prev) => ({ ...prev, dateEnd: undefined }))
+              }}
+              onBlur={() => {
+                const error = validateField('dateEnd', filters.dateRange?.end)
+                setErrors((prev) => ({ ...prev, dateEnd: error }))
+              }}
+            />
           </div>
 
+          <div className="grid grid-cols-2 gap-16">
+            <FilterInput
+              id="tickNumberStart"
+              label={t('startTick')}
+              value={filters.tickNumberRange?.start}
+              error={errors.tickNumberStart}
+              placeholder={t('startTick')}
+              onChange={(value) => {
+                setFilters((prev) => ({
+                  ...prev,
+                  tickNumberRange: { ...prev.tickNumberRange, start: value }
+                }))
+                setErrors((prev) => ({ ...prev, tickNumberStart: undefined }))
+              }}
+              onBlur={() => {
+                if (
+                  !isValidTickNumber(filters.tickNumberRange?.start, filters.tickNumberRange?.end)
+                ) {
+                  setErrors((prev) => ({
+                    ...prev,
+                    tickNumberStart: t('invalidTickNumberRange')
+                  }))
+                }
+              }}
+            />
+            <FilterInput
+              id="tickNumberEnd"
+              label={t('endTick')}
+              value={filters.tickNumberRange?.end}
+              error={errors.tickNumberEnd}
+              placeholder={t('endTick')}
+              onChange={(value) => {
+                setFilters((prev) => ({
+                  ...prev,
+                  tickNumberRange: { ...prev.tickNumberRange, end: value }
+                }))
+                setErrors((prev) => ({ ...prev, tickNumberEnd: undefined }))
+              }}
+              onBlur={() => {
+                if (
+                  !isValidTickNumber(filters.tickNumberRange?.start, filters.tickNumberRange?.end)
+                ) {
+                  setErrors((prev) => ({
+                    ...prev,
+                    tickNumberEnd: t('invalidTickNumberRange')
+                  }))
+                }
+              }}
+            />
+          </div>
           <div className="sticky bottom-0 z-10 -mx-24 flex gap-8 bg-primary-70 px-24 py-16 pt-16">
             <button
               type="button"

@@ -12,6 +12,10 @@ export interface TransactionFilters {
   source?: string
   destination?: string
   amount?: string
+  amountRange?: {
+    start?: string
+    end?: string
+  }
   inputType?: string
   tickNumberRange?: {
     start?: string
@@ -61,6 +65,18 @@ export default function useLatestTransactions(addressId: string): UseLatestTrans
       }, {} as TransactionFilters)
 
       const ranges = {
+        ...(filters.amountRange?.start || filters.amountRange?.end
+          ? {
+              amount: {
+                ...(filters.amountRange.start && filters.amountRange.start.trim() !== ''
+                  ? { gte: filters.amountRange.start.trim() }
+                  : {}),
+                ...(filters.amountRange.end && filters.amountRange.end.trim() !== ''
+                  ? { lte: filters.amountRange.end.trim() }
+                  : {})
+              }
+            }
+          : {}),
         ...(filters.tickNumberRange?.start || filters.tickNumberRange?.end
           ? {
               tickNumber: {
