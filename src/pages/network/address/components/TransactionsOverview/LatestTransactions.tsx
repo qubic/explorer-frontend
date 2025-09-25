@@ -62,18 +62,18 @@ export default function LatestTransactions({
   )
 
   const hasActiveFilters = Object.entries(activeFilters).some(([key, value]) => {
-    if (key === 'tickNumberRange' || key === 'dateRange') {
+    if (key === 'tickNumberRange' || key === 'dateRange' || key === 'amountRange') {
       return value && (value.start || value.end)
     }
     return typeof value === 'string' && value.trim() !== ''
   })
 
-  const activeFilterCount = Object.entries(activeFilters).filter(([key, value]) => {
-    if (key === 'tickNumberRange') {
-      return value && (value.start || value.end)
+  const activeFilterCount = Object.entries(activeFilters).reduce((count, [key, value]) => {
+    if (key === 'tickNumberRange' || key === 'dateRange' || key === 'amountRange') {
+      return count + (value?.start ? 1 : 0) + (value?.end ? 1 : 0)
     }
-    return typeof value === 'string' && value.trim() !== ''
-  }).length
+    return count + (typeof value === 'string' && value.trim() !== '' ? 1 : 0)
+  }, 0)
 
   return (
     <>
@@ -115,7 +115,7 @@ export default function LatestTransactions({
       {hasActiveFilters && (
         <div className="mb-16 rounded bg-primary-75 p-12">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-8 text-sm text-primary-30">
+            <div className="mr-8 flex items-center gap-8 text-sm text-primary-30">
               <svg className="h-16 w-16" fill="currentColor" viewBox="0 0 20 20">
                 <path
                   fillRule="evenodd"
@@ -123,8 +123,7 @@ export default function LatestTransactions({
                   clipRule="evenodd"
                 />
               </svg>
-              {t('filtersActive', { count: activeFilterCount }) ||
-                `${activeFilterCount} filter(s) active`}
+              {t('filtersActive', { count: activeFilterCount })}
             </div>
             <div className="flex flex-wrap gap-8">
               {activeFilters.source && (
