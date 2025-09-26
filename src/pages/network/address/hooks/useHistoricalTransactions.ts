@@ -30,9 +30,16 @@ export default function useHistoricalTransactions(
 
       if (result?.length) {
         setHistoricalTxs((prev) => {
-          const txIdSet = new Set(prev.map(({ transaction }) => transaction.txId))
-          const uniqueTxs = result.filter(({ transaction }) => !txIdSet.has(transaction.txId))
-          return [...prev, ...uniqueTxs]
+          // Create a set of existing transaction IDs for deduplication
+          const existingTxIds = new Set(prev.map(({ transaction }) => transaction.txId))
+
+          // Filter out transactions that already exist
+          const newUniqueTxs = result.filter(({ transaction }) => {
+            return !existingTxIds.has(transaction.txId)
+          })
+
+          // Return the combined array
+          return [...prev, ...newUniqueTxs]
         })
 
         setHasMore(result.length === PAGE_SIZE)

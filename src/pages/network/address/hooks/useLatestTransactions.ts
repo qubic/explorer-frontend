@@ -1,100 +1,211 @@
+import { useGetTransactionsForIdentityMutation } from '@app/store/apis/query-service/query-service.api'
+import type {
+  QueryServiceResponse,
+  QueryServiceTransaction
+} from '@app/store/apis/query-service/query-service.types'
 import { useCallback, useEffect, useRef, useState } from 'react'
 
-import type { GetAddressBalancesResponse } from '@app/store/apis/archiver-v1'
-import type { Transaction } from '@app/store/apis/archiver-v2'
-import { useLazyGetIndentityTransfersQuery } from '@app/store/apis/archiver-v2'
-
 const PAGE_SIZE = 50
-const START_TICK = 1
-const END_TICK = 999_999_999 // Endpoint has now pagination but we still have to provide an end tick, we set it to a very large number
+const MAX_RESULTS = 10_000 // query service limit
+
+export interface TransactionFilters {
+  source?: string
+  destination?: string
+  amount?: string
+  amountRange?: {
+    start?: string
+    end?: string
+  }
+  inputType?: string
+  tickNumberRange?: {
+    start?: string
+    end?: string
+  }
+  dateRange?: {
+    start?: string
+    end?: string
+  }
+}
 
 export interface UseLatestTransactionsResult {
-  transactions: Transaction[]
+  transactions: QueryServiceTransaction[]
   loadMoreTransactions: () => Promise<void>
   hasMore: boolean
   isLoading: boolean
   error: string | null
+  applyFilters: (filters: TransactionFilters) => void
+  clearFilters: () => void
+  activeFilters: TransactionFilters
 }
 
-export default function useLatestTransactions(
-  addressId: string,
-  addressEndTick: GetAddressBalancesResponse['balance']['validForTick']
-): UseLatestTransactionsResult {
-  const [txsList, setTxsList] = useState<Transaction[]>([])
+export default function useLatestTransactions(addressId: string): UseLatestTransactionsResult {
+  const [transactions, setTransactions] = useState<QueryServiceTransaction[]>([])
+  const [offset, setOffset] = useState(0)
   const [isLoading, setIsLoading] = useState(false)
-  const [nextPage, setNextPage] = useState(1)
-  const [hasMore, setHasMore] = useState(true)
+  const [activeFilters, setActiveFilters] = useState<TransactionFilters>({})
   const cancellationRef = useRef(false)
+  const [reachedEnd, setReachedEnd] = useState(false)
+  const [hasError, setHasError] = useState(false)
 
-  const [getIdentityTransfersQuery, { isFetching, error }] = useLazyGetIndentityTransfersQuery()
+  const [getTransactionsForIdentity, { error }] = useGetTransactionsForIdentityMutation()
 
-  const fetchTransfers = useCallback(async () => {
-    const result = await getIdentityTransfersQuery({
-      addressId,
-      startTick: START_TICK,
-      endTick: END_TICK,
-      page: nextPage,
-      pageSize: PAGE_SIZE
-    }).unwrap()
+  const hasMore = !reachedEnd && !hasError && offset < MAX_RESULTS
 
-    return result
-  }, [getIdentityTransfersQuery, addressId, nextPage])
+  const fetchPage = useCallback(
+    async (currentOffset: number, filters: TransactionFilters = {}) => {
+      // Clean up filters - remove empty strings and undefined values
+      const cleanFilters = Object.entries(filters).reduce((acc, [key, value]) => {
+        if (key === 'tickNumberRange') {
+          return acc
+        }
+        if (typeof value === 'string' && value.trim() !== '') {
+          return { ...acc, [key]: value.trim() }
+        }
+        return acc
+      }, {} as TransactionFilters)
+
+      const ranges = {
+        ...(filters.amountRange?.start || filters.amountRange?.end
+          ? {
+              amount: {
+                ...(filters.amountRange.start && filters.amountRange.start.trim() !== ''
+                  ? { gte: filters.amountRange.start.trim() }
+                  : {}),
+                ...(filters.amountRange.end && filters.amountRange.end.trim() !== ''
+                  ? { lte: filters.amountRange.end.trim() }
+                  : {})
+              }
+            }
+          : {}),
+        ...(filters.tickNumberRange?.start || filters.tickNumberRange?.end
+          ? {
+              tickNumber: {
+                ...(filters.tickNumberRange.start && filters.tickNumberRange.start.trim() !== ''
+                  ? { gte: filters.tickNumberRange.start.trim() }
+                  : {}),
+                ...(filters.tickNumberRange.end && filters.tickNumberRange.end.trim() !== ''
+                  ? { lte: filters.tickNumberRange.end.trim() }
+                  : {})
+              }
+            }
+          : {}),
+        ...(filters.dateRange?.start || filters.dateRange?.end
+          ? {
+              timestamp: {
+                ...(filters.dateRange.start
+                  ? { gte: new Date(filters.dateRange.start).getTime().toString() }
+                  : {}),
+                ...(filters.dateRange.end
+                  ? { lte: new Date(filters.dateRange.end).getTime().toString() }
+                  : {})
+              }
+            }
+          : {})
+      }
+
+      const result: QueryServiceResponse = await getTransactionsForIdentity({
+        identity: addressId,
+        filters: Object.keys(cleanFilters).length > 0 ? cleanFilters : undefined,
+        ranges,
+        pagination: {
+          offset: currentOffset,
+          size: PAGE_SIZE
+        }
+      }).unwrap()
+
+      return result?.transactions ?? []
+    },
+    [getTransactionsForIdentity, addressId]
+  )
 
   const loadMoreTransactions = useCallback(async () => {
-    if (isLoading || isFetching || !hasMore) return
-
+    if (isLoading || !hasMore) return
     setIsLoading(true)
+
     try {
-      const { pagination, transactions } = await fetchTransfers()
-      setNextPage(pagination.nextPage)
-      setTxsList((prev) => [...prev, ...transactions])
-      setHasMore(pagination.nextPage !== -1)
+      const newTxs = await fetchPage(offset, activeFilters)
+      if (!cancellationRef.current) {
+        if (newTxs.length > 0) {
+          setTransactions((prev) => [...prev, ...newTxs])
+          setOffset((prev) => prev + PAGE_SIZE)
+        }
+        // If we get less than PAGE_SIZE transactions, we know we've reached the end
+        if (newTxs.length < PAGE_SIZE) {
+          setReachedEnd(true)
+        }
+        setHasError(false) // Clear error state on successful fetch
+      }
+    } catch (err) {
+      if (!cancellationRef.current) {
+        setHasError(true) // Set error state to prevent further retries
+      }
+      throw err // Re-throw to let InfiniteScroll handle the error display
     } finally {
-      setIsLoading(false)
-    }
-  }, [isLoading, isFetching, hasMore, fetchTransfers])
-
-  useEffect(() => {
-    let isMounted = true
-    cancellationRef.current = false
-
-    const initialFetch = async () => {
-      setIsLoading(true)
-      const { pagination, transactions } = await fetchTransfers()
-
-      if (isMounted) {
-        setNextPage(pagination.nextPage)
-        setTxsList((prev) => [...prev, ...transactions])
-        setHasMore(pagination.nextPage !== -1)
+      if (!cancellationRef.current) {
         setIsLoading(false)
       }
     }
+  }, [isLoading, hasMore, offset, fetchPage, activeFilters])
 
-    if (txsList.length === 0 && hasMore) {
+  const applyFilters = useCallback((filters: TransactionFilters) => {
+    setActiveFilters(filters)
+    setTransactions([])
+    setOffset(0)
+    setReachedEnd(false)
+    setHasError(false) // Reset error state when applying new filters
+  }, [])
+
+  const clearFilters = useCallback(() => {
+    setActiveFilters({})
+    setTransactions([])
+    setOffset(0)
+    setReachedEnd(false)
+    setHasError(false) // Reset error state when clearing filters
+  }, [])
+
+  // Initial fetch and refetch when filters change
+  useEffect(() => {
+    cancellationRef.current = false
+    setTransactions([])
+    setOffset(0)
+    setReachedEnd(false)
+    setHasError(false) // Reset error state on initial fetch or dependencies change
+
+    const initialFetch = async () => {
+      setIsLoading(true)
+      try {
+        const firstPage = await fetchPage(0, activeFilters)
+        if (!cancellationRef.current) {
+          setTransactions(firstPage)
+          setOffset(PAGE_SIZE)
+          if (firstPage.length < PAGE_SIZE) {
+            setReachedEnd(true)
+          }
+        }
+      } finally {
+        if (!cancellationRef.current) {
+          setIsLoading(false)
+        }
+      }
+    }
+
+    if (addressId) {
       initialFetch()
     }
 
     return () => {
-      isMounted = false
       cancellationRef.current = true
     }
-  }, [addressEndTick, fetchTransfers, hasMore, nextPage, txsList.length])
-
-  useEffect(() => {
-    return () => {
-      if (addressId) {
-        setTxsList([])
-        setHasMore(true)
-        setNextPage(1)
-      }
-    }
-  }, [addressId])
+  }, [addressId, fetchPage, activeFilters])
 
   return {
-    transactions: txsList,
+    transactions,
     loadMoreTransactions,
     hasMore,
     isLoading,
-    error: error ? String(error) : null
+    error: error ? String(error) : null,
+    applyFilters,
+    clearFilters,
+    activeFilters
   }
 }
