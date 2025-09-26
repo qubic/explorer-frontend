@@ -63,11 +63,6 @@ export default function TickTransactions({ tick }: Props) {
     setOption(selectedOption.value)
   }, [])
 
-  const selectOptions = useMemo(
-    () => (isMobile ? TRANSACTION_OPTIONS_MOBILE : TRANSACTION_OPTIONS),
-    [isMobile]
-  )
-
   useEffect(() => {
     if (transactions) {
       setDisplayTransactions(transactions.slice(0, PAGE_SIZE))
@@ -75,18 +70,43 @@ export default function TickTransactions({ tick }: Props) {
     }
   }, [transactions])
 
+  // 1) pick the base options
+  const baseOptions = useMemo(
+    () => (isMobile ? TRANSACTION_OPTIONS_MOBILE : TRANSACTION_OPTIONS),
+    [isMobile]
+  )
+
+  // Localize them using the t constant
+  const selectOptions = useMemo(
+    () =>
+      baseOptions.map((o) => ({
+        ...o,
+        label: t(o.labelKey) // directly call your provided t
+      })),
+    [baseOptions, t] // depend on t so this re-runs when t changes
+  )
+
+  const defaultValue = useMemo(
+    () => selectOptions.find((o) => o.value === option),
+    [selectOptions, option]
+  )
+
   return (
     <div className="flex flex-col gap-16">
       <div className="flex items-center justify-between gap-10">
         <p className="font-space text-xl font-500">{t('transactions')}</p>
-        <Select
-          label="Transactions Type"
-          className="w-[150px] sm:w-[225px]"
-          size={isMobile ? 'sm' : 'lg'}
-          options={selectOptions}
-          onSelect={handleOnSelect}
-          defaultValue={TRANSACTION_OPTIONS.find((o) => o.value === option)}
-        />
+
+        {/* Wrapper controls width so the Select can size to its content */}
+        <div className="w-fit min-w-[150px] max-w-[90vw] sm:min-w-[252px]">
+          <Select
+            label={t('filter.label')}
+            className="whitespace-nowrap" // prevent wrapping inside the trigger
+            size={isMobile ? 'sm' : 'lg'}
+            options={selectOptions}
+            onSelect={handleOnSelect}
+            defaultValue={defaultValue}
+          />
+        </div>
       </div>
 
       <InfiniteScroll

@@ -2,9 +2,12 @@ import { memo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Tabs } from '@app/components/ui'
+import { envConfig } from '@app/configs'
 import { useHistoricalTransactions, useLatestTransactions } from '../../hooks'
 import HistoricalTxs from './HistoricalTxs'
 import LatestTransactions from './LatestTransactions'
+
+const isTestnet = envConfig.NETWORK === 'testnet'
 
 type Props = {
   addressId: string
@@ -29,30 +32,29 @@ function TransactionsOverview({ addressId }: Props) {
     hasMore: hasMoreHistoricalTxs,
     isLoading: isHistoricalTxsLoading,
     error: historicalTxsError
-  } = useHistoricalTransactions(addressId)
+  } = useHistoricalTransactions(addressId, { skip: isTestnet })
 
   return (
-    <div className="mt-40">
-      <p className="my-10 font-space text-20 font-500 leading-26">{t('transactions')}</p>
-      <Tabs>
-        <Tabs.List>
-          <Tabs.Tab>{t('latest')}</Tabs.Tab>
-          <Tabs.Tab>{t('historical')}</Tabs.Tab>
-        </Tabs.List>
-        <Tabs.Panels>
-          <Tabs.Panel>
-            <LatestTransactions
-              addressId={addressId}
-              transactions={transactions}
-              loadMore={loadMoreTransactions}
-              hasMore={hasMore}
-              isLoading={isLoading}
-              error={error}
-              onApplyFilters={applyFilters}
-              onClearFilters={clearFilters}
-              activeFilters={activeFilters}
-            />
-          </Tabs.Panel>
+    <Tabs className="rounded-lg border border-primary-60">
+      <Tabs.List>
+        <Tabs.Tab>{t('latest')}</Tabs.Tab>
+        {!isTestnet && <Tabs.Tab>{t('historical')}</Tabs.Tab>}
+      </Tabs.List>
+      <Tabs.Panels className="px-16 py-20">
+        <Tabs.Panel>
+          <LatestTransactions
+            addressId={addressId}
+            transactions={transactions}
+            loadMore={loadMoreTransactions}
+            hasMore={hasMore}
+            isLoading={isLoading}
+            error={error}
+            onApplyFilters={applyFilters}
+            onClearFilters={clearFilters}
+            activeFilters={activeFilters}
+          />
+        </Tabs.Panel>
+        {!isTestnet && (
           <Tabs.Panel>
             <HistoricalTxs
               addressId={addressId}
@@ -63,9 +65,9 @@ function TransactionsOverview({ addressId }: Props) {
               error={historicalTxsError}
             />
           </Tabs.Panel>
-        </Tabs.Panels>
-      </Tabs>
-    </div>
+        )}
+      </Tabs.Panels>
+    </Tabs>
   )
 }
 

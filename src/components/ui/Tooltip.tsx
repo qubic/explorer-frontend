@@ -1,26 +1,38 @@
+import { useId, useMemo } from 'react'
+import { Tooltip as ReactTooltip } from 'react-tooltip'
+
 type Props = {
+  tooltipId: string
   children: React.ReactNode
   content: string
 }
 
-export default function Tooltip({ children, content }: Props) {
+export default function Tooltip({ tooltipId, children, content }: Props) {
+  const id = useId()
+
+  const tooltipIdWithId = useMemo(() => `${tooltipId}-${id}-tooltip`, [tooltipId, id])
+
   return (
-    <div className="group relative">
-      <div>{children}</div>
-      <div className="absolute bottom-full left-1/2 mb-2 hidden -translate-x-1/2 transform group-hover:block">
-        <div className="w-max max-w-[50vw] break-words rounded-8 bg-primary-60 px-8 py-6 text-xxs text-white xs:text-xs md:max-w-512">
-          {content}
-        </div>
-        <svg
-          className="absolute left-1/2 top-full h-3 w-full -translate-x-1/2 transform text-primary-60"
-          x="0px"
-          y="0px"
-          viewBox="0 0 255 255"
-          xmlSpace="preserve"
-        >
-          <polygon className="fill-current" points="0,0 127.5,127.5 255,0" />
-        </svg>
-      </div>
+    <div className="group relative h-fit w-fit">
+      <div data-tooltip-id={tooltipIdWithId}>{children}</div>
+      <ReactTooltip
+        id={tooltipIdWithId}
+        style={{
+          backgroundColor: '#202E3C',
+          borderRadius: 10,
+          fontSize: 11,
+          maxWidth: '200px', // Set a fixed maximum width for tooltips
+          wordWrap: 'break-word', // Breaks long words when necessary
+          wordBreak: 'break-word', // Breaks word at any point if necessary
+          whiteSpace: 'normal', // Allows text to break to the next line
+          lineHeight: '1.5', // Adds spacing between lines
+          padding: '5px', // Adds padding inside the tooltip
+          boxSizing: 'border-box' // Ensures padding doesn't overflow the tooltip
+        }}
+        opacity={100}
+      >
+        {content}
+      </ReactTooltip>
     </div>
   )
 }

@@ -4,7 +4,7 @@ import { Alert } from '@app/components/ui'
 import type { Transaction } from '@app/store/apis/archiver-v2/archiver-v2.types'
 import { clsxTwMerge, formatDate, formatString } from '@app/utils'
 import { getAddressName } from '@app/utils/qubic'
-import type { AssetTransfer, Transfer } from '@app/utils/qubic-ts'
+import { type AssetTransfer, type Transfer, isSmartContractTx } from '@app/utils/qubic-ts'
 import { useMemo } from 'react'
 import AddressLink from '../AddressLink'
 import SubCardItem from '../SubCardItem'
@@ -101,7 +101,7 @@ export default function TransactionDetails({
           variant={variant}
           content={
             <p className="font-space text-sm">
-              {formatString(inputType)} {inputType === 0 ? 'Standard' : 'SC'}
+              {formatString(inputType)} {isSmartContractTx(destId, inputType) ? 'SC' : 'Standard'}
             </p>
           }
         />
@@ -115,7 +115,7 @@ export default function TransactionDetails({
             label={sourceAddressName}
             showTooltip={!!sourceAddressName}
             value={sourceId}
-            copy={!isSecondaryVariant}
+            copy={isSecondaryVariant}
           />
         }
       />
@@ -127,7 +127,7 @@ export default function TransactionDetails({
             label={destinationAddressName}
             showTooltip={!!destinationAddressName}
             value={assetDetails?.newOwnerAndPossessor ?? destId}
-            copy={!isSecondaryVariant}
+            copy={isSecondaryVariant}
           />
         }
       />
@@ -142,7 +142,7 @@ export default function TransactionDetails({
           variant={variant}
           content={
             <p className="font-space text-sm">
-              {formatString(inputType)} {inputType === 0 ? 'Standard' : 'SC'}
+              {formatString(inputType)} {isSmartContractTx(destId, inputType) ? 'SC' : 'Standard'}
             </p>
           }
         />

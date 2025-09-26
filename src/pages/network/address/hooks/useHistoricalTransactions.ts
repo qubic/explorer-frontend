@@ -13,7 +13,8 @@ export interface UseHistoricalTransactionsOutput {
 }
 
 export default function useHistoricalTransactions(
-  addressId: string
+  addressId: string,
+  options: { skip: boolean } = { skip: false }
 ): UseHistoricalTransactionsOutput {
   const [triggerGetHistory, { isFetching, error }] = useLazyGetAddressHistoryQuery()
 
@@ -53,10 +54,10 @@ export default function useHistoricalTransactions(
   }, [addressId, page, triggerGetHistory, hasMore, isFetching, error])
 
   useEffect(() => {
-    if (historicalTxs.length === 0) {
+    if (historicalTxs.length === 0 && !options.skip) {
       loadMoreTransactions()
     }
-  }, [historicalTxs.length, loadMoreTransactions])
+  }, [historicalTxs.length, loadMoreTransactions, options.skip])
 
   return {
     historicalTransactions: historicalTxs,

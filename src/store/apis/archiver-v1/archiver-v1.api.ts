@@ -2,16 +2,19 @@ import { envConfig } from '@app/configs'
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import type {
   GetAddressBalancesResponse,
+  GetAssetsIssuancesResponse,
+  GetAssetsRichListResponse,
   GetEpochComputorsResponse,
   GetIssuedAssetsResponse,
   GetLatestStatsResponse,
   GetOwnedAssetsResponse,
   GetPossessedAssetsResponse,
   GetRichListResponse,
-  GetTickDataResponse
+  GetTickDataResponse,
+  GetTickInfoResponse
 } from './archiver-v1.types'
 
-const BASE_URL = `${envConfig.ARCHIVER_API_URL}/v1`
+const BASE_URL = `${envConfig.QUBIC_RPC_URL}/v1`
 
 export const archiverV1Api = createApi({
   reducerPath: 'archiverV1Api',
@@ -22,8 +25,16 @@ export const archiverV1Api = createApi({
       query: () => '/latest-stats',
       transformResponse: (response: GetLatestStatsResponse) => response.data
     }),
+    // Rich List
     getRichList: build.query<GetRichListResponse, { page: number; pageSize: number }>({
       query: ({ page, pageSize }) => `/rich-list?page=${page}&pageSize=${pageSize}`
+    }),
+    getAssetsRichList: build.query<
+      GetAssetsRichListResponse,
+      { issuer: string; asset: string; page: number; pageSize: number }
+    >({
+      query: ({ issuer, asset, page, pageSize }) =>
+        `/issuers/${issuer}/assets/${asset}/owners?page=${page}&pageSize=${pageSize}`
     }),
     // Tick
     getTickData: build.query<GetTickDataResponse['tickData'], { tick: number }>({
@@ -58,6 +69,20 @@ export const archiverV1Api = createApi({
     >({
       query: ({ address }) => `/assets/${address}/possessed`,
       transformResponse: (response: GetPossessedAssetsResponse) => response.possessedAssets
+    }),
+    // Assets
+    getAssetsIssuances: build.query<
+      GetAssetsIssuancesResponse,
+      { issuerIdentity?: string; assetName?: string } | void
+    >({
+      query: ({ issuerIdentity, assetName } = {}) => ({
+        url: '/assets/issuances',
+        params: { issuerIdentity, assetName }
+      })
+    }),
+    getTickInfo: build.query<GetTickInfoResponse['tickInfo'], void>({
+      query: () => '/tick-info',
+      transformResponse: (response: GetTickInfoResponse) => response.tickInfo
     })
   })
 })
@@ -65,7 +90,9 @@ export const archiverV1Api = createApi({
 export const {
   // General
   useGetLatestStatsQuery,
+  // Rich Lists
   useGetRichListQuery,
+  useGetAssetsRichListQuery,
   // Tick
   useGetTickDataQuery,
   // Epoch
@@ -76,5 +103,9 @@ export const {
   // Address Assets
   useGetAddressIssuedAssetsQuery,
   useGetAddressOwnedAssetsQuery,
-  useGetAddressPossessedAssetsQuery
+  useGetAddressPossessedAssetsQuery,
+  // Assets
+  useGetAssetsIssuancesQuery,
+  // tick info
+  useGetTickInfoQuery
 } = archiverV1Api

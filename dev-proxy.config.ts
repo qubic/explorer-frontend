@@ -18,6 +18,10 @@ export const createProxyConfig = (
           req.headers['access-control-request-headers'] || ''
         )
 
+        // Remove referer and referrer headers to avoid being blocked
+        proxyReq.removeHeader('referer')
+        proxyReq.removeHeader('referrer')
+
         if (req.method === 'OPTIONS') {
           res.writeHead(200)
           res.end()
@@ -25,7 +29,9 @@ export const createProxyConfig = (
         }
 
         // eslint-disable-next-line no-console
-        console.log(`[${label}] - API CALL - [${req.method}] ${options.target}${req.url}`)
+        console.log(
+          `[${label}] - API CALL - [${req.method}] ${typeof options.target === 'string' ? options.target : JSON.stringify(options.target)}${req.url}`
+        )
         proxyReq.setHeader('Authorization', req.headers.authorization || '')
       })
 

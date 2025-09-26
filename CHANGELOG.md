@@ -1,3 +1,257 @@
+# [1.20.0](https://github.com/qubic/explorer-frontend/compare/v1.19.1...v1.20.0) (2025-09-09)
+
+
+### Bug Fixes
+
+* update selected style of button when viewing the rich list ([17da8a6](https://github.com/qubic/explorer-frontend/commit/17da8a6226ea00258dddbdf6cecc7aa7597f5968))
+
+
+### Features
+
+* integrate Turnstile for enhanced verification ([19157fc](https://github.com/qubic/explorer-frontend/commit/19157fc3a31f688ea7b34b34d312011442eada25))
+* qswap and nostromo contracts added ([ceae318](https://github.com/qubic/explorer-frontend/commit/ceae31854758ef8e70c755e212e484cbdc8ea66d))
+
+# [1.20.0-rc.1](https://github.com/qubic/explorer-frontend/compare/v1.19.1...v1.20.0-rc.1) (2025-09-09)
+
+
+### Bug Fixes
+
+* update selected style of button when viewing the rich list ([17da8a6](https://github.com/qubic/explorer-frontend/commit/17da8a6226ea00258dddbdf6cecc7aa7597f5968))
+
+
+### Features
+
+* integrate Turnstile for enhanced verification ([19157fc](https://github.com/qubic/explorer-frontend/commit/19157fc3a31f688ea7b34b34d312011442eada25))
+* qswap and nostromo contracts added ([ceae318](https://github.com/qubic/explorer-frontend/commit/ceae31854758ef8e70c755e212e484cbdc8ea66d))
+
+## [1.19.1](https://github.com/qubic/explorer-frontend/compare/v1.19.0...v1.19.1) (2025-08-13)
+
+
+### Bug Fixes
+
+* update OVERVIEW_DATA_POLLING_INTERVAL_MS to 60 seconds ([36e2dc0](https://github.com/qubic/explorer-frontend/commit/36e2dc0333923b254b0999f9f78708e711ec42a1))
+
+# [1.19.0](https://github.com/qubic/explorer-frontend/compare/v1.18.0...v1.19.0) (2025-08-13)
+
+
+### Features
+
+* integrate Turnstile for enhanced verification ([469db63](https://github.com/qubic/explorer-frontend/commit/469db6351931496310ff10f72b35a4d00e73ff81))
+
+# [1.18.0](https://github.com/qubic/explorer-frontend/compare/v1.17.2...v1.18.0) (2025-07-16)
+
+
+### Features
+
+* add qxmr, qxtrade and coded token constants ([7a17c4d](https://github.com/qubic/explorer-frontend/commit/7a17c4d5b0a21b0442cc7a3001d5ed0dc826e917))
+
+# [1.18.0-rc.1](https://github.com/qubic/explorer-frontend/compare/v1.17.2...v1.18.0-rc.1) (2025-07-16)
+
+
+### Features
+
+* add qxmr, qxtrade and coded token constants ([7a17c4d](https://github.com/qubic/explorer-frontend/commit/7a17c4d5b0a21b0442cc7a3001d5ed0dc826e917))
+
+## [1.17.2](https://github.com/qubic/explorer-frontend/compare/v1.17.1...v1.17.2) (2025-07-08)
+
+
+### Bug Fixes
+
+* update Qbay smart contract address ([40b8566](https://github.com/qubic/explorer-frontend/commit/40b8566c93bce5db5634121155cb4c9536ce7ef7))
+
+## [1.17.1](https://github.com/qubic/explorer-frontend/compare/v1.17.0...v1.17.1) (2025-05-30)
+
+
+### Bug Fixes
+
+* add matilda token constant ([6465608](https://github.com/qubic/explorer-frontend/commit/64656087f4e905513ba048da7e6b52d601e97cd1))
+
+## [1.17.1-rc.1](https://github.com/qubic/explorer-frontend/compare/v1.17.0...v1.17.1-rc.1) (2025-05-30)
+
+
+### Bug Fixes
+
+* add matilda token constant ([6465608](https://github.com/qubic/explorer-frontend/commit/64656087f4e905513ba048da7e6b52d601e97cd1))
+
+# [1.17.0](https://github.com/qubic/explorer-frontend/compare/v1.16.1...v1.17.0) (2025-05-23)
+
+
+### Features
+
+* implement named addresses for matilda ([c07676b](https://github.com/qubic/explorer-frontend/commit/c07676b98ec6c341e37f98685f554ef6c6594782))
+
+# [1.17.0-rc.1](https://github.com/qubic/explorer-frontend/compare/v1.16.1...v1.17.0-rc.1) (2025-05-23)
+
+
+### Features
+
+* implement named addresses for matilda ([c07676b](https://github.com/qubic/explorer-frontend/commit/c07676b98ec6c341e37f98685f554ef6c6594782))
+
+## [1.16.1](https://github.com/qubic/explorer-frontend/compare/v1.16.0...v1.16.1) (2025-05-20)
+
+
+### Bug Fixes
+
+* fetch current tick from v1//tick-info endpoint ([58e74dc](https://github.com/qubic/explorer-frontend/commit/58e74dc7e9cd88daef8e6c136cd346ac5963feec))
+* remove 'type' modifier on a named import when 'import type' is used ([852f3b3](https://github.com/qubic/explorer-frontend/commit/852f3b3e7b53e4c7d6dff42b58309b1356e2e88f))
+* updates on tooltips text for german ([572c3c6](https://github.com/qubic/explorer-frontend/commit/572c3c6d480a11ef3c42bdeed1c1c83c20d29ba4))
+
+## [1.16.1-rc.1](https://github.com/qubic/explorer-frontend/compare/v1.16.0...v1.16.1-rc.1) (2025-05-14)
+
+
+### Bug Fixes
+
+* fetch current tick from v1//tick-info endpoint ([58e74dc](https://github.com/qubic/explorer-frontend/commit/58e74dc7e9cd88daef8e6c136cd346ac5963feec))
+* remove 'type' modifier on a named import when 'import type' is used ([852f3b3](https://github.com/qubic/explorer-frontend/commit/852f3b3e7b53e4c7d6dff42b58309b1356e2e88f))
+* updates on tooltips text for german ([572c3c6](https://github.com/qubic/explorer-frontend/commit/572c3c6d480a11ef3c42bdeed1c1c83c20d29ba4))
+
+# [1.16.0](https://github.com/qubic/explorer-frontend/compare/v1.15.0...v1.16.0) (2025-05-13)
+
+
+### Bug Fixes
+
+* display Standard for transactions to empty address ([f0722b7](https://github.com/qubic/explorer-frontend/commit/f0722b71419247064374017aee60517945b7f956))
+* overview tooltips text wrapping ([2351a35](https://github.com/qubic/explorer-frontend/commit/2351a35ff47633d65cf86c18e87cce423b7a24bb))
+
+
+### Features
+
+* display last 10k ticks quality ([a21e9b0](https://github.com/qubic/explorer-frontend/commit/a21e9b084d1b2faec5bbedac97de82b19e05ad7c))
+* tooltip text added for tickQuality, ticksThisEpoch and lastNTickQuality cards ([1eda0bf](https://github.com/qubic/explorer-frontend/commit/1eda0bf4c9594d90681e7441853bdbcc64083d8f))
+
+# [1.16.0-rc.3](https://github.com/qubic/explorer-frontend/compare/v1.16.0-rc.2...v1.16.0-rc.3) (2025-05-12)
+
+
+### Bug Fixes
+
+* overview tooltips text wrapping ([2351a35](https://github.com/qubic/explorer-frontend/commit/2351a35ff47633d65cf86c18e87cce423b7a24bb))
+
+# [1.16.0-rc.2](https://github.com/qubic/explorer-frontend/compare/v1.16.0-rc.1...v1.16.0-rc.2) (2025-05-12)
+
+
+### Features
+
+* tooltip text added for tickQuality, ticksThisEpoch and lastNTickQuality cards ([1eda0bf](https://github.com/qubic/explorer-frontend/commit/1eda0bf4c9594d90681e7441853bdbcc64083d8f))
+
+# [1.16.0-rc.1](https://github.com/qubic/explorer-frontend/compare/v1.15.0...v1.16.0-rc.1) (2025-05-12)
+
+
+### Bug Fixes
+
+* display Standard for transactions to empty address ([f0722b7](https://github.com/qubic/explorer-frontend/commit/f0722b71419247064374017aee60517945b7f956))
+
+
+### Features
+
+* display last 10k ticks quality ([a21e9b0](https://github.com/qubic/explorer-frontend/commit/a21e9b084d1b2faec5bbedac97de82b19e05ad7c))
+
+# [1.15.0](https://github.com/qubic/explorer-frontend/compare/v1.14.1...v1.15.0) (2025-04-08)
+
+
+### Features
+
+* add polling interval for overview data queries ([41cd7f2](https://github.com/qubic/explorer-frontend/commit/41cd7f2e53fe332ff38efa2584df229421b1c0c7))
+* add Qbay smart contract to qubic constants ([89c7883](https://github.com/qubic/explorer-frontend/commit/89c7883281bad40c600a854b35546bc7febc78d4))
+* enhance dropdown component and update integrations ([afc492a](https://github.com/qubic/explorer-frontend/commit/afc492ac0716377bc846a193c82eee810a77d64e))
+* enhance Tabs component ([dd14305](https://github.com/qubic/explorer-frontend/commit/dd1430598e06e092b2f7d0076793f85245040196))
+* install and integrate react-tooltip ([99c5b7e](https://github.com/qubic/explorer-frontend/commit/99c5b7ed71d92f32ed1c2c0c1447f3ef6583c328))
+* integrate smart contract code and info display on address page ([077efb1](https://github.com/qubic/explorer-frontend/commit/077efb1f93a5f4ab3f88287216cc3e0e1570cab7))
+
+# [1.15.0-rc.1](https://github.com/qubic/explorer-frontend/compare/v1.14.1...v1.15.0-rc.1) (2025-04-08)
+
+
+### Features
+
+* add polling interval for overview data queries ([41cd7f2](https://github.com/qubic/explorer-frontend/commit/41cd7f2e53fe332ff38efa2584df229421b1c0c7))
+* add Qbay smart contract to qubic constants ([89c7883](https://github.com/qubic/explorer-frontend/commit/89c7883281bad40c600a854b35546bc7febc78d4))
+* enhance dropdown component and update integrations ([afc492a](https://github.com/qubic/explorer-frontend/commit/afc492ac0716377bc846a193c82eee810a77d64e))
+* enhance Tabs component ([dd14305](https://github.com/qubic/explorer-frontend/commit/dd1430598e06e092b2f7d0076793f85245040196))
+* install and integrate react-tooltip ([99c5b7e](https://github.com/qubic/explorer-frontend/commit/99c5b7ed71d92f32ed1c2c0c1447f3ef6583c328))
+* integrate smart contract code and info display on address page ([077efb1](https://github.com/qubic/explorer-frontend/commit/077efb1f93a5f4ab3f88287216cc3e0e1570cab7))
+
+## [1.14.1](https://github.com/qubic/explorer-frontend/compare/v1.14.0...v1.14.1) (2025-03-22)
+
+
+### Bug Fixes
+
+* update dependency array in useEffect for AssetsRichListPage ([c5b3fb6](https://github.com/qubic/explorer-frontend/commit/c5b3fb6f72dd40c25f6c94cde50ac33afa282c2e))
+
+# [1.14.0](https://github.com/qubic/explorer-frontend/compare/v1.13.0...v1.14.0) (2025-03-21)
+
+
+### Bug Fixes
+
+* remove currency label from amount header in AssetsRichListPage ([b2bcb66](https://github.com/qubic/explorer-frontend/commit/b2bcb66f10bc6362818b0342280da4ee2e50d886))
+
+
+### Features
+
+* add Hackathon page and testnet Qubic RPC API integration ([156e458](https://github.com/qubic/explorer-frontend/commit/156e458d1a1a03e53a8d9df0774dac0671671f14))
+* add NetworkSelector component and add testnet configuration support ([a3a2551](https://github.com/qubic/explorer-frontend/commit/a3a2551c0344462eb30e80cb87f85066140a9c73))
+* add testnet support in deployment workflow ([7922dc0](https://github.com/qubic/explorer-frontend/commit/7922dc0cccaf1d679ee8de4982c1b57d693d0a5f))
+* add website links to smart contracts and update address page display ([e734a40](https://github.com/qubic/explorer-frontend/commit/e734a400a82d8e1193a879b8fea305a83b72612d))
+* enhance Button component with loading state and add LoadingSpinner ([7f5f968](https://github.com/qubic/explorer-frontend/commit/7f5f968c2db4a07f48abf0e7db66766c116dee40))
+* integrate assets rich list page ([d430a06](https://github.com/qubic/explorer-frontend/commit/d430a06db2ca271d3392d39b77a5d6cb10273584))
+
+# [1.14.0-rc.2](https://github.com/qubic/explorer-frontend/compare/v1.14.0-rc.1...v1.14.0-rc.2) (2025-03-21)
+
+
+### Bug Fixes
+
+* remove currency label from amount header in AssetsRichListPage ([b2bcb66](https://github.com/qubic/explorer-frontend/commit/b2bcb66f10bc6362818b0342280da4ee2e50d886))
+
+# [1.14.0-rc.1](https://github.com/qubic/explorer-frontend/compare/v1.13.0...v1.14.0-rc.1) (2025-03-21)
+
+
+### Features
+
+* add Hackathon page and testnet Qubic RPC API integration ([156e458](https://github.com/qubic/explorer-frontend/commit/156e458d1a1a03e53a8d9df0774dac0671671f14))
+* add NetworkSelector component and add testnet configuration support ([a3a2551](https://github.com/qubic/explorer-frontend/commit/a3a2551c0344462eb30e80cb87f85066140a9c73))
+* add testnet support in deployment workflow ([7922dc0](https://github.com/qubic/explorer-frontend/commit/7922dc0cccaf1d679ee8de4982c1b57d693d0a5f))
+* add website links to smart contracts and update address page display ([e734a40](https://github.com/qubic/explorer-frontend/commit/e734a400a82d8e1193a879b8fea305a83b72612d))
+* enhance Button component with loading state and add LoadingSpinner ([7f5f968](https://github.com/qubic/explorer-frontend/commit/7f5f968c2db4a07f48abf0e7db66766c116dee40))
+* integrate assets rich list page ([d430a06](https://github.com/qubic/explorer-frontend/commit/d430a06db2ca271d3392d39b77a5d6cb10273584))
+
+# [1.13.0](https://github.com/qubic/explorer-frontend/compare/v1.12.0...v1.13.0) (2025-03-13)
+
+
+### Bug Fixes
+
+* update footer links to use correct URL paths ([14a4e97](https://github.com/qubic/explorer-frontend/commit/14a4e974f5f2adbb38f6209436aa0c250836cc9c))
+* update pnpm version range in package.json ([05c0369](https://github.com/qubic/explorer-frontend/commit/05c0369e31df5cf7211a83e87e9a27de565418df))
+
+
+### Features
+
+* add additional exchange entries to the constants ([282e337](https://github.com/qubic/explorer-frontend/commit/282e337bdb3a13fbf5fb422b566e7c4da349eadc))
+* add MSVault to SmartContracts ([ce6d72e](https://github.com/qubic/explorer-frontend/commit/ce6d72ea240347b20643acecf61b7f99482530bf))
+* add scroll to top on route change in AppLayout component ([388fd5d](https://github.com/qubic/explorer-frontend/commit/388fd5d0dad478f717110df2b30a00593586ff97))
+* add total value locked (TVL) translations ([3bba913](https://github.com/qubic/explorer-frontend/commit/3bba91366c0e561b7d1e877fa786f2c65169de4d))
+* enhance identity transfers API with pagination support ([56ea55f](https://github.com/qubic/explorer-frontend/commit/56ea55f0f1a6eae3d4f64ebdf33d2e7041ecac49))
+* implement pagination for identity transfers in useLatestTransactions hook ([49a4505](https://github.com/qubic/explorer-frontend/commit/49a4505323e793ab9f57bd565b006fd3f924670a))
+* ui small improvements for identify page ([5a95609](https://github.com/qubic/explorer-frontend/commit/5a956098a1def88aa9353075f25000f317c03313))
+* update copy actions in the transaction details page ([b3befe6](https://github.com/qubic/explorer-frontend/commit/b3befe61ce66ee2b9a4658bd3f869f331983b0cf))
+
+# [1.13.0-rc.1](https://github.com/qubic/explorer-frontend/compare/v1.12.0...v1.13.0-rc.1) (2025-03-13)
+
+
+### Bug Fixes
+
+* update footer links to use correct URL paths ([14a4e97](https://github.com/qubic/explorer-frontend/commit/14a4e974f5f2adbb38f6209436aa0c250836cc9c))
+* update pnpm version range in package.json ([05c0369](https://github.com/qubic/explorer-frontend/commit/05c0369e31df5cf7211a83e87e9a27de565418df))
+
+
+### Features
+
+* add additional exchange entries to the constants ([282e337](https://github.com/qubic/explorer-frontend/commit/282e337bdb3a13fbf5fb422b566e7c4da349eadc))
+* add MSVault to SmartContracts ([ce6d72e](https://github.com/qubic/explorer-frontend/commit/ce6d72ea240347b20643acecf61b7f99482530bf))
+* add scroll to top on route change in AppLayout component ([388fd5d](https://github.com/qubic/explorer-frontend/commit/388fd5d0dad478f717110df2b30a00593586ff97))
+* add total value locked (TVL) translations ([3bba913](https://github.com/qubic/explorer-frontend/commit/3bba91366c0e561b7d1e877fa786f2c65169de4d))
+* enhance identity transfers API with pagination support ([56ea55f](https://github.com/qubic/explorer-frontend/commit/56ea55f0f1a6eae3d4f64ebdf33d2e7041ecac49))
+* implement pagination for identity transfers in useLatestTransactions hook ([49a4505](https://github.com/qubic/explorer-frontend/commit/49a4505323e793ab9f57bd565b006fd3f924670a))
+* ui small improvements for identify page ([5a95609](https://github.com/qubic/explorer-frontend/commit/5a956098a1def88aa9353075f25000f317c03313))
+* update copy actions in the transaction details page ([b3befe6](https://github.com/qubic/explorer-frontend/commit/b3befe61ce66ee2b9a4658bd3f869f331983b0cf))
+
 # [1.12.0](https://github.com/qubic/explorer-frontend/compare/v1.11.1...v1.12.0) (2025-01-07)
 
 

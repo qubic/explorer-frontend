@@ -11,7 +11,7 @@ import type {
   GetTickTransactionsResponse
 } from './archiver-v2.types'
 
-const BASE_URL = `${envConfig.ARCHIVER_API_URL}/v2`
+const BASE_URL = `${envConfig.QUBIC_RPC_URL}/v2`
 
 export const archiverV2Api = createApi({
   reducerPath: 'archiverV2Api',
@@ -24,13 +24,18 @@ export const archiverV2Api = createApi({
     }),
     // Identity Transfers
     getIndentityTransfers: builder.query<
-      GetIdentityTransfersResponse['transactions'][0]['transactions'],
+      {
+        pagination: GetIdentityTransfersResponse['pagination']
+        transactions: GetIdentityTransfersResponse['transactions'][0]['transactions']
+      },
       GetIdentityTransfersArgs
     >({
-      query: ({ addressId, startTick, endTick }) =>
-        `identities/${addressId}/transfers?startTick=${startTick}&endTick=${endTick}`,
-      transformResponse: (response: GetIdentityTransfersResponse) =>
-        response.transactions.flatMap(({ transactions }) => transactions)
+      query: ({ addressId, startTick, endTick, page, pageSize }) =>
+        `identities/${addressId}/transfers?startTick=${startTick}&endTick=${endTick}&page=${page}&pageSize=${pageSize}&desc=true`,
+      transformResponse: (response: GetIdentityTransfersResponse) => ({
+        pagination: response.pagination,
+        transactions: response.transactions.flatMap(({ transactions }) => transactions)
+      })
     }),
     // Tick Transactions
     getTickTransactions: builder.query<
@@ -53,7 +58,6 @@ export const {
   // Transactions
   useGetTransactionQuery,
   // Identity Transfers
-  useGetIndentityTransfersQuery,
   useLazyGetIndentityTransfersQuery,
   // Tick Transactions
   useGetTickTransactionsQuery,
