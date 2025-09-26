@@ -54,51 +54,55 @@ export default function TransactionFilterDialog({
     setErrors({})
   }, [activeFilters, isOpen])
 
-  const validateRangeField = (
-    field:
-      | 'tickNumberStart'
-      | 'tickNumberEnd'
-      | 'dateStart'
-      | 'dateEnd'
-      | 'amountStart'
-      | 'amountEnd',
-    value: string,
-    otherValue: string | undefined,
-    translate: (key: string) => string
-  ): string | undefined => {
-    const isTickField = field.includes('tick')
-    const isAmountField = field.includes('amount')
-    const isDateField = field.includes('date')
-    const isStartField = field.includes('Start')
-
-    if (isTickField && !isValidNumber(value)) {
-      return translate('invalidValue')
-    }
-
-    if (isAmountField && !isValidNumber(value)) {
-      return translate('invalidValue')
-    }
-
-    if (isDateField && (!value || Number.isNaN(new Date(value).getTime()))) {
-      return translate('invalidValue')
-    }
-
-    // Range validation
-    if (otherValue) {
-      const currentVal = isDateField ? new Date(value).getTime() : Number(value)
-      const otherVal = isDateField ? new Date(otherValue).getTime() : Number(otherValue)
-
-      if ((isStartField && currentVal >= otherVal) || (!isStartField && currentVal <= otherVal)) {
-        return translate('invalidRange')
-      }
-    }
-
-    return undefined
-  }
-
   const validateField = useCallback(
     (field: keyof ValidationErrors, value?: string): string | undefined => {
       if (!value) return undefined
+
+      // Move validateRangeField inside useCallback to fix dependency warning
+      const validateRangeField = (
+        rangeField:
+          | 'tickNumberStart'
+          | 'tickNumberEnd'
+          | 'dateStart'
+          | 'dateEnd'
+          | 'amountStart'
+          | 'amountEnd',
+        fieldValue: string,
+        otherValue: string | undefined,
+        translate: (key: string) => string
+      ): string | undefined => {
+        const isTickField = rangeField.includes('tick')
+        const isAmountField = rangeField.includes('amount')
+        const isDateField = rangeField.includes('date')
+        const isStartField = rangeField.includes('Start')
+
+        if (isTickField && !isValidNumber(fieldValue)) {
+          return translate('invalidValue')
+        }
+
+        if (isAmountField && !isValidNumber(fieldValue)) {
+          return translate('invalidValue')
+        }
+
+        if (isDateField && (!fieldValue || Number.isNaN(new Date(fieldValue).getTime()))) {
+          return translate('invalidValue')
+        }
+
+        // Range validation
+        if (otherValue) {
+          const currentVal = isDateField ? new Date(fieldValue).getTime() : Number(fieldValue)
+          const otherVal = isDateField ? new Date(otherValue).getTime() : Number(otherValue)
+
+          if (
+            (isStartField && currentVal >= otherVal) ||
+            (!isStartField && currentVal <= otherVal)
+          ) {
+            return translate('invalidRange')
+          }
+        }
+
+        return undefined
+      }
 
       switch (field) {
         case 'source':
@@ -110,6 +114,17 @@ export default function TransactionFilterDialog({
           return !isValidNumber(value)
             ? t(`${field}Validation`) || `${field} must be a valid number`
             : undefined
+        case 'amount':
+          // Fix nested ternary - use if/else structure instead
+          if (filters.amountRange?.start || filters.amountRange?.end) {
+            return (
+              t('amountRangeAndFilterValidation') || 'Amount must not be set if amount range is set'
+            )
+          }
+          if (!isValidNumber(value)) {
+            return t(`${field}Validation`) || 'Amount must be a valid number'
+          }
+          return undefined
         case 'tickNumberStart':
         case 'tickNumberEnd':
           return validateRangeField(
@@ -140,7 +155,7 @@ export default function TransactionFilterDialog({
           return undefined
       }
     },
-    [t, filters, validateRangeField]
+    [t, filters]
   )
 
   const validateFilters = useCallback((): boolean => {
@@ -247,6 +262,22 @@ export default function TransactionFilterDialog({
             onBlur={() => {
               const error = validateField('destination', filters.destination)
               setErrors((prev) => ({ ...prev, destination: error }))
+            }}
+          />
+
+          <FilterInput
+            id="amount"
+            label="amount"
+            value={filters.amount}
+            error={errors.amount}
+            placeholder="enterAmount"
+            onChange={(value) => {
+              setFilters((prev) => ({ ...prev, amount: value }))
+              setErrors((prev) => ({ ...prev, amount: undefined }))
+            }}
+            onBlur={() => {
+              const error = validateField('amount', filters.amount)
+              setErrors((prev) => ({ ...prev, amount: error }))
             }}
           />
 
