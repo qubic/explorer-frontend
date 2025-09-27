@@ -1,3 +1,16 @@
+# [1.21.0](https://github.com/qubic/explorer-frontend/compare/v1.20.0...v1.21.0) (2025-09-12)
+
+
+### Bug Fixes
+
+* translations added for the trx selector in tick page ([a7a23e8](https://github.com/qubic/explorer-frontend/commit/a7a23e8ec4700d59d1f9c3aba0a7d225277ec934))
+
+
+### Features
+
+* add addresses and labels for new tokens ([84aacc3](https://github.com/qubic/explorer-frontend/commit/84aacc3f6bd3484ebf1b29a55cf8cc33bacdc7a6))
+* vietnamese translations added ([b2f0dac](https://github.com/qubic/explorer-frontend/commit/b2f0dacdaa62216e6975afe6e9200992a785ae9e))
+
 # [1.21.0-rc.1](https://github.com/qubic/explorer-frontend/compare/v1.20.0...v1.21.0-rc.1) (2025-09-12)
 
 
