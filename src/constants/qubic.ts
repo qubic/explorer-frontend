@@ -25,7 +25,8 @@ export enum SmartContracts {
   MSVault = 'LAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAKPTJ',
   Qbay = 'MAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWLWD',
   QSwap = 'NAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMAML',
-  Nost = 'OAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAZTPD'
+  Nost = 'OAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAZTPD',
+  QDraw = 'PAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAYVRC'
 }
 
 export const SMART_CONTRACTS: Record<
@@ -118,6 +119,13 @@ export const SMART_CONTRACTS: Record<
     githubUrl: 'https://github.com/qubic/core/blob/main/src/contracts/Nostromo.h',
     proposalUrl:
       'https://github.com/qubic/proposal/blob/d6addfa293b2fea19ecde3727f5e6e229388beb2/SmartContracts/2025-07-19-Nostromo.md'
+  },
+  [SmartContracts.QDraw]: {
+    name: 'QDRAW',
+    label: 'QDraw',
+    githubUrl: 'https://github.com/qubic/core/blob/main/src/contracts/Qdraw.h',
+    proposalUrl:
+      'https://github.com/qubic/proposal/blob/25a94970fee5f5669d70d7390ceef00d5a8e7d66/SmartContracts/2025-09-02-Qdraw.md'
   }
 } as const
 
