@@ -1,3 +1,10 @@
+# [1.22.0-rc.1](https://github.com/qubic/explorer-frontend/compare/v1.21.0...v1.22.0-rc.1) (2025-09-28)
+
+
+### Features
+
+* **static-data:** add qdraw to smart contracts array ([87e2a61](https://github.com/qubic/explorer-frontend/commit/87e2a61e4c3dfa363c032892d274f25809972927))
+
 # [1.21.0](https://github.com/qubic/explorer-frontend/compare/v1.20.0...v1.21.0) (2025-09-12)
 
 
