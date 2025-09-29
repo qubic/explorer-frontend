@@ -32,7 +32,8 @@ Before running the project, you must configure environment-specific variables fo
   VITE_ENABLE_PROXY=true
   VITE_NETWORK=mainnet
   VITE_QLI_API_URL=/dev-proxy-qli-api
-  VITE_QUBIC_RPC_URL=/dev-proxy-archiver-api
+  VITE_QUBIC_RPC_URL=/dev-proxy-rpc-api
+  VITE_QUERY_SERVICE_URL=/dev-proxy-query-service-api
   ```
 
 Ensure these files are not committed to the repository to protect sensitive information.
