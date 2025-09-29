@@ -7,7 +7,6 @@ import FilterInput from './FilterInput'
 interface ValidationErrors {
   source?: string
   destination?: string
-  amount?: string
   amountStart?: string
   amountEnd?: string
   inputType?: string
@@ -27,7 +26,6 @@ const defaultFilters: TransactionFilters = {
   dateRange: undefined
 }
 
-// Validation helpers
 const isValidAddress = (value?: string): boolean => !value || value.length === 60
 const isValidNumber = (value?: string): boolean => !value || /^\d+$/.test(value)
 
@@ -48,7 +46,6 @@ export default function TransactionFilterDialog({
   const [filters, setFilters] = useState<TransactionFilters>(activeFilters)
   const [errors, setErrors] = useState<ValidationErrors>({})
 
-  // Reset filters and errors when dialog opens with active filters
   useEffect(() => {
     setFilters(activeFilters)
     setErrors({})
@@ -58,39 +55,49 @@ export default function TransactionFilterDialog({
     (field: keyof ValidationErrors, value?: string): string | undefined => {
       if (!value) return undefined
 
-      // Move validateRangeField inside useCallback to fix dependency warning
-      const validateRangeField = (
-        rangeField:
-          | 'tickNumberStart'
-          | 'tickNumberEnd'
-          | 'dateStart'
-          | 'dateEnd'
-          | 'amountStart'
-          | 'amountEnd',
-        fieldValue: string,
+      const validateAmountRange = (
+        rangeField: 'amountStart' | 'amountEnd',
+        rangeValue: string,
         otherValue: string | undefined,
         translate: (key: string) => string
       ): string | undefined => {
-        const isTickField = rangeField.includes('tick')
-        const isAmountField = rangeField.includes('amount')
-        const isDateField = rangeField.includes('date')
-        const isStartField = rangeField.includes('Start')
-
-        if (isTickField && !isValidNumber(fieldValue)) {
+        if (!isValidNumber(rangeValue)) {
           return translate('invalidValue')
         }
 
-        if (isAmountField && !isValidNumber(fieldValue)) {
-          return translate('invalidValue')
-        }
-
-        if (isDateField && (!fieldValue || Number.isNaN(new Date(fieldValue).getTime()))) {
-          return translate('invalidValue')
-        }
-
-        // Range validation
         if (otherValue) {
-          const currentVal = isDateField ? new Date(fieldValue).getTime() : Number(fieldValue)
+          const currentVal = Number(rangeValue)
+          const otherVal = Number(otherValue)
+          const isStartField = rangeField === 'amountStart'
+
+          if ((isStartField && currentVal > otherVal) || (!isStartField && currentVal < otherVal)) {
+            return translate('invalidRangeAmount')
+          }
+        }
+
+        return undefined
+      }
+
+      const validateRangeField = (
+        fieldType: 'tickNumberStart' | 'tickNumberEnd' | 'dateStart' | 'dateEnd',
+        inputValue: string,
+        otherValue: string | undefined,
+        translate: (key: string) => string
+      ): string | undefined => {
+        const isTickField = fieldType.includes('tick')
+        const isDateField = fieldType.includes('date')
+        const isStartField = fieldType.includes('Start')
+
+        if (isTickField && !isValidNumber(inputValue)) {
+          return translate('invalidValue')
+        }
+
+        if (isDateField && (!inputValue || Number.isNaN(new Date(inputValue).getTime()))) {
+          return translate('invalidValue')
+        }
+
+        if (otherValue) {
+          const currentVal = isDateField ? new Date(inputValue).getTime() : Number(inputValue)
           const otherVal = isDateField ? new Date(otherValue).getTime() : Number(otherValue)
 
           if (
@@ -110,15 +117,14 @@ export default function TransactionFilterDialog({
           return !isValidAddress(value) ? t(`addressValidation`) : undefined
         case 'inputType':
           return !isValidNumber(value) ? t(`invalidValue`) : undefined
-        case 'amount':
-          // Fix nested ternary - use if/else structure instead
-          if (filters.amountRange?.start || filters.amountRange?.end) {
-            return t('amountRangeAndFilterValidation')
-          }
-          if (!isValidNumber(value)) {
-            return t(`invalidValue`)
-          }
-          return undefined
+        case 'amountStart':
+        case 'amountEnd':
+          return validateAmountRange(
+            field,
+            value,
+            field === 'amountStart' ? filters.amountRange?.end : filters.amountRange?.start,
+            t
+          )
         case 'tickNumberStart':
         case 'tickNumberEnd':
           return validateRangeField(
@@ -127,14 +133,6 @@ export default function TransactionFilterDialog({
             field === 'tickNumberStart'
               ? filters.tickNumberRange?.end
               : filters.tickNumberRange?.start,
-            t
-          )
-        case 'amountStart':
-        case 'amountEnd':
-          return validateRangeField(
-            field,
-            value,
-            field === 'amountStart' ? filters.amountRange?.end : filters.amountRange?.start,
             t
           )
         case 'dateStart':
@@ -156,7 +154,6 @@ export default function TransactionFilterDialog({
     const newErrors: ValidationErrors = {
       source: validateField('source', filters.source),
       destination: validateField('destination', filters.destination),
-      amount: validateField('amount', filters.amount),
       amountStart: validateField('amountStart', filters.amountRange?.start),
       amountEnd: validateField('amountEnd', filters.amountRange?.end),
       inputType: validateField('inputType', filters.inputType),
@@ -254,21 +251,6 @@ export default function TransactionFilterDialog({
             onBlur={() => {
               const error = validateField('destination', filters.destination)
               setErrors((prev) => ({ ...prev, destination: error }))
-            }}
-          />
-
-          <FilterInput
-            id="amount"
-            label="amount"
-            value={filters.amount}
-            error={errors.amount}
-            onChange={(value) => {
-              setFilters((prev) => ({ ...prev, amount: value }))
-              setErrors((prev) => ({ ...prev, amount: undefined }))
-            }}
-            onBlur={() => {
-              const error = validateField('amount', filters.amount)
-              setErrors((prev) => ({ ...prev, amount: error }))
             }}
           />
 

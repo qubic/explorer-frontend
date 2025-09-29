@@ -55,7 +55,7 @@ export default function useLatestTransactions(addressId: string): UseLatestTrans
     async (currentOffset: number, filters: TransactionFilters = {}) => {
       // Clean up filters - remove empty strings and undefined values
       const cleanFilters = Object.entries(filters).reduce((acc, [key, value]) => {
-        if (key === 'tickNumberRange') {
+        if (key === 'tickNumberRange' || key === 'amountRange') {
           return acc
         }
         if (typeof value === 'string' && value.trim() !== '') {
@@ -64,16 +64,22 @@ export default function useLatestTransactions(addressId: string): UseLatestTrans
         return acc
       }, {} as TransactionFilters)
 
+      if (
+        filters.amountRange?.start &&
+        filters.amountRange?.end &&
+        filters.amountRange.start.trim() === filters.amountRange.end.trim()
+      ) {
+        cleanFilters.amount = filters.amountRange.start.trim()
+      }
+
       const ranges = {
-        ...(filters.amountRange?.start || filters.amountRange?.end
+        ...(filters.amountRange?.start &&
+        filters.amountRange?.end &&
+        filters.amountRange.start.trim() !== filters.amountRange.end.trim()
           ? {
               amount: {
-                ...(filters.amountRange.start && filters.amountRange.start.trim() !== ''
-                  ? { gte: filters.amountRange.start.trim() }
-                  : {}),
-                ...(filters.amountRange.end && filters.amountRange.end.trim() !== ''
-                  ? { lte: filters.amountRange.end.trim() }
-                  : {})
+                gte: filters.amountRange.start.trim(),
+                lte: filters.amountRange.end.trim()
               }
             }
           : {}),
@@ -129,17 +135,16 @@ export default function useLatestTransactions(addressId: string): UseLatestTrans
           setTransactions((prev) => [...prev, ...newTxs])
           setOffset((prev) => prev + PAGE_SIZE)
         }
-        // If we get less than PAGE_SIZE transactions, we know we've reached the end
         if (newTxs.length < PAGE_SIZE) {
           setReachedEnd(true)
         }
-        setHasError(false) // Clear error state on successful fetch
+        setHasError(false)
       }
     } catch (err) {
       if (!cancellationRef.current) {
-        setHasError(true) // Set error state to prevent further retries
+        setHasError(true)
       }
-      throw err // Re-throw to let InfiniteScroll handle the error display
+      throw err
     } finally {
       if (!cancellationRef.current) {
         setIsLoading(false)
@@ -152,7 +157,7 @@ export default function useLatestTransactions(addressId: string): UseLatestTrans
     setTransactions([])
     setOffset(0)
     setReachedEnd(false)
-    setHasError(false) // Reset error state when applying new filters
+    setHasError(false)
   }, [])
 
   const clearFilters = useCallback(() => {
@@ -160,16 +165,15 @@ export default function useLatestTransactions(addressId: string): UseLatestTrans
     setTransactions([])
     setOffset(0)
     setReachedEnd(false)
-    setHasError(false) // Reset error state when clearing filters
+    setHasError(false)
   }, [])
 
-  // Initial fetch and refetch when filters change
   useEffect(() => {
     cancellationRef.current = false
     setTransactions([])
     setOffset(0)
     setReachedEnd(false)
-    setHasError(false) // Reset error state on initial fetch or dependencies change
+    setHasError(false)
 
     const initialFetch = async () => {
       setIsLoading(true)

@@ -106,8 +106,8 @@
   "clearAllFilters": "Clear All Filters",
   "applyFilters": "Apply Filters",
   "filtersActive": "{{count}} Filter(s) Active",
-  "startAmount": "Min Amount",
-  "endAmount": "Max Amount",
+  "startAmount": "From Amount",
+  "endAmount": "To Amount",
   "inputType": "Input Type",
   "startTick": "Start Tick",
   "endTick": "End Tick",
@@ -116,5 +116,6 @@
   "invalidValue": "Invalid value",
   "addressValidation": "Address must be exactly 60 characters",
   "invalidRange": "Invalid range - start value must be less than end value",
+  "invalidRangeAmount": "Invalid range - start value must be less than or equal to end value",
   "amountRangeAndFilterValidation": "Amount filter cannot be used with amount range filters"
 }
