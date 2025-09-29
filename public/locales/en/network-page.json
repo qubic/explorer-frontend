@@ -101,5 +101,20 @@
   "filterApprovedTransactions": "Approved transactions",
   "filterAll": "All",
   "filterTransfer": "Transfers",
-  "filterApproved": "Approved"
+  "filterApproved": "Approved",
+  "filterTransactions": "Filter Transactions",
+  "clearAllFilters": "Clear All Filters",
+  "applyFilters": "Apply Filters",
+  "filtersActive": "{{count}} Filter(s) Active",
+  "startAmount": "Min Amount",
+  "endAmount": "Max Amount",
+  "inputType": "Input Type",
+  "startTick": "Start Tick",
+  "endTick": "End Tick",
+  "startDate": "Start Date",
+  "endDate": "End Date",
+  "invalidValue": "Invalid value",
+  "addressValidation": "Address must be exactly 60 characters",
+  "invalidRange": "Invalid range - start value must be less than end value",
+  "amountRangeAndFilterValidation": "Amount filter cannot be used with amount range filters"
 }
