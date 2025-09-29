@@ -7,8 +7,7 @@ interface FilterInputProps {
   error?: string
   onChange: (value: string) => void
   onBlur?: () => void
-  placeholder?: string
-  type?: string // Add type prop for input type
+  type?: string
 }
 
 export default function FilterInput({
@@ -18,7 +17,6 @@ export default function FilterInput({
   error,
   onChange,
   onBlur,
-  placeholder,
   type = 'text'
 }: FilterInputProps) {
   const { t } = useTranslation('network-page')
@@ -37,7 +35,6 @@ export default function FilterInput({
         className={`w-full rounded bg-primary-60 px-12 py-8 text-sm text-white placeholder-gray-50 focus:outline-none focus:ring-2 ${
           error ? 'ring-2 ring-error-40' : 'focus:ring-primary-30'
         }`}
-        placeholder={t(placeholder || '') || placeholder}
       />
       {error && <p className="mt-4 text-xs text-error-40">{error}</p>}
     </div>

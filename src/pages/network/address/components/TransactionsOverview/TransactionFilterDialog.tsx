@@ -28,7 +28,7 @@ const defaultFilters: TransactionFilters = {
 }
 
 // Validation helpers
-const isValidAddress = (value?: string): boolean => !value || value.length >= 60
+const isValidAddress = (value?: string): boolean => !value || value.length === 60
 const isValidNumber = (value?: string): boolean => !value || /^\d+$/.test(value)
 
 type Props = {
@@ -107,22 +107,16 @@ export default function TransactionFilterDialog({
       switch (field) {
         case 'source':
         case 'destination':
-          return !isValidAddress(value)
-            ? t(`${field}Validation`) || `${field} address must be at least 60 characters`
-            : undefined
+          return !isValidAddress(value) ? t(`addressValidation`) : undefined
         case 'inputType':
-          return !isValidNumber(value)
-            ? t(`${field}Validation`) || `${field} must be a valid number`
-            : undefined
+          return !isValidNumber(value) ? t(`invalidValue`) : undefined
         case 'amount':
           // Fix nested ternary - use if/else structure instead
           if (filters.amountRange?.start || filters.amountRange?.end) {
-            return (
-              t('amountRangeAndFilterValidation') || 'Amount must not be set if amount range is set'
-            )
+            return t('amountRangeAndFilterValidation')
           }
           if (!isValidNumber(value)) {
-            return t(`${field}Validation`) || 'Amount must be a valid number'
+            return t(`invalidValue`)
           }
           return undefined
         case 'tickNumberStart':
@@ -238,7 +232,6 @@ export default function TransactionFilterDialog({
             label="source"
             value={filters.source}
             error={errors.source}
-            placeholder="enterSource"
             onChange={(value) => {
               setFilters((prev) => ({ ...prev, source: value }))
               setErrors((prev) => ({ ...prev, source: undefined }))
@@ -254,7 +247,6 @@ export default function TransactionFilterDialog({
             label="destination"
             value={filters.destination}
             error={errors.destination}
-            placeholder="enterDestination"
             onChange={(value) => {
               setFilters((prev) => ({ ...prev, destination: value }))
               setErrors((prev) => ({ ...prev, destination: undefined }))
@@ -270,7 +262,6 @@ export default function TransactionFilterDialog({
             label="amount"
             value={filters.amount}
             error={errors.amount}
-            placeholder="enterAmount"
             onChange={(value) => {
               setFilters((prev) => ({ ...prev, amount: value }))
               setErrors((prev) => ({ ...prev, amount: undefined }))
@@ -286,7 +277,6 @@ export default function TransactionFilterDialog({
             label="inputType"
             value={filters.inputType}
             error={errors.inputType}
-            placeholder="enterInputType"
             onChange={(value) => {
               setFilters((prev) => ({ ...prev, inputType: value }))
               setErrors((prev) => ({ ...prev, inputType: undefined }))
@@ -303,7 +293,6 @@ export default function TransactionFilterDialog({
               label="startAmount"
               value={filters.amountRange?.start}
               error={errors.amountStart}
-              placeholder="enterStartAmount"
               onChange={(value) => {
                 setFilters((prev) => ({
                   ...prev,
@@ -322,7 +311,6 @@ export default function TransactionFilterDialog({
               label="endAmount"
               value={filters.amountRange?.end}
               error={errors.amountEnd}
-              placeholder="enterEndAmount"
               onChange={(value) => {
                 setFilters((prev) => ({
                   ...prev,
@@ -344,7 +332,6 @@ export default function TransactionFilterDialog({
               type="datetime-local"
               value={filters.dateRange?.start}
               error={errors.dateStart}
-              placeholder={t('startDate')}
               onChange={(value) => {
                 setFilters((prev) => ({
                   ...prev,
@@ -363,7 +350,6 @@ export default function TransactionFilterDialog({
               type="datetime-local"
               value={filters.dateRange?.end}
               error={errors.dateEnd}
-              placeholder={t('endDate')}
               onChange={(value) => {
                 setFilters((prev) => ({
                   ...prev,
@@ -384,7 +370,6 @@ export default function TransactionFilterDialog({
               label={t('startTick')}
               value={filters.tickNumberRange?.start}
               error={errors.tickNumberStart}
-              placeholder={t('startTick')}
               onChange={(value) => {
                 setFilters((prev) => ({
                   ...prev,
@@ -402,7 +387,6 @@ export default function TransactionFilterDialog({
               label={t('endTick')}
               value={filters.tickNumberRange?.end}
               error={errors.tickNumberEnd}
-              placeholder={t('endTick')}
               onChange={(value) => {
                 setFilters((prev) => ({
                   ...prev,
