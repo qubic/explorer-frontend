@@ -34,6 +34,7 @@ Before running the project, you must configure environment-specific variables fo
   VITE_QLI_API_URL=/dev-proxy-qli-api
   VITE_QUBIC_RPC_URL=/dev-proxy-rpc-api
   VITE_STATIC_API_URL=/dev-proxy-static-api
+  VITE_QUERY_SERVICE_URL=/dev-proxy-query-service-api
   ```
 
   **Environment Variables Explained:**
@@ -43,6 +44,7 @@ Before running the project, you must configure environment-specific variables fo
   - `VITE_QLI_API_URL`: Qubic Li API URL for transactions and address history
   - `VITE_QUBIC_RPC_URL`: Qubic RPC/Archiver URL for network stats and blockchain data
   - `VITE_STATIC_API_URL`: Qubic Static API URL for smart contracts, tokens, and exchange data
+  - `VITE_QUERY_SERVICE_URL`: Query Service API URL for transaction filtering
 
 Ensure these files are not committed to the repository to protect sensitive information.
 
