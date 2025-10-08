@@ -26,7 +26,9 @@ export enum SmartContracts {
   Qbay = 'MAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWLWD',
   QSwap = 'NAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMAML',
   Nost = 'OAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAZTPD',
-  QDraw = 'PAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAYVRC'
+  QDraw = 'PAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAYVRC',
+  RL = 'QAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPIYE',
+  QBond = 'RAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADKAH'
 }
 
 export const SMART_CONTRACTS: Record<
@@ -126,6 +128,20 @@ export const SMART_CONTRACTS: Record<
     githubUrl: 'https://github.com/qubic/core/blob/main/src/contracts/Qdraw.h',
     proposalUrl:
       'https://github.com/qubic/proposal/blob/25a94970fee5f5669d70d7390ceef00d5a8e7d66/SmartContracts/2025-09-02-Qdraw.md'
+  },
+  [SmartContracts.RL]: {
+    name: 'RL',
+    label: 'Random Lottery',
+    githubUrl: 'https://github.com/qubic/core/blob/main/src/contracts/RandomLottery.h',
+    proposalUrl:
+      'https://github.com/N-010/proposal/blob/a8e8a80/SmartContracts/2025-09-13-RandomLottery.md'
+  },
+  [SmartContracts.QBond]: {
+    name: 'QBOND',
+    label: 'QBond',
+    githubUrl: 'https://github.com/qubic/core/blob/main/src/contracts/QBond.h',
+    proposalUrl:
+      'https://github.com/qubic/proposal/blob/605da6f57f17505b2d5b9b271b2351a90268f4c8/SmartContracts/2025-09-26-QBond.md'
   }
 } as const
 
