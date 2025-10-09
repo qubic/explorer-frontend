@@ -6,6 +6,7 @@ interface ImportMetaEnv {
   readonly VITE_NETWORK: string
   readonly VITE_QLI_API_URL: string
   readonly VITE_QUBIC_RPC_URL: string
+  readonly VITE_QUERY_SERVICE_URL: string
 }
 
 interface ImportMeta {
