@@ -1,3 +1,10 @@
+# [1.23.0](https://github.com/qubic/explorer-frontend/compare/v1.22.0...v1.23.0) (2025-10-08)
+
+
+### Features
+
+* **static-data:** add RL and QBOND to smart contracts array ([825e0e2](https://github.com/qubic/explorer-frontend/commit/825e0e258388e561da2ae0a1262772c9b4824272))
+
 # [1.23.0-rc.1](https://github.com/qubic/explorer-frontend/compare/v1.22.0...v1.23.0-rc.1) (2025-10-08)
 
 
