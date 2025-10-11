@@ -101,5 +101,7 @@
   "filterApprovedTransactions": "Одобренные транзакции",
   "filterAll": "Все",
   "filterTransfer": "Переводы",
-  "filterApproved": "Одобрено"
+  "filterApproved": "Одобрено",
+  "sharesIssuer": "Эмитент акций",
+  "index": "Индекс"
 }

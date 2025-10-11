@@ -101,5 +101,7 @@
   "filterApprovedTransactions": "已核准交易",
   "filterAll": "全部",
   "filterTransfer": "轉帳交易",
-  "filterApproved": "已核准"
+  "filterApproved": "已核准",
+  "sharesIssuer": "股份發行人",
+  "index": "索引"
 }

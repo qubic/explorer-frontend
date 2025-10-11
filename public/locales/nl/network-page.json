@@ -101,5 +101,7 @@
   "filterApprovedTransactions": "Goedgekeurde transacties",
   "filterAll": "Alle",
   "filterTransfer": "Overboekingen",
-  "filterApproved": "Goedgekeurd"
+  "filterApproved": "Goedgekeurd",
+  "sharesIssuer": "Aandelen Uitgever",
+  "index": "Index"
 }

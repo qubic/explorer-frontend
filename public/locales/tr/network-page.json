@@ -101,5 +101,7 @@
   "filterApprovedTransactions": "Onaylanmış işlemler",
   "filterAll": "Tümü",
   "filterTransfer": "Transferler",
-  "filterApproved": "Onaylı"
+  "filterApproved": "Onaylı",
+  "sharesIssuer": "Hisse Senedi İhraççısı",
+  "index": "İndeks"
 }
