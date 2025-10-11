@@ -33,51 +33,66 @@ export enum SmartContracts {
 
 export const SMART_CONTRACTS: Record<
   SmartContracts,
-  { name: string; label: string; website?: string; githubUrl: string; proposalUrl?: string }
+  {
+    name: string
+    label: string
+    website?: string
+    githubUrl: string
+    proposalUrl?: string
+    contractIndex: number
+  }
 > = {
   [SmartContracts.Qx]: {
     name: 'QX',
     label: 'Qx',
     website: QUBIC_PROJECTS_URLS.QX,
-    githubUrl: 'https://github.com/qubic/core/blob/main/src/contracts/Qx.h'
+    githubUrl: 'https://github.com/qubic/core/blob/main/src/contracts/Qx.h',
+    contractIndex: 1
   },
   [SmartContracts.Quottery]: {
     name: 'QTRY',
     label: 'Quottery',
     website: QUBIC_PROJECTS_URLS.QUOTTERY,
-    githubUrl: 'https://github.com/qubic/core/blob/main/src/contracts/Quottery.h'
+    githubUrl: 'https://github.com/qubic/core/blob/main/src/contracts/Quottery.h',
+    contractIndex: 2
   },
   [SmartContracts.Random]: {
     name: 'RANDOM',
     label: 'Random',
-    githubUrl: 'https://github.com/qubic/core/blob/main/src/contracts/Random.h'
+    githubUrl: 'https://github.com/qubic/core/blob/main/src/contracts/Random.h',
+    contractIndex: 3
   },
   [SmartContracts.QUtil]: {
     name: 'QUTIL',
     label: 'QUtil',
-    githubUrl: 'https://github.com/qubic/core/blob/main/src/contracts/QUtil.h'
+    githubUrl: 'https://github.com/qubic/core/blob/main/src/contracts/QUtil.h',
+    contractIndex: 4
   },
   [SmartContracts.MyLastMatch]: {
     name: 'MLM',
     label: 'My Last Match',
-    githubUrl: 'https://github.com/qubic/core/blob/main/src/contracts/MyLastMatch.h'
+    githubUrl: 'https://github.com/qubic/core/blob/main/src/contracts/MyLastMatch.h',
+    contractIndex: 5
   },
   [SmartContracts.GeneralQuorumProposal]: {
     name: 'GQMPROP',
     label: 'General Quorum Proposal',
-    githubUrl: 'https://github.com/qubic/core/blob/main/src/contracts/GeneralQuorumProposal.h'
+    githubUrl: 'https://github.com/qubic/core/blob/main/src/contracts/GeneralQuorumProposal.h',
+    contractIndex: 6
   },
   [SmartContracts.SupplyWatcher]: {
     name: 'SWATCH',
     label: 'Supply Watcher',
-    githubUrl: 'https://github.com/qubic/core/blob/main/src/contracts/SupplyWatcher.h'
+    githubUrl: 'https://github.com/qubic/core/blob/main/src/contracts/SupplyWatcher.h',
+    contractIndex: 7
   },
   [SmartContracts.ComputorControlledFund]: {
     name: 'CCF',
     label: 'Computor Controlled Fund',
     githubUrl: 'https://github.com/qubic/core/blob/main/src/contracts/ComputorControlledFund.h',
     proposalUrl:
-      'https://github.com/qubic/proposal/blob/e305392f2084dc72b4958c1a62d5af9cfa55785f/SmartContracts/2024-09-09-CCF.md'
+      'https://github.com/qubic/proposal/blob/e305392f2084dc72b4958c1a62d5af9cfa55785f/SmartContracts/2024-09-09-CCF.md',
+    contractIndex: 8
   },
   [SmartContracts.QEarn]: {
     name: 'QEARN',
@@ -85,63 +100,72 @@ export const SMART_CONTRACTS: Record<
     website: QUBIC_PROJECTS_URLS.QEARN,
     githubUrl: 'https://github.com/qubic/core/blob/main/src/contracts/Qearn.h',
     proposalUrl:
-      'https://github.com/qubic/proposal/blob/e305392f2084dc72b4958c1a62d5af9cfa55785f/SmartContracts/2024-11-14-QEarn.md'
+      'https://github.com/qubic/proposal/blob/e305392f2084dc72b4958c1a62d5af9cfa55785f/SmartContracts/2024-11-14-QEarn.md',
+    contractIndex: 9
   },
   [SmartContracts.QVault]: {
     name: 'QVAULT',
     label: 'QVault',
     githubUrl: 'https://github.com/qubic/core/blob/main/src/contracts/QVAULT.h',
     proposalUrl:
-      'https://github.com/qubic/proposal/blob/e305392f2084dc72b4958c1a62d5af9cfa55785f/SmartContracts/2024-11-14-QEarn.md'
+      'https://github.com/qubic/proposal/blob/e305392f2084dc72b4958c1a62d5af9cfa55785f/SmartContracts/2024-11-14-QEarn.md',
+    contractIndex: 10
   },
   [SmartContracts.MSVault]: {
     name: 'MSVAULT',
     label: 'MSVault',
     githubUrl: 'https://github.com/qubic/core/blob/main/src/contracts/MsVault.h',
     proposalUrl:
-      'https://github.com/qubic/proposal/blob/e305392f2084dc72b4958c1a62d5af9cfa55785f/SmartContracts/2025-02-09-MSVAULT.md'
+      'https://github.com/qubic/proposal/blob/e305392f2084dc72b4958c1a62d5af9cfa55785f/SmartContracts/2025-02-09-MSVAULT.md',
+    contractIndex: 11
   },
   [SmartContracts.Qbay]: {
     name: 'QBAY',
     label: 'QBay',
     githubUrl: 'https://github.com/qubic/core/blob/main/src/contracts/Qbay.h',
     proposalUrl:
-      'https://github.com/qubic/proposal/blob/e305392f2084dc72b4958c1a62d5af9cfa55785f/SmartContracts/2025-03-11-Qbay.md'
+      'https://github.com/qubic/proposal/blob/e305392f2084dc72b4958c1a62d5af9cfa55785f/SmartContracts/2025-03-11-Qbay.md',
+    contractIndex: 12
   },
   [SmartContracts.QSwap]: {
     name: 'QSWAP',
     label: 'QSwap',
     githubUrl: 'https://github.com/qubic/core/blob/main/src/contracts/Qswap.h',
     proposalUrl:
-      'https://github.com/qubic/proposal/blob/4c2bf93d8eeaebcfdc7b5723a01149b559a52ac5/SmartContracts/2025-07-11-QSwap.md'
+      'https://github.com/qubic/proposal/blob/4c2bf93d8eeaebcfdc7b5723a01149b559a52ac5/SmartContracts/2025-07-11-QSwap.md',
+    contractIndex: 13
   },
   [SmartContracts.Nost]: {
     name: 'NOST',
     label: 'Nostromo',
     githubUrl: 'https://github.com/qubic/core/blob/main/src/contracts/Nostromo.h',
     proposalUrl:
-      'https://github.com/qubic/proposal/blob/d6addfa293b2fea19ecde3727f5e6e229388beb2/SmartContracts/2025-07-19-Nostromo.md'
+      'https://github.com/qubic/proposal/blob/d6addfa293b2fea19ecde3727f5e6e229388beb2/SmartContracts/2025-07-19-Nostromo.md',
+    contractIndex: 14
   },
   [SmartContracts.QDraw]: {
     name: 'QDRAW',
     label: 'QDraw',
     githubUrl: 'https://github.com/qubic/core/blob/main/src/contracts/Qdraw.h',
     proposalUrl:
-      'https://github.com/qubic/proposal/blob/25a94970fee5f5669d70d7390ceef00d5a8e7d66/SmartContracts/2025-09-02-Qdraw.md'
+      'https://github.com/qubic/proposal/blob/25a94970fee5f5669d70d7390ceef00d5a8e7d66/SmartContracts/2025-09-02-Qdraw.md',
+    contractIndex: 15
   },
   [SmartContracts.RL]: {
     name: 'RL',
     label: 'Random Lottery',
     githubUrl: 'https://github.com/qubic/core/blob/main/src/contracts/RandomLottery.h',
     proposalUrl:
-      'https://github.com/N-010/proposal/blob/a8e8a80/SmartContracts/2025-09-13-RandomLottery.md'
+      'https://github.com/N-010/proposal/blob/a8e8a80/SmartContracts/2025-09-13-RandomLottery.md',
+    contractIndex: 16
   },
   [SmartContracts.QBond]: {
     name: 'QBOND',
     label: 'QBond',
     githubUrl: 'https://github.com/qubic/core/blob/main/src/contracts/QBond.h',
     proposalUrl:
-      'https://github.com/qubic/proposal/blob/605da6f57f17505b2d5b9b271b2351a90268f4c8/SmartContracts/2025-09-26-QBond.md'
+      'https://github.com/qubic/proposal/blob/605da6f57f17505b2d5b9b271b2351a90268f4c8/SmartContracts/2025-09-26-QBond.md',
+    contractIndex: 17
   }
 } as const
 

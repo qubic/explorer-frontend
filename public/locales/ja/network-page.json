@@ -95,5 +95,7 @@
   "smartContractCodeLoadError": "エラー：スマートコントラクトのコードを読み込めませんでした。ページを更新するか、後でもう一度お試しください。",
   "contract": "契約",
   "copied": "コピー済み",
-  "copyToClipboard": "クリップボードにコピー"
+  "copyToClipboard": "クリップボードにコピー",
+  "sharesIssuer": "株式発行者",
+  "contractIndex": "インデックス"
 }
