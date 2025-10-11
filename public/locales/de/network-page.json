@@ -101,5 +101,7 @@
   "filterApprovedTransactions": "Genehmigte Transaktionen",
   "filterAll": "Alle",
   "filterTransfer": "Überweisungen",
-  "filterApproved": "Genehmigt"
+  "filterApproved": "Genehmigt",
+  "sharesIssuer": "Aktien-Emittent",
+  "contractIndex": "Index"
 }

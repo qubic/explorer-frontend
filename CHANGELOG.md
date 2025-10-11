@@ -1,3 +1,11 @@
+# [1.24.0-rc.1](https://github.com/qubic/explorer-frontend/compare/v1.23.0...v1.24.0-rc.1) (2025-10-11)
+
+
+### Features
+
+* copy button added to token address ([99fd1e9](https://github.com/qubic/explorer-frontend/commit/99fd1e9a23a2e08609f08e124c4d06edc68418aa))
+* sc index, sc address copy button and shares issuer address added ([19aea08](https://github.com/qubic/explorer-frontend/commit/19aea083a639f5d4c1e53ff00a7fd1bed03da5f4))
+
 # [1.23.0](https://github.com/qubic/explorer-frontend/compare/v1.22.0...v1.23.0) (2025-10-08)
 
 
