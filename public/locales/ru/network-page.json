@@ -103,5 +103,5 @@
   "filterTransfer": "Переводы",
   "filterApproved": "Одобрено",
   "sharesIssuer": "Эмитент акций",
-  "index": "Индекс"
+  "contractIndex": "Индекс"
 }
