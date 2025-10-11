@@ -1,3 +1,10 @@
+## [1.24.1-rc.1](https://github.com/qubic/explorer-frontend/compare/v1.24.0...v1.24.1-rc.1) (2025-10-11)
+
+
+### Bug Fixes
+
+* index wrong local keys renamed as contractIndex ([ca74fee](https://github.com/qubic/explorer-frontend/commit/ca74feebb36183820fe25c42ead69a78cedf7528))
+
 # [1.24.0](https://github.com/qubic/explorer-frontend/compare/v1.23.0...v1.24.0) (2025-10-11)
 
 
