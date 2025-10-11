@@ -101,5 +101,7 @@
   "filterApprovedTransactions": "Giao dịch đã duyệt",
   "filterAll": "Tất cả",
   "filterTransfer": "Các chuyển khoản",
-  "filterApproved": "Đã duyệt"
+  "filterApproved": "Đã duyệt",
+  "sharesIssuer": "Nhà Phát Hành Cổ Phiếu",
+  "index": "Chỉ Số"
 }

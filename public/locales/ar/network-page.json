@@ -101,5 +101,7 @@
   "filterApprovedTransactions": "المعاملات المعتمدة",
   "filterAll": "الكل",
   "filterTransfer": "التحويلات",
-  "filterApproved": "معتمد"
+  "filterApproved": "معتمد",
+  "sharesIssuer": "مُصدر الأسهم",
+  "contractIndex": "الفهرس"
 }
