@@ -108,6 +108,12 @@ export default function TickTransactions({ tick }: Props) {
     }
   }, [transactions])
 
+  // Reset expand state when tick changes
+  useEffect(() => {
+    setExpandAll(false)
+    setExpandedTxIds(new Set())
+  }, [tick])
+
   // 1) pick the base options
   const baseOptions = useMemo(
     () => (isMobile ? TRANSACTION_OPTIONS_MOBILE : TRANSACTION_OPTIONS),

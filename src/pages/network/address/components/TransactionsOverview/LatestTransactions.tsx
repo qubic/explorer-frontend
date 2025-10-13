@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { ChevronDownIcon } from '@app/assets/icons'
@@ -28,6 +28,12 @@ export default function LatestTransactions({
   const { t } = useTranslation('network-page')
   const [expandAll, setExpandAll] = useState(false)
   const [expandedTxIds, setExpandedTxIds] = useState<Set<string>>(new Set())
+
+  // Reset expand state when addressId changes
+  useEffect(() => {
+    setExpandAll(false)
+    setExpandedTxIds(new Set())
+  }, [addressId])
 
   const handleExpandAllChange = useCallback(
     (checked: boolean) => {
