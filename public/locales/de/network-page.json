@@ -103,5 +103,7 @@
   "filterTransfer": "Überweisungen",
   "filterApproved": "Genehmigt",
   "sharesIssuer": "Aktien-Emittent",
-  "contractIndex": "Index"
+  "contractIndex": "Index",
+  "expandAll": "Alle erweitern",
+  "collapseAll": "Alle einklappen"
 }

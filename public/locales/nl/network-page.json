@@ -103,5 +103,7 @@
   "filterTransfer": "Overboekingen",
   "filterApproved": "Goedgekeurd",
   "sharesIssuer": "Aandelen Uitgever",
-  "contractIndex": "Index"
+  "contractIndex": "Index",
+  "expandAll": "Alles uitvouwen",
+  "collapseAll": "Alles invouwen"
 }

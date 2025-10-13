@@ -103,5 +103,7 @@
   "filterTransfer": "Transferler",
   "filterApproved": "Onaylı",
   "sharesIssuer": "Hisse Senedi İhraççısı",
-  "contractIndex": "İndeks"
+  "contractIndex": "İndeks",
+  "expandAll": "Tümünü genişlet",
+  "collapseAll": "Tümünü daralt"
 }

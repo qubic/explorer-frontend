@@ -103,5 +103,7 @@
   "filterTransfer": "Переводы",
   "filterApproved": "Одобрено",
   "sharesIssuer": "Эмитент акций",
-  "contractIndex": "Индекс"
+  "contractIndex": "Индекс",
+  "expandAll": "Развернуть все",
+  "collapseAll": "Свернуть все"
 }
