@@ -1,3 +1,5 @@
 export * from './redux'
 export { default as useTailwindBreakpoint } from './useTailwindBreakpoint'
 export { useTurnstile } from './useTurnstile'
+export { useGetAddressName } from './useGetAddressName'
+export type { GetAddressNameResult } from './useGetAddressName'

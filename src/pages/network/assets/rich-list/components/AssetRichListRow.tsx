@@ -1,9 +1,9 @@
-import { memo, useMemo } from 'react'
+import { memo } from 'react'
 
 import { AddressLink } from '@app/pages/network/components'
 import type { Owner } from '@app/store/apis/archiver-v1'
 import { formatString } from '@app/utils'
-import { getAddressName } from '@app/utils/qubic'
+import { useGetAddressName } from '@app/hooks'
 
 type Props = {
   entity: Owner & { rank: number }
@@ -11,7 +11,7 @@ type Props = {
 }
 
 function AssetRichListRow({ entity, isMobile }: Props) {
-  const addressName = useMemo(() => getAddressName(entity.identity), [entity.identity])
+  const addressName = useGetAddressName(entity.identity)
 
   return (
     <tr key={entity.identity} className="border-b border-primary-60">

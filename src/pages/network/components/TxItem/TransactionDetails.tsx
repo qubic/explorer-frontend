@@ -2,8 +2,10 @@ import { useTranslation } from 'react-i18next'
 
 import { Alert } from '@app/components/ui'
 import type { Transaction } from '@app/store/apis/archiver-v2/archiver-v2.types'
+import { useGetSmartContractsQuery } from '@app/store/apis/qubic-static'
 import { clsxTwMerge, formatDate, formatString } from '@app/utils'
-import { getAddressName } from '@app/utils/qubic'
+import { getProcedureName } from '@app/utils/qubic'
+import { useGetAddressName } from '@app/hooks'
 import { type AssetTransfer, type Transfer, isSmartContractTx } from '@app/utils/qubic-ts'
 import { useMemo } from 'react'
 import AddressLink from '../AddressLink'
@@ -47,15 +49,41 @@ export default function TransactionDetails({
   variant = 'primary'
 }: Props) {
   const { t } = useTranslation('network-page')
+  const { data: smartContracts } = useGetSmartContractsQuery()
 
   const isSecondaryVariant = variant === 'secondary'
   const { date, time } = useMemo(() => formatDate(timestamp, { split: true }), [timestamp])
 
-  const sourceAddressName = useMemo(() => getAddressName(sourceId)?.name, [sourceId])
-  const destinationAddressName = useMemo(
-    () => getAddressName(assetDetails?.newOwnerAndPossessor ?? destId)?.name,
-    [assetDetails?.newOwnerAndPossessor, destId]
+  const destAddress = assetDetails?.newOwnerAndPossessor ?? destId
+  const sourceAddressNameData = useGetAddressName(sourceId)
+  const destinationAddressNameData = useGetAddressName(destAddress)
+
+  // Check if addresses are smart contracts (prioritize SC names over token names)
+  const sourceSmartContract = useMemo(
+    () => smartContracts?.find((sc) => sc.address === sourceId),
+    [smartContracts, sourceId]
   )
+  const destSmartContract = useMemo(
+    () => smartContracts?.find((sc) => sc.address === destAddress),
+    [smartContracts, destAddress]
+  )
+
+  // Prioritize smart contract name, then token/exchange/label name
+  const sourceAddressName = sourceSmartContract?.name ?? sourceAddressNameData?.name
+  const destinationAddressName = destSmartContract?.name ?? destinationAddressNameData?.name
+
+  const procedureName = useMemo(
+    () => getProcedureName(destId, inputType, smartContracts),
+    [destId, inputType, smartContracts]
+  )
+
+  const transactionTypeDisplay = useMemo(() => {
+    const baseType = formatString(inputType)
+    const txCategory = isSmartContractTx(destId, inputType) ? 'SC' : 'Standard'
+    return procedureName
+      ? `${baseType} ${txCategory} (${procedureName})`
+      : `${baseType} ${txCategory}`
+  }, [inputType, destId, procedureName])
 
   return (
     <TransactionDetailsWrapper variant={variant}>
@@ -99,11 +127,7 @@ export default function TransactionDetails({
         <SubCardItem
           title={t('type')}
           variant={variant}
-          content={
-            <p className="font-space text-sm">
-              {formatString(inputType)} {isSmartContractTx(destId, inputType) ? 'SC' : 'Standard'}
-            </p>
-          }
+          content={<p className="font-space text-sm">{transactionTypeDisplay}</p>}
         />
       )}
 
@@ -140,11 +164,7 @@ export default function TransactionDetails({
         <SubCardItem
           title={t('type')}
           variant={variant}
-          content={
-            <p className="font-space text-sm">
-              {formatString(inputType)} {isSmartContractTx(destId, inputType) ? 'SC' : 'Standard'}
-            </p>
-          }
+          content={<p className="font-space text-sm">{transactionTypeDisplay}</p>}
         />
       )}
 

@@ -26,3 +26,6 @@ dist-ssr
 .env*
 !.env.example
 .vercel
+
+# Claude Code
+CLAUDE.md
