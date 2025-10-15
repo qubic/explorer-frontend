@@ -1,10 +1,11 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { ChevronDownIcon, Infocon } from '@app/assets/icons'
 import { InfiniteScroll } from '@app/components/ui'
 import { Button } from '@app/components/ui/buttons'
 import { DotsLoader } from '@app/components/ui/loaders'
+import { useTransactionExpandCollapse } from '@app/hooks'
 import type { TransactionWithType } from '@app/types'
 import { TxItem } from '../../../components'
 
@@ -26,52 +27,14 @@ export default function HistoricalTxs({
   error
 }: Props) {
   const { t } = useTranslation('network-page')
-  const [expandAll, setExpandAll] = useState(false)
-  const [expandedTxIds, setExpandedTxIds] = useState<Set<string>>(new Set())
 
-  // Reset expand state when addressId changes
-  useEffect(() => {
-    setExpandAll(false)
-    setExpandedTxIds(new Set())
-  }, [addressId])
-
-  // Auto-expand newly loaded transactions when expandAll is active
-  useEffect(() => {
-    if (expandAll && transactions.length > 0) {
-      setExpandedTxIds((prev) => {
-        const newSet = new Set(prev)
-        transactions.forEach((tx) => newSet.add(tx.transaction.txId))
-        return newSet
-      })
-    }
-  }, [transactions, expandAll])
-
-  const handleExpandAllChange = useCallback(
-    (checked: boolean) => {
-      setExpandAll(checked)
-      if (checked) {
-        // Expand all displayed transactions
-        const allTxIds = new Set(transactions.map((tx) => tx.transaction.txId))
-        setExpandedTxIds(allTxIds)
-      } else {
-        // Collapse all
-        setExpandedTxIds(new Set())
-      }
-    },
-    [transactions]
-  )
-
-  const handleTxToggle = useCallback((txId: string, isOpen: boolean) => {
-    setExpandedTxIds((prev) => {
-      const newSet = new Set(prev)
-      if (isOpen) {
-        newSet.add(txId)
-      } else {
-        newSet.delete(txId)
-      }
-      return newSet
+  // Use shared expand/collapse hook
+  const { expandAll, expandedTxIds, handleExpandAllChange, handleTxToggle } =
+    useTransactionExpandCollapse({
+      transactions,
+      getTransactionId: (tx) => tx.transaction.txId,
+      resetDependency: addressId
     })
-  }, [])
 
   const renderTxItem = useCallback(
     ({ transaction, moneyFlew }: TransactionWithType) => (

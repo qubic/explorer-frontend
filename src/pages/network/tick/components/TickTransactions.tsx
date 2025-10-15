@@ -6,7 +6,7 @@ import { InfiniteScroll, Select, Skeleton } from '@app/components/ui'
 import { Button } from '@app/components/ui/buttons'
 import type { Option } from '@app/components/ui/Select'
 import { TRANSACTION_OPTIONS, TRANSACTION_OPTIONS_MOBILE } from '@app/constants'
-import { useTailwindBreakpoint } from '@app/hooks'
+import { useTailwindBreakpoint, useTransactionExpandCollapse } from '@app/hooks'
 import type { Transaction } from '@app/store/apis/archiver-v2'
 import { useGetTickTransactionsQuery } from '@app/store/apis/archiver-v2'
 import { TransactionOptionEnum } from '@app/types'
@@ -32,10 +32,16 @@ export default function TickTransactions({ tick }: Props) {
   const [option, setOption] = useState<TransactionOptionEnum>(TransactionOptionEnum.ALL)
   const [displayTransactions, setDisplayTransactions] = useState<Transaction[]>([])
   const [hasMore, setHasMore] = useState(true)
-  const [expandAll, setExpandAll] = useState(false)
-  const [expandedTxIds, setExpandedTxIds] = useState<Set<string>>(new Set())
 
   const { isMobile } = useTailwindBreakpoint()
+
+  // Use shared expand/collapse hook
+  const { expandAll, expandedTxIds, handleExpandAllChange, handleTxToggle } =
+    useTransactionExpandCollapse({
+      transactions: displayTransactions,
+      getTransactionId: (tx) => tx.transaction.txId,
+      resetDependency: tick
+    })
 
   const {
     data: transactions,
@@ -57,51 +63,14 @@ export default function TickTransactions({ tick }: Props) {
         displayTransactions.length + PAGE_SIZE
       )
       setDisplayTransactions((prevTransactions) => [...prevTransactions, ...nextTransactions])
-
-      // If "Expand All" is active, auto-expand newly loaded transactions
-      if (expandAll) {
-        setExpandedTxIds((prev) => {
-          const newSet = new Set(prev)
-          nextTransactions.forEach((tx) => newSet.add(tx.transaction.txId))
-          return newSet
-        })
-      }
-
       setHasMore(displayTransactions.length + PAGE_SIZE < transactions?.length)
     } else {
       setHasMore(false)
     }
-  }, [displayTransactions, transactions, expandAll])
+  }, [displayTransactions, transactions])
 
   const handleOnSelect = useCallback((selectedOption: Option<TransactionOptionEnum>) => {
     setOption(selectedOption.value)
-  }, [])
-
-  const handleExpandAllChange = useCallback(
-    (checked: boolean) => {
-      setExpandAll(checked)
-      if (checked) {
-        // Expand all displayed transactions
-        const allTxIds = new Set(displayTransactions.map((tx) => tx.transaction.txId))
-        setExpandedTxIds(allTxIds)
-      } else {
-        // Collapse all
-        setExpandedTxIds(new Set())
-      }
-    },
-    [displayTransactions]
-  )
-
-  const handleTxToggle = useCallback((txId: string, isOpen: boolean) => {
-    setExpandedTxIds((prev) => {
-      const newSet = new Set(prev)
-      if (isOpen) {
-        newSet.add(txId)
-      } else {
-        newSet.delete(txId)
-      }
-      return newSet
-    })
   }, [])
 
   useEffect(() => {
@@ -110,12 +79,6 @@ export default function TickTransactions({ tick }: Props) {
       setHasMore(transactions.length > PAGE_SIZE)
     }
   }, [transactions])
-
-  // Reset expand state when tick changes
-  useEffect(() => {
-    setExpandAll(false)
-    setExpandedTxIds(new Set())
-  }, [tick])
 
   // 1) pick the base options
   const baseOptions = useMemo(
