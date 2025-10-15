@@ -58,20 +58,6 @@ export default function TransactionDetails({
   const sourceAddressNameData = useGetAddressName(sourceId)
   const destinationAddressNameData = useGetAddressName(destAddress)
 
-  // Check if addresses are smart contracts (prioritize SC names over token names)
-  const sourceSmartContract = useMemo(
-    () => smartContracts?.find((sc) => sc.address === sourceId),
-    [smartContracts, sourceId]
-  )
-  const destSmartContract = useMemo(
-    () => smartContracts?.find((sc) => sc.address === destAddress),
-    [smartContracts, destAddress]
-  )
-
-  // Prioritize smart contract name, then token/exchange/label name
-  const sourceAddressName = sourceSmartContract?.name ?? sourceAddressNameData?.name
-  const destinationAddressName = destSmartContract?.name ?? destinationAddressNameData?.name
-
   const procedureName = useMemo(
     () => getProcedureName(destId, inputType, smartContracts),
     [destId, inputType, smartContracts]
@@ -136,8 +122,8 @@ export default function TransactionDetails({
         variant={variant}
         content={
           <AddressLink
-            label={sourceAddressName}
-            showTooltip={!!sourceAddressName}
+            label={sourceAddressNameData?.name}
+            showTooltip={!!sourceAddressNameData?.name}
             value={sourceId}
             copy={isSecondaryVariant}
           />
@@ -148,8 +134,8 @@ export default function TransactionDetails({
         variant={variant}
         content={
           <AddressLink
-            label={destinationAddressName}
-            showTooltip={!!destinationAddressName}
+            label={destinationAddressNameData?.name}
+            showTooltip={!!destinationAddressNameData?.name}
             value={assetDetails?.newOwnerAndPossessor ?? destId}
             copy={isSecondaryVariant}
           />
