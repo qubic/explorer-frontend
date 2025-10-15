@@ -57,11 +57,21 @@ export default function TickTransactions({ tick }: Props) {
         displayTransactions.length + PAGE_SIZE
       )
       setDisplayTransactions((prevTransactions) => [...prevTransactions, ...nextTransactions])
+
+      // If "Expand All" is active, auto-expand newly loaded transactions
+      if (expandAll) {
+        setExpandedTxIds((prev) => {
+          const newSet = new Set(prev)
+          nextTransactions.forEach((tx) => newSet.add(tx.transaction.txId))
+          return newSet
+        })
+      }
+
       setHasMore(displayTransactions.length + PAGE_SIZE < transactions?.length)
     } else {
       setHasMore(false)
     }
-  }, [displayTransactions, transactions])
+  }, [displayTransactions, transactions, expandAll])
 
   const handleOnSelect = useCallback((selectedOption: Option<TransactionOptionEnum>) => {
     setOption(selectedOption.value)
@@ -91,13 +101,6 @@ export default function TickTransactions({ tick }: Props) {
         newSet.delete(txId)
       }
       return newSet
-    })
-    // Update expandAll state based on whether all transactions are expanded
-    setExpandAll((prevExpandAll) => {
-      if (!isOpen && prevExpandAll) {
-        return false
-      }
-      return prevExpandAll
     })
   }, [])
 

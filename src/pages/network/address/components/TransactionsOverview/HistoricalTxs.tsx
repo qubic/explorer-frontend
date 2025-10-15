@@ -35,6 +35,17 @@ export default function HistoricalTxs({
     setExpandedTxIds(new Set())
   }, [addressId])
 
+  // Auto-expand newly loaded transactions when expandAll is active
+  useEffect(() => {
+    if (expandAll && transactions.length > 0) {
+      setExpandedTxIds((prev) => {
+        const newSet = new Set(prev)
+        transactions.forEach((tx) => newSet.add(tx.transaction.txId))
+        return newSet
+      })
+    }
+  }, [transactions, expandAll])
+
   const handleExpandAllChange = useCallback(
     (checked: boolean) => {
       setExpandAll(checked)
@@ -59,13 +70,6 @@ export default function HistoricalTxs({
         newSet.delete(txId)
       }
       return newSet
-    })
-    // Update expandAll state based on whether all transactions are expanded
-    setExpandAll((prevExpandAll) => {
-      if (!isOpen && prevExpandAll) {
-        return false
-      }
-      return prevExpandAll
     })
   }, [])
 
