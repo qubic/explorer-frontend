@@ -27,5 +27,5 @@ dist-ssr
 !.env.example
 .vercel
 
-# Claude Code
+# Claude Code documentation
 CLAUDE.md

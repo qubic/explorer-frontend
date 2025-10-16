@@ -97,5 +97,7 @@
   "copied": "コピー済み",
   "copyToClipboard": "クリップボードにコピー",
   "sharesIssuer": "株式発行者",
-  "contractIndex": "インデックス"
+  "contractIndex": "インデックス",
+  "expandAll": "すべて展開",
+  "collapseAll": "すべて折りたたむ"
 }

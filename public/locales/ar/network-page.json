@@ -103,5 +103,7 @@
   "filterTransfer": "التحويلات",
   "filterApproved": "معتمد",
   "sharesIssuer": "مُصدر الأسهم",
-  "contractIndex": "الفهرس"
+  "contractIndex": "الفهرس",
+  "expandAll": "توسيع الكل",
+  "collapseAll": "طي الكل"
 }
