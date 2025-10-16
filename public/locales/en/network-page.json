@@ -103,5 +103,7 @@
   "filterTransfer": "Transfers",
   "filterApproved": "Approved",
   "sharesIssuer": "Shares Issuer",
-  "contractIndex": "Index"
+  "contractIndex": "Index",
+  "expandAll": "Expand All",
+  "collapseAll": "Collapse All"
 }

@@ -103,5 +103,7 @@
   "filterTransfer": "Các chuyển khoản",
   "filterApproved": "Đã duyệt",
   "sharesIssuer": "Nhà Phát Hành Cổ Phiếu",
-  "contractIndex": "Chỉ Số"
+  "contractIndex": "Chỉ Số",
+  "expandAll": "Mở rộng tất cả",
+  "collapseAll": "Thu gọn tất cả"
 }
