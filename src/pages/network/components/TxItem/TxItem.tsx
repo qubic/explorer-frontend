@@ -27,6 +27,8 @@ type Props = {
   readonly variant?: TxItemVariant
   readonly isHistoricalTx?: boolean
   readonly timestamp?: string
+  readonly isExpanded?: boolean
+  readonly onToggle?: (txId: string, isOpen: boolean) => void
 }
 
 function TxItem({
@@ -35,13 +37,24 @@ function TxItem({
   nonExecutedTxIds,
   variant = 'primary',
   isHistoricalTx = false,
-  timestamp
+  timestamp,
+  isExpanded,
+  onToggle
 }: Props) {
   const [entries, setEntries] = useState<Transfer[]>([])
   const [asset, setAsset] = useState<AssetTransfer>()
-  const [detailsOpen, setDetailsOpen] = useState(false)
+  const [internalDetailsOpen, setInternalDetailsOpen] = useState(false)
 
-  const handleToggleDetails = () => setDetailsOpen((prev) => !prev)
+  // Use external control if provided, otherwise use internal state
+  const detailsOpen = isExpanded !== undefined ? isExpanded : internalDetailsOpen
+
+  const handleToggleDetails = () => {
+    if (onToggle) {
+      onToggle(txId, !detailsOpen)
+    } else {
+      setInternalDetailsOpen((prev) => !prev)
+    }
+  }
 
   const isTransferTransaction = useMemo(
     () => isTransferTx(sourceId, destId, amount),
