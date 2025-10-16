@@ -6,7 +6,7 @@ import type {
   GetTokensResponse
 } from './qubic-static.types'
 
-const BASE_URL = import.meta.env.VITE_STATIC_API_URL || 'https://static.qubic.org/general/data/v1'
+const BASE_URL = `${import.meta.env.VITE_STATIC_API_URL || 'https://static.qubic.org'}/general/data/v1`
 
 // Cache time in seconds (5 minutes)
 const CACHE_TIME = 300
