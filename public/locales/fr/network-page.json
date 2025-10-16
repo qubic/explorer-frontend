@@ -103,5 +103,7 @@
   "filterTransfer": "Transferts",
   "filterApproved": "Approuvées",
   "sharesIssuer": "Émetteur d'Actions",
-  "contractIndex": "Index"
+  "contractIndex": "Index",
+  "expandAll": "Tout développer",
+  "collapseAll": "Tout réduire"
 }
