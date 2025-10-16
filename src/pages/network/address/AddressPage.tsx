@@ -10,8 +10,9 @@ import { ErrorFallback } from '@app/components/ui/error-boundaries'
 import { PageLayout } from '@app/components/ui/layouts'
 import { LinearProgress } from '@app/components/ui/loaders'
 import { useGetAddressBalancesQuery, useGetLatestStatsQuery } from '@app/store/apis/archiver-v1'
+import { useGetSmartContractsQuery } from '@app/store/apis/qubic-static'
 import { clsxTwMerge, formatEllipsis, formatString } from '@app/utils'
-import { AddressType, getAddressName } from '@app/utils/qubic'
+import { useGetAddressName } from '@app/hooks'
 import { HomeLink } from '../components'
 import { AddressDetails, ContractOverview, OwnedAssets, TransactionsOverview } from './components'
 
@@ -20,6 +21,7 @@ function AddressPage() {
   const { addressId = '' } = useParams()
   const latestStats = useGetLatestStatsQuery()
   const addressBalances = useGetAddressBalancesQuery({ address: addressId }, { skip: !addressId })
+  const { data: smartContracts } = useGetSmartContractsQuery()
 
   const [detailsOpen, setDetailsOpen] = useState(false)
 
@@ -32,8 +34,15 @@ function AddressPage() {
     return formatString(+addressBalances.data.balance * (latestStats.data.price ?? 0))
   }, [addressBalances.data, latestStats.data])
 
-  const addressName = useMemo(() => getAddressName(addressId), [addressId])
-  const isSmartContract = addressName?.type === AddressType.SmartContract
+  const addressName = useGetAddressName(addressId)
+
+  // Get full smart contract details from API if it's a smart contract
+  const smartContractDetails = useMemo(() => {
+    if (!smartContracts) return null
+    return smartContracts.find((contract) => contract.address === addressId)
+  }, [smartContracts, addressId])
+
+  const isSmartContract = !!smartContractDetails
 
   if (addressBalances.isFetching) {
     return <LinearProgress />
@@ -57,31 +66,68 @@ function AddressPage() {
         <CopyTextButton text={addressId} />
       </div>
 
-      {addressName && (
+      {(addressName || smartContractDetails) && (
         <div className="flex items-center gap-4 pb-16">
-          <Badge
-            color="primary"
-            size="xs"
-            variant="outlined"
-            className={clsxTwMerge({ 'hover:bg-primary-60': addressName.website })}
-          >
-            {addressName.website ? (
-              <a
-                href={addressName.website}
-                target="_blank"
-                rel="noreferrer"
-                className="flex items-center"
-              >
-                {addressName.name}
-                <ArrowTopRightOnSquareIcon className="mb-1.5 ml-4 size-12 text-primary-20" />
-              </a>
-            ) : (
-              addressName.name
-            )}
-          </Badge>
-          {'i18nKey' in addressName && (
+          {/* Smart Contract Type Label */}
+          {smartContractDetails && (
+            <Badge color="primary" size="xs" variant="outlined">
+              {t('smartContract')}
+            </Badge>
+          )}
+          {/* Smart Contract Name */}
+          {smartContractDetails && (
+            <Badge
+              color="primary"
+              size="xs"
+              variant="outlined"
+              className={clsxTwMerge({
+                'hover:bg-primary-60': smartContractDetails?.website
+              })}
+            >
+              {smartContractDetails?.website ? (
+                <a
+                  href={smartContractDetails.website}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex items-center"
+                >
+                  {smartContractDetails.name}
+                  <ArrowTopRightOnSquareIcon className="mb-1.5 ml-4 size-12 text-primary-20" />
+                </a>
+              ) : (
+                smartContractDetails?.name
+              )}
+            </Badge>
+          )}
+          {/* Token/Exchange Type Label (not for named addresses) */}
+          {addressName && 'i18nKey' in addressName && addressName.i18nKey !== 'named-address' && (
             <Badge color="primary" size="xs" variant="outlined">
               {t(addressName.i18nKey)}
+            </Badge>
+          )}
+          {/* Token/Exchange/Named Address Name */}
+          {addressName && (
+            <Badge
+              color="primary"
+              size="xs"
+              variant="outlined"
+              className={clsxTwMerge({
+                'hover:bg-primary-60': addressName.website
+              })}
+            >
+              {addressName.website ? (
+                <a
+                  href={addressName.website}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex items-center"
+                >
+                  {addressName.name}
+                  <ArrowTopRightOnSquareIcon className="mb-1.5 ml-4 size-12 text-primary-20" />
+                </a>
+              ) : (
+                addressName.name
+              )}
             </Badge>
           )}
         </div>
@@ -121,12 +167,13 @@ function AddressPage() {
           <Tabs.Panel>
             <TransactionsOverview address={addressBalances.data} addressId={addressId} />
           </Tabs.Panel>
-          {isSmartContract && (
+          {isSmartContract && smartContractDetails && (
             <Tabs.Panel>
               <ContractOverview
-                asset={addressName.name}
-                githubUrl={addressName.githubUrl}
-                proposalUrl={addressName.proposalUrl}
+                asset={smartContractDetails.name}
+                githubUrl={smartContractDetails.githubUrl}
+                proposalUrl={smartContractDetails.proposalUrl}
+                contractIndex={smartContractDetails.contractIndex}
               />
             </Tabs.Panel>
           )}

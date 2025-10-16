@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 
-import { EXCHANGES } from '@app/constants/qubic'
 import { useLazyGetAddressBalancesQuery } from '@app/store/apis/archiver-v1'
+import { useGetExchangesQuery } from '@app/store/apis/qubic-static'
 import type { ExchangeWallet } from '@app/types'
 import type { ExchangeWalletWithBalance } from '../types'
 
@@ -16,6 +16,11 @@ export default function useGetExchangesBalances(): UseGetExchangesBalancesOutput
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState(false)
 
+  const {
+    data: exchanges,
+    isLoading: isLoadingExchanges,
+    error: exchangesError
+  } = useGetExchangesQuery()
   const [triggerQuery] = useLazyGetAddressBalancesQuery()
 
   const getAddressBalance = useCallback(
@@ -33,13 +38,22 @@ export default function useGetExchangesBalances(): UseGetExchangesBalancesOutput
 
   useEffect(() => {
     const fetchBalances = async () => {
+      if (!exchanges || isLoadingExchanges) {
+        setIsLoading(true)
+        return
+      }
+
+      if (exchangesError) {
+        setError(true)
+        setIsLoading(false)
+        return
+      }
+
       setIsLoading(true)
       setError(false)
 
       try {
-        const results = await Promise.all(
-          EXCHANGES.map((exchangeWallet) => getAddressBalance(exchangeWallet))
-        )
+        const results = await Promise.all(exchanges.map((exchange) => getAddressBalance(exchange)))
 
         setExchangeWallets(results.toSorted((a, b) => b.balance - a.balance))
       } catch (err) {
@@ -52,7 +66,7 @@ export default function useGetExchangesBalances(): UseGetExchangesBalancesOutput
     }
 
     fetchBalances()
-  }, [error, getAddressBalance, triggerQuery])
+  }, [error, exchanges, exchangesError, getAddressBalance, isLoadingExchanges, triggerQuery])
 
   return { exchangeWallets, isLoading, error }
 }

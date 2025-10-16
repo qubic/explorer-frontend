@@ -33,7 +33,15 @@ Before running the project, you must configure environment-specific variables fo
   VITE_NETWORK=mainnet
   VITE_QLI_API_URL=/dev-proxy-qli-api
   VITE_QUBIC_RPC_URL=/dev-proxy-archiver-api
+  VITE_STATIC_API_URL=/dev-proxy-static-api
   ```
+
+  **Environment Variables Explained:**
+  - `VITE_ENABLE_PROXY`: Enable local development proxy (set to `true` for development)
+  - `VITE_NETWORK`: Network mode (`mainnet` or `testnet`)
+  - `VITE_QLI_API_URL`: Qubic Li API URL for transactions and address history
+  - `VITE_QUBIC_RPC_URL`: Qubic RPC/Archiver URL for network stats and blockchain data
+  - `VITE_STATIC_API_URL`: Qubic Static API URL for smart contracts, tokens, and exchange data
 
 Ensure these files are not committed to the repository to protect sensitive information.
 

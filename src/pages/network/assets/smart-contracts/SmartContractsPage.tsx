@@ -4,8 +4,9 @@ import { useTranslation } from 'react-i18next'
 import { withHelmet } from '@app/components/hocs'
 import { Breadcrumbs } from '@app/components/ui'
 import { PageLayout } from '@app/components/ui/layouts'
-import { SMART_CONTRACTS } from '@app/constants/qubic'
+import { DotsLoader } from '@app/components/ui/loaders'
 import { useTailwindBreakpoint } from '@app/hooks'
+import { useGetSmartContractsQuery } from '@app/store/apis/qubic-static'
 import { EMPTY_ADDRESS } from '@app/utils/qubic-ts'
 import { AddressLink, CardItem, HomeLink } from '../../components'
 import { SmartContractRow } from './components'
@@ -13,12 +14,42 @@ import { SmartContractRow } from './components'
 function SmartContractsPage() {
   const { t } = useTranslation('network-page')
   const { isMobile } = useTailwindBreakpoint()
+  const { data: smartContracts, isLoading, error } = useGetSmartContractsQuery()
 
   const renderTableContent = useCallback(() => {
-    return Object.entries(SMART_CONTRACTS).map(([address, details]) => (
-      <SmartContractRow key={address} address={address} details={details} isMobile={isMobile} />
+    if (isLoading) {
+      return (
+        <tr>
+          <td colSpan={3} className="py-40 text-center">
+            <DotsLoader showLoadingText />
+          </td>
+        </tr>
+      )
+    }
+
+    if (error || !smartContracts) {
+      return (
+        <tr>
+          <td colSpan={3} className="py-40 text-center text-sm text-gray-50">
+            {t('smartContractsLoadFailed')}
+          </td>
+        </tr>
+      )
+    }
+
+    return smartContracts.map((contract) => (
+      <SmartContractRow
+        key={contract.address}
+        address={contract.address}
+        details={{
+          name: contract.name,
+          label: contract.label,
+          contractIndex: contract.contractIndex
+        }}
+        isMobile={isMobile}
+      />
     ))
-  }, [isMobile])
+  }, [isLoading, error, smartContracts, isMobile, t])
 
   return (
     <PageLayout className="space-y-20">

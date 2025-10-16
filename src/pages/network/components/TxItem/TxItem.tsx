@@ -4,7 +4,7 @@ import { ArrowDownIcon, ArrowUpIcon } from '@app/assets/icons'
 import { ChevronToggleButton } from '@app/components/ui/buttons'
 import type { Transaction } from '@app/store/apis/archiver-v2'
 import { formatString } from '@app/utils'
-import { getAddressName } from '@app/utils/qubic'
+import { useGetAddressName } from '@app/hooks'
 import type { AssetTransfer, Transfer } from '@app/utils/qubic-ts'
 import {
   getAssetsTransfers,
@@ -68,7 +68,8 @@ function TxItem({
     return identity === sourceId ? destId : sourceId
   }, [asset, identity, sourceId, destId])
 
-  const addressName = useMemo(() => getAddressName(addressLabel)?.name, [addressLabel])
+  const addressNameData = useGetAddressName(addressLabel)
+  const addressName = addressNameData?.name
 
   useEffect(() => {
     if (destId === QUTIL_ADDRESS && inputType === 1 && inputHex) {
