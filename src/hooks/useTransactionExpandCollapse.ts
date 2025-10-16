@@ -1,4 +1,8 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
+
+// Default function for extracting transaction ID
+const defaultGetTransactionId = <T>(tx: T): string =>
+  (tx as { transaction: { txId: string } }).transaction.txId
 
 export interface UseTransactionExpandCollapseOptions<T> {
   /**
@@ -7,8 +11,9 @@ export interface UseTransactionExpandCollapseOptions<T> {
   transactions: T[]
   /**
    * Extract transaction ID from a transaction object
+   * Defaults to accessing 'transaction.txId' if not provided
    */
-  getTransactionId: (transaction: T) => string
+  getTransactionId?: (transaction: T) => string
   /**
    * Optional dependency value that triggers a reset (e.g., addressId, tick number)
    * When this value changes, all expand state is reset
@@ -51,6 +56,12 @@ export function useTransactionExpandCollapse<T>({
   const [expandAll, setExpandAll] = useState(false)
   const [expandedTxIds, setExpandedTxIds] = useState<Set<string>>(new Set())
 
+  // Use stable reference for the ID extractor function
+  const getIdFn = getTransactionId || defaultGetTransactionId
+
+  // Memoize the transaction IDs to avoid recalculating on every render
+  const transactionIds = useMemo(() => transactions.map(getIdFn), [transactions, getIdFn])
+
   // Reset expand state when resetDependency changes (e.g., new tick or address)
   useEffect(() => {
     setExpandAll(false)
@@ -59,12 +70,11 @@ export function useTransactionExpandCollapse<T>({
 
   // Auto-expand newly loaded transactions when expandAll is active
   useEffect(() => {
-    if (expandAll && transactions.length > 0) {
+    if (expandAll && transactionIds.length > 0) {
       setExpandedTxIds((prev) => {
         const newSet = new Set(prev)
         // Only add transaction IDs that don't already exist
-        transactions.forEach((tx) => {
-          const txId = getTransactionId(tx)
+        transactionIds.forEach((txId) => {
           if (!newSet.has(txId)) {
             newSet.add(txId)
           }
@@ -76,22 +86,21 @@ export function useTransactionExpandCollapse<T>({
         return prev
       })
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [transactions.length, expandAll])
+  }, [transactionIds, expandAll])
 
   const handleExpandAllChange = useCallback(
     (checked: boolean) => {
       setExpandAll(checked)
       if (checked) {
         // Expand all displayed transactions
-        const allTxIds = new Set(transactions.map(getTransactionId))
+        const allTxIds = new Set(transactions.map(getIdFn))
         setExpandedTxIds(allTxIds)
       } else {
         // Collapse all
         setExpandedTxIds(new Set())
       }
     },
-    [transactions, getTransactionId]
+    [transactions, getIdFn]
   )
 
   const handleTxToggle = useCallback((txId: string, isOpen: boolean) => {

@@ -32,7 +32,6 @@ export default function LatestTransactions({
   const { expandAll, expandedTxIds, handleExpandAllChange, handleTxToggle } =
     useTransactionExpandCollapse({
       transactions,
-      getTransactionId: (tx) => tx.transaction.txId,
       resetDependency: addressId
     })
 

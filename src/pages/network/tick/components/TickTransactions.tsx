@@ -39,7 +39,6 @@ export default function TickTransactions({ tick }: Props) {
   const { expandAll, expandedTxIds, handleExpandAllChange, handleTxToggle } =
     useTransactionExpandCollapse({
       transactions: displayTransactions,
-      getTransactionId: (tx) => tx.transaction.txId,
       resetDependency: tick
     })
 
