@@ -62,11 +62,22 @@ export function useTransactionExpandCollapse<T>({
     if (expandAll && transactions.length > 0) {
       setExpandedTxIds((prev) => {
         const newSet = new Set(prev)
-        transactions.forEach((tx) => newSet.add(getTransactionId(tx)))
-        return newSet
+        // Only add transaction IDs that don't already exist
+        transactions.forEach((tx) => {
+          const txId = getTransactionId(tx)
+          if (!newSet.has(txId)) {
+            newSet.add(txId)
+          }
+        })
+        // Only update state if there are actually new items
+        if (newSet.size !== prev.size) {
+          return newSet
+        }
+        return prev
       })
     }
-  }, [transactions, expandAll, getTransactionId])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [transactions.length, expandAll])
 
   const handleExpandAllChange = useCallback(
     (checked: boolean) => {
