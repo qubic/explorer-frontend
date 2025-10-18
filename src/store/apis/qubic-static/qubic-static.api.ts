@@ -1,3 +1,4 @@
+import { envConfig } from '@app/configs'
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import type {
   GetAddressLabelsResponse,
@@ -6,15 +7,17 @@ import type {
   GetTokensResponse
 } from './qubic-static.types'
 
-const BASE_URL = `${import.meta.env.VITE_STATIC_API_URL || 'https://static.qubic.org'}/general/data/v1`
+const BASE_URL = `${envConfig.STATIC_API_URL || 'https://static.qubic.org'}/v1/general/data`
 
-// Cache time in seconds (5 minutes)
-const CACHE_TIME = 300
+// Cache static data for 24 hours within a browser session
+// Note: Browser refresh (F5) clears Redux store and refetches fresh data
+const CACHE_TIME = 86400 // 24 hours in seconds
 
 export const qubicStaticApi = createApi({
   reducerPath: 'qubicStaticApi',
   baseQuery: fetchBaseQuery({ baseUrl: BASE_URL }),
-  // Keep cached data for 5 minutes
+  // Keep cached data for 24 hours (only applies within a single browser session)
+  // Browser refresh will always fetch fresh data as Redux store resets
   keepUnusedDataFor: CACHE_TIME,
   endpoints: (build) => ({
     getSmartContracts: build.query<GetSmartContractsResponse['smart_contracts'], void>({
