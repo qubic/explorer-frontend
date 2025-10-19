@@ -37,6 +37,7 @@ Before running the project, you must configure environment-specific variables fo
   ```
 
   **Environment Variables Explained:**
+
   - `VITE_ENABLE_PROXY`: Enable local development proxy (set to `true` for development)
   - `VITE_NETWORK`: Network mode (`mainnet` or `testnet`)
   - `VITE_QLI_API_URL`: Qubic Li API URL for transactions and address history
