@@ -44,6 +44,7 @@ jobs:
           VITE_NETWORK: ${{ github.ref == 'refs/heads/testnet' && 'testnet' || 'mainnet' }}
           VITE_QLI_API_URL: ${{ secrets.QLI_API_URL }}
           VITE_QUBIC_RPC_URL: ${{ github.ref == 'refs/heads/testnet' && secrets.QUBIC_RPC_URL_TESTNET || secrets.QUBIC_RPC_URL }}
+          VITE_STATIC_API_URL: ${{ secrets.STATIC_API_URL }}
           VITE_TURNSTILE_SITE_KEY: ${{ secrets.TURNSTILE_SITE_KEY }}
         run: pnpm run build
 
