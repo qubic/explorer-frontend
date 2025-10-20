@@ -17,13 +17,16 @@ export type GetAddressNameResult = {
 /**
  * Hook to get address name/label from static API data
  * Checks smart contracts (priority), exchanges, tokens (asset issuers), and address labels
+ *
+ * Note: Fetches all assets once and filters in memory for efficiency
  */
 export function useGetAddressName(address: string): GetAddressNameResult | undefined {
   const { data: smartContracts } = useGetSmartContractsQuery()
   const { data: exchanges } = useGetExchangesQuery()
   const { data: addressLabels } = useGetAddressLabelsQuery()
   const { data: tokens } = useGetTokensQuery()
-  const { data: assetsIssuances } = useGetAssetsIssuancesQuery({ issuerIdentity: address })
+  // Fetch all assets once (not filtered by address) - more efficient for multiple calls
+  const { data: allAssetsIssuances } = useGetAssetsIssuancesQuery()
 
   return useMemo(() => {
     // Check smart contracts first (highest priority)
@@ -44,10 +47,11 @@ export function useGetAddressName(address: string): GetAddressNameResult | undef
       }
     }
 
-    // Check tokens (asset issuers) - only if issuer is not the empty address
-    if (assetsIssuances?.assets && assetsIssuances.assets.length > 0) {
-      const tokenIssuance = assetsIssuances.assets.find(
-        (asset) => asset.data.issuerIdentity !== EMPTY_ADDRESS
+    // Check tokens (asset issuers) - filter all assets by this address
+    if (allAssetsIssuances?.assets && allAssetsIssuances.assets.length > 0) {
+      const tokenIssuance = allAssetsIssuances.assets.find(
+        (asset) =>
+          asset.data.issuerIdentity === address && asset.data.issuerIdentity !== EMPTY_ADDRESS
       )
       if (tokenIssuance) {
         // Try to find matching token data from static API to get website
@@ -70,5 +74,5 @@ export function useGetAddressName(address: string): GetAddressNameResult | undef
     }
 
     return undefined
-  }, [address, smartContracts, exchanges, addressLabels, tokens, assetsIssuances])
+  }, [address, smartContracts, exchanges, addressLabels, tokens, allAssetsIssuances])
 }
