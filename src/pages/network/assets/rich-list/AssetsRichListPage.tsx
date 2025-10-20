@@ -7,7 +7,7 @@ import { withHelmet } from '@app/components/hocs'
 import { Breadcrumbs, PaginationBar, Select } from '@app/components/ui'
 import { PageLayout } from '@app/components/ui/layouts'
 import type { Option } from '@app/components/ui/Select'
-import { SMART_CONTRACTS, SmartContracts } from '@app/constants/qubic'
+// Default asset for rich list (QX)
 import { useTailwindBreakpoint } from '@app/hooks'
 import { useGetAssetsRichListQuery } from '@app/store/apis/archiver-v1'
 import { ASSETS_ISSUER_ADDRESS } from '@app/utils/qubic-ts'
@@ -21,6 +21,7 @@ import {
 } from './components'
 
 const DEFAULT_PAGE_SIZE = 15
+const DEFAULT_ASSET = 'QX' // Default asset for rich list
 
 const PAGE_SIZE_OPTIONS = [
   { i18nKey: 'showItemsPerPage', value: '15' },
@@ -59,7 +60,7 @@ function AssetsRichListPage() {
 
   const { data, isFetching, error } = useGetAssetsRichListQuery({
     issuer: issuerParam || ASSETS_ISSUER_ADDRESS,
-    asset: assetParam || SMART_CONTRACTS[SmartContracts.Qx].name,
+    asset: assetParam || DEFAULT_ASSET,
     page,
     pageSize
   })
@@ -112,7 +113,7 @@ function AssetsRichListPage() {
       params.set('issuer', ASSETS_ISSUER_ADDRESS)
     }
     if (!params.has('asset')) {
-      params.set('asset', SMART_CONTRACTS[SmartContracts.Qx].name)
+      params.set('asset', DEFAULT_ASSET)
     }
     setSearchParams(params, { replace: true })
   }, [searchParams, setSearchParams])

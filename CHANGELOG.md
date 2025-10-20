@@ -1,3 +1,18 @@
+# [1.25.0](https://github.com/qubic/explorer-frontend/compare/v1.24.1...v1.25.0) (2025-10-16)
+
+
+### Bug Fixes
+
+* expand-collapse button only changes with user interaction ([361c9bf](https://github.com/qubic/explorer-frontend/commit/361c9bfea5eac651788450008e1ad8ed068b23e8))
+* expand/collapse works again ([4d9ed89](https://github.com/qubic/explorer-frontend/commit/4d9ed892b0eecd42ebebfe9ff203d3581193855b))
+* reset the expand/collapse button state when loading a new tick or new page ([4430541](https://github.com/qubic/explorer-frontend/commit/44305414a533af16b5d4e236f0d547967613ba2b))
+* stable reference for default getTransactionId function ([8aaba06](https://github.com/qubic/explorer-frontend/commit/8aaba0600a8b554839e4d9b383ae9dcdb6534b8a))
+
+
+### Features
+
+* collapse and expand transactions button added to tick and address page ([92bd0b3](https://github.com/qubic/explorer-frontend/commit/92bd0b32ec9e6a24ae976d698e0bdff97abefca8))
+
 # [1.25.0-rc.1](https://github.com/qubic/explorer-frontend/compare/v1.24.1...v1.25.0-rc.1) (2025-10-16)
 
 

@@ -1,67 +1,22 @@
-import type { SmartContracts, Tokens } from '@app/constants/qubic'
-import { ADDRESS_BOOK, EXCHANGES, SMART_CONTRACTS, TOKENS } from '@app/constants/qubic'
+import type { SmartContract } from '@app/store/apis/qubic-static'
 
-export enum AddressType {
-  Exchange = 'EXCHANGE',
-  SmartContract = 'SMART_CONTRACT',
-  Token = 'TOKEN',
-  NamedAddress = 'NAMED_ADDRESS'
-}
+/**
+ * Get the procedure name for a smart contract transaction
+ * @param contractAddress - The smart contract address
+ * @param inputType - The transaction input type (procedure ID)
+ * @param smartContracts - The smart contracts data from the API
+ * @returns The procedure name if found, undefined otherwise
+ */
+export const getProcedureName = (
+  contractAddress: string,
+  inputType: number,
+  smartContracts?: SmartContract[]
+): string | undefined => {
+  if (!smartContracts) return undefined
 
-export type GetAddressNameResult =
-  | {
-      name: string
-      type: AddressType.Exchange
-      i18nKey: string
-      website?: string
-    }
-  | {
-      name: string
-      type: AddressType.Token
-      i18nKey: string
-      website?: string
-    }
-  | {
-      name: string
-      type: AddressType.SmartContract
-      i18nKey: string
-      website?: string
-      githubUrl: string
-      proposalUrl?: string
-    }
-  | {
-      name: string
-      type: AddressType.NamedAddress
-      website?: string
-    }
+  const contract = smartContracts.find((sc) => sc.address === contractAddress)
+  if (!contract) return undefined
 
-export const getAddressName = (address: string): GetAddressNameResult | undefined => {
-  const exchange = EXCHANGES.find(({ address: exAddress }) => exAddress === address)?.name
-  if (exchange) return { name: exchange, type: AddressType.Exchange, i18nKey: 'exchange' }
-
-  if (address in SMART_CONTRACTS) {
-    return {
-      name: SMART_CONTRACTS[address as SmartContracts].name,
-      type: AddressType.SmartContract,
-      i18nKey: 'smartContract',
-      website: SMART_CONTRACTS[address as SmartContracts].website,
-      githubUrl: SMART_CONTRACTS[address as SmartContracts].githubUrl,
-      proposalUrl: SMART_CONTRACTS[address as SmartContracts].proposalUrl
-    }
-  }
-
-  if (address in TOKENS) {
-    return {
-      name: TOKENS[address as Tokens].name,
-      type: AddressType.Token,
-      i18nKey: 'token'
-    }
-  }
-
-  const namedAddress = ADDRESS_BOOK.find((item) => item.address === address)?.label
-  if (namedAddress) {
-    return { name: namedAddress, type: AddressType.NamedAddress }
-  }
-
-  return undefined
+  const procedure = contract.procedures.find((proc) => proc.id === inputType)
+  return procedure?.name
 }
