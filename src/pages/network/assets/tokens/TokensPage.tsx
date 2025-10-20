@@ -22,8 +22,9 @@ function TokensPage() {
 
   const tokens = useMemo(
     () =>
-      data?.assets.filter(({ data: asset }) => asset.issuerIdentity !== ASSETS_ISSUER_ADDRESS) ??
-      [],
+      data?.assets
+        .filter(({ data: asset }) => asset.issuerIdentity !== ASSETS_ISSUER_ADDRESS)
+        .sort((a, b) => a.data.name.localeCompare(b.data.name)) ?? [],
     [data]
   )
 
