@@ -1,3 +1,10 @@
+## [1.26.1-rc.1](https://github.com/qubic/explorer-frontend/compare/v1.26.0...v1.26.1-rc.1) (2025-10-23)
+
+
+### Bug Fixes
+
+* qearn smart contact name ([e9f493e](https://github.com/qubic/explorer-frontend/commit/e9f493e2d93730d6c848c3e6f334d71ca262e2a6))
+
 # [1.26.0](https://github.com/qubic/explorer-frontend/compare/v1.25.0...v1.26.0) (2025-10-20)
 
 
