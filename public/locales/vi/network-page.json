@@ -95,6 +95,8 @@
   "smartContractCodeLoadError": "Lỗi: Không tải được mã hợp đồng thông minh. Vui lòng tải lại trang hoặc thử lại sau.",
   "contract": "Hợp đồng",
   "copied": "Đã sao chép",
+  "copyAddress": "Sao chép địa chỉ",
+  "copyTransactionId": "Sao chép ID TX",
   "copyToClipboard": "Sao chép vào clipboard",
   "filterAllTransactions": "Tất cả giao dịch",
   "filterTransferTransactions": "Giao dịch chuyển khoản",

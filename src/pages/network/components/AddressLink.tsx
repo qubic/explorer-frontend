@@ -1,5 +1,5 @@
 import { Tooltip } from '@app/components/ui'
-import { CopyTextButton } from '@app/components/ui/buttons'
+import { CopyTextButton, COPY_BUTTON_TYPES } from '@app/components/ui/buttons'
 import { Routes } from '@app/router'
 import { clsxTwMerge, formatEllipsis } from '@app/utils'
 import { Link } from 'react-router-dom'
@@ -54,7 +54,7 @@ export default function AddressLink({
       ) : (
         linkElement
       )}
-      {copy && <CopyTextButton text={value} />}
+      {copy && <CopyTextButton text={value} type={COPY_BUTTON_TYPES.ADDRESS} />}
     </div>
   )
 }

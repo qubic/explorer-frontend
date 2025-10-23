@@ -95,6 +95,8 @@
   "smartContractCodeLoadError": "Error: No se pudo cargar el código del contrato inteligente. Por favor, actualiza la página o inténtalo más tarde.",
   "contract": "Contrato",
   "copied": "Copiado",
+  "copyAddress": "Copiar dirección",
+  "copyTransactionId": "Copiar ID de TX",
   "copyToClipboard": "Copiar al portapapeles",
   "filterAllTransactions": "Todas las transacciones",
   "filterTransferTransactions": "Transferencias",

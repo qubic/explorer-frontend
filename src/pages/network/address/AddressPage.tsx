@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom'
 import { ArrowTopRightOnSquareIcon } from '@app/assets/icons'
 import { withHelmet } from '@app/components/hocs'
 import { Badge, Breadcrumbs, Tabs } from '@app/components/ui'
-import { ChevronToggleButton, CopyTextButton } from '@app/components/ui/buttons'
+import { ChevronToggleButton, CopyTextButton, COPY_BUTTON_TYPES } from '@app/components/ui/buttons'
 import { ErrorFallback } from '@app/components/ui/error-boundaries'
 import { PageLayout } from '@app/components/ui/layouts'
 import { LinearProgress } from '@app/components/ui/loaders'
@@ -63,7 +63,7 @@ function AddressPage() {
 
       <div className="flex items-center gap-12 pb-6 pt-16">
         <p className="break-all font-space text-base text-gray-50">{addressId}</p>
-        <CopyTextButton text={addressId} />
+        <CopyTextButton text={addressId} type={COPY_BUTTON_TYPES.ADDRESS} />
       </div>
 
       {(addressName || smartContractDetails) && (
