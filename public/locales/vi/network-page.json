@@ -105,5 +105,7 @@
   "sharesIssuer": "Nhà Phát Hành Cổ Phiếu",
   "contractIndex": "Chỉ Số",
   "expandAll": "Mở rộng tất cả",
-  "collapseAll": "Thu gọn tất cả"
+  "collapseAll": "Thu gọn tất cả",
+  "managedBy": "Được quản lý bởi {{contract}}",
+  "unknownContract": "Hợp đồng không xác định"
 }

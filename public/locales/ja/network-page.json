@@ -99,5 +99,7 @@
   "sharesIssuer": "株式発行者",
   "contractIndex": "インデックス",
   "expandAll": "すべて展開",
-  "collapseAll": "すべて折りたたむ"
+  "collapseAll": "すべて折りたたむ",
+  "managedBy": "{{contract}}によって管理",
+  "unknownContract": "不明なコントラクト"
 }

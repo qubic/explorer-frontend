@@ -105,5 +105,7 @@
   "sharesIssuer": "Aandelen Uitgever",
   "contractIndex": "Index",
   "expandAll": "Alles uitvouwen",
-  "collapseAll": "Alles invouwen"
+  "collapseAll": "Alles invouwen",
+  "managedBy": "Beheerd door {{contract}}",
+  "unknownContract": "Onbekend contract"
 }

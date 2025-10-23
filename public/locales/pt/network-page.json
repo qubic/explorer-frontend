@@ -105,5 +105,7 @@
   "sharesIssuer": "Emissor de Ações",
   "contractIndex": "Índice",
   "expandAll": "Expandir tudo",
-  "collapseAll": "Recolher tudo"
+  "collapseAll": "Recolher tudo",
+  "managedBy": "Gerenciado por {{contract}}",
+  "unknownContract": "Contrato desconhecido"
 }
