@@ -43,6 +43,7 @@ function copyText(textToCopy: string) {
 }
 
 export * from './date'
+export * from './qubic-ts'
 export * from './styles'
 export * from './transactions'
 export { copyText, formatBase64, formatEllipsis, formatString }

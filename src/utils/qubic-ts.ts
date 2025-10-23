@@ -1,4 +1,5 @@
 import { QubicDefinitions } from '@qubic-lib/qubic-ts-library/dist/QubicDefinitions'
+import { PublicKey } from '@qubic-lib/qubic-ts-library/dist/qubic-types/PublicKey'
 import { QubicTransferAssetPayload } from '@qubic-lib/qubic-ts-library/dist/qubic-types/transacion-payloads/QubicTransferAssetPayload'
 import { QubicTransferSendManyPayload } from '@qubic-lib/qubic-ts-library/dist/qubic-types/transacion-payloads/QubicTransferSendManyPayload'
 
@@ -68,3 +69,21 @@ export const isTransferTx = (
 }
 
 export const isAssetsIssuerAddress = (address: string): boolean => address === ASSETS_ISSUER_ADDRESS
+
+/**
+ * Validates if a Qubic address is valid by verifying its identity
+ * @param address - The address string to validate
+ * @returns Promise<boolean> - True if the address is valid, false otherwise
+ */
+export const isValidQubicAddress = async (address: string): Promise<boolean> => {
+  if (!address || typeof address !== 'string') {
+    return false
+  }
+
+  try {
+    const publicKey = new PublicKey(address)
+    return await publicKey.verifyIdentity()
+  } catch (error) {
+    return false
+  }
+}

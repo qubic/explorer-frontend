@@ -53,6 +53,7 @@
   "hide": "Hide",
   "show": "Show",
   "transactionNotFound": "Transaction not found",
+  "invalidAddressError": "The address format is invalid. Please check the address and try again.",
   "addressNotFoundError": "Error: We could not find the address you are looking for. Please check the address and try again.",
   "loadingTransactionsError": "Error: Something went wrong while loading transactions. Please try again later.",
   "richList": "Rich List",

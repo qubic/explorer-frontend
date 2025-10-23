@@ -53,6 +53,7 @@
   "hide": "隐藏",
   "show": "显示",
   "transactionNotFound": "未找到交易",
+  "invalidAddressError": "地址格式无效。请检查地址并重试。",
   "addressNotFoundError": "错误：我们找不到您要查找的地址。请检查地址并重试。",
   "loadingTransactionsError": "错误：加载交易时出现问题。请稍后再试。",
   "richList": "富豪榜",
