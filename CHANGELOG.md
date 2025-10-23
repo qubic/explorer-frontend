@@ -1,3 +1,17 @@
+# [1.26.0](https://github.com/qubic/explorer-frontend/compare/v1.25.0...v1.26.0) (2025-10-20)
+
+
+### Features
+
+* replace local constant data with the one from static ([#324](https://github.com/qubic/explorer-frontend/issues/324)) ([68d65ad](https://github.com/qubic/explorer-frontend/commit/68d65ad95a13459142a1b9485d884e181dd400d6))
+
+# [1.26.0-rc.1](https://github.com/qubic/explorer-frontend/compare/v1.25.0...v1.26.0-rc.1) (2025-10-20)
+
+
+### Features
+
+* replace local constant data with the one from static ([#324](https://github.com/qubic/explorer-frontend/issues/324)) ([68d65ad](https://github.com/qubic/explorer-frontend/commit/68d65ad95a13459142a1b9485d884e181dd400d6))
+
 # [1.25.0](https://github.com/qubic/explorer-frontend/compare/v1.24.1...v1.25.0) (2025-10-16)
 
 
