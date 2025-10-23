@@ -27,7 +27,7 @@ function OverviewPage() {
 
   // Get QEarn address from smart contracts API
   const qEarnAddress = useMemo(() => {
-    return smartContracts?.find((sc) => sc.name === 'QEarn')?.address
+    return smartContracts?.find((sc) => sc.name === 'QEARN')?.address
   }, [smartContracts])
 
   const qEarnBalance = useGetAddressBalancesQuery(
