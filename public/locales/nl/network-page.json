@@ -95,6 +95,8 @@
   "smartContractCodeLoadError": "Fout: Het laden van de smartcontractcode is mislukt. Vernieuw de pagina of probeer het later opnieuw.",
   "contract": "Contract",
   "copied": "Gekopieerd",
+  "copyAddress": "Adres kopiëren",
+  "copyTransactionId": "TX-ID kopiëren",
   "copyToClipboard": "Kopiëren naar klembord",
   "filterAllTransactions": "Alle transacties",
   "filterTransferTransactions": "Overboekingen",

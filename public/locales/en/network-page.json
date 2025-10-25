@@ -95,6 +95,8 @@
   "smartContractCodeLoadError": "Error: Failed to load smart contract code. Please refresh the page or try again later.",
   "contract": "Contract",
   "copied": "Copied",
+  "copyAddress": "Copy Address",
+  "copyTransactionId": "Copy TX ID",
   "copyToClipboard": "Copy to clipboard",
   "filterAllTransactions": "All transactions",
   "filterTransferTransactions": "Transfer transactions",

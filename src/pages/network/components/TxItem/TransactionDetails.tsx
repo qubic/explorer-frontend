@@ -125,7 +125,7 @@ export default function TransactionDetails({
             label={sourceAddressNameData?.name}
             showTooltip={!!sourceAddressNameData?.name}
             value={sourceId}
-            copy={isSecondaryVariant}
+            copy
           />
         }
       />
@@ -137,7 +137,7 @@ export default function TransactionDetails({
             label={destinationAddressNameData?.name}
             showTooltip={!!destinationAddressNameData?.name}
             value={assetDetails?.newOwnerAndPossessor ?? destId}
-            copy={isSecondaryVariant}
+            copy
           />
         }
       />

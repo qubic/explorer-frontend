@@ -95,6 +95,8 @@
   "smartContractCodeLoadError": "Ошибка: Не удалось загрузить код смарт-контракта. Обновите страницу или попробуйте позже.",
   "contract": "Контракт",
   "copied": "Скопировано",
+  "copyAddress": "Копировать адрес",
+  "copyTransactionId": "Копировать ID TX",
   "copyToClipboard": "Скопировать в буфер обмена",
   "filterAllTransactions": "Все транзакции",
   "filterTransferTransactions": "Транзакции перевода",

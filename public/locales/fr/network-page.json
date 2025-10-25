@@ -95,6 +95,8 @@
   "smartContractCodeLoadError": "Erreur : Échec du chargement du code du contrat intelligent. Veuillez actualiser la page ou réessayer plus tard.",
   "contract": "Contrat",
   "copied": "Copié",
+  "copyAddress": "Copier l'adresse",
+  "copyTransactionId": "Copier l'ID de TX",
   "copyToClipboard": "Copier dans le presse-papiers",
   "filterAllTransactions": "Toutes les transactions",
   "filterTransferTransactions": "Transactions de transfert",
