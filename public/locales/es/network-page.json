@@ -62,7 +62,7 @@
   "richListWarning": "Los datos de la lista de ricos se actualizan al comienzo de cada época",
   "timestamp": "Fecha",
   "fee": "Tarifa",
-  "assetTransferWarning": "Este registro de transacción es actualmente visible solo para el remitente. El destinatario no tendrá acceso a estos datos de la transacción en sus registros en este momento.",
+  "assetTransferWarning": "Esta transacción es visible solo en la lista de transacciones de la dirección de origen. Mostrarla en la lista de transacciones de la dirección de destino aún no está soportado en la versión actual.",
   "ticksLoadFailed": "Error: No se pudieron cargar los ticks. Por favor, actualiza la página o inténtalo de nuevo más tarde. Si es miércoles, espera hasta que comience la próxima época.",
   "showItemsPerPage": "Mostrar {{count}} elementos",
   "itemsPerPage": "Elementos por página",
