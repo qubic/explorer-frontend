@@ -25,6 +25,11 @@ type ContractGroup = {
   assets: AssetBalance[]
 }
 
+// Animation constants
+const ANIMATION_DELAY = 800
+const ANIMATION_TRAIL = 500
+const ANIMATION_DURATION = 500
+
 export default function OwnedAssets({ addressId }: Props) {
   const { t } = useTranslation('network-page')
   const { data: ownedAssets } = useGetAddressOwnedAssetsQuery(
@@ -118,12 +123,10 @@ export default function OwnedAssets({ addressId }: Props) {
       return undefined
     }
 
-    // Start chevron animation at same time as first token item (800ms delay)
-    const animationDuration = 800
-
+    // Start chevron animation at same time as first token item
     const timer = setTimeout(() => {
       setShowChevron(true)
-    }, animationDuration)
+    }, ANIMATION_DELAY)
 
     return () => clearTimeout(timer)
   }, [individualAssets.length])
@@ -135,7 +138,7 @@ export default function OwnedAssets({ addressId }: Props) {
       opacity: ownedAssets?.length ? 1 : 0,
       transform: ownedAssets?.length ? 'translateX(0px)' : 'translateX(20px)'
     },
-    config: { tension: 220, friction: 15, duration: 500 }
+    config: { tension: 220, friction: 15, duration: ANIMATION_DURATION }
   })
 
   // Staggered animation for collapsed view
@@ -143,26 +146,25 @@ export default function OwnedAssets({ addressId }: Props) {
     from: { opacity: 0, transform: 'translateX(20px)' },
     enter: { opacity: 1, transform: 'translateX(0px)' },
     leave: { opacity: 0, transform: 'translateX(-10px)' },
-    delay: 800, // Delay the entire animation
-    trail: 500, // Delay between items
-    config: { duration: 500 }
+    delay: ANIMATION_DELAY, // Delay the entire animation
+    trail: ANIMATION_TRAIL, // Delay between items
+    config: { duration: ANIMATION_DURATION }
   })
 
   // Staggered animation for expanded view (by contract)
-  const expandedTransitions = useTransition(contractGroups, {
+  const expandedTransitions = useTransition(isExpanded ? contractGroups : [], {
     from: { opacity: 0, transform: 'translateX(20px)' },
     enter: { opacity: 1, transform: 'translateX(0px)' },
     leave: { opacity: 0, transform: 'translateX(-10px)' },
-    delay: 800, // Delay the entire animation
-    trail: 500, // Delay between items
-    config: { duration: 500 }
+    trail: ANIMATION_TRAIL, // Delay between items
+    config: { duration: ANIMATION_DURATION }
   })
 
   // Chevron fade-in animation - matches token items animation
   const chevronAnimation = useSpring({
     opacity: showChevron ? 1 : 0,
     transform: showChevron ? 'translateX(0px)' : 'translateX(20px)',
-    config: { duration: 500 }
+    config: { duration: ANIMATION_DURATION }
   })
 
   const toggleExpanded = () => {
