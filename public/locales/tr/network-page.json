@@ -107,5 +107,7 @@
   "sharesIssuer": "Hisse Senedi İhraççısı",
   "contractIndex": "İndeks",
   "expandAll": "Tümünü genişlet",
-  "collapseAll": "Tümünü daralt"
+  "collapseAll": "Tümünü daralt",
+  "managedBy": "{{contract}} tarafından yönetiliyor",
+  "unknownContract": "Bilinmeyen sözleşme"
 }

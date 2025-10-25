@@ -107,5 +107,7 @@
   "sharesIssuer": "Aktien-Emittent",
   "contractIndex": "Index",
   "expandAll": "Alle erweitern",
-  "collapseAll": "Alle einklappen"
+  "collapseAll": "Alle einklappen",
+  "managedBy": "Verwaltet von {{contract}}",
+  "unknownContract": "Unbekannter Vertrag"
 }
