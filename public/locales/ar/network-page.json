@@ -96,7 +96,7 @@
   "contract": "عقد",
   "copied": "تم النسخ",
   "copyAddress": "نسخ العنوان",
-  "copyTransactionId": "نسخ معرّف TX",
+  "copyTransactionId": "نسخ معرّف المعاملة",
   "copyToClipboard": "نسخ إلى الحافظة",
   "filterAllTransactions": "جميع المعاملات",
   "filterTransferTransactions": "معاملات التحويل",
