@@ -103,9 +103,11 @@ export default function AssetsTabs() {
       { smartContractShares: [], tokens: [] }
     )
 
-    // Sort both arrays alphabetically by name
-    result.tokens.sort((a, b) => a.name.localeCompare(b.name))
-    result.smartContractShares.sort((a, b) => a.name.localeCompare(b.name))
+    // Sort both arrays alphabetically by name (case-insensitive)
+    result.tokens.sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }))
+    result.smartContractShares.sort((a, b) =>
+      a.name.localeCompare(b.name, undefined, { sensitivity: 'base' })
+    )
 
     return result
   }, [data])
