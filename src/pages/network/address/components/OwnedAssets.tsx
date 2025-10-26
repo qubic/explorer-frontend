@@ -153,11 +153,13 @@ export default function OwnedAssets({ addressId }: Props) {
 
   // Staggered animation for expanded view (by contract)
   const expandedTransitions = useTransition(isExpanded ? contractGroups : [], {
+    keys: (item) => item.contractIndex,
     from: { opacity: 0, transform: 'translateX(20px)' },
     enter: { opacity: 1, transform: 'translateX(0px)' },
     leave: { opacity: 0, transform: 'translateX(-10px)' },
     trail: ANIMATION_TRAIL, // Delay between items
-    config: { duration: ANIMATION_DURATION }
+    config: { duration: ANIMATION_DURATION },
+    immediate: !isExpanded // Skip animation when collapsing
   })
 
   // Chevron fade-in animation - matches token items animation
