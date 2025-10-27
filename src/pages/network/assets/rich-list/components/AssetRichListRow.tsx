@@ -19,7 +19,7 @@ function AssetRichListRow({ entity, isMobile }: Props) {
         {entity.rank}
       </td>
       <td className="px-8 py-16 sm:p-16">
-        <AddressLink value={entity.identity} ellipsis={isMobile} showTooltip={isMobile} />
+        <AddressLink value={entity.identity} ellipsis={isMobile} showTooltip={isMobile} copy />
       </td>
       <td className="whitespace-nowrap px-8 py-16 font-space text-xs xs:text-sm sm:p-16">
         {addressNameData?.name || ''}

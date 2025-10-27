@@ -62,7 +62,7 @@
   "richListWarning": "Danh sách giàu được cập nhật vào đầu mỗi epoch",
   "timestamp": "Dấu thời gian",
   "fee": "Phí",
-  "assetTransferWarning": "Bản ghi giao dịch này hiện chỉ hiển thị cho người gửi. Người nhận sẽ chưa thấy dữ liệu giao dịch trong hồ sơ của họ vào lúc này.",
+  "assetTransferWarning": "Giao dịch này chỉ hiển thị trong danh sách giao dịch của địa chỉ nguồn. Việc hiển thị nó trong danh sách giao dịch của địa chỉ đích chưa được hỗ trợ trong phiên bản hiện tại.",
   "ticksLoadFailed": "Lỗi: Không tải được các tick. Vui lòng tải lại trang hoặc thử lại sau. Nếu hôm nay là thứ Tư, vui lòng chờ đến khi epoch mới bắt đầu.",
   "showItemsPerPage": "Hiển thị {{count}} mục",
   "itemsPerPage": "Số mục mỗi trang",
@@ -95,6 +95,8 @@
   "smartContractCodeLoadError": "Lỗi: Không tải được mã hợp đồng thông minh. Vui lòng tải lại trang hoặc thử lại sau.",
   "contract": "Hợp đồng",
   "copied": "Đã sao chép",
+  "copyAddress": "Sao chép địa chỉ",
+  "copyTransactionId": "Sao chép ID TX",
   "copyToClipboard": "Sao chép vào clipboard",
   "filterAllTransactions": "Tất cả giao dịch",
   "filterTransferTransactions": "Giao dịch chuyển khoản",
@@ -105,5 +107,7 @@
   "sharesIssuer": "Nhà Phát Hành Cổ Phiếu",
   "contractIndex": "Chỉ Số",
   "expandAll": "Mở rộng tất cả",
-  "collapseAll": "Thu gọn tất cả"
+  "collapseAll": "Thu gọn tất cả",
+  "managedBy": "Được quản lý bởi {{contract}}",
+  "unknownContract": "Hợp đồng không xác định"
 }

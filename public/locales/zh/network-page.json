@@ -62,7 +62,7 @@
   "richListWarning": "富豪榜数据会在每个纪元开始时更新",
   "timestamp": "时间戳",
   "fee": "费用",
-  "assetTransferWarning": "此交易当前仅发送方可见，接收方暂时无法查看",
+  "assetTransferWarning": "此交易仅在源地址的交易列表中可见。在当前版本中尚不支持在目标地址的交易列表中显示它。",
   "ticksLoadFailed": "错误：无法加载滴答数据。请刷新页面或稍后再试。如果今天是星期三，请等到下一个纪元开始。",
   "showItemsPerPage": "显示 {{count}} 项",
   "itemsPerPage": "每页项数",
@@ -95,6 +95,8 @@
   "smartContractCodeLoadError": "错误：加载智能合约代码失败。请刷新页面或稍后再试。",
   "contract": "合约",
   "copied": "已复制",
+  "copyAddress": "复制地址",
+  "copyTransactionId": "复制TX ID",
   "copyToClipboard": "复制到剪贴板",
   "filterAllTransactions": "所有交易",
   "filterTransferTransactions": "轉帳交易",
@@ -105,5 +107,7 @@
   "sharesIssuer": "股份發行人",
   "contractIndex": "索引",
   "expandAll": "全部展開",
-  "collapseAll": "全部摺疊"
+  "collapseAll": "全部摺疊",
+  "managedBy": "由{{contract}}管理",
+  "unknownContract": "未知合约"
 }

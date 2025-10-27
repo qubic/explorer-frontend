@@ -7,7 +7,7 @@ import AddressLink from '../../AddressLink'
 function TransferItem({ transfer, className }: { transfer: Transfer; className?: string }) {
   return (
     <li className={clsxTwMerge('flex flex-col justify-between gap-8 md:flex-row', className)}>
-      <AddressLink value={transfer.destId} />
+      <AddressLink value={transfer.destId} copy />
       <p className="font-space text-sm">{formatString(transfer.amount)} QUBIC</p>
     </li>
   )

@@ -62,7 +62,7 @@
   "richListWarning": "Les données de la liste des riches sont mises à jour au début de chaque époque",
   "timestamp": "Horodatage",
   "fee": "Frais",
-  "assetTransferWarning": "Cet enregistrement de transaction est actuellement visible uniquement par l'expéditeur. Le destinataire n'aura pas accès à ces données de transaction dans ses enregistrements pour le moment.",
+  "assetTransferWarning": "Cette transaction est visible uniquement dans la liste des transactions de l'adresse source. L'afficher dans la liste des transactions de l'adresse de destination n'est pas encore pris en charge dans la version actuelle.",
   "ticksLoadFailed": "Erreur : Échec du chargement des ticks. Veuillez actualiser la page ou réessayer plus tard. Si nous sommes mercredi, veuillez attendre le début de la prochaine époque.",
   "showItemsPerPage": "Afficher {{count}} éléments",
   "itemsPerPage": "Éléments par page",
@@ -95,6 +95,8 @@
   "smartContractCodeLoadError": "Erreur : Échec du chargement du code du contrat intelligent. Veuillez actualiser la page ou réessayer plus tard.",
   "contract": "Contrat",
   "copied": "Copié",
+  "copyAddress": "Copier l'adresse",
+  "copyTransactionId": "Copier l'ID de TX",
   "copyToClipboard": "Copier dans le presse-papiers",
   "filterAllTransactions": "Toutes les transactions",
   "filterTransferTransactions": "Transactions de transfert",
@@ -105,5 +107,7 @@
   "sharesIssuer": "Émetteur d'Actions",
   "contractIndex": "Index",
   "expandAll": "Tout développer",
-  "collapseAll": "Tout réduire"
+  "collapseAll": "Tout réduire",
+  "managedBy": "Géré par {{contract}}",
+  "unknownContract": "Contrat inconnu"
 }
