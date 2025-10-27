@@ -62,7 +62,7 @@
   "richListWarning": "Die Daten der Reichenliste werden zu Beginn jeder Epoche aktualisiert",
   "timestamp": "Zeitstempel",
   "fee": "Gebühr",
-  "assetTransferWarning": "Dieser Transaktionsdatensatz ist derzeit nur für den Absender sichtbar. Der Empfänger hat zu diesem Zeitpunkt keinen Zugriff auf diese Transaktionsdaten in seinen Aufzeichnungen.",
+  "assetTransferWarning": "Diese Transaktion ist nur in der Transaktionsliste der Quelladresse sichtbar. Die Anzeige in der Transaktionsliste der Zieladresse wird in der aktuellen Version noch nicht unterstützt.",
   "ticksLoadFailed": "Fehler: Konnte Ticks nicht laden. Bitte aktualisieren Sie die Seite oder versuchen Sie es später erneut. Wenn heute Mittwoch ist, warten Sie bitte, bis die nächste Epoche beginnt.",
   "showItemsPerPage": "{{count}} Elemente anzeigen",
   "itemsPerPage": "Elemente pro Seite",
@@ -95,6 +95,8 @@
   "smartContractCodeLoadError": "Fehler: Der Smart-Contract-Code konnte nicht geladen werden. Bitte lade die Seite neu oder versuche es später erneut.",
   "contract": "Vertrag",
   "copied": "Kopiert",
+  "copyAddress": "Adresse kopieren",
+  "copyTransactionId": "TX-ID kopieren",
   "copyToClipboard": "In die Zwischenablage kopieren",
   "filterAllTransactions": "Alle Transaktionen",
   "filterTransferTransactions": "Überweisungen",
@@ -105,5 +107,7 @@
   "sharesIssuer": "Aktien-Emittent",
   "contractIndex": "Index",
   "expandAll": "Alle erweitern",
-  "collapseAll": "Alle einklappen"
+  "collapseAll": "Alle einklappen",
+  "managedBy": "Verwaltet von {{contract}}",
+  "unknownContract": "Unbekannter Vertrag"
 }

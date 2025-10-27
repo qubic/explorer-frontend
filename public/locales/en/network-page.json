@@ -62,7 +62,7 @@
   "richListWarning": "Rich list data is updated at the beginning of each epoch",
   "timestamp": "Timestamp",
   "fee": "Fee",
-  "assetTransferWarning": "This transaction record is currently visible only to the sender. The recipient will not have access to this transaction data in their records at this time.",
+  "assetTransferWarning": "This transaction is visible only in the list of transactions for the source address. Displaying it in the destination address's list of transactions is not supported yet in the current version.",
   "ticksLoadFailed": "Error: Failed to load ticks. Please refresh the page or try again later. If it's Wednesday, please wait until the next epoch begins.",
   "showItemsPerPage": "Show {{count}} items",
   "itemsPerPage": "Items per page",
@@ -95,6 +95,8 @@
   "smartContractCodeLoadError": "Error: Failed to load smart contract code. Please refresh the page or try again later.",
   "contract": "Contract",
   "copied": "Copied",
+  "copyAddress": "Copy Address",
+  "copyTransactionId": "Copy TX ID",
   "copyToClipboard": "Copy to clipboard",
   "filterAllTransactions": "All transactions",
   "filterTransferTransactions": "Transfer transactions",
@@ -105,5 +107,7 @@
   "sharesIssuer": "Shares Issuer",
   "contractIndex": "Index",
   "expandAll": "Expand All",
-  "collapseAll": "Collapse All"
+  "collapseAll": "Collapse All",
+  "managedBy": "Managed by {{contract}}",
+  "unknownContract": "Unknown Contract"
 }

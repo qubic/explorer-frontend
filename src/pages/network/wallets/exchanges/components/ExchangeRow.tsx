@@ -19,6 +19,7 @@ function ExchangeRow({ entity, isMobile }: Props) {
           ellipsis={isMobile}
           showTooltip={isMobile}
           className="xs:text-xs sm:text-sm"
+          copy
         />
       </td>
       <td className="px-10 py-16 text-right font-space text-xs sm:p-16 sm:text-sm">

@@ -62,7 +62,7 @@
   "richListWarning": "Rijkelijstgegevens worden aan het begin van elke epoche bijgewerkt",
   "timestamp": "Tijdstempel",
   "fee": "Kosten",
-  "assetTransferWarning": "Dit transactieoverzicht is momenteel alleen zichtbaar voor de afzender. De ontvanger heeft op dit moment geen toegang tot deze transactiegegevens in zijn administratie.",
+  "assetTransferWarning": "Deze transactie is alleen zichtbaar in de transactielijst van het bronadres. Weergave in de transactielijst van het bestemmingsadres wordt in de huidige versie nog niet ondersteund.",
   "ticksLoadFailed": "Fout: Het laden van ticks is mislukt. Vernieuw de pagina of probeer het later opnieuw. Als het woensdag is, wacht dan tot de volgende tijdperk begint.",
   "showItemsPerPage": "{{count}} items weergeven",
   "itemsPerPage": "Items per pagina",
@@ -95,6 +95,8 @@
   "smartContractCodeLoadError": "Fout: Het laden van de smartcontractcode is mislukt. Vernieuw de pagina of probeer het later opnieuw.",
   "contract": "Contract",
   "copied": "Gekopieerd",
+  "copyAddress": "Adres kopiëren",
+  "copyTransactionId": "TX-ID kopiëren",
   "copyToClipboard": "Kopiëren naar klembord",
   "filterAllTransactions": "Alle transacties",
   "filterTransferTransactions": "Overboekingen",
@@ -105,5 +107,7 @@
   "sharesIssuer": "Aandelen Uitgever",
   "contractIndex": "Index",
   "expandAll": "Alles uitvouwen",
-  "collapseAll": "Alles invouwen"
+  "collapseAll": "Alles invouwen",
+  "managedBy": "Beheerd door {{contract}}",
+  "unknownContract": "Onbekend contract"
 }
