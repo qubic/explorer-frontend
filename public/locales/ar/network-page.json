@@ -107,5 +107,7 @@
   "sharesIssuer": "مُصدر الأسهم",
   "contractIndex": "الفهرس",
   "expandAll": "توسيع الكل",
-  "collapseAll": "طي الكل"
+  "collapseAll": "طي الكل",
+  "managedBy": "يُدار بواسطة {{contract}}",
+  "unknownContract": "عقد غير معروف"
 }

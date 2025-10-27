@@ -107,5 +107,7 @@
   "sharesIssuer": "Эмитент акций",
   "contractIndex": "Индекс",
   "expandAll": "Развернуть все",
-  "collapseAll": "Свернуть все"
+  "collapseAll": "Свернуть все",
+  "managedBy": "Управляется {{contract}}",
+  "unknownContract": "Неизвестный контракт"
 }

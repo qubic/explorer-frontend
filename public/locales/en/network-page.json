@@ -107,5 +107,7 @@
   "sharesIssuer": "Shares Issuer",
   "contractIndex": "Index",
   "expandAll": "Expand All",
-  "collapseAll": "Collapse All"
+  "collapseAll": "Collapse All",
+  "managedBy": "Managed by {{contract}}",
+  "unknownContract": "Unknown Contract"
 }

@@ -107,5 +107,7 @@
   "sharesIssuer": "股份發行人",
   "contractIndex": "索引",
   "expandAll": "全部展開",
-  "collapseAll": "全部摺疊"
+  "collapseAll": "全部摺疊",
+  "managedBy": "由{{contract}}管理",
+  "unknownContract": "未知合约"
 }
