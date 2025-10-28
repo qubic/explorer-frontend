@@ -1,3 +1,17 @@
+# [1.27.0](https://github.com/qubic/explorer-frontend/compare/v1.26.1...v1.27.0) (2025-10-27)
+
+
+### Bug Fixes
+
+* sort assets alphabetically in rich list page ([#339](https://github.com/qubic/explorer-frontend/issues/339)) ([c12e717](https://github.com/qubic/explorer-frontend/commit/c12e71772f90e523a0d2bb48d8dcff53af41a8d7))
+* update asset transfer warning message text ([c39a0e0](https://github.com/qubic/explorer-frontend/commit/c39a0e0b2d9886a41a3cf885f85ffbf2f3b891bd))
+
+
+### Features
+
+* add context-aware copy buttons for addresses and transactions ([#332](https://github.com/qubic/explorer-frontend/issues/332)) ([da4aaeb](https://github.com/qubic/explorer-frontend/commit/da4aaeb1802b9f2cf4324ac392aca09b984a4696))
+* add tokens smart contract manager information for owned assets ([#338](https://github.com/qubic/explorer-frontend/issues/338)) ([0b0f59f](https://github.com/qubic/explorer-frontend/commit/0b0f59f3398aa3cb4dcb77d2b96b86d17d1a32e0))
+
 # [1.27.0-rc.1](https://github.com/qubic/explorer-frontend/compare/v1.26.1...v1.27.0-rc.1) (2025-10-27)
 
 
