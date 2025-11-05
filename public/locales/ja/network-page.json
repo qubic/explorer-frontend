@@ -98,6 +98,8 @@
   "copyAddress": "アドレスをコピー",
   "copyTransactionId": "TX IDをコピー",
   "copyToClipboard": "クリップボードにコピー",
+  "showQRCode": "QRコードを表示",
+  "qrcodeModalTitle": "アドレスQRコード",
   "filterAllTransactions": "すべてのトランザクション",
   "filterTransferTransactions": "転送トランザクション",
   "filterApprovedTransactions": "承認されたトランザクション",

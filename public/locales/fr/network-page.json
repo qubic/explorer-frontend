@@ -98,6 +98,8 @@
   "copyAddress": "Copier l'adresse",
   "copyTransactionId": "Copier l'ID de TX",
   "copyToClipboard": "Copier dans le presse-papiers",
+  "showQRCode": "Afficher le code QR",
+  "qrcodeModalTitle": "Code QR de l'adresse",
   "filterAllTransactions": "Toutes les transactions",
   "filterTransferTransactions": "Transactions de transfert",
   "filterApprovedTransactions": "Transactions approuvées",

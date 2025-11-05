@@ -98,6 +98,8 @@
   "copyAddress": "Adres kopiëren",
   "copyTransactionId": "TX-ID kopiëren",
   "copyToClipboard": "Kopiëren naar klembord",
+  "showQRCode": "QR-code weergeven",
+  "qrcodeModalTitle": "Adres QR-code",
   "filterAllTransactions": "Alle transacties",
   "filterTransferTransactions": "Overboekingen",
   "filterApprovedTransactions": "Goedgekeurde transacties",

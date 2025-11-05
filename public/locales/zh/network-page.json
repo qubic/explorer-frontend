@@ -98,6 +98,8 @@
   "copyAddress": "复制地址",
   "copyTransactionId": "复制TX ID",
   "copyToClipboard": "复制到剪贴板",
+  "showQRCode": "显示二维码",
+  "qrcodeModalTitle": "地址二维码",
   "filterAllTransactions": "所有交易",
   "filterTransferTransactions": "轉帳交易",
   "filterApprovedTransactions": "已核准交易",

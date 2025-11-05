@@ -98,6 +98,8 @@
   "copyAddress": "Adresi kopyala",
   "copyTransactionId": "TX ID'sini kopyala",
   "copyToClipboard": "Panoya kopyala",
+  "showQRCode": "QR Kodunu Göster",
+  "qrcodeModalTitle": "Adres QR Kodu",
   "filterAllTransactions": "Tüm işlemler",
   "filterTransferTransactions": "Transfer işlemleri",
   "filterApprovedTransactions": "Onaylanmış işlemler",

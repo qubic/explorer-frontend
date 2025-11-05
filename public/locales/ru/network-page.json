@@ -98,6 +98,8 @@
   "copyAddress": "Копировать адрес",
   "copyTransactionId": "Копировать ID TX",
   "copyToClipboard": "Скопировать в буфер обмена",
+  "showQRCode": "Показать QR-код",
+  "qrcodeModalTitle": "QR-код адреса",
   "filterAllTransactions": "Все транзакции",
   "filterTransferTransactions": "Транзакции перевода",
   "filterApprovedTransactions": "Одобренные транзакции",
