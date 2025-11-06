@@ -233,8 +233,8 @@ const tailwindConfig: Config = {
   },
   plugins: [
     aspectRatioPlugin,
-    formsPlugin({ strategy: 'class' }),
-    typographyPlugin(),
+    formsPlugin,
+    typographyPlugin,
     scrollbarPlugin({ nocompatible: true, preferredStrategy: 'pseudoelements' })
   ]
 }
