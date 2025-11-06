@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useParams } from 'react-router-dom'
+import { useLocation, useParams } from 'react-router-dom'
 
 import { ArrowTopRightOnSquareIcon } from '@app/assets/icons'
 import { withHelmet } from '@app/components/hocs'
@@ -19,6 +19,7 @@ import { AddressDetails, ContractOverview, OwnedAssets, TransactionsOverview } f
 function AddressPage() {
   const { t } = useTranslation('network-page')
   const { addressId = '' } = useParams()
+  const location = useLocation()
   const latestStats = useGetLatestStatsQuery()
   const [isValidatingAddress, setIsValidatingAddress] = useState(true)
   const [isAddressValid, setIsAddressValid] = useState(false)
@@ -39,6 +40,15 @@ function AddressPage() {
         return
       }
 
+      // Skip validation if coming from internal link and address has valid format
+      const skipValidation = location.state?.skipValidation === true
+      const hasValidFormat = addressId.length === 60 && /^[A-Z]+$/.test(addressId)
+      if (skipValidation && hasValidFormat) {
+        setIsAddressValid(true)
+        setIsValidatingAddress(false)
+        return
+      }
+
       setIsValidatingAddress(true)
       const isValid = await isValidQubicAddress(addressId)
       setIsAddressValid(isValid)
@@ -46,7 +56,7 @@ function AddressPage() {
     }
 
     validateAddress()
-  }, [addressId])
+  }, [addressId, location.state])
 
   const handleToggleDetails = useCallback(() => {
     setDetailsOpen((prev) => !prev)
