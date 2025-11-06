@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { Alert, Skeleton } from '@app/components/ui'
 import { OVERVIEW_DATA_POLLING_INTERVAL_MS } from '@app/constants'
 import { useGetLatestStatsQuery } from '@app/store/apis/archiver-v1'
+import { formatQubicPrice } from '@app/utils'
 import LanguagePicker from './LanguagePicker'
 import NetworkSelector from './NetworkSelector'
 import SearchBar from './SearchBar/SearchBar'
@@ -27,7 +28,7 @@ export default function TopBar() {
         </Alert>
       )
     }
-    return <span className="text-primary-30">${data?.price}</span>
+    return <span className="text-primary-30">{formatQubicPrice(data?.price)}</span>
   }, [data, isLoading, isError, t])
 
   return (
