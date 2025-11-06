@@ -17,7 +17,7 @@ import {
 import { Alert, Skeleton, Tooltip } from '@app/components/ui'
 import type { GetLatestStatsResponse, GetTickInfoResponse } from '@app/store/apis/archiver-v1'
 import type { TickQualityResponse } from '@app/store/apis/qli'
-import { formatString } from '@app/utils'
+import { formatQubicPrice, formatString } from '@app/utils'
 import OverviewCardItem from './OverviewCardItem'
 
 function getTickQuality(tickQuality: number | undefined) {
@@ -84,7 +84,7 @@ export default function LatestStats({
         id: 'price',
         icon: DollarCoinIcon,
         label: t('price'),
-        value: `$${latestStats?.price ?? 0}`
+        value: formatQubicPrice(latestStats?.price)
       },
       {
         id: 'market-cap',
