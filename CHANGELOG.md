@@ -1,3 +1,17 @@
+# [1.28.0](https://github.com/qubic/explorer-frontend/compare/v1.27.0...v1.28.0) (2025-11-06)
+
+
+### Features
+
+* add price per billion format and refactor formatting utilities ([ecdc203](https://github.com/qubic/explorer-frontend/commit/ecdc203313cf73755e8a33c24c119c0ac18bad50))
+
+# [1.28.0-rc.1](https://github.com/qubic/explorer-frontend/compare/v1.27.0...v1.28.0-rc.1) (2025-11-06)
+
+
+### Features
+
+* add price per billion format and refactor formatting utilities ([ecdc203](https://github.com/qubic/explorer-frontend/commit/ecdc203313cf73755e8a33c24c119c0ac18bad50))
+
 # [1.27.0](https://github.com/qubic/explorer-frontend/compare/v1.26.1...v1.27.0) (2025-10-27)
 
 
