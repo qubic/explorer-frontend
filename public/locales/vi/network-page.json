@@ -98,6 +98,8 @@
   "copyAddress": "Sao chép địa chỉ",
   "copyTransactionId": "Sao chép ID TX",
   "copyToClipboard": "Sao chép vào clipboard",
+  "showQRCode": "Hiển thị mã QR",
+  "qrcodeModalTitle": "Mã QR địa chỉ",
   "filterAllTransactions": "Tất cả giao dịch",
   "filterTransferTransactions": "Giao dịch chuyển khoản",
   "filterApprovedTransactions": "Giao dịch đã duyệt",

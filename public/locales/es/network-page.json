@@ -98,6 +98,8 @@
   "copyAddress": "Copiar dirección",
   "copyTransactionId": "Copiar ID de TX",
   "copyToClipboard": "Copiar al portapapeles",
+  "showQRCode": "Mostrar código QR",
+  "qrcodeModalTitle": "Código QR de la dirección",
   "filterAllTransactions": "Todas las transacciones",
   "filterTransferTransactions": "Transferencias",
   "filterApprovedTransactions": "Transacciones aprobadas",

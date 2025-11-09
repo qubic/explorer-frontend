@@ -98,6 +98,8 @@
   "copyAddress": "نسخ العنوان",
   "copyTransactionId": "نسخ معرّف المعاملة",
   "copyToClipboard": "نسخ إلى الحافظة",
+  "showQRCode": "عرض رمز الاستجابة السريعة",
+  "qrcodeModalTitle": "رمز استجابة سريعة للعنوان",
   "filterAllTransactions": "جميع المعاملات",
   "filterTransferTransactions": "معاملات التحويل",
   "filterApprovedTransactions": "المعاملات المعتمدة",
