@@ -1,3 +1,73 @@
+# [1.28.0](https://github.com/qubic/explorer-frontend/compare/v1.27.0...v1.28.0) (2025-11-06)
+
+
+### Features
+
+* add price per billion format and refactor formatting utilities ([ecdc203](https://github.com/qubic/explorer-frontend/commit/ecdc203313cf73755e8a33c24c119c0ac18bad50))
+
+# [1.28.0-rc.1](https://github.com/qubic/explorer-frontend/compare/v1.27.0...v1.28.0-rc.1) (2025-11-06)
+
+
+### Features
+
+* add price per billion format and refactor formatting utilities ([ecdc203](https://github.com/qubic/explorer-frontend/commit/ecdc203313cf73755e8a33c24c119c0ac18bad50))
+
+# [1.27.0](https://github.com/qubic/explorer-frontend/compare/v1.26.1...v1.27.0) (2025-10-27)
+
+
+### Bug Fixes
+
+* sort assets alphabetically in rich list page ([#339](https://github.com/qubic/explorer-frontend/issues/339)) ([c12e717](https://github.com/qubic/explorer-frontend/commit/c12e71772f90e523a0d2bb48d8dcff53af41a8d7))
+* update asset transfer warning message text ([c39a0e0](https://github.com/qubic/explorer-frontend/commit/c39a0e0b2d9886a41a3cf885f85ffbf2f3b891bd))
+
+
+### Features
+
+* add context-aware copy buttons for addresses and transactions ([#332](https://github.com/qubic/explorer-frontend/issues/332)) ([da4aaeb](https://github.com/qubic/explorer-frontend/commit/da4aaeb1802b9f2cf4324ac392aca09b984a4696))
+* add tokens smart contract manager information for owned assets ([#338](https://github.com/qubic/explorer-frontend/issues/338)) ([0b0f59f](https://github.com/qubic/explorer-frontend/commit/0b0f59f3398aa3cb4dcb77d2b96b86d17d1a32e0))
+
+# [1.27.0-rc.1](https://github.com/qubic/explorer-frontend/compare/v1.26.1...v1.27.0-rc.1) (2025-10-27)
+
+
+### Bug Fixes
+
+* sort assets alphabetically in rich list page ([#339](https://github.com/qubic/explorer-frontend/issues/339)) ([c12e717](https://github.com/qubic/explorer-frontend/commit/c12e71772f90e523a0d2bb48d8dcff53af41a8d7))
+* update asset transfer warning message text ([c39a0e0](https://github.com/qubic/explorer-frontend/commit/c39a0e0b2d9886a41a3cf885f85ffbf2f3b891bd))
+
+
+### Features
+
+* add context-aware copy buttons for addresses and transactions ([#332](https://github.com/qubic/explorer-frontend/issues/332)) ([da4aaeb](https://github.com/qubic/explorer-frontend/commit/da4aaeb1802b9f2cf4324ac392aca09b984a4696))
+* add tokens smart contract manager information for owned assets ([#338](https://github.com/qubic/explorer-frontend/issues/338)) ([0b0f59f](https://github.com/qubic/explorer-frontend/commit/0b0f59f3398aa3cb4dcb77d2b96b86d17d1a32e0))
+
+## [1.26.1](https://github.com/qubic/explorer-frontend/compare/v1.26.0...v1.26.1) (2025-10-23)
+
+
+### Bug Fixes
+
+* qearn smart contact name ([e9f493e](https://github.com/qubic/explorer-frontend/commit/e9f493e2d93730d6c848c3e6f334d71ca262e2a6))
+
+## [1.26.1-rc.1](https://github.com/qubic/explorer-frontend/compare/v1.26.0...v1.26.1-rc.1) (2025-10-23)
+
+
+### Bug Fixes
+
+* qearn smart contact name ([e9f493e](https://github.com/qubic/explorer-frontend/commit/e9f493e2d93730d6c848c3e6f334d71ca262e2a6))
+
+# [1.26.0](https://github.com/qubic/explorer-frontend/compare/v1.25.0...v1.26.0) (2025-10-20)
+
+
+### Features
+
+* replace local constant data with the one from static ([#324](https://github.com/qubic/explorer-frontend/issues/324)) ([68d65ad](https://github.com/qubic/explorer-frontend/commit/68d65ad95a13459142a1b9485d884e181dd400d6))
+
+# [1.26.0-rc.1](https://github.com/qubic/explorer-frontend/compare/v1.25.0...v1.26.0-rc.1) (2025-10-20)
+
+
+### Features
+
+* replace local constant data with the one from static ([#324](https://github.com/qubic/explorer-frontend/issues/324)) ([68d65ad](https://github.com/qubic/explorer-frontend/commit/68d65ad95a13459142a1b9485d884e181dd400d6))
+
 # [1.25.0](https://github.com/qubic/explorer-frontend/compare/v1.24.1...v1.25.0) (2025-10-16)
 
 

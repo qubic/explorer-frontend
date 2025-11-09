@@ -5,7 +5,7 @@ import { useLocation, useParams } from 'react-router-dom'
 import { ArrowTopRightOnSquareIcon } from '@app/assets/icons'
 import { withHelmet } from '@app/components/hocs'
 import { Badge, Breadcrumbs, Tabs } from '@app/components/ui'
-import { ChevronToggleButton, CopyTextButton } from '@app/components/ui/buttons'
+import { ChevronToggleButton, CopyTextButton, COPY_BUTTON_TYPES } from '@app/components/ui/buttons'
 import { ErrorFallback } from '@app/components/ui/error-boundaries'
 import { PageLayout } from '@app/components/ui/layouts'
 import { LinearProgress } from '@app/components/ui/loaders'
@@ -108,73 +108,40 @@ function AddressPage() {
 
       <div className="flex items-center gap-12 pb-6 pt-16">
         <p className="break-all font-space text-base text-gray-50">{addressId}</p>
-        <CopyTextButton text={addressId} />
+        <CopyTextButton text={addressId} type={COPY_BUTTON_TYPES.ADDRESS} />
       </div>
 
-      {(addressName || smartContractDetails) && (
+      {addressName && (
         <div className="flex items-center gap-4 pb-16">
-          {/* Smart Contract Type Label */}
-          {smartContractDetails && (
-            <Badge color="primary" size="xs" variant="outlined">
-              {t('smartContract')}
-            </Badge>
-          )}
-          {/* Smart Contract Name */}
-          {smartContractDetails && (
-            <Badge
-              color="primary"
-              size="xs"
-              variant="outlined"
-              className={clsxTwMerge({
-                'hover:bg-primary-60': smartContractDetails?.website
-              })}
-            >
-              {smartContractDetails?.website ? (
-                <a
-                  href={smartContractDetails.website}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="flex items-center"
-                >
-                  {smartContractDetails.name}
-                  <ArrowTopRightOnSquareIcon className="mb-1.5 ml-4 size-12 text-primary-20" />
-                </a>
-              ) : (
-                smartContractDetails?.name
-              )}
-            </Badge>
-          )}
-          {/* Token/Exchange Type Label (not for named addresses) */}
-          {addressName && 'i18nKey' in addressName && addressName.i18nKey !== 'named-address' && (
+          {/* Type Label (not for named addresses) */}
+          {addressName.i18nKey !== 'named-address' && (
             <Badge color="primary" size="xs" variant="outlined">
               {t(addressName.i18nKey)}
             </Badge>
           )}
-          {/* Token/Exchange/Named Address Name */}
-          {addressName && (
-            <Badge
-              color="primary"
-              size="xs"
-              variant="outlined"
-              className={clsxTwMerge({
-                'hover:bg-primary-60': addressName.website
-              })}
-            >
-              {addressName.website ? (
-                <a
-                  href={addressName.website}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="flex items-center"
-                >
-                  {addressName.name}
-                  <ArrowTopRightOnSquareIcon className="mb-1.5 ml-4 size-12 text-primary-20" />
-                </a>
-              ) : (
-                addressName.name
-              )}
-            </Badge>
-          )}
+          {/* Name Badge */}
+          <Badge
+            color="primary"
+            size="xs"
+            variant="outlined"
+            className={clsxTwMerge({
+              'hover:bg-primary-60': addressName.website
+            })}
+          >
+            {addressName.website ? (
+              <a
+                href={addressName.website}
+                target="_blank"
+                rel="noreferrer"
+                className="flex items-center"
+              >
+                {addressName.name}
+                <ArrowTopRightOnSquareIcon className="mb-1.5 ml-4 size-12 text-primary-20" />
+              </a>
+            ) : (
+              addressName.name
+            )}
+          </Badge>
         </div>
       )}
 

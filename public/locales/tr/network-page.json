@@ -63,7 +63,7 @@
   "richListWarning": "Zenginler listesi verileri her dönemin başında güncellenir",
   "timestamp": "Zaman damgası",
   "fee": "Ücret",
-  "assetTransferWarning": "Bu işlem kaydı şu anda yalnızca gönderen tarafından görülebilir. Alıcı, şu anda bu işlem verilerine kayıtlarında erişemeyecektir.",
+  "assetTransferWarning": "Bu işlem yalnızca kaynak adresin işlem listesinde görünmektedir. Hedef adresin işlem listesinde gösterilmesi mevcut sürümde henüz desteklenmemektedir.",
   "ticksLoadFailed": "Hata: Tikler yüklenemedi. Lütfen sayfayı yenileyin veya daha sonra tekrar deneyin. Eğer bugün çarşamba ise, lütfen bir sonraki dönemin başlamasını bekleyin.",
   "showItemsPerPage": "{{count}} öğeyi göster",
   "itemsPerPage": "Sayfa başına öğe",
@@ -96,6 +96,8 @@
   "smartContractCodeLoadError": "Hata: Akıllı sözleşme kodu yüklenemedi. Lütfen sayfayı yenileyin veya daha sonra tekrar deneyin.",
   "contract": "Sözleşme",
   "copied": "Kopyalandı",
+  "copyAddress": "Adresi kopyala",
+  "copyTransactionId": "TX ID'sini kopyala",
   "copyToClipboard": "Panoya kopyala",
   "filterAllTransactions": "Tüm işlemler",
   "filterTransferTransactions": "Transfer işlemleri",
@@ -106,5 +108,7 @@
   "sharesIssuer": "Hisse Senedi İhraççısı",
   "contractIndex": "İndeks",
   "expandAll": "Tümünü genişlet",
-  "collapseAll": "Tümünü daralt"
+  "collapseAll": "Tümünü daralt",
+  "managedBy": "{{contract}} tarafından yönetiliyor",
+  "unknownContract": "Bilinmeyen sözleşme"
 }

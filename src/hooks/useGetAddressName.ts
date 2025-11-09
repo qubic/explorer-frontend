@@ -34,7 +34,8 @@ export function useGetAddressName(address: string): GetAddressNameResult | undef
     if (smartContract) {
       return {
         name: smartContract.name,
-        i18nKey: 'smart-contract'
+        i18nKey: 'smartContract',
+        website: smartContract.website
       }
     }
 
