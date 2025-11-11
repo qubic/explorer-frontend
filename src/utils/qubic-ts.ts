@@ -72,14 +72,31 @@ export const isAssetsIssuerAddress = (address: string): boolean => address === A
 
 /**
  * Validates if a Qubic address is valid by verifying its identity
+ * First performs basic format checks (length and uppercase) before cryptographic validation
  * @param address - The address string to validate
+ * @param skipCryptographicValidation - If true, only performs basic format validation (for internal links)
  * @returns Promise<boolean> - True if the address is valid, false otherwise
  */
-export const isValidQubicAddress = async (address: string): Promise<boolean> => {
+export const isValidQubicAddress = async (
+  address: string,
+  skipCryptographicValidation = false
+): Promise<boolean> => {
   if (!address || typeof address !== 'string') {
     return false
   }
 
+  // Basic format validation first (no cryptographic operations needed)
+  // Qubic addresses must be exactly 60 characters and all uppercase
+  if (address.length !== 60 || !/^[A-Z]+$/.test(address)) {
+    return false
+  }
+
+  // Skip expensive cryptographic validation if requested (e.g., for internal links)
+  if (skipCryptographicValidation) {
+    return true
+  }
+
+  // Only perform expensive cryptographic validation if basic format is valid
   try {
     const publicKey = new PublicKey(address)
     return await publicKey.verifyIdentity()

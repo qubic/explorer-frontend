@@ -40,17 +40,10 @@ function AddressPage() {
         return
       }
 
-      // Skip validation if coming from internal link and address has valid format
-      const skipValidation = location.state?.skipValidation === true
-      const hasValidFormat = addressId.length === 60 && /^[A-Z]+$/.test(addressId)
-      if (skipValidation && hasValidFormat) {
-        setIsAddressValid(true)
-        setIsValidatingAddress(false)
-        return
-      }
-
       setIsValidatingAddress(true)
-      const isValid = await isValidQubicAddress(addressId)
+      // Skip cryptographic validation if coming from internal link (only do basic format check)
+      const skipCryptographicValidation = location.state?.skipValidation === true
+      const isValid = await isValidQubicAddress(addressId, skipCryptographicValidation)
       setIsAddressValid(isValid)
       setIsValidatingAddress(false)
     }
