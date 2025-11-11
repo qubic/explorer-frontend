@@ -53,6 +53,7 @@
   "hide": "Ocultar",
   "show": "Mostrar",
   "transactionNotFound": "Transacción no encontrada",
+  "invalidAddressError": "El formato de la dirección no es válido. Verifica la dirección y vuelve a intentarlo.",
   "addressNotFoundError": "Error: No pudimos encontrar la dirección que estás buscando. Verifica la dirección y vuelve a intentarlo.",
   "loadingTransactionsError": "Error: Algo ha ido mal al cargar las transacciones. Por favor, inténtalo de nuevo más tarde.",
   "richList": "Lista de Ricos",

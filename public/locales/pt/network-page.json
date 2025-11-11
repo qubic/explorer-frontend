@@ -53,6 +53,7 @@
   "hide": "Esconder",
   "show": "Mostrar",
   "transactionNotFound": "Transação não encontrada",
+  "invalidAddressError": "O formato do endereço é inválido. Verifique o endereço e tente novamente.",
   "addressNotFoundError": "Erro: Não conseguimos encontrar o endereço que você está procurando. Verifique o endereço e tente novamente.",
   "loadingTransactionsError": "Erro: Algo deu errado ao carregar as transações. Por favor, tente novamente mais tarde.",
   "richList": "Lista de Ricos",

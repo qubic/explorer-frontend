@@ -7,11 +7,35 @@ import { Alert } from '@app/components/ui'
 type ErrorDisplayProps = Readonly<{
   is404Error?: boolean
   error?: ErrorResponse | Error
+  hideErrorHeader?: boolean
 }>
 
-export default function ErrorDisplay({ is404Error = false, error }: ErrorDisplayProps) {
+export default function ErrorDisplay({
+  is404Error = false,
+  error,
+  hideErrorHeader = false
+}: ErrorDisplayProps) {
   const { t } = useTranslation('error-404-page')
   const ErrorImg = is404Error ? Error404 : GenericError
+
+  const renderErrorContent = () => {
+    if (!error) {
+      return t('unexpectedError')
+    }
+
+    if (error instanceof Error) {
+      return String(error.message)
+    }
+
+    return (
+      <>
+        <p className="text-base font-medium text-error-40">
+          {error.status} | {error.statusText}
+        </p>
+        <p className="text-sm text-error-40">{String(error.data)}</p>
+      </>
+    )
+  }
 
   return (
     <>
@@ -23,34 +47,49 @@ export default function ErrorDisplay({ is404Error = false, error }: ErrorDisplay
         />
       </div>
       <div className="h-fit">
-        <div>
-          <h1 className="text-center font-space text-32 font-700 leading-40 md:text-4xl md:leading-tight">
-            {is404Error ? t('pageNotFound') : t('title')}
-          </h1>
-        </div>
+        {is404Error && (
+          <>
+            <div>
+              <h1 className="text-center font-space text-32 font-700 leading-40 md:text-4xl md:leading-tight">
+                {t('pageNotFound')}
+              </h1>
+            </div>
 
-        <div className="mx-auto max-w-[400px]">
-          <p className="mt-16 text-center font-space text-16 leading-20 text-gray-50 md:text-18">
-            {is404Error ? t('error404Message') : t('unexpectedError')}
-          </p>
-        </div>
+            <div className="mx-auto max-w-[400px]">
+              <p className="mt-16 text-center font-space text-16 leading-20 text-gray-50 md:text-18">
+                {t('error404Message')}
+              </p>
+            </div>
+          </>
+        )}
 
-        <div className="mt-32 text-center md:mt-40">
-          {error && !is404Error && (
+        {!is404Error && !hideErrorHeader && (
+          <>
+            <div>
+              <h1 className="text-center font-space text-32 font-700 leading-40 md:text-4xl md:leading-tight">
+                {t('title')}
+              </h1>
+            </div>
+
+            <div className="mx-auto max-w-[400px]">
+              <p className="mt-16 text-center font-space text-16 leading-20 text-gray-50 md:text-18">
+                {t('unexpectedError')}
+              </p>
+            </div>
+          </>
+        )}
+
+        {!is404Error && (
+          <div
+            className={
+              hideErrorHeader ? 'mt-16 text-center md:mt-16' : 'mt-32 text-center md:mt-40'
+            }
+          >
             <Alert variant="error" className="mx-auto w-fit">
-              {error instanceof Error ? (
-                String(error.message)
-              ) : (
-                <>
-                  <p className="text-base font-medium text-error-40">
-                    {error.status} | {error.statusText}
-                  </p>
-                  <p className="text-sm text-error-40">{String(error.data)}</p>
-                </>
-              )}
+              {renderErrorContent()}
             </Alert>
-          )}
-        </div>
+          </div>
+        )}
       </div>
     </>
   )
