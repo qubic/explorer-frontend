@@ -1,6 +1,6 @@
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useParams } from 'react-router-dom'
+import { useLocation, useParams } from 'react-router-dom'
 
 import { ArrowTopRightOnSquareIcon } from '@app/assets/icons'
 import { withHelmet } from '@app/components/hocs'
@@ -16,7 +16,7 @@ import { PageLayout } from '@app/components/ui/layouts'
 import { LinearProgress } from '@app/components/ui/loaders'
 import { useGetAddressBalancesQuery, useGetLatestStatsQuery } from '@app/store/apis/archiver-v1'
 import { useGetSmartContractsQuery } from '@app/store/apis/qubic-static'
-import { clsxTwMerge, formatEllipsis, formatString } from '@app/utils'
+import { clsxTwMerge, formatEllipsis, formatString, isValidQubicAddress } from '@app/utils'
 import { useGetAddressName } from '@app/hooks'
 import { HomeLink } from '../components'
 import { AddressDetails, ContractOverview, OwnedAssets, TransactionsOverview } from './components'
@@ -24,11 +24,37 @@ import { AddressDetails, ContractOverview, OwnedAssets, TransactionsOverview } f
 function AddressPage() {
   const { t } = useTranslation('network-page')
   const { addressId = '' } = useParams()
+  const location = useLocation()
   const latestStats = useGetLatestStatsQuery()
-  const addressBalances = useGetAddressBalancesQuery({ address: addressId }, { skip: !addressId })
+  const [isValidatingAddress, setIsValidatingAddress] = useState(true)
+  const [isAddressValid, setIsAddressValid] = useState(false)
+  const addressBalances = useGetAddressBalancesQuery(
+    { address: addressId },
+    { skip: !addressId || !isAddressValid }
+  )
   const { data: smartContracts } = useGetSmartContractsQuery()
 
   const [detailsOpen, setDetailsOpen] = useState(false)
+
+  // Validate address on mount or when addressId changes
+  useEffect(() => {
+    const validateAddress = async () => {
+      if (!addressId) {
+        setIsValidatingAddress(false)
+        setIsAddressValid(false)
+        return
+      }
+
+      setIsValidatingAddress(true)
+      // Skip cryptographic validation if coming from internal link (only do basic format check)
+      const skipCryptographicValidation = location.state?.skipValidation === true
+      const isValid = await isValidQubicAddress(addressId, skipCryptographicValidation)
+      setIsAddressValid(isValid)
+      setIsValidatingAddress(false)
+    }
+
+    validateAddress()
+  }, [addressId, location.state])
 
   const handleToggleDetails = useCallback(() => {
     setDetailsOpen((prev) => !prev)
@@ -49,12 +75,24 @@ function AddressPage() {
 
   const isSmartContract = !!smartContractDetails
 
+  // Show loading while validating address
+  if (isValidatingAddress) {
+    return <LinearProgress />
+  }
+
+  // Show error if address is invalid
+  if (!isAddressValid) {
+    return <ErrorFallback message={t('invalidAddressError')} showRetry={false} hideErrorHeader />
+  }
+
+  // Show loading while fetching address data
   if (addressBalances.isFetching) {
     return <LinearProgress />
   }
 
+  // Show error if address data not found
   if (!addressBalances.data) {
-    return <ErrorFallback message={t('addressNotFoundError')} />
+    return <ErrorFallback message={t('addressNotFoundError')} hideErrorHeader />
   }
 
   return (

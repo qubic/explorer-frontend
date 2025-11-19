@@ -53,6 +53,7 @@
   "hide": "Ẩn",
   "show": "Hiện",
   "transactionNotFound": "Không tìm thấy giao dịch",
+  "invalidAddressError": "Định dạng địa chỉ không hợp lệ. Vui lòng kiểm tra và thử lại.",
   "addressNotFoundError": "Lỗi: Không tìm thấy địa chỉ bạn đang tìm. Vui lòng kiểm tra và thử lại.",
   "loadingTransactionsError": "Lỗi: Đã xảy ra sự cố khi tải giao dịch. Vui lòng thử lại sau.",
   "richList": "Danh sách giàu",
