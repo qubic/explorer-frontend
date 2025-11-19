@@ -1,3 +1,41 @@
+# [1.29.0](https://github.com/qubic/explorer-frontend/compare/v1.28.0...v1.29.0) (2025-11-19)
+
+
+### Bug Fixes
+
+* remove duplicate smart contract name display ([b8137e7](https://github.com/qubic/explorer-frontend/commit/b8137e713ad971c9e984e80f5c34a49bc31399f9))
+
+
+### Features
+
+* add QR code button to address page ([#348](https://github.com/qubic/explorer-frontend/issues/348)) ([23057d1](https://github.com/qubic/explorer-frontend/commit/23057d1b3653631d6d66de81198e76c43a9a5850))
+* cryptographic address validation added to address page ([e549c21](https://github.com/qubic/explorer-frontend/commit/e549c21df453f68b9af81786292d64a48ee0cff8))
+
+
+### Performance Improvements
+
+* optimize address page navigation with conditional validation ([22d4bec](https://github.com/qubic/explorer-frontend/commit/22d4beca48bfb882dc6bc7d8163d7654b02fc172))
+* optimize address validation with basic format checks ([16298c0](https://github.com/qubic/explorer-frontend/commit/16298c02f9cc36b802705a6fd1ba6afbf9925470))
+
+# [1.29.0-rc.1](https://github.com/qubic/explorer-frontend/compare/v1.28.0...v1.29.0-rc.1) (2025-11-19)
+
+
+### Bug Fixes
+
+* remove duplicate smart contract name display ([b8137e7](https://github.com/qubic/explorer-frontend/commit/b8137e713ad971c9e984e80f5c34a49bc31399f9))
+
+
+### Features
+
+* add QR code button to address page ([#348](https://github.com/qubic/explorer-frontend/issues/348)) ([23057d1](https://github.com/qubic/explorer-frontend/commit/23057d1b3653631d6d66de81198e76c43a9a5850))
+* cryptographic address validation added to address page ([e549c21](https://github.com/qubic/explorer-frontend/commit/e549c21df453f68b9af81786292d64a48ee0cff8))
+
+
+### Performance Improvements
+
+* optimize address page navigation with conditional validation ([22d4bec](https://github.com/qubic/explorer-frontend/commit/22d4beca48bfb882dc6bc7d8163d7654b02fc172))
+* optimize address validation with basic format checks ([16298c0](https://github.com/qubic/explorer-frontend/commit/16298c02f9cc36b802705a6fd1ba6afbf9925470))
+
 # [1.28.0](https://github.com/qubic/explorer-frontend/compare/v1.27.0...v1.28.0) (2025-11-06)
 
 
