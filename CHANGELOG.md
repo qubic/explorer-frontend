@@ -1,4 +1,4 @@
-# [1.28.0-rc.2](https://github.com/qubic/explorer-frontend/compare/v1.28.0-rc.1...v1.28.0-rc.2) (2025-11-19)
+# [1.29.0-rc.1](https://github.com/qubic/explorer-frontend/compare/v1.28.0...v1.29.0-rc.1) (2025-11-19)
 
 
 ### Bug Fixes
