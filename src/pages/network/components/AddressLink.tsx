@@ -22,6 +22,7 @@ function LinkElement({ value, label, ellipsis, className }: LinkElementProps) {
         className
       )}
       to={Routes.NETWORK.ADDRESS(value)}
+      state={{ skipValidation: true }}
     >
       {displayValue}
     </Link>
