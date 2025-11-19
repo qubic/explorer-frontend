@@ -31,7 +31,7 @@ function TxPage() {
   }
 
   if (!transaction) {
-    return <ErrorFallback message={t('transactionNotFound')} />
+    return <ErrorFallback message={t('transactionNotFound')} hideErrorHeader />
   }
 
   return (

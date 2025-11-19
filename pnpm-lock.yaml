@@ -11,9 +11,6 @@ importers:
       '@headlessui/react':
         specifier: ^2.1.2
         version: 2.1.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@marsidev/react-turnstile':
-        specifier: ^1.3.0
-        version: 1.3.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@qubic-lib/qubic-ts-library':
         specifier: 0.1.6
         version: 0.1.6
@@ -47,6 +44,9 @@ importers:
       lottie-react:
         specifier: ^2.4.0
         version: 2.4.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      qrcode.react:
+        specifier: ^4.2.0
+        version: 4.2.0(react@18.3.1)
       react:
         specifier: ^18.3.1
         version: 18.3.1
@@ -601,12 +601,6 @@ packages:
 
   '@jridgewell/trace-mapping@0.3.25':
     resolution: {integrity: sha512-vNk6aEwybGtawWmy/PzwnGDOjCkLWSD2wqvjGGAgOAwCGWySYXfYoxt00IJkTF+8Lb57DwOb3Aa0o9CApepiYQ==}
-
-  '@marsidev/react-turnstile@1.3.0':
-    resolution: {integrity: sha512-VO99Nynt+j4ETfMImQCj5LgbUKZ9mWPpy3RjP/3e/3vZu+FIphjEdU6g+cq4FeDoNshSxLlRzBTKcH5JMeM1GQ==}
-    peerDependencies:
-      react: ^17.0.2 || ^18.0.0 || ^19.0
-      react-dom: ^17.0.2 || ^18.0.0 || ^19.0
 
   '@nodelib/fs.scandir@2.1.5':
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
@@ -3252,6 +3246,11 @@ packages:
     resolution: {integrity: sha512-vYt7UD1U9Wg6138shLtLOvdAu+8DsC/ilFtEVHcH+wydcSpNE20AfSOduf6MkRFahL5FY7X1oU7nKVZFtfq8Fg==}
     engines: {node: '>=6'}
 
+  qrcode.react@4.2.0:
+    resolution: {integrity: sha512-QpgqWi8rD9DsS9EP3z7BT+5lY5SFhsqGjpgW5DY/i3mK4M9DTBNz3ErMi8BWYEfI3L0d8GIbGmcdFAS1uIRGjA==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+
   queue-microtask@1.2.3:
     resolution: {integrity: sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A==}
 
@@ -4437,11 +4436,6 @@ snapshots:
     dependencies:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.4.15
-
-  '@marsidev/react-turnstile@1.3.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
-    dependencies:
-      react: 18.3.1
-      react-dom: 18.3.1(react@18.3.1)
 
   '@nodelib/fs.scandir@2.1.5':
     dependencies:
@@ -7172,6 +7166,10 @@ snapshots:
   proxy-from-env@1.1.0: {}
 
   punycode@2.3.1: {}
+
+  qrcode.react@4.2.0(react@18.3.1):
+    dependencies:
+      react: 18.3.1
 
   queue-microtask@1.2.3: {}
 
