@@ -1,2 +1,5 @@
 export * from './redux'
 export { default as useTailwindBreakpoint } from './useTailwindBreakpoint'
+export { useTransactionExpandCollapse } from './useTransactionExpandCollapse'
+export { useGetAddressName } from './useGetAddressName'
+export type { GetAddressNameResult } from './useGetAddressName'

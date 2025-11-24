@@ -1,26 +1,46 @@
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useSearchParams } from 'react-router-dom'
 
 import { withHelmet } from '@app/components/hocs'
 import { PageLayout } from '@app/components/ui/layouts'
 import { OVERVIEW_DATA_POLLING_INTERVAL_MS } from '@app/constants'
-import { SmartContracts } from '@app/constants/qubic'
-import { useGetAddressBalancesQuery, useGetLatestStatsQuery } from '@app/store/apis/archiver-v1'
+import {
+  useGetAddressBalancesQuery,
+  useGetLatestStatsQuery,
+  useGetTickInfoQuery
+} from '@app/store/apis/archiver-v1'
 import { useGetEpochTicksQuery } from '@app/store/apis/archiver-v2'
+import { useGetTickQualityQuery } from '@app/store/apis/qli'
+import { useGetSmartContractsQuery } from '@app/store/apis/qubic-static'
 import { LatestStats, TickList } from './components'
 import { TICKS_PAGE_SIZE } from './constants'
 
 function OverviewPage() {
   const [searchParams, setSearchParams] = useSearchParams()
-  const page = parseInt(searchParams.get('ticksPage') || '1', 10)
+  const page = Number.parseInt(searchParams.get('ticksPage') || '1', 10)
 
   const latestStats = useGetLatestStatsQuery(undefined, {
     pollingInterval: OVERVIEW_DATA_POLLING_INTERVAL_MS
   })
+
+  const { data: smartContracts } = useGetSmartContractsQuery()
+
+  // Get QEarn address from smart contracts API
+  const qEarnAddress = useMemo(() => {
+    return smartContracts?.find((sc) => sc.name === 'QEARN')?.address
+  }, [smartContracts])
+
   const qEarnBalance = useGetAddressBalancesQuery(
-    { address: SmartContracts.QEarn },
-    { pollingInterval: OVERVIEW_DATA_POLLING_INTERVAL_MS }
+    { address: qEarnAddress ?? '' },
+    { pollingInterval: OVERVIEW_DATA_POLLING_INTERVAL_MS, skip: !qEarnAddress }
   )
+  const tickQuality = useGetTickQualityQuery(undefined, {
+    pollingInterval: OVERVIEW_DATA_POLLING_INTERVAL_MS
+  })
+
+  const tickInfo = useGetTickInfoQuery(undefined, {
+    pollingInterval: OVERVIEW_DATA_POLLING_INTERVAL_MS
+  })
 
   const epochTicks = useGetEpochTicksQuery(
     {
@@ -42,8 +62,15 @@ function OverviewPage() {
     <PageLayout className="flex flex-1 flex-col gap-16">
       <LatestStats
         latestStats={latestStats.data}
+        tickQuality={tickQuality.data}
+        tickInfo={tickInfo.data}
         totalValueLocked={qEarnBalance.data?.balance ?? ''}
-        isLoading={latestStats.isLoading || qEarnBalance.isLoading}
+        isLoading={
+          latestStats.isLoading ||
+          qEarnBalance.isLoading ||
+          tickQuality.isLoading ||
+          tickInfo.isLoading
+        }
         isError={latestStats.isError}
       />
       <TickList

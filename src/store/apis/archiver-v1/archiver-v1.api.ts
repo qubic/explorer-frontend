@@ -10,7 +10,8 @@ import type {
   GetOwnedAssetsResponse,
   GetPossessedAssetsResponse,
   GetRichListResponse,
-  GetTickDataResponse
+  GetTickDataResponse,
+  GetTickInfoResponse
 } from './archiver-v1.types'
 
 const BASE_URL = `${envConfig.QUBIC_RPC_URL}/v1`
@@ -75,9 +76,13 @@ export const archiverV1Api = createApi({
       { issuerIdentity?: string; assetName?: string } | void
     >({
       query: ({ issuerIdentity, assetName } = {}) => ({
-        url: `/assets/issuances`,
+        url: '/assets/issuances',
         params: { issuerIdentity, assetName }
       })
+    }),
+    getTickInfo: build.query<GetTickInfoResponse['tickInfo'], void>({
+      query: () => '/tick-info',
+      transformResponse: (response: GetTickInfoResponse) => response.tickInfo
     })
   })
 })
@@ -100,5 +105,7 @@ export const {
   useGetAddressOwnedAssetsQuery,
   useGetAddressPossessedAssetsQuery,
   // Assets
-  useGetAssetsIssuancesQuery
+  useGetAssetsIssuancesQuery,
+  // tick info
+  useGetTickInfoQuery
 } = archiverV1Api

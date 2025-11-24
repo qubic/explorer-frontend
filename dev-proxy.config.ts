@@ -18,6 +18,10 @@ export const createProxyConfig = (
           req.headers['access-control-request-headers'] || ''
         )
 
+        // Remove referer and referrer headers to avoid being blocked
+        proxyReq.removeHeader('referer')
+        proxyReq.removeHeader('referrer')
+
         if (req.method === 'OPTIONS') {
           res.writeHead(200)
           res.end()
@@ -50,4 +54,9 @@ export const archiverApiProxy = createProxyConfig(
   'https://rpc.qubic.org',
   '/dev-proxy-archiver-api',
   'ARCHIVER-API-DEV-PROXY'
+)
+export const staticApiProxy = createProxyConfig(
+  'https://static.qubic.org',
+  '/dev-proxy-static-api',
+  'STATIC-API-DEV-PROXY'
 )

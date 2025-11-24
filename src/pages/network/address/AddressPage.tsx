@@ -1,27 +1,60 @@
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useParams } from 'react-router-dom'
+import { useLocation, useParams } from 'react-router-dom'
 
 import { ArrowTopRightOnSquareIcon } from '@app/assets/icons'
 import { withHelmet } from '@app/components/hocs'
 import { Badge, Breadcrumbs, Tabs } from '@app/components/ui'
-import { ChevronToggleButton, CopyTextButton } from '@app/components/ui/buttons'
+import {
+  ChevronToggleButton,
+  CopyTextButton,
+  COPY_BUTTON_TYPES,
+  QRCodeButton
+} from '@app/components/ui/buttons'
 import { ErrorFallback } from '@app/components/ui/error-boundaries'
 import { PageLayout } from '@app/components/ui/layouts'
 import { LinearProgress } from '@app/components/ui/loaders'
 import { useGetAddressBalancesQuery, useGetLatestStatsQuery } from '@app/store/apis/archiver-v1'
-import { clsxTwMerge, formatEllipsis, formatString } from '@app/utils'
-import { AddressType, getAddressName } from '@app/utils/qubic'
+import { useGetSmartContractsQuery } from '@app/store/apis/qubic-static'
+import { clsxTwMerge, formatEllipsis, formatString, isValidQubicAddress } from '@app/utils'
+import { useGetAddressName } from '@app/hooks'
 import { HomeLink } from '../components'
 import { AddressDetails, ContractOverview, OwnedAssets, TransactionsOverview } from './components'
 
 function AddressPage() {
   const { t } = useTranslation('network-page')
   const { addressId = '' } = useParams()
+  const location = useLocation()
   const latestStats = useGetLatestStatsQuery()
-  const addressBalances = useGetAddressBalancesQuery({ address: addressId }, { skip: !addressId })
+  const [isValidatingAddress, setIsValidatingAddress] = useState(true)
+  const [isAddressValid, setIsAddressValid] = useState(false)
+  const addressBalances = useGetAddressBalancesQuery(
+    { address: addressId },
+    { skip: !addressId || !isAddressValid }
+  )
+  const { data: smartContracts } = useGetSmartContractsQuery()
 
   const [detailsOpen, setDetailsOpen] = useState(false)
+
+  // Validate address on mount or when addressId changes
+  useEffect(() => {
+    const validateAddress = async () => {
+      if (!addressId) {
+        setIsValidatingAddress(false)
+        setIsAddressValid(false)
+        return
+      }
+
+      setIsValidatingAddress(true)
+      // Skip cryptographic validation if coming from internal link (only do basic format check)
+      const skipCryptographicValidation = location.state?.skipValidation === true
+      const isValid = await isValidQubicAddress(addressId, skipCryptographicValidation)
+      setIsAddressValid(isValid)
+      setIsValidatingAddress(false)
+    }
+
+    validateAddress()
+  }, [addressId, location.state])
 
   const handleToggleDetails = useCallback(() => {
     setDetailsOpen((prev) => !prev)
@@ -32,15 +65,34 @@ function AddressPage() {
     return formatString(+addressBalances.data.balance * (latestStats.data.price ?? 0))
   }, [addressBalances.data, latestStats.data])
 
-  const addressName = useMemo(() => getAddressName(addressId), [addressId])
-  const isSmartContract = addressName?.type === AddressType.SmartContract
+  const addressName = useGetAddressName(addressId)
 
+  // Get full smart contract details from API if it's a smart contract
+  const smartContractDetails = useMemo(() => {
+    if (!smartContracts) return null
+    return smartContracts.find((contract) => contract.address === addressId)
+  }, [smartContracts, addressId])
+
+  const isSmartContract = !!smartContractDetails
+
+  // Show loading while validating address
+  if (isValidatingAddress) {
+    return <LinearProgress />
+  }
+
+  // Show error if address is invalid
+  if (!isAddressValid) {
+    return <ErrorFallback message={t('invalidAddressError')} showRetry={false} hideErrorHeader />
+  }
+
+  // Show loading while fetching address data
   if (addressBalances.isFetching) {
     return <LinearProgress />
   }
 
+  // Show error if address data not found
   if (!addressBalances.data) {
-    return <ErrorFallback message={t('addressNotFoundError')} />
+    return <ErrorFallback message={t('addressNotFoundError')} hideErrorHeader />
   }
 
   return (
@@ -54,16 +106,28 @@ function AddressPage() {
 
       <div className="flex items-center gap-12 pb-6 pt-16">
         <p className="break-all font-space text-base text-gray-50">{addressId}</p>
-        <CopyTextButton text={addressId} />
+        <div className="flex items-center gap-8">
+          <CopyTextButton text={addressId} type={COPY_BUTTON_TYPES.ADDRESS} />
+          <QRCodeButton address={addressId} />
+        </div>
       </div>
 
       {addressName && (
         <div className="flex items-center gap-4 pb-16">
+          {/* Type Label (not for named addresses) */}
+          {addressName.i18nKey !== 'named-address' && (
+            <Badge color="primary" size="xs" variant="outlined">
+              {t(addressName.i18nKey)}
+            </Badge>
+          )}
+          {/* Name Badge */}
           <Badge
             color="primary"
             size="xs"
             variant="outlined"
-            className={clsxTwMerge({ 'hover:bg-primary-60': addressName.website })}
+            className={clsxTwMerge({
+              'hover:bg-primary-60': addressName.website
+            })}
           >
             {addressName.website ? (
               <a
@@ -78,9 +142,6 @@ function AddressPage() {
             ) : (
               addressName.name
             )}
-          </Badge>
-          <Badge color="primary" size="xs" variant="outlined">
-            {t(addressName.i18nKey)}
           </Badge>
         </div>
       )}
@@ -119,12 +180,13 @@ function AddressPage() {
           <Tabs.Panel>
             <TransactionsOverview address={addressBalances.data} addressId={addressId} />
           </Tabs.Panel>
-          {isSmartContract && (
+          {isSmartContract && smartContractDetails && (
             <Tabs.Panel>
               <ContractOverview
-                asset={addressName.name}
-                githubUrl={addressName.githubUrl}
-                proposalUrl={addressName.proposalUrl}
+                asset={smartContractDetails.name}
+                githubUrl={smartContractDetails.githubUrl}
+                proposalUrl={smartContractDetails.proposalUrl}
+                contractIndex={smartContractDetails.contractIndex}
               />
             </Tabs.Panel>
           )}

@@ -4,7 +4,7 @@ import { ArrowDownIcon, ArrowUpIcon } from '@app/assets/icons'
 import { ChevronToggleButton } from '@app/components/ui/buttons'
 import type { Transaction } from '@app/store/apis/archiver-v2'
 import { formatString } from '@app/utils'
-import { getAddressName } from '@app/utils/qubic'
+import { useGetAddressName } from '@app/hooks'
 import type { AssetTransfer, Transfer } from '@app/utils/qubic-ts'
 import {
   getAssetsTransfers,
@@ -27,6 +27,8 @@ type Props = {
   readonly variant?: TxItemVariant
   readonly isHistoricalTx?: boolean
   readonly timestamp?: string
+  readonly isExpanded?: boolean
+  readonly onToggle?: (txId: string, isOpen: boolean) => void
 }
 
 function TxItem({
@@ -35,13 +37,24 @@ function TxItem({
   nonExecutedTxIds,
   variant = 'primary',
   isHistoricalTx = false,
-  timestamp
+  timestamp,
+  isExpanded,
+  onToggle
 }: Props) {
   const [entries, setEntries] = useState<Transfer[]>([])
   const [asset, setAsset] = useState<AssetTransfer>()
-  const [detailsOpen, setDetailsOpen] = useState(false)
+  const [internalDetailsOpen, setInternalDetailsOpen] = useState(false)
 
-  const handleToggleDetails = () => setDetailsOpen((prev) => !prev)
+  // Use external control if provided, otherwise use internal state
+  const detailsOpen = isExpanded !== undefined ? isExpanded : internalDetailsOpen
+
+  const handleToggleDetails = () => {
+    if (onToggle) {
+      onToggle(txId, !detailsOpen)
+    } else {
+      setInternalDetailsOpen((prev) => !prev)
+    }
+  }
 
   const isTransferTransaction = useMemo(
     () => isTransferTx(sourceId, destId, amount),
@@ -55,7 +68,8 @@ function TxItem({
     return identity === sourceId ? destId : sourceId
   }, [asset, identity, sourceId, destId])
 
-  const addressName = useMemo(() => getAddressName(addressLabel)?.name, [addressLabel])
+  const addressNameData = useGetAddressName(addressLabel)
+  const addressName = addressNameData?.name
 
   useEffect(() => {
     if (destId === QUTIL_ADDRESS && inputType === 1 && inputHex) {

@@ -45,7 +45,9 @@ function AssetsTabsSection({
               <li key={asset.name}>
                 <Button
                   className={clsxTwMerge(
-                    isSelected && 'bg-primary-30 text-primary-80 hover:text-primary-30'
+                    isSelected
+                      ? 'bg-primary-30 text-primary-80 hover:bg-primary-30 hover:text-primary-80'
+                      : 'hover:text-primary-30'
                   )}
                   variant="outlined"
                   size="xs"
@@ -90,19 +92,25 @@ export default function AssetsTabs() {
     [setSearchParams]
   )
 
-  const { smartContractShares, tokens } = useMemo(
-    () =>
-      [...(data?.assets ?? [])].reduce(
-        (acc: { smartContractShares: IssuedAsset[]; tokens: IssuedAsset[] }, asset) => {
-          const key =
-            asset.data.issuerIdentity === ASSETS_ISSUER_ADDRESS ? 'smartContractShares' : 'tokens'
-          acc[key].push(asset.data)
-          return acc
-        },
-        { smartContractShares: [], tokens: [] }
-      ),
-    [data]
-  )
+  const { smartContractShares, tokens } = useMemo(() => {
+    const result = [...(data?.assets ?? [])].reduce(
+      (acc: { smartContractShares: IssuedAsset[]; tokens: IssuedAsset[] }, asset) => {
+        const key =
+          asset.data.issuerIdentity === ASSETS_ISSUER_ADDRESS ? 'smartContractShares' : 'tokens'
+        acc[key].push(asset.data)
+        return acc
+      },
+      { smartContractShares: [], tokens: [] }
+    )
+
+    // Sort both arrays alphabetically by name (case-insensitive)
+    result.tokens.sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }))
+    result.smartContractShares.sort((a, b) =>
+      a.name.localeCompare(b.name, undefined, { sensitivity: 'base' })
+    )
+
+    return result
+  }, [data])
 
   return (
     <div className="grid gap-14">

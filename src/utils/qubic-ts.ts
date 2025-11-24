@@ -1,10 +1,11 @@
 import { QubicDefinitions } from '@qubic-lib/qubic-ts-library/dist/QubicDefinitions'
+import { PublicKey } from '@qubic-lib/qubic-ts-library/dist/qubic-types/PublicKey'
 import { QubicTransferAssetPayload } from '@qubic-lib/qubic-ts-library/dist/qubic-types/transacion-payloads/QubicTransferAssetPayload'
 import { QubicTransferSendManyPayload } from '@qubic-lib/qubic-ts-library/dist/qubic-types/transacion-payloads/QubicTransferSendManyPayload'
 
 export const { QUTIL_ADDRESS, ARBITRATOR, EMPTY_ADDRESS, QX_ADDRESS } = QubicDefinitions
 
-export const ASSETS_ISSUER_ADDRESS = 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFXIB'
+export const ASSETS_ISSUER_ADDRESS = EMPTY_ADDRESS
 
 export type Transfer = {
   amount: string
@@ -56,6 +57,9 @@ export const getAssetsTransfers = async (data: string): Promise<AssetTransfer | 
 export const isProtocolMessage = (address: string): boolean =>
   [ARBITRATOR, EMPTY_ADDRESS].includes(address)
 
+export const isSmartContractTx = (destination: string, inputType: number): boolean =>
+  !isProtocolMessage(destination) && inputType > 0
+
 export const isTransferTx = (
   sourceId: string,
   destId: string,
@@ -65,3 +69,38 @@ export const isTransferTx = (
 }
 
 export const isAssetsIssuerAddress = (address: string): boolean => address === ASSETS_ISSUER_ADDRESS
+
+/**
+ * Validates if a Qubic address is valid by verifying its identity
+ * First performs basic format checks (length and uppercase) before cryptographic validation
+ * @param address - The address string to validate
+ * @param skipCryptographicValidation - If true, only performs basic format validation (for internal links)
+ * @returns Promise<boolean> - True if the address is valid, false otherwise
+ */
+export const isValidQubicAddress = async (
+  address: string,
+  skipCryptographicValidation = false
+): Promise<boolean> => {
+  if (!address || typeof address !== 'string') {
+    return false
+  }
+
+  // Basic format validation first (no cryptographic operations needed)
+  // Qubic addresses must be exactly 60 characters and all uppercase
+  if (address.length !== 60 || !/^[A-Z]+$/.test(address)) {
+    return false
+  }
+
+  // Skip expensive cryptographic validation if requested (e.g., for internal links)
+  if (skipCryptographicValidation) {
+    return true
+  }
+
+  // Only perform expensive cryptographic validation if basic format is valid
+  try {
+    const publicKey = new PublicKey(address)
+    return await publicKey.verifyIdentity()
+  } catch (error) {
+    return false
+  }
+}
