@@ -1,13 +1,17 @@
 import { envConfig } from '@app/configs'
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import type {
+  ExplorerTranslations,
   GetAddressLabelsResponse,
   GetExchangesResponse,
   GetSmartContractsResponse,
+  GetTokenCategoriesResponse,
   GetTokensResponse
 } from './qubic-static.types'
 
-const BASE_URL = `${envConfig.STATIC_API_URL || 'https://static.qubic.org'}/v1/general/data`
+const STATIC_BASE_URL = envConfig.STATIC_API_URL
+const GENERAL_DATA_URL = `${STATIC_BASE_URL}/v1/general/data`
+const EXPLORER_DATA_URL = `${STATIC_BASE_URL}/v1/explorer`
 
 // Cache static data for 24 hours within a browser session
 // Note: Browser refresh (F5) clears Redux store and refetches fresh data
@@ -15,7 +19,7 @@ const CACHE_TIME = 86400 // 24 hours in seconds
 
 export const qubicStaticApi = createApi({
   reducerPath: 'qubicStaticApi',
-  baseQuery: fetchBaseQuery({ baseUrl: BASE_URL }),
+  baseQuery: fetchBaseQuery({ baseUrl: GENERAL_DATA_URL }),
   // Keep cached data for 24 hours (only applies within a single browser session)
   // Browser refresh will always fetch fresh data as Redux store resets
   keepUnusedDataFor: CACHE_TIME,
@@ -35,6 +39,12 @@ export const qubicStaticApi = createApi({
     getTokens: build.query<GetTokensResponse['tokens'], void>({
       query: () => '/tokens.json',
       transformResponse: (response: GetTokensResponse) => response.tokens
+    }),
+    getTokenCategories: build.query<GetTokenCategoriesResponse, void>({
+      query: () => `${EXPLORER_DATA_URL}/token_categories.json`
+    }),
+    getExplorerTranslations: build.query<ExplorerTranslations, string>({
+      query: (lang) => `${EXPLORER_DATA_URL}/locales/${lang}.json`
     })
   })
 })
@@ -43,5 +53,7 @@ export const {
   useGetSmartContractsQuery,
   useGetExchangesQuery,
   useGetAddressLabelsQuery,
-  useGetTokensQuery
+  useGetTokensQuery,
+  useGetTokenCategoriesQuery,
+  useGetExplorerTranslationsQuery
 } = qubicStaticApi

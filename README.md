@@ -46,6 +46,19 @@ Before running the project, you must configure environment-specific variables fo
 
 Ensure these files are not committed to the repository to protect sensitive information.
 
+### GitHub Secrets for CI/CD
+
+The following secrets must be configured in GitHub for deployment:
+
+| Secret | Description | Branches |
+|--------|-------------|----------|
+| `STATIC_API_URL` | Production static data URL | `main`, `testnet` |
+| `STATIC_API_URL_STAGING` | Staging static data URL | `staging` |
+| `STATIC_API_URL_DEV` | Development static data URL | `dev` |
+| `QLI_API_URL` | Qubic Li API URL | all |
+| `QUBIC_RPC_URL` | Qubic RPC URL (mainnet) | all except `testnet` |
+| `QUBIC_RPC_URL_TESTNET` | Qubic RPC URL (testnet) | `testnet` |
+
 ### Step 3: Install Dependencies
 
 Install the project's dependencies by running:
