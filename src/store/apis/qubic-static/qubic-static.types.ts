@@ -45,3 +45,24 @@ export type Token = {
 export type GetTokensResponse = {
   tokens: Token[]
 }
+
+export type TokenCategoryRules = {
+  nameRegex?: string
+  issuerRegex?: string
+  matchAll?: boolean // default true (AND), if false uses OR
+}
+
+export type TokenCategory = {
+  id: string
+  nameKey: string
+  rules: TokenCategoryRules
+}
+
+export type GetTokenCategoriesResponse = {
+  categories: TokenCategory[]
+  defaultCategoryId: string
+  defaultCategoryNameKey: string
+  allCategoryNameKey: string
+}
+
+export type ExplorerTranslations = Record<string, string>
