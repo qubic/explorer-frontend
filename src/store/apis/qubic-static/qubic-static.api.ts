@@ -10,8 +10,8 @@ import type {
 } from './qubic-static.types'
 
 const STATIC_BASE_URL = envConfig.STATIC_API_URL
-const GENERAL_DATA_URL = `${STATIC_BASE_URL}/v1/general/data`
-const EXPLORER_DATA_URL = `${STATIC_BASE_URL}/v1/explorer`
+const GENERAL_DATA_URL = `/v1/general/data`
+const EXPLORER_DATA_URL = `/v1/explorer`
 
 // Cache static data for 24 hours within a browser session
 // Note: Browser refresh (F5) clears Redux store and refetches fresh data
@@ -19,25 +19,25 @@ const CACHE_TIME = 86400 // 24 hours in seconds
 
 export const qubicStaticApi = createApi({
   reducerPath: 'qubicStaticApi',
-  baseQuery: fetchBaseQuery({ baseUrl: GENERAL_DATA_URL }),
+  baseQuery: fetchBaseQuery({ baseUrl: STATIC_BASE_URL }),
   // Keep cached data for 24 hours (only applies within a single browser session)
   // Browser refresh will always fetch fresh data as Redux store resets
   keepUnusedDataFor: CACHE_TIME,
   endpoints: (build) => ({
     getSmartContracts: build.query<GetSmartContractsResponse['smart_contracts'], void>({
-      query: () => '/smart_contracts.json',
+      query: () => `${GENERAL_DATA_URL}/smart_contracts.json`,
       transformResponse: (response: GetSmartContractsResponse) => response.smart_contracts
     }),
     getExchanges: build.query<GetExchangesResponse['exchanges'], void>({
-      query: () => '/exchanges.json',
+      query: () => `${GENERAL_DATA_URL}/exchanges.json`,
       transformResponse: (response: GetExchangesResponse) => response.exchanges
     }),
     getAddressLabels: build.query<GetAddressLabelsResponse['address_labels'], void>({
-      query: () => '/address_labels.json',
+      query: () => `${GENERAL_DATA_URL}/address_labels.json`,
       transformResponse: (response: GetAddressLabelsResponse) => response.address_labels
     }),
     getTokens: build.query<GetTokensResponse['tokens'], void>({
-      query: () => '/tokens.json',
+      query: () => `${GENERAL_DATA_URL}/tokens.json`,
       transformResponse: (response: GetTokensResponse) => response.tokens
     }),
     getTokenCategories: build.query<GetTokenCategoriesResponse, void>({
