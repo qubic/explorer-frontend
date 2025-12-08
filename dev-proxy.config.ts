@@ -56,7 +56,7 @@ export const archiverApiProxy = createProxyConfig(
   'ARCHIVER-API-DEV-PROXY'
 )
 export const staticApiProxy = createProxyConfig(
-  'https://static.qubic.org',
+  'https://static.qubic.org/dev',
   '/dev-proxy-static-api',
   'STATIC-API-DEV-PROXY'
 )
