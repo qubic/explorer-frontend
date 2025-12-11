@@ -2,12 +2,11 @@ import type { PayloadAction } from '@reduxjs/toolkit'
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 
 import type { AppDispatch, RootState } from '@app/store'
-import type { TransactionWithType } from '@app/types'
 import type { GetAddressBalancesResponse, GetTickDataResponse } from './apis/archiver-v1'
 import { archiverV1Api } from './apis/archiver-v1'
-import { archiverV2Api } from './apis/archiver-v2'
+import { archiverV2Api, type Transaction } from './apis/archiver-v2'
 
-type HandlerResponse = GetAddressBalancesResponse | GetTickDataResponse | TransactionWithType
+type HandlerResponse = GetAddressBalancesResponse | GetTickDataResponse | Transaction
 
 export interface SearchState {
   result: HandlerResponse | null

@@ -1,5 +1,3 @@
-import type { TransactionWithType } from '@app/types'
-import { getTxType } from '@app/utils'
 import type { Transaction } from '../archiver-v2'
 import type { HistoricalTx } from './qli.types'
 
@@ -17,9 +15,4 @@ export const convertQliTxToArchiverTx = (historicalTx: HistoricalTx): Transactio
   },
   timestamp: '', // Default to empty string since not present in historical
   moneyFlew: historicalTx.moneyFlew
-})
-
-export const convertQliTxToTxWithType = (historicalTx: HistoricalTx): TransactionWithType => ({
-  ...convertQliTxToArchiverTx(historicalTx),
-  txType: getTxType(historicalTx)
 })

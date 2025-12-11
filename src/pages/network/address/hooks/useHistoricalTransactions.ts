@@ -1,11 +1,11 @@
+import type { Transaction } from '@app/store/apis/archiver-v2'
 import { useLazyGetAddressHistoryQuery } from '@app/store/apis/qli'
-import type { TransactionWithType } from '@app/types'
 import { useCallback, useEffect, useState } from 'react'
 
 const PAGE_SIZE = 50
 
 export interface UseHistoricalTransactionsOutput {
-  historicalTransactions: TransactionWithType[]
+  historicalTransactions: Transaction[]
   loadMoreTransactions: () => Promise<void>
   hasMore: boolean
   isLoading: boolean
@@ -18,7 +18,7 @@ export default function useHistoricalTransactions(
 ): UseHistoricalTransactionsOutput {
   const [triggerGetHistory, { isFetching, error }] = useLazyGetAddressHistoryQuery()
 
-  const [historicalTxs, setHistoricalTxs] = useState<TransactionWithType[]>([])
+  const [historicalTxs, setHistoricalTxs] = useState<Transaction[]>([])
   const [page, setPage] = useState<number>(0)
   const [hasMore, setHasMore] = useState<boolean>(true)
 
