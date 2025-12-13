@@ -15,7 +15,8 @@ import {
   WalletIcon
 } from '@app/assets/icons'
 import { Alert, Skeleton, Tooltip } from '@app/components/ui'
-import type { GetLatestStatsResponse, GetTickInfoResponse } from '@app/store/apis/archiver-v1'
+import type { GetLatestStatsResponse } from '@app/store/apis/rpc-stats'
+import type { GetTickInfoResponse } from '@app/store/apis/rpc-live'
 import type { TickQualityResponse } from '@app/store/apis/qli'
 import { formatQubicPrice, formatString } from '@app/utils'
 import OverviewCardItem from './OverviewCardItem'

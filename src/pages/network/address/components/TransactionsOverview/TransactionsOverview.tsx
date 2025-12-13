@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import { Tabs } from '@app/components/ui'
 import { envConfig } from '@app/configs'
-import type { GetAddressBalancesResponse } from '@app/store/apis/archiver-v1'
+import type { GetAddressBalancesResponse } from '@app/store/apis/rpc-live'
 import { useHistoricalTransactions, useLatestTransactions } from '../../hooks'
 import HistoricalTxs from './HistoricalTxs'
 import LatestTransactions from './LatestTransactions'

@@ -9,7 +9,7 @@ import { PageLayout } from '@app/components/ui/layouts'
 import type { Option } from '@app/components/ui/Select'
 // Default asset for rich list (QX)
 import { useTailwindBreakpoint } from '@app/hooks'
-import { useGetAssetsRichListQuery } from '@app/store/apis/archiver-v1'
+import { useGetAssetsRichListQuery } from '@app/store/apis/rpc-stats'
 import { ASSETS_ISSUER_ADDRESS } from '@app/utils/qubic-ts'
 import { HomeLink } from '../../components'
 import {

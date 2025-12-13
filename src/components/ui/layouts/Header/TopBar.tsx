@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import { Alert, Skeleton } from '@app/components/ui'
 import { OVERVIEW_DATA_POLLING_INTERVAL_MS } from '@app/constants'
-import { useGetLatestStatsQuery } from '@app/store/apis/archiver-v1'
+import { useGetLatestStatsQuery } from '@app/store/apis/rpc-stats'
 import { formatQubicPrice } from '@app/utils'
 import LanguagePicker from './LanguagePicker'
 import NetworkSelector from './NetworkSelector'

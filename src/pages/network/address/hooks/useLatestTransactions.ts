@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 
-import type { GetAddressBalancesResponse } from '@app/store/apis/archiver-v1'
+import type { GetAddressBalancesResponse } from '@app/store/apis/rpc-live'
 import type { Transaction } from '@app/store/apis/archiver-v2'
 import { useLazyGetIndentityTransfersQuery } from '@app/store/apis/archiver-v2'
 
