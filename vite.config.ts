@@ -3,7 +3,7 @@ import { visualizer } from 'rollup-plugin-visualizer'
 import type { UserConfig } from 'vite'
 import { defineConfig, loadEnv } from 'vite'
 import svgr from 'vite-plugin-svgr'
-import { archiverApiProxy, qliApiProxy, staticApiProxy } from './dev-proxy.config'
+import { qliApiProxy, rpcApiProxy, staticApiProxy } from './dev-proxy.config'
 
 const defaultConfig: UserConfig = {
   plugins: [
@@ -46,7 +46,7 @@ export default defineConfig(({ command, mode }) => {
       server: {
         proxy: {
           '/dev-proxy-qli-api': qliApiProxy,
-          '/dev-proxy-archiver-api': archiverApiProxy,
+          '/dev-proxy-rpc-api': rpcApiProxy,
           '/dev-proxy-static-api': staticApiProxy
         }
       }

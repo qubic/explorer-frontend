@@ -9,6 +9,7 @@ import {
   HackathonPageLazy,
   OverviewPage,
   RichListPageLazy,
+  SmartContractDetailPageLazy,
   SmartContractsPageLazy,
   TickPageLazy,
   TokensPageLazy,
@@ -60,6 +61,10 @@ const router: ReturnType<typeof createBrowserRouter> = createBrowserRouter([
           {
             path: Routes.NETWORK.ASSETS.SMART_CONTRACTS,
             element: <SmartContractsPageLazy />
+          },
+          {
+            path: Routes.NETWORK.ASSETS.SMART_CONTRACT_DETAIL(':contractId'),
+            element: <SmartContractDetailPageLazy />
           },
           {
             path: Routes.NETWORK.ASSETS.RICH_LIST(),

@@ -1,1 +1,5 @@
+export { default as BalanceHistoryChart } from './BalanceHistoryChart'
+export { default as FeeReserveStats } from './FeeReserveStats'
+export { default as InflowsOutflowsChart } from './InflowsOutflowsChart'
+export { default as RecentEventsTable } from './RecentEventsTable'
 export { default as SmartContractRow } from './SmartContractRow'

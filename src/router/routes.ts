@@ -35,6 +35,8 @@ export const Routes = {
     ASSETS: {
       TOKENS: '/network/assets/tokens',
       SMART_CONTRACTS: '/network/assets/smart-contracts',
+      SMART_CONTRACT_DETAIL: (contractId: string) =>
+        `${Routes.NETWORK.ROOT}/assets/smart-contracts/${contractId}`,
       RICH_LIST: (issuer?: string, asset?: string) =>
         buildUrlWithQueryParams(`${Routes.NETWORK.ROOT}/assets/rich-list`, { issuer, asset })
     },
