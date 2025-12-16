@@ -88,8 +88,6 @@
   "noEntries": "表示するエントリがありません",
   "assetsRichList": "アセット保有ランキング",
   "assetsRichListDesc": "アセット保有ランキングでは各アセットの上位保有者を表示します。",
-  "developers": "開発者",
-  "hackathon": "ハッカソン",
   "contractName": "コントラクト名",
   "shareholders": "株主",
   "checkContractShareholders": "コントラクトの株主を確認",

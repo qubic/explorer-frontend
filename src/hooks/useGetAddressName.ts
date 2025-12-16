@@ -5,7 +5,7 @@ import {
   useGetSmartContractsQuery,
   useGetTokensQuery
 } from '@app/store/apis/qubic-static'
-import { useGetAssetsIssuancesQuery } from '@app/store/apis/archiver-v1'
+import { useGetAssetsIssuancesQuery } from '@app/store/apis/rpc-live'
 import { EMPTY_ADDRESS } from '@app/utils/qubic-ts'
 
 export type GetAddressNameResult = {

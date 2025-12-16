@@ -8,7 +8,7 @@ import { Breadcrumbs, PaginationBar, Select } from '@app/components/ui'
 import { PageLayout } from '@app/components/ui/layouts'
 import type { Option } from '@app/components/ui/Select'
 import { useTailwindBreakpoint } from '@app/hooks'
-import { useGetRichListQuery } from '@app/store/apis/archiver-v1'
+import { useGetRichListQuery } from '@app/store/apis/rpc-stats'
 import { HomeLink } from '../../components'
 import { RichListErrorRow, RichListRow, RichListSkeletonRow } from './components'
 
