@@ -50,10 +50,10 @@ export const qliApiProxy = createProxyConfig(
   '/dev-proxy-qli-api',
   'QLI-API-DEV-PROXY'
 )
-export const archiverApiProxy = createProxyConfig(
+export const rpcApiProxy = createProxyConfig(
   'https://rpc.qubic.org',
-  '/dev-proxy-archiver-api',
-  'ARCHIVER-API-DEV-PROXY'
+  '/dev-proxy-rpc-api',
+  'RPC-API-DEV-PROXY'
 )
 export const staticApiProxy = createProxyConfig(
   'https://static.qubic.org/dev',

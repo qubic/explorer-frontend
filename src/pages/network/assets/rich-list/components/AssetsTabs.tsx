@@ -4,8 +4,8 @@ import { useSearchParams } from 'react-router-dom'
 
 import { Skeleton } from '@app/components/ui'
 import { Button } from '@app/components/ui/buttons'
-import type { IssuedAsset } from '@app/store/apis/archiver-v1'
-import { useGetAssetsIssuancesQuery } from '@app/store/apis/archiver-v1'
+import type { IssuedAsset } from '@app/store/apis/rpc-live'
+import { useGetAssetsIssuancesQuery } from '@app/store/apis/rpc-live'
 import { clsxTwMerge } from '@app/utils'
 import { ASSETS_ISSUER_ADDRESS } from '@app/utils/qubic-ts'
 

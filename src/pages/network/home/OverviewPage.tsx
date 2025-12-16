@@ -4,11 +4,8 @@ import { useSearchParams } from 'react-router-dom'
 import { withHelmet } from '@app/components/hocs'
 import { PageLayout } from '@app/components/ui/layouts'
 import { OVERVIEW_DATA_POLLING_INTERVAL_MS } from '@app/constants'
-import {
-  useGetAddressBalancesQuery,
-  useGetLatestStatsQuery,
-  useGetTickInfoQuery
-} from '@app/store/apis/archiver-v1'
+import { useGetLatestStatsQuery } from '@app/store/apis/rpc-stats'
+import { useGetAddressBalancesQuery, useGetTickInfoQuery } from '@app/store/apis/rpc-live'
 import { useGetEpochTicksQuery } from '@app/store/apis/archiver-v2'
 import { useGetTickQualityQuery } from '@app/store/apis/qli'
 import { useGetSmartContractsQuery } from '@app/store/apis/qubic-static'
