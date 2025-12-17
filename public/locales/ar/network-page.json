@@ -12,6 +12,7 @@
   "epoch": "فترة",
   "epochTicks": "علامات الحقبة",
   "errorMessage": "بيتا - قد تكون البيانات غير مكتملة أو بها أخطاء",
+  "executed": "تم التنفيذ",
   "txStatusExecuted": "تم تنفيذ المعاملة",
   "txStatusFailed": "فشل التحويل",
   "id": "معرّف",

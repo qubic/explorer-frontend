@@ -12,6 +12,7 @@
   "epoch": "エポック",
   "epochTicks": "エポックティック",
   "errorMessage": "ベータ版 - データが不完全であるか、誤りがある可能性があります",
+  "executed": "実行済み",
   "txStatusExecuted": "トランザクション実行済み",
   "txStatusFailed": "送金失敗",
   "id": "ID",

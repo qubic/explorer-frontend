@@ -12,6 +12,7 @@
   "epoch": "Epoche",
   "epochTicks": "Epoche-tikken",
   "errorMessage": "Beta - Gegevens kunnen onvolledig of onjuist zijn",
+  "executed": "Uitgevoerd",
   "txStatusExecuted": "Transactie uitgevoerd",
   "txStatusFailed": "Overdracht mislukt",
   "id": "ID",

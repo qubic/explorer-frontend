@@ -6,7 +6,7 @@ import type { Transaction } from '@app/store/apis/archiver-v2'
 import { formatString } from '@app/utils'
 import { useGetAddressName } from '@app/hooks'
 import type { AssetTransfer, Transfer } from '@app/utils/qubic-ts'
-import { getAssetsTransfers, getTransfers, QUTIL_ADDRESS, QX_ADDRESS } from '@app/utils/qubic-ts'
+import { getAssetsTransfers, getTransfers, isSendManyTx, QX_ADDRESS } from '@app/utils/qubic-ts'
 import AddressLink from '../AddressLink'
 import CardItem from '../CardItem'
 import TxLink from '../TxLink'
@@ -74,7 +74,7 @@ function TxItem({
   const addressName = addressNameData?.name
 
   useEffect(() => {
-    if (destId === QUTIL_ADDRESS && inputType === 1 && inputHex) {
+    if (isSendManyTx(destId, inputType) && inputHex) {
       ;(async () => {
         try {
           const transfers = await getTransfers(inputHex)

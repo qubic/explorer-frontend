@@ -12,6 +12,7 @@
   "epoch": "Epoch",
   "epochTicks": "Epoch Ticks",
   "errorMessage": "Beta - Dữ liệu có thể chưa đầy đủ hoặc có lỗi",
+  "executed": "Đã thực hiện",
   "txStatusExecuted": "Giao dịch đã thực thi",
   "txStatusFailed": "Chuyển tiền thất bại",
   "id": "ID",

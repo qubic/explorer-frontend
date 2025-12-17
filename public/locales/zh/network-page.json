@@ -12,6 +12,7 @@
   "epoch": "纪元",
   "epochTicks": "纪元刻度",
   "errorMessage": "测试版 - 数据可能不完整或有误",
+  "executed": "已执行",
   "txStatusExecuted": "交易已执行",
   "txStatusFailed": "转账失败",
   "id": "ID",

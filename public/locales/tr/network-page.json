@@ -12,6 +12,7 @@
   "epoch": "Çağ",
   "epochTicks": "Çağ Tikleri",
   "errorMessage": "Beta - Veriler eksik veya hatalı olabilir",
+  "executed": "Gerçekleştirildi",
   "txStatusExecuted": "İşlem gerçekleştirildi",
   "txStatusFailed": "Transfer başarısız",
   "id": "Kimlik",

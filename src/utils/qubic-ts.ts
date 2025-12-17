@@ -60,6 +60,9 @@ export const isProtocolMessage = (address: string): boolean =>
 export const isSmartContractTx = (destination: string, inputType: number): boolean =>
   !isProtocolMessage(destination) && inputType > 0
 
+export const isSendManyTx = (destination: string, inputType: number): boolean =>
+  destination === QUTIL_ADDRESS && inputType === 1
+
 export const isAssetsIssuerAddress = (address: string): boolean => address === ASSETS_ISSUER_ADDRESS
 
 /**

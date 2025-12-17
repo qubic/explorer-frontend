@@ -12,6 +12,7 @@
   "epoch": "Epoch",
   "epochTicks": "Epoch Ticks",
   "errorMessage": "Beta - Data may be incomplete or erroneous",
+  "executed": "Executed",
   "txStatusExecuted": "Transaction executed",
   "txStatusFailed": "Transfer failed",
   "id": "ID",
