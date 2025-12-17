@@ -62,9 +62,3 @@ export const staticApiProxy = createProxyConfig(
   '/dev-proxy-static-api',
   'STATIC-API-DEV-PROXY'
 )
-
-export const queryServiceProxy = createProxyConfig(
-  'https://api.qubic.org',
-  '/dev-proxy-query-service-api',
-  'QUERY-SERVICE-DEV-PROXY'
-)

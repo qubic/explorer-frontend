@@ -2,10 +2,10 @@ import { envConfig } from '@app/configs'
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import type { GetTransactionsForIdentityRequest, QueryServiceResponse } from './query-service.types'
 
-const BASE_URL = `${envConfig.QUERY_SERVICE_URL}`
+const BASE_URL = `${envConfig.QUBIC_RPC_URL}/query/v1`
 
-export const queryServiceApi = createApi({
-  reducerPath: 'queryServiceApi',
+export const rpcQueryServiceApi = createApi({
+  reducerPath: 'rpcQueryServiceApi',
   baseQuery: fetchBaseQuery({ baseUrl: BASE_URL }),
   endpoints: (builder) => ({
     getTransactionsForIdentity: builder.mutation<
@@ -21,4 +21,4 @@ export const queryServiceApi = createApi({
   })
 })
 
-export const { useGetTransactionsForIdentityMutation } = queryServiceApi
+export const { useGetTransactionsForIdentityMutation } = rpcQueryServiceApi
