@@ -60,25 +60,6 @@ const decodeAsciiFromBigInt = (value: bigint): string | null => {
   return characterBytes.map((byte) => String.fromCharCode(byte)).join('')
 }
 
-const identityHints = [
-  'issuer',
-  'address',
-  'owner',
-  'identity',
-  'dest',
-  'destination',
-  'source',
-  'dst',
-  'src',
-  'possessor'
-]
-
-const shouldFormatAsIdentity = (key?: string): boolean => {
-  if (!key) return false
-  const normalizedKey = key.toLowerCase()
-  return identityHints.some((hint) => normalizedKey.includes(hint))
-}
-
 const bytesToHex = (value: Uint8Array): string =>
   Array.from(value)
     .map((byte) => byte.toString(16).padStart(2, '0'))
@@ -96,7 +77,7 @@ const normalizeDecodedValue = async (value: unknown, key?: string): Promise<unkn
   }
 
   if (value instanceof Uint8Array) {
-    if (value.length === 32 && shouldFormatAsIdentity(key)) {
+    if (value.length === 32) {
       try {
         return await identityFromPublicKey(value)
       } catch (error) {
