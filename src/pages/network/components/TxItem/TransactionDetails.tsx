@@ -172,10 +172,10 @@ export default function TransactionDetails({
           <tbody>
             {inputDataEntries.map(({ key, value }) => (
               <tr key={`${key}-${value}`} className="border-b-1 border-primary-60 last:border-b-0">
-                <td className="text-gray-20 w-1/3 bg-primary-70 px-12 py-10 align-top font-space text-xs uppercase">
+                <td className="text-gray-20 w-1/3 bg-primary-70 px-12 py-10 font-space text-xs uppercase">
                   {key}
                 </td>
-                <td className="px-12 py-10 align-top">
+                <td className="px-12 py-10">
                   <div className="flex items-center gap-8">
                     <span className="text-gray-30 flex-1 truncate font-space text-sm" title={value}>
                       {value}
