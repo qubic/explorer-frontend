@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "@headlessui/react": "^2.1.2",
+    "@qubic-labs/kit": "^1.0.2",
     "@qubic-lib/qubic-ts-library": "0.1.6",
     "@react-spring/web": "^9.7.5",
     "@reduxjs/toolkit": "^2.2.6",
