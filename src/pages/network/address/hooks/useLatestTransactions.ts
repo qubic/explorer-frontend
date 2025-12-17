@@ -64,6 +64,7 @@ export default function useLatestTransactions(addressId: string): UseLatestTrans
         return acc
       }, {} as TransactionFilters)
 
+      // Handle amount range - if start equals end, use exact match
       if (
         filters.amountRange?.start &&
         filters.amountRange?.end &&
@@ -72,17 +73,26 @@ export default function useLatestTransactions(addressId: string): UseLatestTrans
         cleanFilters.amount = filters.amountRange.start.trim()
       }
 
-      const ranges = {
-        ...(filters.amountRange?.start &&
+      // Check if amount range should be used (has values and is not an exact match)
+      const hasAmountRange = filters.amountRange?.start || filters.amountRange?.end
+      const isExactAmountMatch =
+        filters.amountRange?.start &&
         filters.amountRange?.end &&
-        filters.amountRange.start.trim() !== filters.amountRange.end.trim()
-          ? {
-              amount: {
-                gte: filters.amountRange.start.trim(),
-                lte: filters.amountRange.end.trim()
-              }
-            }
-          : {}),
+        filters.amountRange.start.trim() === filters.amountRange.end.trim()
+      const shouldUseAmountRange = hasAmountRange && !isExactAmountMatch
+
+      const ranges = {
+        // Handle amount range (when not exact match)
+        ...(shouldUseAmountRange && {
+          amount: {
+            ...(filters.amountRange?.start && filters.amountRange.start.trim() !== ''
+              ? { gte: filters.amountRange.start.trim() }
+              : {}),
+            ...(filters.amountRange?.end && filters.amountRange.end.trim() !== ''
+              ? { lte: filters.amountRange.end.trim() }
+              : {})
+          }
+        }),
         ...(filters.tickNumberRange?.start || filters.tickNumberRange?.end
           ? {
               tickNumber: {
