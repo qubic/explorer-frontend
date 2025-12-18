@@ -2,27 +2,34 @@ import { useTranslation } from 'react-i18next'
 import { Button } from '@app/components/ui/buttons'
 import type { GetTokenCategoriesResponse } from '@app/store/apis/qubic-static'
 import { useGetExplorerTranslationsQuery } from '@app/store/apis/qubic-static'
-import { clsxTwMerge } from '@app/utils'
-
-export const CATEGORY_ALL = 'all'
-export const CATEGORY_STANDARD = 'standard'
-
-export type CategoryFilter = typeof CATEGORY_ALL | typeof CATEGORY_STANDARD | string
+import {
+  clsxTwMerge,
+  ASSET_CATEGORY_SC_SHARES,
+  TOKEN_CATEGORY_STANDARD,
+  type CategoryFilter
+} from '@app/utils'
 
 type Props = {
   categoriesData: GetTokenCategoriesResponse
   selectedCategory: CategoryFilter
   onCategoryChange: (category: CategoryFilter) => void
+  showAll?: boolean
+  showScShares?: boolean
+  label?: string
 }
 
 export default function CategoryChips({
   categoriesData,
   selectedCategory,
-  onCategoryChange
+  onCategoryChange,
+  showAll = false,
+  showScShares = false,
+  label
 }: Props) {
-  const { i18n } = useTranslation()
+  const { t, i18n } = useTranslation('network-page')
   const { data: translations } = useGetExplorerTranslationsQuery(i18n.language)
 
+  // API categories use API translations, fallback to raw key
   const getLabel = (nameKey: string) => translations?.[nameKey] ?? nameKey
 
   const getButtonClasses = (isSelected: boolean) =>
@@ -33,39 +40,56 @@ export default function CategoryChips({
     )
 
   return (
-    <ul className="flex flex-wrap gap-10">
-      <li>
-        <Button
-          variant="outlined"
-          size="sm"
-          className={getButtonClasses(selectedCategory === CATEGORY_ALL)}
-          onClick={() => onCategoryChange(CATEGORY_ALL)}
-        >
-          {getLabel(categoriesData.allCategoryNameKey)}
-        </Button>
-      </li>
-      <li>
-        <Button
-          variant="outlined"
-          size="sm"
-          className={getButtonClasses(selectedCategory === CATEGORY_STANDARD)}
-          onClick={() => onCategoryChange(CATEGORY_STANDARD)}
-        >
-          {getLabel(categoriesData.defaultCategoryNameKey)}
-        </Button>
-      </li>
-      {categoriesData.categories.map((category) => (
-        <li key={category.id}>
+    <div className="flex flex-col gap-10">
+      {label && <h3 className="text-sm text-gray-50">{label}</h3>}
+      <ul className="flex flex-wrap gap-10">
+        {showAll && (
+          <li>
+            <Button
+              variant="outlined"
+              size="sm"
+              className={getButtonClasses(selectedCategory === 'all')}
+              onClick={() => onCategoryChange('all')}
+            >
+              {getLabel(categoriesData.allCategoryNameKey)}
+            </Button>
+          </li>
+        )}
+        {showScShares && (
+          <li>
+            <Button
+              variant="outlined"
+              size="sm"
+              className={getButtonClasses(selectedCategory === ASSET_CATEGORY_SC_SHARES)}
+              onClick={() => onCategoryChange(ASSET_CATEGORY_SC_SHARES)}
+            >
+              {t('scShares')}
+            </Button>
+          </li>
+        )}
+        <li>
           <Button
             variant="outlined"
             size="sm"
-            className={getButtonClasses(selectedCategory === category.id)}
-            onClick={() => onCategoryChange(category.id)}
+            className={getButtonClasses(selectedCategory === TOKEN_CATEGORY_STANDARD)}
+            onClick={() => onCategoryChange(TOKEN_CATEGORY_STANDARD)}
           >
-            {getLabel(category.nameKey)}
+            {getLabel(categoriesData.defaultCategoryNameKey)}
           </Button>
         </li>
-      ))}
-    </ul>
+        {categoriesData.categories.map((category) => (
+          <li key={category.id}>
+            <Button
+              variant="outlined"
+              size="sm"
+              className={getButtonClasses(selectedCategory === category.id)}
+              onClick={() => onCategoryChange(category.id)}
+            >
+              {getLabel(category.nameKey)}
+            </Button>
+          </li>
+        ))}
+      </ul>
+    </div>
   )
 }
