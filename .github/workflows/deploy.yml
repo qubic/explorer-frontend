@@ -10,10 +10,17 @@ on:
   pull_request:
     types:
       - closed
+    branches:
+      - dev
+      - staging
+      - main
+      - testnet
 
 jobs:
   release-and-deploy:
     runs-on: ubuntu-latest
+    # Only run on push events OR on merged pull requests (not closed-without-merge)
+    if: github.event_name == 'push' || github.event.pull_request.merged == true
     steps:
       - name: 🛎️ Checkout repository
         uses: actions/checkout@v4
