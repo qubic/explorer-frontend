@@ -1,8 +1,8 @@
-import { useGetTransactionsForIdentityMutation } from '@app/store/apis/query-service/query-service.api'
-import type {
-  QueryServiceResponse,
-  QueryServiceTransaction
-} from '@app/store/apis/query-service/query-service.types'
+import {
+  useGetTransactionsForIdentityMutation,
+  type QueryServiceResponse,
+  type QueryServiceTransaction
+} from '@app/store/apis/query-service'
 import { useCallback, useEffect, useRef, useState } from 'react'
 
 const PAGE_SIZE = 50

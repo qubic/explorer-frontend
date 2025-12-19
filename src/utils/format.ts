@@ -44,6 +44,27 @@ export function formatBase64(hex: string | undefined) {
 }
 
 /**
+ * Converts base64 string to hex
+ * @param base64 - The base64 string to convert
+ * @returns Hex encoded string, or empty string if invalid
+ */
+export function formatHex(base64: string | undefined): string {
+  if (!base64) return ''
+  try {
+    const binaryString = atob(base64)
+    return Array.from(binaryString, (char) =>
+      char.charCodeAt(0).toString(16).padStart(2, '0')
+    ).join('')
+  } catch (error) {
+    if (import.meta.env.DEV) {
+      // eslint-disable-next-line no-console
+      console.warn('formatHex: Failed to decode base64 string', error)
+    }
+    return ''
+  }
+}
+
+/**
  * Formats a Qubic price value to display as "price per billion"
  * @param price - The price value (e.g., 0.000000978)
  * @returns Formatted string like "$978 / bQUBIC"

@@ -1,6 +1,10 @@
 import { envConfig } from '@app/configs'
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-import type { GetTransactionsForIdentityRequest, QueryServiceResponse } from './query-service.types'
+import type {
+  GetTransactionsForIdentityRequest,
+  QueryServiceResponse,
+  QueryServiceTransaction
+} from './query-service.types'
 
 const BASE_URL = `${envConfig.QUBIC_RPC_URL}/query/v1`
 
@@ -17,8 +21,26 @@ export const rpcQueryServiceApi = createApi({
         method: 'POST',
         body
       })
+    }),
+    getTransactionByHash: builder.query<QueryServiceTransaction, string>({
+      query: (hash) => ({
+        url: '/getTransactionByHash',
+        method: 'POST',
+        body: { hash }
+      })
+    }),
+    getTransactionsForTick: builder.query<QueryServiceTransaction[], number>({
+      query: (tickNumber) => ({
+        url: '/getTransactionsForTick',
+        method: 'POST',
+        body: { tickNumber }
+      })
     })
   })
 })
 
-export const { useGetTransactionsForIdentityMutation } = rpcQueryServiceApi
+export const {
+  useGetTransactionsForIdentityMutation,
+  useGetTransactionByHashQuery,
+  useGetTransactionsForTickQuery
+} = rpcQueryServiceApi

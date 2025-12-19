@@ -6,7 +6,7 @@ import { InfiniteScroll } from '@app/components/ui'
 import { Button } from '@app/components/ui/buttons'
 import { DotsLoader } from '@app/components/ui/loaders'
 import { useTransactionExpandCollapse } from '@app/hooks'
-import type { QueryServiceTransaction } from '@app/store/apis/query-service/query-service.types'
+import type { QueryServiceTransaction } from '@app/store/apis/query-service'
 import { TxItem } from '../../../components'
 import type { TransactionFilters } from '../../hooks/useLatestTransactions'
 import TransactionFiltersBar from './TransactionFiltersBar'
@@ -48,15 +48,7 @@ export default function LatestTransactions({
     (tx: QueryServiceTransaction) => (
       <TxItem
         key={tx.hash}
-        tx={{
-          txId: tx.hash,
-          sourceId: tx.source,
-          destId: tx.destination,
-          amount: tx.amount,
-          tickNumber: tx.tickNumber,
-          inputType: tx.inputType,
-          inputHex: tx.inputData
-        }}
+        tx={tx}
         identity={addressId}
         variant="primary"
         nonExecutedTxIds={tx.moneyFlew ? [] : [tx.hash]}
