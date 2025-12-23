@@ -60,6 +60,7 @@
   "rank": "Rang",
   "addressID": "Adress-ID",
   "richListLoadFailed": "Fehler: Reichenliste konnte nicht geladen werden. Bitte aktualisieren Sie die Seite oder versuchen Sie es später erneut.",
+  "assetsRichListInvalidAssetOrIssuer": "Fehler: Ungültige Emittentenadresse und/oder Asset-Name. Bitte überprüfen Sie die URL-Parameter.",
   "richListWarning": "Die Daten der Reichenliste werden zu Beginn jeder Epoche aktualisiert",
   "timestamp": "Zeitstempel",
   "fee": "Gebühr",

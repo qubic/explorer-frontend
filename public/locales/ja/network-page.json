@@ -60,6 +60,7 @@
   "rank": "ランク",
   "addressID": "アドレスID",
   "richListLoadFailed": "エラー：リッチリストの読み込みに失敗しました。ページを更新するか、後でもう一度お試しください。",
+  "assetsRichListInvalidAssetOrIssuer": "エラー：発行者アドレスおよび/またはアセット名が無効です。URLパラメータを確認してください。",
   "richListWarning": "リッチリストのデータは各エポックの開始時に更新されます",
   "timestamp": "タイムスタンプ",
   "fee": "手数料",

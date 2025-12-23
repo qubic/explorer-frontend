@@ -60,6 +60,7 @@
   "rank": "Rang",
   "addressID": "Adres-ID",
   "richListLoadFailed": "Fout: Het laden van de rijkelijst is mislukt. Ververs de pagina of probeer het later opnieuw.",
+  "assetsRichListInvalidAssetOrIssuer": "Fout: Ongeldig uitgeveradres en/of assetnaam. Controleer de URL-parameters.",
   "richListWarning": "Rijkelijstgegevens worden aan het begin van elke epoche bijgewerkt",
   "timestamp": "Tijdstempel",
   "fee": "Kosten",

@@ -1,4 +1,4 @@
-import { memo, useCallback, useEffect, useMemo, useState } from 'react'
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router-dom'
 
@@ -10,9 +10,11 @@ import { useGetTokenCategoriesQuery } from '@app/store/apis/qubic-static'
 import {
   clsxTwMerge,
   ASSET_CATEGORY_SC_SHARES,
+  QX_ASSET_NAME,
   isAssetsIssuerAddress,
   type CategoryFilter,
-  filterTokensByCategory
+  filterTokensByCategory,
+  findTokenCategory
 } from '@app/utils'
 import { CategoryChips } from '@app/pages/network/assets/tokens/components'
 
@@ -29,6 +31,8 @@ export default function AssetsTabs() {
   const [searchParams, setSearchParams] = useSearchParams()
   const [selectedCategory, setSelectedCategory] = useState<CategoryFilter>(ASSET_CATEGORY_SC_SHARES)
   const [categorySelections, setCategorySelections] = useState<Record<string, AssetSelection>>({})
+  const hasInitializedCategory = useRef(false)
+  const hasInvalidUrlParams = useRef(false)
 
   const assetParam = searchParams.get('asset') || ''
   const issuerParam = searchParams.get('issuer') || ''
@@ -58,6 +62,8 @@ export default function AssetsTabs() {
 
   const handleAssetChange = useCallback(
     (asset: IssuedAsset) => {
+      // Reset invalid URL params flag when user manually selects a valid asset
+      hasInvalidUrlParams.current = false
       // Remember selection for current category
       setCategorySelections((prev) => ({
         ...prev,
@@ -72,6 +78,35 @@ export default function AssetsTabs() {
     const assets = data?.assets.map((a) => a.data) ?? []
     return assets.sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }))
   }, [data])
+
+  // Detect category from URL params on initial load
+  useEffect(() => {
+    if (hasInitializedCategory.current || !allAssets.length || !assetParam || !issuerParam) return
+
+    // Mark as initialized to prevent auto-select from overriding URL params
+    hasInitializedCategory.current = true
+
+    const urlAsset = allAssets.find(
+      (asset) => asset.name === assetParam && asset.issuerIdentity === issuerParam
+    )
+
+    if (!urlAsset) {
+      // URL has invalid asset/issuer combination - mark as invalid to prevent auto-select
+      hasInvalidUrlParams.current = true
+      return
+    }
+
+    // Check if it's an SC Share
+    if (isAssetsIssuerAddress(urlAsset.issuerIdentity)) {
+      setSelectedCategory(ASSET_CATEGORY_SC_SHARES)
+      return
+    }
+
+    // Find the category for non-SC assets
+    const categories = categoriesData?.categories ?? []
+    const detectedCategory = findTokenCategory(urlAsset, categories)
+    setSelectedCategory(detectedCategory)
+  }, [allAssets, assetParam, issuerParam, categoriesData])
 
   const filteredAssets = useMemo(() => {
     const categories = categoriesData?.categories ?? []
@@ -99,8 +134,9 @@ export default function AssetsTabs() {
   // Auto-select asset when category changes and current selection is not in filtered list
   // Prioritizes remembered selection for the category, then falls back to first asset
   // Exception: SC Shares defaults to QX
+  // Skip if URL has invalid params to let the API return an error
   useEffect(() => {
-    if (filteredAssets.length === 0) return
+    if (filteredAssets.length === 0 || hasInvalidUrlParams.current) return
 
     const currentAssetInList = filteredAssets.some(
       (asset) =>
@@ -124,7 +160,7 @@ export default function AssetsTabs() {
 
       // For SC Shares category, default to QX if available
       if (selectedCategory === ASSET_CATEGORY_SC_SHARES) {
-        const qxAsset = filteredAssets.find((asset) => asset.name === 'QX')
+        const qxAsset = filteredAssets.find((asset) => asset.name === QX_ASSET_NAME)
         if (qxAsset) {
           handleAssetChange(qxAsset)
           return

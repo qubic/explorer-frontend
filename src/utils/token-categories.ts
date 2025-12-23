@@ -61,3 +61,14 @@ export const filterTokensByCategory = (
 
   return tokens
 }
+
+export const findTokenCategory = (
+  token: TokenLike,
+  categories: TokenCategory[]
+): CategoryFilter => {
+  const matchedCategory = categories.find((category) => matchesCategory(token, category))
+  if (matchedCategory) {
+    return matchedCategory.id
+  }
+  return TOKEN_CATEGORY_STANDARD
+}
