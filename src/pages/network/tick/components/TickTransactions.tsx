@@ -65,23 +65,21 @@ export default function TickTransactions({ tick }: Props) {
 
   return (
     <div className="flex flex-col gap-16">
-      <div className="flex items-center justify-between">
-        <p className="font-space text-xl font-500">{t('transactions')}</p>
+      <p className="font-space text-xl font-500">{t('transactions')}</p>
 
-        {displayTransactions.length > 0 && (
-          <Button
-            variant="link"
-            size="sm"
-            onClick={() => handleExpandAllChange(!expandAll)}
-            className="gap-6"
-          >
-            <ChevronDownIcon
-              className={`h-16 w-16 transition-transform duration-300 ${expandAll ? 'rotate-180' : 'rotate-0'}`}
-            />
-            {expandAll ? t('collapseAll') : t('expandAll')}
-          </Button>
-        )}
-      </div>
+      {displayTransactions.length > 0 && (
+        <Button
+          variant="link"
+          size="sm"
+          onClick={() => handleExpandAllChange(!expandAll)}
+          className="ml-auto w-fit gap-6 pb-8"
+        >
+          <ChevronDownIcon
+            className={`h-16 w-16 transition-transform duration-300 ${expandAll ? 'rotate-180' : 'rotate-0'}`}
+          />
+          {expandAll ? t('collapseAll') : t('expandAll')}
+        </Button>
+      )}
 
       <InfiniteScroll
         items={displayTransactions}

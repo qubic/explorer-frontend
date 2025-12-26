@@ -1,235 +1,40 @@
-import { ChevronDownIcon, XmarkIcon } from '@app/assets/icons'
-import DropdownMenu from '@app/components/ui/DropdownMenu'
+import { useCallback, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+
+import { ArrowDownIcon, ArrowUpIcon, FunnelIcon, UndoIcon } from '@app/assets/icons'
+import { DateTimeInput } from '@app/components/ui'
 import Tooltip from '@app/components/ui/Tooltip'
 import { clsxTwMerge } from '@app/utils'
-import { useCallback, useLayoutEffect, useRef, useState } from 'react'
-import { useTranslation } from 'react-i18next'
-import type { TransactionFilters } from '../../hooks/useLatestTransactions'
-
-// Format a number string with thousand separators for display
-function formatAmountForDisplay(value: string | undefined): string {
-  if (!value) return ''
-  const num = Number(value)
-  if (Number.isNaN(num)) return value
-  return num.toLocaleString('en-US')
-}
-
-// Format a number with K/M/B notation for chip labels (only for round numbers)
-type TranslationFn = (key: string) => string
-function formatAmountShort(value: string | undefined, t: TranslationFn): string {
-  if (!value) return ''
-  const num = Number(value)
-  if (Number.isNaN(num)) return value
-
-  const billion = 1_000_000_000
-  const million = 1_000_000
-  const thousand = 1_000
-
-  // Check if it's a round number divisible by the unit
-  if (num >= billion && num % billion === 0) {
-    return `${num / billion}${t('billionShort')}`
-  }
-  if (num >= million && num % million === 0) {
-    return `${num / million}${t('millionShort')}`
-  }
-  if (num >= thousand && num % thousand === 0) {
-    return `${num / thousand}${t('thousandShort')}`
-  }
-
-  // Fall back to regular formatting for non-round numbers
-  return num.toLocaleString('en-US')
-}
-
-// Parse a formatted string back to raw number string
-function parseAmountFromDisplay(formatted: string): string {
-  // Remove all non-digit characters except for leading minus
-  return formatted.replace(/[^\d]/g, '')
-}
+import type { TransactionDirection, TransactionFilters } from '../../hooks/useLatestTransactions'
+import ActiveFilterChip from './ActiveFilterChip'
+import FilterDropdown from './FilterDropdown'
+import MobileFiltersModal from './MobileFiltersModal'
+import {
+  AMOUNT_PRESETS,
+  DATE_PRESETS,
+  DIRECTION_OPTIONS,
+  formatAmountForDisplay,
+  formatAmountShort,
+  getStartDateFromDays,
+  parseAmountFromDisplay
+} from './filterUtils'
 
 type Props = {
+  addressId: string
   activeFilters: TransactionFilters
   onApplyFilters: (filters: TransactionFilters) => void
   onClearFilters: () => void
 }
 
-type FilterDropdownProps = {
-  label: string
-  isActive: boolean
-  children: React.ReactNode
-  show: boolean
-  onToggle: () => void
-  onClear?: () => void
-  contentClassName?: string
-}
-
-type DropdownAlignment = 'left' | 'center' | 'right'
-
-function FilterDropdown({
-  label,
-  isActive,
-  children,
-  show,
-  onToggle,
-  onClear,
-  contentClassName
-}: FilterDropdownProps) {
-  const wrapperRef = useRef<HTMLDivElement>(null)
-  const triggerRef = useRef<HTMLButtonElement>(null)
-  const [alignment, setAlignment] = useState<DropdownAlignment>('left')
-  const [isPositioned, setIsPositioned] = useState(false)
-
-  // Calculate optimal alignment after dropdown renders
-  useLayoutEffect(() => {
-    if (!show) {
-      setIsPositioned(false)
-      return undefined
-    }
-
-    // Use requestAnimationFrame to ensure DOM has been laid out
-    const rafId = requestAnimationFrame(() => {
-      if (!wrapperRef.current || !triggerRef.current) return
-
-      // Query for the dropdown content element inside the wrapper
-      const contentEl = wrapperRef.current.querySelector('[role="menu"]') as HTMLElement
-      if (!contentEl) return
-
-      const buttonRect = triggerRef.current.getBoundingClientRect()
-      const contentWidth = contentEl.offsetWidth
-      const viewportWidth = window.innerWidth
-      const margin = 16
-
-      // Calculate where dropdown would be with left alignment
-      const leftAlignedRight = buttonRect.left + contentWidth
-      // Calculate where dropdown would be with right alignment
-      const rightAlignedLeft = buttonRect.right - contentWidth
-
-      // Check if left alignment would overflow right edge
-      const wouldOverflowRight = leftAlignedRight > viewportWidth - margin
-      // Check if right alignment would overflow left edge
-      const wouldOverflowLeft = rightAlignedLeft < margin
-
-      if (wouldOverflowRight && !wouldOverflowLeft) {
-        setAlignment('right')
-      } else if (!wouldOverflowRight) {
-        setAlignment('left')
-      } else {
-        // Both overflow - center it
-        setAlignment('center')
-      }
-
-      setIsPositioned(true)
-    })
-
-    return () => cancelAnimationFrame(rafId)
-  }, [show])
-
-  const handleClearClick = (e: React.MouseEvent) => {
-    e.stopPropagation()
-    onClear?.()
-    // Close the dropdown after clearing
-    if (show) {
-      onToggle()
-    }
-  }
-
-  const getAlignmentClasses = () => {
-    switch (alignment) {
-      case 'right':
-        return 'ltr:right-0 ltr:left-auto rtl:left-0 rtl:right-auto'
-      case 'center':
-        return 'ltr:left-1/2 ltr:right-auto ltr:-translate-x-1/2 rtl:right-1/2 rtl:left-auto rtl:translate-x-1/2'
-      default:
-        return 'ltr:left-0 ltr:right-auto rtl:right-0 rtl:left-auto'
-    }
-  }
-
-  return (
-    <div ref={wrapperRef} className="relative">
-      <DropdownMenu show={show} onToggle={onToggle}>
-        <DropdownMenu.Trigger className="flex items-center gap-4">
-          <button
-            ref={triggerRef}
-            type="button"
-            className={clsxTwMerge(
-              'flex shrink-0 items-center gap-4 rounded border px-8 py-6 text-xs transition-colors sm:gap-6 sm:px-10',
-              isActive
-                ? 'border-primary-30 bg-primary-60 text-primary-30'
-                : 'border-primary-60 text-gray-50 hover:border-primary-50 hover:text-white'
-            )}
-          >
-            <span className="max-w-[120px] truncate sm:max-w-[200px]">{label}</span>
-            {isActive && onClear ? (
-              <span
-                role="button"
-                tabIndex={0}
-                onClick={handleClearClick}
-                onKeyDown={(e) =>
-                  e.key === 'Enter' && handleClearClick(e as unknown as React.MouseEvent)
-                }
-                className="flex items-center justify-center rounded-full p-2 hover:bg-primary-50"
-                aria-label="Clear filter"
-              >
-                <XmarkIcon className="h-10 w-10" />
-              </span>
-            ) : (
-              <ChevronDownIcon
-                className={clsxTwMerge('h-12 w-12 transition-transform', show && 'rotate-180')}
-              />
-            )}
-          </button>
-        </DropdownMenu.Trigger>
-        <DropdownMenu.Content
-          className={clsxTwMerge(
-            'min-w-[200px] max-w-[calc(100vw-32px)] p-12 transition-none',
-            getAlignmentClasses(),
-            !isPositioned && 'invisible',
-            contentClassName
-          )}
-        >
-          {children}
-        </DropdownMenu.Content>
-      </DropdownMenu>
-    </div>
-  )
-}
-
-const AMOUNT_PRESETS = [
-  { labelKey: 'amount1to1M', start: '1', end: '1000000' },
-  { labelKey: 'amount1Mto100M', start: '1000000', end: '100000000' },
-  { labelKey: 'amount100Mto1B', start: '100000000', end: '1000000000' },
-  { labelKey: 'amount1Bto10B', start: '1000000000', end: '10000000000' },
-  { labelKey: 'amountOver10B', start: '10000000000', end: undefined }
-]
-
-const DATE_PRESETS = [
-  { labelKey: 'dateLastHour', days: 1 / 24 },
-  { labelKey: 'dateLast24Hours', days: 1 },
-  { labelKey: 'dateLastNDays', days: 7, daysCount: 7 },
-  { labelKey: 'dateLastNDays', days: 30, daysCount: 30 },
-  { labelKey: 'dateLastNDays', days: 90, daysCount: 90 },
-  { labelKey: 'dateLastNDays', days: 180, daysCount: 180 }
-]
-
-function getStartDateFromDays(days: number | undefined): string | undefined {
-  if (!days) return undefined
-  const now = new Date()
-  const start = new Date(now.getTime() - days * 24 * 60 * 60 * 1000)
-  // Format to datetime-local format: YYYY-MM-DDTHH:mm
-  const year = start.getFullYear()
-  const month = String(start.getMonth() + 1).padStart(2, '0')
-  const day = String(start.getDate()).padStart(2, '0')
-  const hours = String(start.getHours()).padStart(2, '0')
-  const minutes = String(start.getMinutes()).padStart(2, '0')
-  return `${year}-${month}-${day}T${hours}:${minutes}`
-}
-
 export default function TransactionFiltersBar({
+  addressId,
   activeFilters,
   onApplyFilters,
   onClearFilters
 }: Props) {
   const { t } = useTranslation('network-page')
   const [openDropdown, setOpenDropdown] = useState<string | null>(null)
+  const [isMobileModalOpen, setIsMobileModalOpen] = useState(false)
 
   const [localFilters, setLocalFilters] = useState<TransactionFilters>(activeFilters)
   const [validationErrors, setValidationErrors] = useState<Record<string, string | null>>({})
@@ -240,59 +45,63 @@ export default function TransactionFiltersBar({
         if (prev === dropdown) {
           // Closing dropdown - clear its validation error and reset local filters
           setValidationErrors((errors) => ({ ...errors, [dropdown]: null }))
-          setLocalFilters(activeFilters)
+          setLocalFilters((current) => ({
+            ...current,
+            amountRange: undefined,
+            dateRange: undefined
+          }))
           return null
         }
         // Opening dropdown - sync local filters with active filters
-        setLocalFilters(activeFilters)
+        const isAmountPreset = !!activeFilters.amountRange?.presetKey
+        const isDatePreset = activeFilters.dateRange?.presetDays !== undefined
+        setLocalFilters({
+          ...activeFilters,
+          amountRange: isAmountPreset ? undefined : activeFilters.amountRange,
+          dateRange: isDatePreset ? undefined : activeFilters.dateRange
+        })
         return dropdown
       })
     },
     [activeFilters]
   )
 
-  const handleApplyFilter = useCallback(
-    (filterKey: keyof TransactionFilters, value: TransactionFilters[keyof TransactionFilters]) => {
-      const newFilters = { ...activeFilters, [filterKey]: value }
-      onApplyFilters(newFilters)
-      setLocalFilters(newFilters)
-      setOpenDropdown(null)
-    },
-    [activeFilters, onApplyFilters]
-  )
-
   const handleApplyRangeFilter = useCallback(
     (
-      filterKey: 'amountRange' | 'tickNumberRange' | 'dateRange',
+      filterKey: 'amountRange' | 'tickNumberRange' | 'dateRange' | 'inputTypeRange',
       start: string | undefined,
       end: string | undefined
     ) => {
-      // Determine dropdown key for error state
-      let dropdownKey: string
-      if (filterKey === 'amountRange') {
-        dropdownKey = 'amount'
-      } else if (filterKey === 'tickNumberRange') {
-        dropdownKey = 'tick'
-      } else {
-        dropdownKey = 'date'
+      const filterConfig: Record<
+        typeof filterKey,
+        { dropdownKey: string; errorKey: string; strictComparison?: boolean }
+      > = {
+        amountRange: { dropdownKey: 'amount', errorKey: 'invalidRangeAmount' },
+        tickNumberRange: {
+          dropdownKey: 'tick',
+          errorKey: 'invalidTickRange',
+          strictComparison: true
+        },
+        dateRange: { dropdownKey: 'date', errorKey: 'invalidDateRange' },
+        inputTypeRange: { dropdownKey: 'inputType', errorKey: 'invalidRangeInputType' }
       }
 
-      // Validate range before applying
+      const { dropdownKey, errorKey, strictComparison } = filterConfig[filterKey]
+
       let error: string | null = null
       if (start && end) {
         if (filterKey === 'dateRange') {
-          // Date validation
           const startDate = new Date(start)
           const endDate = new Date(end)
           if (startDate > endDate) {
-            error = t('invalidRange')
+            error = t(errorKey)
           }
         } else {
-          // Numeric validation
           const startNum = Number(start)
           const endNum = Number(end)
-          if (startNum > endNum) {
-            error = t('invalidRangeAmount')
+          const isInvalid = strictComparison ? startNum >= endNum : startNum > endNum
+          if (isInvalid) {
+            error = t(errorKey)
           }
         }
       }
@@ -302,7 +111,6 @@ export default function TransactionFiltersBar({
         return
       }
 
-      // Clear any validation error
       setValidationErrors((prev) => ({ ...prev, [dropdownKey]: null }))
 
       const newFilters = {
@@ -316,8 +124,66 @@ export default function TransactionFiltersBar({
     [activeFilters, onApplyFilters, t]
   )
 
+  const handleApplyDatePreset = useCallback(
+    (presetDays: number) => {
+      const startDate = getStartDateFromDays(presetDays)
+      const newFilters = {
+        ...activeFilters,
+        dateRange: { start: startDate, end: undefined, presetDays }
+      }
+      onApplyFilters(newFilters)
+      setLocalFilters(newFilters)
+      setOpenDropdown(null)
+    },
+    [activeFilters, onApplyFilters]
+  )
+
+  const handleApplyAmountPreset = useCallback(
+    (preset: { labelKey: string; start: string; end: string | undefined }) => {
+      const newFilters = {
+        ...activeFilters,
+        amountRange: { start: preset.start, end: preset.end, presetKey: preset.labelKey }
+      }
+      onApplyFilters(newFilters)
+      setLocalFilters(newFilters)
+      setOpenDropdown(null)
+    },
+    [activeFilters, onApplyFilters]
+  )
+
+  const handleDirectionChange = useCallback(
+    (direction: TransactionDirection | undefined) => {
+      const newFilters = { ...activeFilters, direction }
+
+      if (direction === 'incoming') {
+        newFilters.destination = addressId
+        if (newFilters.source === addressId) {
+          newFilters.source = undefined
+        }
+      } else if (direction === 'outgoing') {
+        newFilters.source = addressId
+        if (newFilters.destination === addressId) {
+          newFilters.destination = undefined
+        }
+      } else {
+        if (newFilters.source === addressId) {
+          newFilters.source = undefined
+        }
+        if (newFilters.destination === addressId) {
+          newFilters.destination = undefined
+        }
+      }
+
+      onApplyFilters(newFilters)
+      setLocalFilters(newFilters)
+    },
+    [activeFilters, onApplyFilters, addressId]
+  )
+
+  // Check for active filters (excluding direction)
   const hasActiveFilters = Object.entries(activeFilters).some(([key, value]) => {
-    if (['tickNumberRange', 'dateRange', 'amountRange'].includes(key)) {
+    if (key === 'direction') return false
+    if (['tickNumberRange', 'dateRange', 'amountRange', 'inputTypeRange'].includes(key)) {
       return value && (value.start || value.end)
     }
     return key !== 'amount' && typeof value === 'string' && value.trim() !== ''
@@ -330,52 +196,69 @@ export default function TransactionFiltersBar({
   const isTickActive = !!(
     activeFilters.tickNumberRange?.start || activeFilters.tickNumberRange?.end
   )
+  const isInputTypeActive = !!(
+    activeFilters.inputTypeRange?.start || activeFilters.inputTypeRange?.end
+  )
+
+  // Format address with first 4 and last 4 characters
+  const formatAddressShort = (address: string) => `${address.slice(0, 4)}...${address.slice(-4)}`
 
   // Get display labels for active filters
   const getSourceLabel = () => {
-    if (!isSourceActive) return t('source')
-    return `${t('source')}: ${activeFilters.source?.slice(0, 8)}...`
+    if (!isSourceActive || !activeFilters.source) return t('source')
+    return `${t('source')}: ${formatAddressShort(activeFilters.source)}`
   }
 
   const getDestinationLabel = () => {
-    if (!isDestinationActive) return t('destination')
-    return `${t('destination')}: ${activeFilters.destination?.slice(0, 8)}...`
+    if (!isDestinationActive || !activeFilters.destination) return t('destination')
+    return `${t('destination')}: ${formatAddressShort(activeFilters.destination)}`
   }
 
   const getAmountLabel = () => {
     if (!isAmountActive) return t('amount')
-    // Check if it matches a preset
-    const preset = AMOUNT_PRESETS.find(
-      (p) =>
-        p.start === activeFilters.amountRange?.start && p.end === activeFilters.amountRange?.end
-    )
-    if (preset) return `${t('amount')}: ${t(preset.labelKey)}`
-    const { start, end } = activeFilters.amountRange || {}
+    const { start, end, presetKey } = activeFilters.amountRange || {}
+
+    if (presetKey) {
+      const preset = AMOUNT_PRESETS.find((p) => p.labelKey === presetKey)
+      if (preset) return `${t('amount')}: ${t(preset.labelKey)}`
+    }
+
     if (start && end)
       return `${t('amount')}: ${formatAmountShort(start, t)} - ${formatAmountShort(end, t)}`
-    if (start) return `${t('amount')}: ≥ ${formatAmountShort(start, t)}`
-    if (end) return `${t('amount')}: ≤ ${formatAmountShort(end, t)}`
+    if (start) return `${t('amount')}: >= ${formatAmountShort(start, t)}`
+    if (end) return `${t('amount')}: <= ${formatAmountShort(end, t)}`
     return t('amount')
   }
 
   const getDateLabel = () => {
     if (!isDateActive) return t('date')
-    // Check if it matches a preset (approximate check based on days difference)
-    const { start, end } = activeFilters.dateRange || {}
-    if (start && end) {
-      const startDate = new Date(start)
-      const endDate = new Date(end)
-      const daysDiff = Math.round((endDate.getTime() - startDate.getTime()) / (24 * 60 * 60 * 1000))
-      const preset = DATE_PRESETS.find((p) => p.days === daysDiff)
+    const { start, end, presetDays } = activeFilters.dateRange || {}
+
+    if (presetDays !== undefined) {
+      const preset = DATE_PRESETS.find((p) => p.days === presetDays)
       if (preset) {
         const presetLabel = preset.daysCount
           ? t(preset.labelKey, { count: preset.daysCount })
           : t(preset.labelKey)
         return `${t('date')}: ${presetLabel}`
       }
-      return `${t('date')}: ${t('customRange')}`
     }
-    return `${t('date')}: ${t('customRange')}`
+
+    const formatDateTimeShort = (dateStr: string) => {
+      const date = new Date(dateStr)
+      const month = String(date.getMonth() + 1).padStart(2, '0')
+      const day = String(date.getDate()).padStart(2, '0')
+      const year = String(date.getFullYear()).slice(-2)
+      const hours = String(date.getHours()).padStart(2, '0')
+      const minutes = String(date.getMinutes()).padStart(2, '0')
+      return `${month}/${day}/${year} ${hours}:${minutes}`
+    }
+
+    if (start && end)
+      return `${t('date')}: ${formatDateTimeShort(start)} - ${formatDateTimeShort(end)}`
+    if (start) return `${t('date')}: >= ${formatDateTimeShort(start)}`
+    if (end) return `${t('date')}: <= ${formatDateTimeShort(end)}`
+    return t('date')
   }
 
   const getTickLabel = () => {
@@ -383,23 +266,38 @@ export default function TransactionFiltersBar({
     const { start, end } = activeFilters.tickNumberRange || {}
     if (start && end)
       return `${t('tick')}: ${formatAmountForDisplay(start)} - ${formatAmountForDisplay(end)}`
-    if (start) return `${t('tick')}: ≥ ${formatAmountForDisplay(start)}`
-    if (end) return `${t('tick')}: ≤ ${formatAmountForDisplay(end)}`
+    if (start) return `${t('tick')}: >= ${formatAmountForDisplay(start)}`
+    if (end) return `${t('tick')}: <= ${formatAmountForDisplay(end)}`
     return t('tick')
+  }
+
+  const getInputTypeLabel = () => {
+    if (!isInputTypeActive) return t('inputType')
+    const { start, end } = activeFilters.inputTypeRange || {}
+    if (start && end) return `${t('inputType')}: ${start} - ${end}`
+    if (start) return `${t('inputType')}: >= ${start}`
+    if (end) return `${t('inputType')}: <= ${end}`
+    return t('inputType')
   }
 
   // Clear handlers for individual filters
   const clearSourceFilter = useCallback(() => {
     const newFilters = { ...activeFilters, source: undefined }
+    if (activeFilters.source === addressId) {
+      newFilters.direction = undefined
+    }
     onApplyFilters(newFilters)
     setLocalFilters(newFilters)
-  }, [activeFilters, onApplyFilters])
+  }, [activeFilters, onApplyFilters, addressId])
 
   const clearDestinationFilter = useCallback(() => {
     const newFilters = { ...activeFilters, destination: undefined }
+    if (activeFilters.destination === addressId) {
+      newFilters.direction = undefined
+    }
     onApplyFilters(newFilters)
     setLocalFilters(newFilters)
-  }, [activeFilters, onApplyFilters])
+  }, [activeFilters, onApplyFilters, addressId])
 
   const clearAmountFilter = useCallback(() => {
     const newFilters = { ...activeFilters, amountRange: undefined }
@@ -419,76 +317,184 @@ export default function TransactionFiltersBar({
     setLocalFilters(newFilters)
   }, [activeFilters, onApplyFilters])
 
+  const clearInputTypeFilter = useCallback(() => {
+    const newFilters = { ...activeFilters, inputTypeRange: undefined }
+    onApplyFilters(newFilters)
+    setLocalFilters(newFilters)
+  }, [activeFilters, onApplyFilters])
+
+  // Segmented control for direction filter
+  const renderDirectionSegmentedControl = (showTooltips: boolean) => (
+    <div className="inline-flex rounded border border-primary-60">
+      {DIRECTION_OPTIONS.map((option, index) => {
+        const isSelected = activeFilters.direction === option.value
+        const isFirst = index === 0
+        const isLast = index === DIRECTION_OPTIONS.length - 1
+
+        const buttonContent = (
+          <button
+            key={option.labelKey}
+            type="button"
+            onClick={() => handleDirectionChange(option.value)}
+            className={clsxTwMerge(
+              'flex w-40 items-center justify-center gap-4 py-5 font-space text-xs font-medium transition duration-300',
+              isFirst && 'rounded-l',
+              isLast && 'rounded-r',
+              !isFirst && 'border-l border-primary-60',
+              isSelected ? 'bg-primary-30 text-primary-80' : 'text-gray-100 hover:bg-primary-60/60'
+            )}
+          >
+            {option.value === 'incoming' && (
+              <ArrowDownIcon
+                className={clsxTwMerge(
+                  'size-14',
+                  isSelected ? 'text-primary-80' : 'text-success-30'
+                )}
+              />
+            )}
+            {option.value === 'outgoing' && (
+              <ArrowUpIcon
+                className={clsxTwMerge('size-14', isSelected ? 'text-primary-80' : 'text-error-30')}
+              />
+            )}
+            {option.value === undefined && <span>{t(option.labelKey)}</span>}
+          </button>
+        )
+
+        if (showTooltips && option.value === 'incoming') {
+          return (
+            <Tooltip
+              key={option.labelKey}
+              tooltipId="direction-incoming"
+              content={t('directionIncomingTooltip')}
+            >
+              {buttonContent}
+            </Tooltip>
+          )
+        }
+        if (showTooltips && option.value === 'outgoing') {
+          return (
+            <Tooltip
+              key={option.labelKey}
+              tooltipId="direction-outgoing"
+              content={t('directionOutgoingTooltip')}
+            >
+              {buttonContent}
+            </Tooltip>
+          )
+        }
+
+        return buttonContent
+      })}
+    </div>
+  )
+
   return (
-    <div className="mb-16 flex flex-wrap items-center justify-start gap-6 sm:gap-8">
-      {/* Clear All Filters Chip */}
-      {hasActiveFilters && (
-        <Tooltip tooltipId="clear-all-filters" content={t('clearAllFiltersTooltip')}>
+    <>
+      {/* Mobile: Filters button on top, active filter chips below */}
+      <div className="mb-16 flex flex-col gap-10 sm:hidden">
+        <div className="flex items-center justify-end">
           <button
             type="button"
-            onClick={() => {
-              onClearFilters()
-              setLocalFilters({})
-            }}
-            className="flex shrink-0 items-center gap-4 rounded border border-primary-30 bg-primary-60 px-8 py-6 text-xs text-primary-30 transition-colors sm:gap-6 sm:px-10"
+            onClick={() => setIsMobileModalOpen(true)}
+            className="flex shrink-0 items-center gap-6 rounded border border-primary-60 px-10 py-5 font-space text-xs font-medium text-gray-100 transition duration-300 hover:bg-primary-60/60"
           >
-            <span className="max-w-[120px] truncate sm:max-w-[200px]">{t('clearAllFilters')}</span>
-            <span className="flex items-center justify-center rounded-full p-2 hover:bg-primary-50">
-              <XmarkIcon className="h-10 w-10" />
-            </span>
+            <FunnelIcon className="h-14 w-14" />
+            <span>{t('filters')}</span>
           </button>
-        </Tooltip>
-      )}
+        </div>
 
-      {/* Source Filter */}
-      <FilterDropdown
-        label={getSourceLabel()}
-        isActive={isSourceActive}
-        show={openDropdown === 'source'}
-        onToggle={() => handleToggle('source')}
-        onClear={isSourceActive ? clearSourceFilter : undefined}
-        contentClassName="w-[280px] sm:min-w-[420px]"
-      >
-        <div className="space-y-10">
-          <div>
-            <label htmlFor="filter-source" className="mb-4 block text-xs text-gray-50">
-              {t('source')}
-            </label>
+        {hasActiveFilters && (
+          <div className="flex flex-wrap items-center gap-6">
+            {isSourceActive && (
+              <ActiveFilterChip label={getSourceLabel()} onClear={clearSourceFilter} />
+            )}
+            {isDestinationActive && (
+              <ActiveFilterChip label={getDestinationLabel()} onClear={clearDestinationFilter} />
+            )}
+            {isAmountActive && (
+              <ActiveFilterChip label={getAmountLabel()} onClear={clearAmountFilter} />
+            )}
+            {isDateActive && <ActiveFilterChip label={getDateLabel()} onClear={clearDateFilter} />}
+            {isTickActive && <ActiveFilterChip label={getTickLabel()} onClear={clearTickFilter} />}
+            {isInputTypeActive && (
+              <ActiveFilterChip label={getInputTypeLabel()} onClear={clearInputTypeFilter} />
+            )}
+
+            <button
+              type="button"
+              onClick={() => {
+                onClearFilters()
+                setLocalFilters({})
+              }}
+              className="ml-auto flex shrink-0 items-center gap-4 text-xs text-gray-50 transition-colors hover:text-white"
+            >
+              <UndoIcon className="h-14 w-14" />
+              <span>{t('resetFilters')}</span>
+            </button>
+          </div>
+        )}
+      </div>
+
+      {/* Mobile Modal */}
+      <MobileFiltersModal
+        isOpen={isMobileModalOpen}
+        onClose={() => setIsMobileModalOpen(false)}
+        activeFilters={activeFilters}
+        onApplyFilters={onApplyFilters}
+      />
+
+      {/* Desktop: Original dropdown filters */}
+      <div className="mb-16 hidden w-full flex-wrap items-center gap-8 sm:flex">
+        <FunnelIcon className="h-16 w-16 text-gray-50" />
+
+        {renderDirectionSegmentedControl(true)}
+
+        {/* Source Filter */}
+        <FilterDropdown
+          label={getSourceLabel()}
+          isActive={isSourceActive}
+          show={openDropdown === 'source'}
+          onToggle={() => handleToggle('source')}
+          onClear={isSourceActive ? clearSourceFilter : undefined}
+          contentClassName="min-w-[300px]"
+        >
+          <div className="space-y-12">
             <input
-              id="filter-source"
+              id="filter-source-desktop-standalone"
               type="text"
               value={localFilters.source || ''}
               onChange={(e) => setLocalFilters((prev) => ({ ...prev, source: e.target.value }))}
               placeholder={t('addressPlaceholder')}
               className="w-full rounded bg-primary-60 px-10 py-6 text-xs text-white placeholder-gray-50 focus:outline-none focus:ring-1 focus:ring-primary-30"
             />
+            <button
+              type="button"
+              onClick={() => {
+                const newFilters = { ...activeFilters, source: localFilters.source || undefined }
+                onApplyFilters(newFilters)
+                setLocalFilters(newFilters)
+                setOpenDropdown(null)
+              }}
+              className="w-full rounded bg-primary-30 px-10 py-6 text-xs text-primary-80 hover:bg-primary-40"
+            >
+              {t('filterButton')}
+            </button>
           </div>
-          <button
-            type="button"
-            onClick={() => handleApplyFilter('source', localFilters.source)}
-            className="w-full rounded bg-primary-30 px-10 py-6 text-xs text-primary-80 hover:bg-primary-40"
-          >
-            {t('filterButton')}
-          </button>
-        </div>
-      </FilterDropdown>
+        </FilterDropdown>
 
-      {/* Destination Filter */}
-      <FilterDropdown
-        label={getDestinationLabel()}
-        isActive={isDestinationActive}
-        show={openDropdown === 'destination'}
-        onToggle={() => handleToggle('destination')}
-        onClear={isDestinationActive ? clearDestinationFilter : undefined}
-        contentClassName="w-[280px] sm:min-w-[420px]"
-      >
-        <div className="space-y-10">
-          <div>
-            <label htmlFor="filter-destination" className="mb-4 block text-xs text-gray-50">
-              {t('destination')}*
-            </label>
+        {/* Destination Filter */}
+        <FilterDropdown
+          label={getDestinationLabel()}
+          isActive={isDestinationActive}
+          show={openDropdown === 'destination'}
+          onToggle={() => handleToggle('destination')}
+          onClear={isDestinationActive ? clearDestinationFilter : undefined}
+          contentClassName="min-w-[300px]"
+        >
+          <div className="space-y-12">
             <input
-              id="filter-destination"
+              id="filter-destination-desktop-standalone"
               type="text"
               value={localFilters.destination || ''}
               onChange={(e) =>
@@ -497,288 +503,414 @@ export default function TransactionFiltersBar({
               placeholder={t('addressPlaceholder')}
               className="w-full rounded bg-primary-60 px-10 py-6 text-xs text-white placeholder-gray-50 focus:outline-none focus:ring-1 focus:ring-primary-30"
             />
-            <p className="mt-6 text-xs italic text-gray-50">*{t('destinationFilterHint')}</p>
-          </div>
-          <button
-            type="button"
-            onClick={() => handleApplyFilter('destination', localFilters.destination)}
-            className="w-full rounded bg-primary-30 px-10 py-6 text-xs text-primary-80 hover:bg-primary-40"
-          >
-            {t('filterButton')}
-          </button>
-        </div>
-      </FilterDropdown>
-
-      {/* Amount Filter */}
-      <FilterDropdown
-        label={getAmountLabel()}
-        isActive={isAmountActive}
-        show={openDropdown === 'amount'}
-        onToggle={() => handleToggle('amount')}
-        onClear={isAmountActive ? clearAmountFilter : undefined}
-        contentClassName="min-w-[200px]"
-      >
-        <div className="space-y-8">
-          {/* Preset chips */}
-          <div className="flex flex-wrap gap-6">
-            {AMOUNT_PRESETS.map((preset) => {
-              const isSelected =
-                localFilters.amountRange?.start === preset.start &&
-                localFilters.amountRange?.end === preset.end
-              return (
-                <button
-                  key={preset.labelKey}
-                  type="button"
-                  onClick={() =>
-                    setLocalFilters((prev) => ({
-                      ...prev,
-                      amountRange: { start: preset.start, end: preset.end }
-                    }))
-                  }
-                  className={clsxTwMerge(
-                    'rounded-full border px-8 py-4 text-xs transition-colors',
-                    isSelected
-                      ? 'border-primary-30 bg-primary-60 text-primary-30'
-                      : 'border-primary-60 text-gray-50 hover:border-primary-50 hover:text-white'
-                  )}
-                >
-                  {t(preset.labelKey)}
-                </button>
-              )
-            })}
-          </div>
-          {/* Amount inputs */}
-          <div className="space-y-8">
-            <div>
-              <label htmlFor="filter-amount-min" className="mb-4 block text-xs text-gray-50">
-                {t('minAmount')}
-              </label>
-              <input
-                id="filter-amount-min"
-                type="text"
-                inputMode="numeric"
-                value={formatAmountForDisplay(localFilters.amountRange?.start)}
-                onChange={(e) => {
-                  const rawValue = parseAmountFromDisplay(e.target.value)
-                  setLocalFilters((prev) => ({
-                    ...prev,
-                    amountRange: { ...prev.amountRange, start: rawValue || undefined }
-                  }))
-                }}
-                className="w-full rounded bg-primary-60 px-10 py-6 text-xs text-white placeholder-gray-50 focus:outline-none focus:ring-1 focus:ring-primary-30"
-              />
-            </div>
-            <div>
-              <label htmlFor="filter-amount-max" className="mb-4 block text-xs text-gray-50">
-                {t('maxAmount')}
-              </label>
-              <input
-                id="filter-amount-max"
-                type="text"
-                inputMode="numeric"
-                value={formatAmountForDisplay(localFilters.amountRange?.end)}
-                onChange={(e) => {
-                  const rawValue = parseAmountFromDisplay(e.target.value)
-                  setLocalFilters((prev) => ({
-                    ...prev,
-                    amountRange: { ...prev.amountRange, end: rawValue || undefined }
-                  }))
-                }}
-                className="w-full rounded bg-primary-60 px-10 py-6 text-xs text-white placeholder-gray-50 focus:outline-none focus:ring-1 focus:ring-primary-30"
-              />
-            </div>
-            <p className="text-xs italic text-gray-50">*{t('amountFilterHint')}</p>
-            {validationErrors.amount && (
-              <p className="text-xs text-red-400">{validationErrors.amount}</p>
-            )}
+            <p className="text-xs italic text-gray-50">*{t('destinationFilterHint')}</p>
             <button
               type="button"
-              onClick={() =>
-                handleApplyRangeFilter(
-                  'amountRange',
-                  localFilters.amountRange?.start,
-                  localFilters.amountRange?.end
-                )
-              }
+              onClick={() => {
+                const newFilters = {
+                  ...activeFilters,
+                  destination: localFilters.destination || undefined
+                }
+                onApplyFilters(newFilters)
+                setLocalFilters(newFilters)
+                setOpenDropdown(null)
+              }}
               className="w-full rounded bg-primary-30 px-10 py-6 text-xs text-primary-80 hover:bg-primary-40"
             >
               {t('filterButton')}
             </button>
           </div>
-        </div>
-      </FilterDropdown>
+        </FilterDropdown>
 
-      {/* Date Filter */}
-      <FilterDropdown
-        label={getDateLabel()}
-        isActive={isDateActive}
-        show={openDropdown === 'date'}
-        onToggle={() => handleToggle('date')}
-        onClear={isDateActive ? clearDateFilter : undefined}
-        contentClassName="min-w-[280px]"
-      >
-        <div className="space-y-8">
-          {/* Preset chips */}
-          <div className="flex flex-wrap gap-6">
-            {DATE_PRESETS.map((preset) => {
-              const startDate = getStartDateFromDays(preset.days)
-              const isSelected =
-                localFilters.dateRange?.start === startDate && !localFilters.dateRange?.end
-              return (
-                <button
-                  key={preset.labelKey}
-                  type="button"
-                  onClick={() =>
+        {/* Amount Filter */}
+        <FilterDropdown
+          label={getAmountLabel()}
+          isActive={isAmountActive}
+          show={openDropdown === 'amount'}
+          onToggle={() => handleToggle('amount')}
+          onClear={isAmountActive ? clearAmountFilter : undefined}
+          contentClassName="min-w-[200px]"
+        >
+          <div className="space-y-12">
+            <div className="flex flex-wrap gap-6">
+              {AMOUNT_PRESETS.map((preset) => {
+                const isSelected = activeFilters.amountRange?.presetKey === preset.labelKey
+                const presetLabel = t(preset.labelKey)
+                return (
+                  <button
+                    key={preset.labelKey}
+                    type="button"
+                    aria-label={presetLabel}
+                    onClick={() => handleApplyAmountPreset(preset)}
+                    className={clsxTwMerge(
+                      'rounded-full border px-8 py-4 text-xs transition-colors',
+                      isSelected
+                        ? 'border-primary-30 bg-primary-60 text-primary-30'
+                        : 'border-primary-60 text-gray-50 hover:border-primary-50 hover:text-white'
+                    )}
+                  >
+                    {presetLabel}
+                  </button>
+                )
+              })}
+            </div>
+            <div className="border-t border-primary-60" />
+            <div className="space-y-8">
+              <p className="text-xs font-medium text-gray-50">{t('customRange')}</p>
+              <div>
+                <label
+                  htmlFor="filter-amount-min-desktop"
+                  className="mb-4 block text-xs text-gray-50"
+                >
+                  {t('minAmount')}
+                </label>
+                <input
+                  id="filter-amount-min-desktop"
+                  type="text"
+                  inputMode="numeric"
+                  value={formatAmountForDisplay(localFilters.amountRange?.start)}
+                  onChange={(e) => {
+                    const rawValue = parseAmountFromDisplay(e.target.value)
                     setLocalFilters((prev) => ({
                       ...prev,
-                      dateRange: { start: startDate, end: undefined }
+                      amountRange: {
+                        ...prev.amountRange,
+                        start: rawValue || undefined,
+                        presetKey: undefined
+                      }
                     }))
-                  }
-                  className={clsxTwMerge(
-                    'rounded-full border px-8 py-4 text-xs transition-colors',
-                    isSelected
-                      ? 'border-primary-30 bg-primary-60 text-primary-30'
-                      : 'border-primary-60 text-gray-50 hover:border-primary-50 hover:text-white'
-                  )}
+                  }}
+                  className="w-full rounded bg-primary-60 px-10 py-6 text-right text-xs text-white placeholder-gray-50 focus:outline-none focus:ring-1 focus:ring-primary-30"
+                />
+              </div>
+              <div>
+                <label
+                  htmlFor="filter-amount-max-desktop"
+                  className="mb-4 block text-xs text-gray-50"
                 >
-                  {preset.daysCount
-                    ? t(preset.labelKey, { count: preset.daysCount })
-                    : t(preset.labelKey)}
-                </button>
-              )
-            })}
+                  {t('maxAmount')}
+                </label>
+                <input
+                  id="filter-amount-max-desktop"
+                  type="text"
+                  inputMode="numeric"
+                  value={formatAmountForDisplay(localFilters.amountRange?.end)}
+                  onChange={(e) => {
+                    const rawValue = parseAmountFromDisplay(e.target.value)
+                    setLocalFilters((prev) => ({
+                      ...prev,
+                      amountRange: {
+                        ...prev.amountRange,
+                        end: rawValue || undefined,
+                        presetKey: undefined
+                      }
+                    }))
+                  }}
+                  className="w-full rounded bg-primary-60 px-10 py-6 text-right text-xs text-white placeholder-gray-50 focus:outline-none focus:ring-1 focus:ring-primary-30"
+                />
+              </div>
+              <p className="text-xs italic text-gray-50">*{t('amountFilterHint')}</p>
+              {validationErrors.amount && (
+                <p className="text-xs text-red-400">{validationErrors.amount}</p>
+              )}
+              <button
+                type="button"
+                onClick={() =>
+                  handleApplyRangeFilter(
+                    'amountRange',
+                    localFilters.amountRange?.start,
+                    localFilters.amountRange?.end
+                  )
+                }
+                className="w-full rounded bg-primary-30 px-10 py-6 text-xs text-primary-80 hover:bg-primary-40"
+              >
+                {t('filterButton')}
+              </button>
+            </div>
           </div>
-          {/* Date inputs */}
-          <div className="space-y-8">
-            <div>
-              <label htmlFor="filter-date-start" className="mb-4 block text-xs text-gray-50">
-                {t('startDate')}
-              </label>
-              <input
-                id="filter-date-start"
-                type="datetime-local"
-                value={localFilters.dateRange?.start || ''}
-                onChange={(e) => {
+        </FilterDropdown>
+
+        {/* Date Filter */}
+        <FilterDropdown
+          label={getDateLabel()}
+          isActive={isDateActive}
+          show={openDropdown === 'date'}
+          onToggle={() => handleToggle('date')}
+          onClear={isDateActive ? clearDateFilter : undefined}
+          contentClassName="min-w-[280px]"
+          allowFullWidth
+        >
+          <div className="space-y-12">
+            <div className="flex flex-wrap gap-6">
+              {DATE_PRESETS.map((preset) => {
+                const isSelected = activeFilters.dateRange?.presetDays === preset.days
+                const presetLabel = preset.daysCount
+                  ? t(preset.labelKey, { count: preset.daysCount })
+                  : t(preset.labelKey)
+                return (
+                  <button
+                    key={`${preset.labelKey}-${preset.days}`}
+                    type="button"
+                    aria-label={presetLabel}
+                    onClick={() => handleApplyDatePreset(preset.days)}
+                    className={clsxTwMerge(
+                      'rounded-full border px-8 py-4 text-xs transition-colors',
+                      isSelected
+                        ? 'border-primary-30 bg-primary-60 text-primary-30'
+                        : 'border-primary-60 text-gray-50 hover:border-primary-50 hover:text-white'
+                    )}
+                  >
+                    {presetLabel}
+                  </button>
+                )
+              })}
+            </div>
+            <div className="border-t border-primary-60" />
+            <div className="space-y-8">
+              <p className="text-xs font-medium text-gray-50">{t('customRange')}</p>
+              <DateTimeInput
+                id="filter-date-start-desktop"
+                label={t('startDate')}
+                value={localFilters.dateRange?.start}
+                defaultTime="00:00:00"
+                onChange={(datetime) =>
                   setLocalFilters((prev) => ({
                     ...prev,
-                    dateRange: { ...prev.dateRange, start: e.target.value }
+                    dateRange: { ...prev.dateRange, start: datetime, presetDays: undefined }
                   }))
-                  e.target.blur()
-                }}
-                className={clsxTwMerge(
-                  'w-full rounded bg-primary-60 px-10 py-6 text-xs focus:outline-none focus:ring-1 focus:ring-primary-30 [&::-webkit-calendar-picker-indicator]:invert',
-                  localFilters.dateRange?.start
-                    ? 'text-white [&::-webkit-calendar-picker-indicator]:opacity-100'
-                    : 'text-gray-50 [&::-webkit-calendar-picker-indicator]:opacity-50'
-                )}
+                }
               />
-            </div>
-            <div>
-              <label htmlFor="filter-date-end" className="mb-4 block text-xs text-gray-50">
-                {t('endDate')}
-              </label>
-              <input
-                id="filter-date-end"
-                type="datetime-local"
-                value={localFilters.dateRange?.end || ''}
-                onChange={(e) => {
+              <DateTimeInput
+                id="filter-date-end-desktop"
+                label={t('endDate')}
+                value={localFilters.dateRange?.end}
+                defaultTime="23:59:59"
+                onChange={(datetime) =>
                   setLocalFilters((prev) => ({
                     ...prev,
-                    dateRange: { ...prev.dateRange, end: e.target.value }
+                    dateRange: { ...prev.dateRange, end: datetime, presetDays: undefined }
                   }))
-                  e.target.blur()
-                }}
-                className={clsxTwMerge(
-                  'w-full rounded bg-primary-60 px-10 py-6 text-xs focus:outline-none focus:ring-1 focus:ring-primary-30 [&::-webkit-calendar-picker-indicator]:invert',
-                  localFilters.dateRange?.end
-                    ? 'text-white [&::-webkit-calendar-picker-indicator]:opacity-100'
-                    : 'text-gray-50 [&::-webkit-calendar-picker-indicator]:opacity-50'
-                )}
+                }
               />
+              {validationErrors.date && (
+                <p className="text-xs text-red-400">{validationErrors.date}</p>
+              )}
+              <button
+                type="button"
+                onClick={() =>
+                  handleApplyRangeFilter(
+                    'dateRange',
+                    localFilters.dateRange?.start,
+                    localFilters.dateRange?.end
+                  )
+                }
+                className="w-full rounded bg-primary-30 px-10 py-6 text-xs text-primary-80 hover:bg-primary-40"
+              >
+                {t('filterButton')}
+              </button>
             </div>
-            {validationErrors.date && (
-              <p className="text-xs text-red-400">{validationErrors.date}</p>
+          </div>
+        </FilterDropdown>
+
+        {/* Input Type Filter */}
+        <FilterDropdown
+          label={getInputTypeLabel()}
+          isActive={isInputTypeActive}
+          show={openDropdown === 'inputType'}
+          onToggle={() => handleToggle('inputType')}
+          onClear={isInputTypeActive ? clearInputTypeFilter : undefined}
+          contentClassName="min-w-[200px]"
+        >
+          <div className="space-y-12">
+            <div className="flex gap-8">
+              <div className="flex-1">
+                <label
+                  htmlFor="filter-inputtype-start-desktop"
+                  className="mb-4 block text-xs text-gray-50"
+                >
+                  {t('minInputType')}
+                </label>
+                <input
+                  id="filter-inputtype-start-desktop"
+                  type="text"
+                  inputMode="numeric"
+                  value={localFilters.inputTypeRange?.start || ''}
+                  onChange={(e) => {
+                    const rawValue = parseAmountFromDisplay(e.target.value)
+                    setLocalFilters((prev) => ({
+                      ...prev,
+                      inputTypeRange: { ...prev.inputTypeRange, start: rawValue || undefined }
+                    }))
+                  }}
+                  className="w-full rounded bg-primary-60 px-10 py-6 text-right text-xs text-white placeholder-gray-50 focus:outline-none focus:ring-1 focus:ring-primary-30"
+                />
+              </div>
+              <div className="flex-1">
+                <label
+                  htmlFor="filter-inputtype-end-desktop"
+                  className="mb-4 block text-xs text-gray-50"
+                >
+                  {t('maxInputType')}
+                </label>
+                <input
+                  id="filter-inputtype-end-desktop"
+                  type="text"
+                  inputMode="numeric"
+                  value={localFilters.inputTypeRange?.end || ''}
+                  onChange={(e) => {
+                    const rawValue = parseAmountFromDisplay(e.target.value)
+                    setLocalFilters((prev) => ({
+                      ...prev,
+                      inputTypeRange: { ...prev.inputTypeRange, end: rawValue || undefined }
+                    }))
+                  }}
+                  className="w-full rounded bg-primary-60 px-10 py-6 text-right text-xs text-white placeholder-gray-50 focus:outline-none focus:ring-1 focus:ring-primary-30"
+                />
+              </div>
+            </div>
+            {validationErrors.inputType && (
+              <p className="text-xs text-red-400">{validationErrors.inputType}</p>
             )}
             <button
               type="button"
-              onClick={() =>
-                handleApplyRangeFilter(
-                  'dateRange',
-                  localFilters.dateRange?.start,
-                  localFilters.dateRange?.end
-                )
-              }
+              onClick={() => {
+                if (localFilters.inputTypeRange?.start && localFilters.inputTypeRange?.end) {
+                  const startNum = Number(localFilters.inputTypeRange.start)
+                  const endNum = Number(localFilters.inputTypeRange.end)
+                  if (startNum > endNum) {
+                    setValidationErrors((prev) => ({
+                      ...prev,
+                      inputType: t('invalidRangeInputType')
+                    }))
+                    return
+                  }
+                }
+                setValidationErrors((prev) => ({ ...prev, inputType: null }))
+                const newFilters = {
+                  ...activeFilters,
+                  inputTypeRange:
+                    localFilters.inputTypeRange?.start || localFilters.inputTypeRange?.end
+                      ? localFilters.inputTypeRange
+                      : undefined
+                }
+                onApplyFilters(newFilters)
+                setLocalFilters(newFilters)
+                setOpenDropdown(null)
+              }}
               className="w-full rounded bg-primary-30 px-10 py-6 text-xs text-primary-80 hover:bg-primary-40"
             >
               {t('filterButton')}
             </button>
           </div>
-        </div>
-      </FilterDropdown>
+        </FilterDropdown>
 
-      {/* Tick Filter */}
-      <FilterDropdown
-        label={getTickLabel()}
-        isActive={isTickActive}
-        show={openDropdown === 'tick'}
-        onToggle={() => handleToggle('tick')}
-        onClear={isTickActive ? clearTickFilter : undefined}
-      >
-        <div className="space-y-16">
-          <div>
-            <label htmlFor="filter-tick-start" className="mb-4 block text-xs text-gray-50">
-              {t('startTick')}
-            </label>
-            <input
-              id="filter-tick-start"
-              type="text"
-              inputMode="numeric"
-              value={formatAmountForDisplay(localFilters.tickNumberRange?.start)}
-              onChange={(e) => {
-                const rawValue = parseAmountFromDisplay(e.target.value)
-                setLocalFilters((prev) => ({
-                  ...prev,
-                  tickNumberRange: { ...prev.tickNumberRange, start: rawValue || undefined }
-                }))
+        {/* Tick Filter */}
+        <FilterDropdown
+          label={getTickLabel()}
+          isActive={isTickActive}
+          show={openDropdown === 'tick'}
+          onToggle={() => handleToggle('tick')}
+          onClear={isTickActive ? clearTickFilter : undefined}
+          contentClassName="min-w-[200px]"
+        >
+          <div className="space-y-12">
+            <div className="space-y-8">
+              <div>
+                <label
+                  htmlFor="filter-tick-start-desktop"
+                  className="mb-4 block text-xs text-gray-50"
+                >
+                  {t('startTick')}
+                </label>
+                <input
+                  id="filter-tick-start-desktop"
+                  type="text"
+                  inputMode="numeric"
+                  value={formatAmountForDisplay(localFilters.tickNumberRange?.start)}
+                  onChange={(e) => {
+                    const rawValue = parseAmountFromDisplay(e.target.value)
+                    setLocalFilters((prev) => ({
+                      ...prev,
+                      tickNumberRange: { ...prev.tickNumberRange, start: rawValue || undefined }
+                    }))
+                  }}
+                  className="w-full rounded bg-primary-60 px-10 py-6 text-right text-xs text-white placeholder-gray-50 focus:outline-none focus:ring-1 focus:ring-primary-30"
+                />
+              </div>
+              <div>
+                <label
+                  htmlFor="filter-tick-end-desktop"
+                  className="mb-4 block text-xs text-gray-50"
+                >
+                  {t('endTick')}
+                </label>
+                <input
+                  id="filter-tick-end-desktop"
+                  type="text"
+                  inputMode="numeric"
+                  value={formatAmountForDisplay(localFilters.tickNumberRange?.end)}
+                  onChange={(e) => {
+                    const rawValue = parseAmountFromDisplay(e.target.value)
+                    setLocalFilters((prev) => ({
+                      ...prev,
+                      tickNumberRange: { ...prev.tickNumberRange, end: rawValue || undefined }
+                    }))
+                  }}
+                  className="w-full rounded bg-primary-60 px-10 py-6 text-right text-xs text-white placeholder-gray-50 focus:outline-none focus:ring-1 focus:ring-primary-30"
+                />
+              </div>
+            </div>
+            {validationErrors.tick && (
+              <p className="text-xs text-red-400">{validationErrors.tick}</p>
+            )}
+            <button
+              type="button"
+              onClick={() => {
+                if (localFilters.tickNumberRange?.start && localFilters.tickNumberRange?.end) {
+                  const startNum = Number(localFilters.tickNumberRange.start)
+                  const endNum = Number(localFilters.tickNumberRange.end)
+                  if (startNum >= endNum) {
+                    setValidationErrors((prev) => ({ ...prev, tick: t('invalidTickRange') }))
+                    return
+                  }
+                }
+                setValidationErrors((prev) => ({ ...prev, tick: null }))
+                const newFilters = {
+                  ...activeFilters,
+                  tickNumberRange:
+                    localFilters.tickNumberRange?.start || localFilters.tickNumberRange?.end
+                      ? localFilters.tickNumberRange
+                      : undefined
+                }
+                onApplyFilters(newFilters)
+                setLocalFilters(newFilters)
+                setOpenDropdown(null)
               }}
-              className="w-full rounded bg-primary-60 px-10 py-6 text-xs text-white placeholder-gray-50 focus:outline-none focus:ring-1 focus:ring-primary-30"
-            />
+              className="w-full rounded bg-primary-30 px-10 py-6 text-xs text-primary-80 hover:bg-primary-40"
+            >
+              {t('filterButton')}
+            </button>
           </div>
-          <div>
-            <label htmlFor="filter-tick-end" className="mb-4 block text-xs text-gray-50">
-              {t('endTick')}
-            </label>
-            <input
-              id="filter-tick-end"
-              type="text"
-              inputMode="numeric"
-              value={formatAmountForDisplay(localFilters.tickNumberRange?.end)}
-              onChange={(e) => {
-                const rawValue = parseAmountFromDisplay(e.target.value)
-                setLocalFilters((prev) => ({
-                  ...prev,
-                  tickNumberRange: { ...prev.tickNumberRange, end: rawValue || undefined }
-                }))
+        </FilterDropdown>
+
+        {hasActiveFilters && <div className="grow" />}
+
+        {hasActiveFilters && (
+          <Tooltip tooltipId="clear-all-filters" content={t('clearAllFiltersTooltip')}>
+            <button
+              type="button"
+              onClick={() => {
+                onClearFilters()
+                setLocalFilters({})
               }}
-              className="w-full rounded bg-primary-60 px-10 py-6 text-xs text-white placeholder-gray-50 focus:outline-none focus:ring-1 focus:ring-primary-30"
-            />
-          </div>
-          {validationErrors.tick && <p className="text-xs text-red-400">{validationErrors.tick}</p>}
-          <button
-            type="button"
-            onClick={() =>
-              handleApplyRangeFilter(
-                'tickNumberRange',
-                localFilters.tickNumberRange?.start,
-                localFilters.tickNumberRange?.end
-              )
-            }
-            className="w-full rounded bg-primary-30 px-10 py-6 text-xs text-primary-80 hover:bg-primary-40"
-          >
-            {t('filterButton')}
-          </button>
-        </div>
-      </FilterDropdown>
-    </div>
+              className="flex shrink-0 items-center gap-4 whitespace-nowrap text-xs text-gray-50 transition-colors hover:text-white"
+            >
+              <UndoIcon className="h-14 w-14" />
+              <span>{t('resetFilters')}</span>
+            </button>
+          </Tooltip>
+        )}
+      </div>
+    </>
   )
 }

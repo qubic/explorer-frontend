@@ -63,23 +63,26 @@ export default function LatestTransactions({
   return (
     <div className="flex w-full flex-col gap-10">
       <TransactionFiltersBar
+        addressId={addressId}
         activeFilters={activeFilters}
         onApplyFilters={onApplyFilters}
         onClearFilters={onClearFilters}
       />
 
       {transactions.length > 0 && (
-        <Button
-          variant="link"
-          size="sm"
-          onClick={() => handleExpandAllChange(!expandAll)}
-          className="ml-auto w-fit gap-6 pb-8"
-        >
-          <ChevronDownIcon
-            className={`h-16 w-16 transition-transform duration-300 ${expandAll ? 'rotate-180' : 'rotate-0'}`}
-          />
-          {expandAll ? t('collapseAll') : t('expandAll')}
-        </Button>
+        <div className="flex items-center justify-end">
+          <Button
+            variant="link"
+            size="sm"
+            onClick={() => handleExpandAllChange(!expandAll)}
+            className="w-fit gap-6"
+          >
+            <ChevronDownIcon
+              className={`h-16 w-16 transition-transform duration-300 ${expandAll ? 'rotate-180' : 'rotate-0'}`}
+            />
+            {expandAll ? t('collapseAll') : t('expandAll')}
+          </Button>
+        </div>
       )}
 
       <InfiniteScroll

@@ -1,22 +1,45 @@
-import {
-  useGetTransactionsForIdentityMutation,
-  type QueryServiceResponse,
-  type QueryServiceTransaction
-} from '@app/store/apis/query-service'
+import { useGetTransactionsForIdentityMutation } from '@app/store/apis/query-service/query-service.api'
+import type {
+  QueryServiceResponse,
+  QueryServiceTransaction
+} from '@app/store/apis/query-service/query-service.types'
 import { useCallback, useEffect, useRef, useState } from 'react'
 
 const PAGE_SIZE = 50
 const MAX_RESULTS = 10_000 // query service limit
 
+// Helper function to calculate start date from preset days
+// This is called at request time so the date is always fresh
+// Returns full datetime format (YYYY-MM-DDTHH:mm:ss) to preserve time precision for presets like "Last hour"
+const getStartDateFromPresetDays = (days: number): string => {
+  const now = new Date()
+  const start = new Date(now.getTime() - days * 24 * 60 * 60 * 1000)
+  const year = start.getFullYear()
+  const month = String(start.getMonth() + 1).padStart(2, '0')
+  const day = String(start.getDate()).padStart(2, '0')
+  const hours = String(start.getHours()).padStart(2, '0')
+  const minutes = String(start.getMinutes()).padStart(2, '0')
+  const seconds = String(start.getSeconds()).padStart(2, '0')
+  return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`
+}
+
+export type TransactionDirection = 'incoming' | 'outgoing'
+
 export interface TransactionFilters {
+  direction?: TransactionDirection
   source?: string
   destination?: string
   amount?: string
+  inputType?: string // Exact match filter for input type
   amountRange?: {
     start?: string
     end?: string
+    presetKey?: string // Track which preset was selected for display purposes
   }
-  inputType?: string
+  inputTypeRange?: {
+    start?: string
+    end?: string
+  }
   tickNumberRange?: {
     start?: string
     end?: string
@@ -24,6 +47,7 @@ export interface TransactionFilters {
   dateRange?: {
     start?: string
     end?: string
+    presetDays?: number // Track which preset was selected for display purposes
   }
 }
 
@@ -54,8 +78,15 @@ export default function useLatestTransactions(addressId: string): UseLatestTrans
   const fetchPage = useCallback(
     async (currentOffset: number, filters: TransactionFilters = {}) => {
       // Clean up filters - remove empty strings and undefined values
+      // Skip direction, tickNumberRange, amountRange, dateRange, and inputTypeRange as they need special handling
       const cleanFilters = Object.entries(filters).reduce((acc, [key, value]) => {
-        if (key === 'tickNumberRange' || key === 'amountRange') {
+        if (
+          key === 'direction' ||
+          key === 'tickNumberRange' ||
+          key === 'amountRange' ||
+          key === 'dateRange' ||
+          key === 'inputTypeRange'
+        ) {
           return acc
         }
         if (typeof value === 'string' && value.trim() !== '') {
@@ -63,6 +94,13 @@ export default function useLatestTransactions(addressId: string): UseLatestTrans
         }
         return acc
       }, {} as TransactionFilters)
+
+      // Handle direction filter - set source or destination based on direction
+      if (filters.direction === 'incoming') {
+        cleanFilters.destination = addressId
+      } else if (filters.direction === 'outgoing') {
+        cleanFilters.source = addressId
+      }
 
       // Handle amount range - if start equals end, use exact match
       if (
@@ -73,6 +111,15 @@ export default function useLatestTransactions(addressId: string): UseLatestTrans
         cleanFilters.amount = filters.amountRange.start.trim()
       }
 
+      // Handle inputType range - if start equals end, use exact match
+      if (
+        filters.inputTypeRange?.start &&
+        filters.inputTypeRange?.end &&
+        filters.inputTypeRange.start.trim() === filters.inputTypeRange.end.trim()
+      ) {
+        cleanFilters.inputType = filters.inputTypeRange.start.trim()
+      }
+
       // Check if amount range should be used (has values and is not an exact match)
       const hasAmountRange = filters.amountRange?.start || filters.amountRange?.end
       const isExactAmountMatch =
@@ -81,7 +128,26 @@ export default function useLatestTransactions(addressId: string): UseLatestTrans
         filters.amountRange.start.trim() === filters.amountRange.end.trim()
       const shouldUseAmountRange = hasAmountRange && !isExactAmountMatch
 
+      // Check if inputType range should be used (has values and is not an exact match)
+      const hasInputTypeRange = filters.inputTypeRange?.start || filters.inputTypeRange?.end
+      const isExactInputTypeMatch =
+        filters.inputTypeRange?.start &&
+        filters.inputTypeRange?.end &&
+        filters.inputTypeRange.start.trim() === filters.inputTypeRange.end.trim()
+      const shouldUseInputTypeRange = hasInputTypeRange && !isExactInputTypeMatch
+
       const ranges = {
+        // Handle inputType range (when not exact match)
+        ...(shouldUseInputTypeRange && {
+          inputType: {
+            ...(filters.inputTypeRange?.start && filters.inputTypeRange.start.trim() !== ''
+              ? { gte: filters.inputTypeRange.start.trim() }
+              : {}),
+            ...(filters.inputTypeRange?.end && filters.inputTypeRange.end.trim() !== ''
+              ? { lte: filters.inputTypeRange.end.trim() }
+              : {})
+          }
+        }),
         // Handle amount range (when not exact match)
         ...(shouldUseAmountRange && {
           amount: {
@@ -105,18 +171,26 @@ export default function useLatestTransactions(addressId: string): UseLatestTrans
               }
             }
           : {}),
-        ...(filters.dateRange?.start || filters.dateRange?.end
-          ? {
+        // Handle date range - recalculate from presetDays if set (so "Last 24 hours" is always fresh)
+        ...(() => {
+          // If presetDays is set, calculate the start date now (at request time)
+          const startDate =
+            filters.dateRange?.presetDays !== undefined
+              ? getStartDateFromPresetDays(filters.dateRange.presetDays)
+              : filters.dateRange?.start
+
+          if (startDate || filters.dateRange?.end) {
+            return {
               timestamp: {
-                ...(filters.dateRange.start
-                  ? { gte: new Date(filters.dateRange.start).getTime().toString() }
-                  : {}),
-                ...(filters.dateRange.end
+                ...(startDate ? { gte: new Date(startDate).getTime().toString() } : {}),
+                ...(filters.dateRange?.end
                   ? { lte: new Date(filters.dateRange.end).getTime().toString() }
                   : {})
               }
             }
-          : {})
+          }
+          return {}
+        })()
       }
 
       const result: QueryServiceResponse = await getTransactionsForIdentity({
@@ -129,7 +203,10 @@ export default function useLatestTransactions(addressId: string): UseLatestTrans
         }
       }).unwrap()
 
-      return result?.transactions ?? []
+      return {
+        transactions: result?.transactions ?? [],
+        total: result?.hits?.total ?? null
+      }
     },
     [getTransactionsForIdentity, addressId]
   )
@@ -139,7 +216,7 @@ export default function useLatestTransactions(addressId: string): UseLatestTrans
     setIsLoading(true)
 
     try {
-      const newTxs = await fetchPage(offset, activeFilters)
+      const { transactions: newTxs } = await fetchPage(offset, activeFilters)
       if (!cancellationRef.current) {
         if (newTxs.length > 0) {
           setTransactions((prev) => [...prev, ...newTxs])
@@ -188,7 +265,7 @@ export default function useLatestTransactions(addressId: string): UseLatestTrans
     const initialFetch = async () => {
       setIsLoading(true)
       try {
-        const firstPage = await fetchPage(0, activeFilters)
+        const { transactions: firstPage } = await fetchPage(0, activeFilters)
         if (!cancellationRef.current) {
           setTransactions(firstPage)
           setOffset(PAGE_SIZE)
