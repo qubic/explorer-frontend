@@ -31,7 +31,7 @@ export default function AssetsTabs() {
   const [searchParams, setSearchParams] = useSearchParams()
   const [selectedCategory, setSelectedCategory] = useState<CategoryFilter>(ASSET_CATEGORY_SC_SHARES)
   const [categorySelections, setCategorySelections] = useState<Record<string, AssetSelection>>({})
-  const hasInitializedCategory = useRef(false)
+  const [hasInitializedCategory, setHasInitializedCategory] = useState(false)
   const hasInvalidUrlParams = useRef(false)
 
   const assetParam = searchParams.get('asset') || ''
@@ -81,10 +81,7 @@ export default function AssetsTabs() {
 
   // Detect category from URL params on initial load
   useEffect(() => {
-    if (hasInitializedCategory.current || !allAssets.length || !assetParam || !issuerParam) return
-
-    // Mark as initialized to prevent auto-select from overriding URL params
-    hasInitializedCategory.current = true
+    if (hasInitializedCategory || !allAssets.length || !assetParam || !issuerParam) return
 
     const urlAsset = allAssets.find(
       (asset) => asset.name === assetParam && asset.issuerIdentity === issuerParam
@@ -92,21 +89,28 @@ export default function AssetsTabs() {
 
     if (!urlAsset) {
       // URL has invalid asset/issuer combination - mark as invalid to prevent auto-select
+      setHasInitializedCategory(true)
       hasInvalidUrlParams.current = true
       return
     }
 
-    // Check if it's an SC Share
+    // Check if it's an SC Share - no need to wait for categories
     if (isAssetsIssuerAddress(urlAsset.issuerIdentity)) {
+      setHasInitializedCategory(true)
       setSelectedCategory(ASSET_CATEGORY_SC_SHARES)
       return
     }
 
+    // For non-SC assets, wait for categories data before determining category
+    if (!categoriesData?.categories) return
+
+    // Mark as initialized now that we have all necessary data
+    setHasInitializedCategory(true)
+
     // Find the category for non-SC assets
-    const categories = categoriesData?.categories ?? []
-    const detectedCategory = findTokenCategory(urlAsset, categories)
+    const detectedCategory = findTokenCategory(urlAsset, categoriesData.categories)
     setSelectedCategory(detectedCategory)
-  }, [allAssets, assetParam, issuerParam, categoriesData])
+  }, [allAssets, assetParam, issuerParam, categoriesData, hasInitializedCategory])
 
   const filteredAssets = useMemo(() => {
     const categories = categoriesData?.categories ?? []
@@ -135,8 +139,12 @@ export default function AssetsTabs() {
   // Prioritizes remembered selection for the category, then falls back to first asset
   // Exception: SC Shares defaults to QX
   // Skip if URL has invalid params to let the API return an error
+  // Skip if URL params are present but category hasn't been initialized yet (let category detection run first)
   useEffect(() => {
     if (filteredAssets.length === 0 || hasInvalidUrlParams.current) return
+
+    // If URL has asset params but category hasn't been initialized, wait for category detection
+    if (assetParam && issuerParam && !hasInitializedCategory) return
 
     const currentAssetInList = filteredAssets.some(
       (asset) =>
@@ -177,7 +185,10 @@ export default function AssetsTabs() {
     selectedCategory,
     categorySelections,
     handleAssetChange,
-    updateUrlParams
+    updateUrlParams,
+    assetParam,
+    issuerParam,
+    hasInitializedCategory
   ])
 
   const getButtonClasses = (isSelected: boolean) =>
