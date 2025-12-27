@@ -52,15 +52,8 @@ function TxItem({
   }
 
   const txStatus = useMemo(
-    () =>
-      getTxStatus(
-        inputType,
-        Number(amount),
-        !(nonExecutedTxIds || []).includes(txId),
-        sourceId,
-        destId
-      ),
-    [inputType, amount, nonExecutedTxIds, txId, sourceId, destId]
+    () => getTxStatus(inputType, Number(amount), !(nonExecutedTxIds || []).includes(txId), destId),
+    [inputType, amount, nonExecutedTxIds, txId, destId]
   )
 
   const addressLabel = useMemo(() => {

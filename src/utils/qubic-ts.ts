@@ -63,6 +63,9 @@ export const isSmartContractTx = (destination: string, inputType: number): boole
 export const isSendManyTx = (destination: string, inputType: number): boolean =>
   destination === QUTIL_ADDRESS && inputType === 1
 
+export const isSimpleTransfer = (inputType: number, amount: number): boolean =>
+  inputType === 0 && amount > 0
+
 export const isAssetsIssuerAddress = (address: string): boolean => address === ASSETS_ISSUER_ADDRESS
 
 /**
