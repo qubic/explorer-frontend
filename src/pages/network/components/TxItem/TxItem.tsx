@@ -102,7 +102,7 @@ function TxItem({
   if (variant === 'secondary') {
     return (
       <>
-        <div className="mb-24 flex flex-col gap-10 md:flex-row md:items-center md:gap-16">
+        <div className="mb-24 flex items-center gap-10 md:gap-16">
           <TxStatus status={txStatus} />
           <TxLink
             isHistoricalTx={isHistoricalTx}
