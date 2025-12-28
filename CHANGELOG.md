@@ -1,3 +1,17 @@
+# [1.30.0](https://github.com/qubic/explorer-frontend/compare/v1.29.0...v1.30.0) (2025-12-08)
+
+
+### Features
+
+* add tokens category filtering ([#366](https://github.com/qubic/explorer-frontend/issues/366)) ([30fb7ed](https://github.com/qubic/explorer-frontend/commit/30fb7edfb0a1d5acbd46035030fd2597a4251f2a))
+
+# [1.30.0-rc.1](https://github.com/qubic/explorer-frontend/compare/v1.29.0...v1.30.0-rc.1) (2025-12-08)
+
+
+### Features
+
+* add tokens category filtering ([#366](https://github.com/qubic/explorer-frontend/issues/366)) ([30fb7ed](https://github.com/qubic/explorer-frontend/commit/30fb7edfb0a1d5acbd46035030fd2597a4251f2a))
+
 # [1.29.0](https://github.com/qubic/explorer-frontend/compare/v1.28.0...v1.29.0) (2025-11-19)
 
 
