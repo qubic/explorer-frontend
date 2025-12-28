@@ -13,8 +13,10 @@ export default function Tooltip({ tooltipId, children, content }: Props) {
   const tooltipIdWithId = useMemo(() => `${tooltipId}-${id}-tooltip`, [tooltipId, id])
 
   return (
-    <div className="group relative h-fit w-fit">
-      <div data-tooltip-id={tooltipIdWithId}>{children}</div>
+    <div className="group relative flex h-fit w-fit items-center">
+      <div className="flex items-center" data-tooltip-id={tooltipIdWithId}>
+        {children}
+      </div>
       <ReactTooltip
         id={tooltipIdWithId}
         style={{
