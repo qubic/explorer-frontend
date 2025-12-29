@@ -1,5 +1,6 @@
 import type { TokenCategory } from '@app/store/apis/qubic-static'
 
+export const TOKEN_CATEGORY_ALL = 'all'
 export const TOKEN_CATEGORY_STANDARD = 'standard'
 
 export type CategoryFilter = typeof TOKEN_CATEGORY_STANDARD | string

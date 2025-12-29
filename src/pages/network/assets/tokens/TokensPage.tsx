@@ -8,6 +8,7 @@ import { useTailwindBreakpoint } from '@app/hooks'
 import { useGetAssetsIssuancesQuery } from '@app/store/apis/rpc-live'
 import { useGetTokenCategoriesQuery } from '@app/store/apis/qubic-static'
 import {
+  TOKEN_CATEGORY_ALL,
   TOKEN_CATEGORY_STANDARD,
   isAssetsIssuerAddress,
   type CategoryFilter,
@@ -15,8 +16,6 @@ import {
 } from '@app/utils'
 import { HomeLink } from '../../components'
 import { CategoryChips, TokenRow, TokensErrorRow, TokenSkeletonRow } from './components'
-
-const CATEGORY_ALL = 'all'
 
 const TokensLoadingRows = memo(() =>
   Array.from({ length: 5 }).map((_, index) => <TokenSkeletonRow key={String(`${index}`)} />)
@@ -41,7 +40,7 @@ function TokensPage() {
   const tokens = useMemo(() => {
     const categories = categoriesData?.categories ?? []
 
-    if (selectedCategory === CATEGORY_ALL) {
+    if (selectedCategory === TOKEN_CATEGORY_ALL) {
       return allTokens
     }
 
