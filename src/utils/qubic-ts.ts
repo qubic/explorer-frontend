@@ -7,6 +7,12 @@ export const { QUTIL_ADDRESS, ARBITRATOR, EMPTY_ADDRESS, QX_ADDRESS } = QubicDef
 
 export const ASSETS_ISSUER_ADDRESS = EMPTY_ADDRESS
 
+// Asset category constant for Smart Contract Shares in asset filtering UI
+export const ASSET_CATEGORY_SC_SHARES = 'sc-shares'
+
+// QX asset name constant
+export const QX_ASSET_NAME = 'QX'
+
 export type Transfer = {
   amount: string
   destId: string

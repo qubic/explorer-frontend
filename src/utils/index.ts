@@ -20,5 +20,6 @@ export * from './date'
 export * from './qubic-ts'
 export * from './format'
 export * from './styles'
+export * from './token-categories'
 export * from './transactions'
 export { copyText }

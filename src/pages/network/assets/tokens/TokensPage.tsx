@@ -6,70 +6,25 @@ import { Breadcrumbs } from '@app/components/ui'
 import { PageLayout } from '@app/components/ui/layouts'
 import { useTailwindBreakpoint } from '@app/hooks'
 import { useGetAssetsIssuancesQuery } from '@app/store/apis/rpc-live'
-import type { TokenCategory } from '@app/store/apis/qubic-static'
 import { useGetTokenCategoriesQuery } from '@app/store/apis/qubic-static'
-import { ASSETS_ISSUER_ADDRESS } from '@app/utils/qubic-ts'
-import { HomeLink } from '../../components'
 import {
-  CATEGORY_ALL,
-  CATEGORY_STANDARD,
-  CategoryChips,
+  TOKEN_CATEGORY_ALL,
+  TOKEN_CATEGORY_STANDARD,
+  isAssetsIssuerAddress,
   type CategoryFilter,
-  TokenRow,
-  TokensErrorRow,
-  TokenSkeletonRow
-} from './components'
+  filterTokensByCategory
+} from '@app/utils'
+import { HomeLink } from '../../components'
+import { CategoryChips, TokenRow, TokensErrorRow, TokenSkeletonRow } from './components'
 
 const TokensLoadingRows = memo(() =>
   Array.from({ length: 5 }).map((_, index) => <TokenSkeletonRow key={String(`${index}`)} />)
 )
 
-const matchesCategory = (
-  token: { name: string; issuerIdentity: string },
-  category: TokenCategory
-): boolean => {
-  const { rules } = category
-
-  if (!rules) {
-    return false
-  }
-
-  const { nameRegex, issuerRegex, matchAll = true } = rules
-
-  // If no patterns defined, no match
-  if (!nameRegex && !issuerRegex) {
-    return false
-  }
-
-  const nameMatches = nameRegex ? new RegExp(nameRegex).test(token.name) : undefined
-  const issuerMatches = issuerRegex ? new RegExp(issuerRegex).test(token.issuerIdentity) : undefined
-
-  // If only one pattern is defined, use that result
-  if (nameMatches !== undefined && issuerMatches === undefined) {
-    return nameMatches
-  }
-  if (issuerMatches !== undefined && nameMatches === undefined) {
-    return issuerMatches
-  }
-
-  // Both patterns defined - use matchAll for AND/OR logic
-  if (matchAll) {
-    return nameMatches === true && issuerMatches === true
-  }
-  return nameMatches === true || issuerMatches === true
-}
-
-const isStandardToken = (
-  token: { name: string; issuerIdentity: string },
-  categories: TokenCategory[]
-): boolean => {
-  return !categories.some((category) => matchesCategory(token, category))
-}
-
 function TokensPage() {
   const { t } = useTranslation('network-page')
   const { isMobile } = useTailwindBreakpoint()
-  const [selectedCategory, setSelectedCategory] = useState<CategoryFilter>(CATEGORY_STANDARD)
+  const [selectedCategory, setSelectedCategory] = useState<CategoryFilter>(TOKEN_CATEGORY_STANDARD)
 
   const { data, isLoading, error } = useGetAssetsIssuancesQuery()
   const { data: categoriesData } = useGetTokenCategoriesQuery()
@@ -77,7 +32,7 @@ function TokensPage() {
   const allTokens = useMemo(
     () =>
       data?.assets
-        .filter(({ data: asset }) => asset.issuerIdentity !== ASSETS_ISSUER_ADDRESS)
+        .filter(({ data: asset }) => !isAssetsIssuerAddress(asset.issuerIdentity))
         .sort((a, b) => a.data.name.localeCompare(b.data.name)) ?? [],
     [data]
   )
@@ -85,22 +40,23 @@ function TokensPage() {
   const tokens = useMemo(() => {
     const categories = categoriesData?.categories ?? []
 
-    let filtered = allTokens
-
-    if (selectedCategory === CATEGORY_STANDARD) {
-      filtered = allTokens.filter(({ data: token }) =>
-        isStandardToken({ name: token.name, issuerIdentity: token.issuerIdentity }, categories)
-      )
-    } else if (selectedCategory !== CATEGORY_ALL) {
-      const category = categories.find((cat) => cat.id === selectedCategory)
-      if (category) {
-        filtered = allTokens.filter(({ data: token }) =>
-          matchesCategory({ name: token.name, issuerIdentity: token.issuerIdentity }, category)
-        )
-      }
+    if (selectedCategory === TOKEN_CATEGORY_ALL) {
+      return allTokens
     }
 
-    return [...filtered].sort((a, b) => a.data.name.localeCompare(b.data.name))
+    const tokenData = allTokens.map(({ data: token }) => ({
+      name: token.name,
+      issuerIdentity: token.issuerIdentity
+    }))
+
+    const filteredTokenData = filterTokensByCategory(tokenData, selectedCategory, categories)
+    const filteredNames = new Set(
+      filteredTokenData.map((token) => `${token.name}-${token.issuerIdentity}`)
+    )
+
+    return allTokens.filter(({ data: token }) =>
+      filteredNames.has(`${token.name}-${token.issuerIdentity}`)
+    )
   }, [allTokens, categoriesData, selectedCategory])
 
   const renderTableContent = useCallback(() => {
@@ -136,6 +92,7 @@ function TokensPage() {
             categoriesData={categoriesData}
             selectedCategory={selectedCategory}
             onCategoryChange={setSelectedCategory}
+            showAll
           />
         )}
         <div className="w-full rounded-12 border-1 border-primary-60 bg-primary-70">
