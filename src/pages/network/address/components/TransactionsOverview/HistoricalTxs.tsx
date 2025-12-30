@@ -6,12 +6,12 @@ import { InfiniteScroll } from '@app/components/ui'
 import { Button } from '@app/components/ui/buttons'
 import { DotsLoader } from '@app/components/ui/loaders'
 import { useTransactionExpandCollapse } from '@app/hooks'
-import type { TransactionWithType } from '@app/types'
+import type { Transaction } from '@app/store/apis/archiver-v2'
 import { TxItem } from '../../../components'
 
 type Props = {
   addressId: string
-  transactions: TransactionWithType[]
+  transactions: Transaction[]
   loadMore: () => Promise<void>
   hasMore: boolean
   isLoading: boolean
@@ -36,7 +36,7 @@ export default function HistoricalTxs({
     })
 
   const renderTxItem = useCallback(
-    ({ transaction, moneyFlew }: TransactionWithType) => (
+    ({ transaction, moneyFlew }: Transaction) => (
       <TxItem
         key={transaction.txId}
         tx={transaction}

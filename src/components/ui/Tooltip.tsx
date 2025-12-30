@@ -29,7 +29,8 @@ export default function Tooltip({ tooltipId, children, content }: Props) {
           whiteSpace: 'normal', // Allows text to break to the next line
           lineHeight: '1.5', // Adds spacing between lines
           padding: '5px', // Adds padding inside the tooltip
-          boxSizing: 'border-box' // Ensures padding doesn't overflow the tooltip
+          boxSizing: 'border-box', // Ensures padding doesn't overflow the tooltip
+          zIndex: 9999 // Ensures tooltip appears above other elements
         }}
         opacity={100}
       >

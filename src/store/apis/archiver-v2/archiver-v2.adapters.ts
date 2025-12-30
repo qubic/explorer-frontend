@@ -1,8 +1,2 @@
-import type { TransactionWithType } from '@app/types'
-import { getTxType } from '@app/utils'
-import type { Transaction } from './archiver-v2.types'
-
-export const convertArchiverTxToTxWithType = (tx: Transaction): TransactionWithType => ({
-  ...tx,
-  txType: getTxType(tx.transaction)
-})
+// This file is kept for potential future adapter functions
+// Currently no adapters are needed as Transaction type is used directly

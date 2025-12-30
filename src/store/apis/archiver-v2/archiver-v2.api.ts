@@ -1,14 +1,13 @@
 import { envConfig } from '@app/configs'
-import type { TransactionWithType } from '@app/types'
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-import { convertArchiverTxToTxWithType } from './archiver-v2.adapters'
 import type {
   GetEpochTicksArgs,
   GetEpochTicksResponse,
   GetIdentityTransfersArgs,
   GetIdentityTransfersResponse,
   GetTickTransactionsArgs,
-  GetTickTransactionsResponse
+  GetTickTransactionsResponse,
+  Transaction
 } from './archiver-v2.types'
 
 const BASE_URL = `${envConfig.QUBIC_RPC_URL}/v2`
@@ -18,9 +17,8 @@ export const archiverV2Api = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: BASE_URL }),
   endpoints: (builder) => ({
     // Transactions
-    getTransaction: builder.query<TransactionWithType, string>({
-      query: (txId) => `transactions/${txId}`,
-      transformResponse: convertArchiverTxToTxWithType
+    getTransaction: builder.query<Transaction, string>({
+      query: (txId) => `transactions/${txId}`
     }),
     // Identity Transfers
     getIndentityTransfers: builder.query<
