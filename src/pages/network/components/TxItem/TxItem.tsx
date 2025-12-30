@@ -52,7 +52,8 @@ function TxItem({
   }
 
   const txStatus = useMemo(
-    () => getTxStatus(inputType, Number(amount), !(nonExecutedTxIds || []).includes(hash), destination),
+    () =>
+      getTxStatus(inputType, Number(amount), !(nonExecutedTxIds || []).includes(hash), destination),
     [inputType, amount, nonExecutedTxIds, hash, destination]
   )
 
