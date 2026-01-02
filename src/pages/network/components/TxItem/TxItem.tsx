@@ -105,7 +105,7 @@ function TxItem({
           />
         </div>
         <TransactionDetails
-          txDetails={{ txId, sourceId, tickNumber, destId, inputType, amount }}
+          txDetails={{ txId, sourceId, tickNumber, destId, inputType, amount, inputHex }}
           isHistoricalTx={isHistoricalTx}
           variant={variant}
           entries={entries}
@@ -167,7 +167,7 @@ function TxItem({
       </div>
       {detailsOpen && (
         <TransactionDetails
-          txDetails={{ txId, sourceId, tickNumber, destId, inputType, amount }}
+          txDetails={{ txId, sourceId, tickNumber, destId, inputType, amount, inputHex }}
           isHistoricalTx={isHistoricalTx}
           variant={variant}
           entries={entries}
