@@ -129,6 +129,7 @@
   "invalidRangeInputType": "La valeur minimale doit être inférieure ou égale à la valeur maximale",
   "invalidTickRange": "Le tick de début doit être inférieur au tick de fin",
   "invalidDateRange": "La date de début doit être antérieure à la date de fin",
+  "invalidAddressFormat": "L'adresse doit contenir 60 lettres majuscules",
   "destinationFilterHint": "Pour les transactions de contrats intelligents, il s'agit de l'adresse du contrat, pas du destinataire final du jeton.",
   "amountFilterHint": "Montant de la transaction en QUBIC.",
   "customRange": "Plage personnalisée",

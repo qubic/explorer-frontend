@@ -129,6 +129,7 @@
   "invalidRangeInputType": "O valor mínimo deve ser menor ou igual ao valor máximo",
   "invalidTickRange": "O tick inicial deve ser menor que o tick final",
   "invalidDateRange": "A data inicial deve ser anterior à data final",
+  "invalidAddressFormat": "O endereço deve conter 60 letras maiúsculas",
   "destinationFilterHint": "Para transações de contratos inteligentes, este é o endereço do contrato, não o destinatário final do token.",
   "amountFilterHint": "Valor da transação em QUBIC.",
   "customRange": "Intervalo personalizado",

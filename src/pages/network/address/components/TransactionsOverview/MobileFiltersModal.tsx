@@ -1,18 +1,16 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { ArrowDownIcon, ArrowUpIcon, XmarkIcon } from '@app/assets/icons'
-import { DateTimeInput, Modal } from '@app/components/ui'
-import { clsxTwMerge } from '@app/utils'
+import { XmarkIcon } from '@app/assets/icons'
+import { Modal } from '@app/components/ui'
+import { isValidAddressFormat } from '@app/utils'
 import type { TransactionDirection, TransactionFilters } from '../../hooks/useLatestTransactions'
-import {
-  AMOUNT_PRESETS,
-  DATE_PRESETS,
-  DIRECTION_OPTIONS,
-  formatAmountForDisplay,
-  getStartDateFromDays,
-  parseAmountFromDisplay
-} from './filterUtils'
+import AddressFilterContent from './AddressFilterContent'
+import AmountFilterContent from './AmountFilterContent'
+import DateFilterContent from './DateFilterContent'
+import DirectionControl from './DirectionControl'
+import RangeFilterContent from './RangeFilterContent'
+import { getStartDateFromDays } from './filterUtils'
 
 type Props = {
   isOpen: boolean
@@ -58,6 +56,18 @@ export default function MobileFiltersModal({
   const handleApplyAllFilters = useCallback(() => {
     // Validate before applying
     let hasError = false
+
+    // Validate source address
+    if (localFilters.source && !isValidAddressFormat(localFilters.source)) {
+      setValidationErrors((prev) => ({ ...prev, source: t('invalidAddressFormat') }))
+      hasError = true
+    }
+
+    // Validate destination address
+    if (localFilters.destination && !isValidAddressFormat(localFilters.destination)) {
+      setValidationErrors((prev) => ({ ...prev, destination: t('invalidAddressFormat') }))
+      hasError = true
+    }
 
     // Validate amount range
     if (localFilters.amountRange?.start && localFilters.amountRange?.end) {
@@ -124,47 +134,6 @@ export default function MobileFiltersModal({
     setValidationErrors({})
   }, [localFilters, onApplyFilters, onClose, t])
 
-  // Direction segmented control
-  const renderDirectionSegmentedControl = () => (
-    <div className="inline-flex rounded border border-primary-60">
-      {DIRECTION_OPTIONS.map((option, index) => {
-        const isSelected = localFilters.direction === option.value
-        const isFirst = index === 0
-        const isLast = index === DIRECTION_OPTIONS.length - 1
-
-        return (
-          <button
-            key={option.labelKey}
-            type="button"
-            onClick={() => handleDirectionChange(option.value)}
-            className={clsxTwMerge(
-              'flex w-40 items-center justify-center gap-4 py-5 font-space text-xs font-medium transition duration-300',
-              isFirst && 'rounded-l',
-              isLast && 'rounded-r',
-              !isFirst && 'border-l border-primary-60',
-              isSelected ? 'bg-primary-30 text-primary-80' : 'text-gray-100 hover:bg-primary-60/60'
-            )}
-          >
-            {option.value === 'incoming' && (
-              <ArrowDownIcon
-                className={clsxTwMerge(
-                  'size-14',
-                  isSelected ? 'text-primary-80' : 'text-success-30'
-                )}
-              />
-            )}
-            {option.value === 'outgoing' && (
-              <ArrowUpIcon
-                className={clsxTwMerge('size-14', isSelected ? 'text-primary-80' : 'text-error-30')}
-              />
-            )}
-            {option.value === undefined && <span>{t(option.labelKey)}</span>}
-          </button>
-        )
-      })}
-    </div>
-  )
-
   return (
     <Modal
       id="mobile-filters-modal"
@@ -196,319 +165,100 @@ export default function MobileFiltersModal({
             {/* Direction */}
             <div>
               <h3 className="mb-8 text-sm font-medium text-white">{t('direction')}</h3>
-              {renderDirectionSegmentedControl()}
+              <DirectionControl value={localFilters.direction} onChange={handleDirectionChange} />
             </div>
 
             {/* Source */}
             <div>
               <h3 className="mb-8 text-sm font-medium text-white">{t('source')}</h3>
-              <input
+              <AddressFilterContent
                 id="filter-source"
-                type="text"
-                value={localFilters.source || ''}
-                onChange={(e) => setLocalFilters((prev) => ({ ...prev, source: e.target.value }))}
-                placeholder={t('addressPlaceholder')}
-                className="w-full rounded bg-primary-60 px-10 py-6 text-xs text-white placeholder-gray-50 focus:outline-none focus:ring-1 focus:ring-primary-30"
+                value={localFilters.source}
+                onChange={(value) => setLocalFilters((prev) => ({ ...prev, source: value }))}
+                onApply={() => {}}
+                showApplyButton={false}
+                error={validationErrors.source}
               />
             </div>
 
             {/* Destination */}
             <div>
               <h3 className="mb-8 text-sm font-medium text-white">{t('destination')}*</h3>
-              <input
+              <AddressFilterContent
                 id="filter-destination"
-                type="text"
-                value={localFilters.destination || ''}
-                onChange={(e) =>
-                  setLocalFilters((prev) => ({ ...prev, destination: e.target.value }))
-                }
-                placeholder={t('addressPlaceholder')}
-                className="w-full rounded bg-primary-60 px-10 py-6 text-xs text-white placeholder-gray-50 focus:outline-none focus:ring-1 focus:ring-primary-30"
+                value={localFilters.destination}
+                onChange={(value) => setLocalFilters((prev) => ({ ...prev, destination: value }))}
+                onApply={() => {}}
+                showApplyButton={false}
+                hint={t('destinationFilterHint')}
+                error={validationErrors.destination}
               />
-              <p className="mt-6 text-xs italic text-gray-50">*{t('destinationFilterHint')}</p>
             </div>
 
             {/* Amount */}
             <div>
               <h3 className="mb-8 text-sm font-medium text-white">{t('amount')}</h3>
-              <div className="space-y-12">
-                {/* Preset chips */}
-                <div className="flex flex-wrap gap-6">
-                  {AMOUNT_PRESETS.map((preset) => {
-                    const isSelected = localFilters.amountRange?.presetKey === preset.labelKey
-                    const presetLabel = t(preset.labelKey)
-                    return (
-                      <button
-                        key={preset.labelKey}
-                        type="button"
-                        aria-label={presetLabel}
-                        onClick={() =>
-                          setLocalFilters((prev) => ({
-                            ...prev,
-                            amountRange: {
-                              start: preset.start,
-                              end: preset.end,
-                              presetKey: preset.labelKey
-                            }
-                          }))
-                        }
-                        className={clsxTwMerge(
-                          'rounded-full border px-8 py-4 text-xs transition-colors',
-                          isSelected
-                            ? 'border-primary-30 bg-primary-60 text-primary-30'
-                            : 'border-primary-60 text-gray-50 hover:border-primary-50 hover:text-white'
-                        )}
-                      >
-                        {presetLabel}
-                      </button>
-                    )
-                  })}
-                </div>
-                {/* Range inputs */}
-                <div className="space-y-8">
-                  <div className="flex gap-8">
-                    <div className="flex-1">
-                      <label
-                        htmlFor="filter-amount-min"
-                        className="mb-4 block text-xs text-gray-50"
-                      >
-                        {t('minAmount')}
-                      </label>
-                      <input
-                        id="filter-amount-min"
-                        type="text"
-                        inputMode="numeric"
-                        value={
-                          localFilters.amountRange?.presetKey
-                            ? ''
-                            : formatAmountForDisplay(localFilters.amountRange?.start)
-                        }
-                        onChange={(e) => {
-                          const rawValue = parseAmountFromDisplay(e.target.value)
-                          setLocalFilters((prev) => ({
-                            ...prev,
-                            amountRange: {
-                              ...prev.amountRange,
-                              start: rawValue || undefined,
-                              presetKey: undefined
-                            }
-                          }))
-                        }}
-                        className="w-full rounded bg-primary-60 px-10 py-6 text-right text-xs text-white placeholder-gray-50 focus:outline-none focus:ring-1 focus:ring-primary-30"
-                      />
-                    </div>
-                    <div className="flex-1">
-                      <label
-                        htmlFor="filter-amount-max"
-                        className="mb-4 block text-xs text-gray-50"
-                      >
-                        {t('maxAmount')}
-                      </label>
-                      <input
-                        id="filter-amount-max"
-                        type="text"
-                        inputMode="numeric"
-                        value={
-                          localFilters.amountRange?.presetKey
-                            ? ''
-                            : formatAmountForDisplay(localFilters.amountRange?.end)
-                        }
-                        onChange={(e) => {
-                          const rawValue = parseAmountFromDisplay(e.target.value)
-                          setLocalFilters((prev) => ({
-                            ...prev,
-                            amountRange: {
-                              ...prev.amountRange,
-                              end: rawValue || undefined,
-                              presetKey: undefined
-                            }
-                          }))
-                        }}
-                        className="w-full rounded bg-primary-60 px-10 py-6 text-right text-xs text-white placeholder-gray-50 focus:outline-none focus:ring-1 focus:ring-primary-30"
-                      />
-                    </div>
-                  </div>
-                  {validationErrors.amount && (
-                    <p className="text-xs text-red-400">{validationErrors.amount}</p>
-                  )}
-                </div>
-              </div>
+              <AmountFilterContent
+                idPrefix="filter-amount-mobile"
+                value={localFilters.amountRange}
+                onChange={(value) => setLocalFilters((prev) => ({ ...prev, amountRange: value }))}
+                onApply={() => {}}
+                selectedPresetKey={localFilters.amountRange?.presetKey}
+                error={validationErrors.amount}
+                showApplyButton={false}
+                layout="horizontal"
+              />
             </div>
 
             {/* Date */}
             <div>
               <h3 className="mb-8 text-sm font-medium text-white">{t('date')}</h3>
-              <div className="space-y-12">
-                {/* Preset chips */}
-                <div className="flex flex-wrap gap-6">
-                  {DATE_PRESETS.map((preset) => {
-                    const isSelected = localFilters.dateRange?.presetDays === preset.days
-                    return (
-                      <button
-                        key={`${preset.labelKey}-${preset.days}`}
-                        type="button"
-                        aria-label={
-                          preset.daysCount
-                            ? t(preset.labelKey, { count: preset.daysCount })
-                            : t(preset.labelKey)
-                        }
-                        onClick={() => {
-                          setLocalFilters((prev) => ({
-                            ...prev,
-                            dateRange: { start: undefined, end: undefined, presetDays: preset.days }
-                          }))
-                        }}
-                        className={clsxTwMerge(
-                          'rounded-full border px-8 py-4 text-xs transition-colors',
-                          isSelected
-                            ? 'border-primary-30 bg-primary-60 text-primary-30'
-                            : 'border-primary-60 text-gray-50 hover:border-primary-50 hover:text-white'
-                        )}
-                      >
-                        {preset.daysCount
-                          ? t(preset.labelKey, { count: preset.daysCount })
-                          : t(preset.labelKey)}
-                      </button>
-                    )
-                  })}
-                </div>
-                {/* Range inputs */}
-                <div className="space-y-8">
-                  <DateTimeInput
-                    id="filter-date-start"
-                    label={t('startDate')}
-                    value={localFilters.dateRange?.start}
-                    defaultTime="00:00:00"
-                    onChange={(datetime) =>
-                      setLocalFilters((prev) => ({
-                        ...prev,
-                        dateRange: { ...prev.dateRange, start: datetime, presetDays: undefined }
-                      }))
-                    }
-                  />
-                  <DateTimeInput
-                    id="filter-date-end"
-                    label={t('endDate')}
-                    value={localFilters.dateRange?.end}
-                    defaultTime="23:59:59"
-                    onChange={(datetime) =>
-                      setLocalFilters((prev) => ({
-                        ...prev,
-                        dateRange: { ...prev.dateRange, end: datetime, presetDays: undefined }
-                      }))
-                    }
-                  />
-                  {validationErrors.date && (
-                    <p className="text-xs text-red-400">{validationErrors.date}</p>
-                  )}
-                </div>
-              </div>
+              <DateFilterContent
+                idPrefix="filter-date-mobile"
+                value={localFilters.dateRange}
+                onChange={(value) => setLocalFilters((prev) => ({ ...prev, dateRange: value }))}
+                onApply={() => {}}
+                selectedPresetDays={localFilters.dateRange?.presetDays}
+                error={validationErrors.date}
+                showApplyButton={false}
+              />
             </div>
 
             {/* Input Type */}
             <div>
               <h3 className="mb-8 text-sm font-medium text-white">{t('inputType')}</h3>
-              <div className="space-y-8">
-                <div className="flex gap-8">
-                  <div className="flex-1">
-                    <label
-                      htmlFor="filter-inputtype-start"
-                      className="mb-4 block text-xs text-gray-50"
-                    >
-                      {t('minInputType')}
-                    </label>
-                    <input
-                      id="filter-inputtype-start"
-                      type="text"
-                      inputMode="numeric"
-                      value={localFilters.inputTypeRange?.start || ''}
-                      onChange={(e) => {
-                        const rawValue = parseAmountFromDisplay(e.target.value)
-                        setLocalFilters((prev) => ({
-                          ...prev,
-                          inputTypeRange: { ...prev.inputTypeRange, start: rawValue || undefined }
-                        }))
-                      }}
-                      className="w-full rounded bg-primary-60 px-10 py-6 text-right text-xs text-white placeholder-gray-50 focus:outline-none focus:ring-1 focus:ring-primary-30"
-                    />
-                  </div>
-                  <div className="flex-1">
-                    <label
-                      htmlFor="filter-inputtype-end"
-                      className="mb-4 block text-xs text-gray-50"
-                    >
-                      {t('maxInputType')}
-                    </label>
-                    <input
-                      id="filter-inputtype-end"
-                      type="text"
-                      inputMode="numeric"
-                      value={localFilters.inputTypeRange?.end || ''}
-                      onChange={(e) => {
-                        const rawValue = parseAmountFromDisplay(e.target.value)
-                        setLocalFilters((prev) => ({
-                          ...prev,
-                          inputTypeRange: { ...prev.inputTypeRange, end: rawValue || undefined }
-                        }))
-                      }}
-                      className="w-full rounded bg-primary-60 px-10 py-6 text-right text-xs text-white placeholder-gray-50 focus:outline-none focus:ring-1 focus:ring-primary-30"
-                    />
-                  </div>
-                </div>
-                {validationErrors.inputType && (
-                  <p className="text-xs text-red-400">{validationErrors.inputType}</p>
-                )}
-              </div>
+              <RangeFilterContent
+                idPrefix="filter-inputtype-mobile"
+                value={localFilters.inputTypeRange}
+                onChange={(value) =>
+                  setLocalFilters((prev) => ({ ...prev, inputTypeRange: value }))
+                }
+                onApply={() => {}}
+                startLabel={t('minInputType')}
+                endLabel={t('maxInputType')}
+                error={validationErrors.inputType}
+                showApplyButton={false}
+                layout="horizontal"
+                formatDisplay={false}
+              />
             </div>
 
             {/* Tick */}
             <div id="mobile-tick-filter">
               <h3 className="mb-8 text-sm font-medium text-white">{t('tick')}</h3>
-              <div className="space-y-8">
-                <div className="flex gap-8">
-                  <div className="flex-1">
-                    <label htmlFor="filter-tick-start" className="mb-4 block text-xs text-gray-50">
-                      {t('startTick')}
-                    </label>
-                    <input
-                      id="filter-tick-start"
-                      type="text"
-                      inputMode="numeric"
-                      value={formatAmountForDisplay(localFilters.tickNumberRange?.start)}
-                      onChange={(e) => {
-                        const rawValue = parseAmountFromDisplay(e.target.value)
-                        setLocalFilters((prev) => ({
-                          ...prev,
-                          tickNumberRange: { ...prev.tickNumberRange, start: rawValue || undefined }
-                        }))
-                      }}
-                      className="w-full rounded bg-primary-60 px-10 py-6 text-right text-xs text-white placeholder-gray-50 focus:outline-none focus:ring-1 focus:ring-primary-30"
-                    />
-                  </div>
-                  <div className="flex-1">
-                    <label htmlFor="filter-tick-end" className="mb-4 block text-xs text-gray-50">
-                      {t('endTick')}
-                    </label>
-                    <input
-                      id="filter-tick-end"
-                      type="text"
-                      inputMode="numeric"
-                      value={formatAmountForDisplay(localFilters.tickNumberRange?.end)}
-                      onChange={(e) => {
-                        const rawValue = parseAmountFromDisplay(e.target.value)
-                        setLocalFilters((prev) => ({
-                          ...prev,
-                          tickNumberRange: { ...prev.tickNumberRange, end: rawValue || undefined }
-                        }))
-                      }}
-                      className="w-full rounded bg-primary-60 px-10 py-6 text-right text-xs text-white placeholder-gray-50 focus:outline-none focus:ring-1 focus:ring-primary-30"
-                    />
-                  </div>
-                </div>
-                {validationErrors.tick && (
-                  <p className="text-xs text-red-400">{validationErrors.tick}</p>
-                )}
-              </div>
+              <RangeFilterContent
+                idPrefix="filter-tick-mobile"
+                value={localFilters.tickNumberRange}
+                onChange={(value) =>
+                  setLocalFilters((prev) => ({ ...prev, tickNumberRange: value }))
+                }
+                onApply={() => {}}
+                startLabel={t('startTick')}
+                endLabel={t('endTick')}
+                error={validationErrors.tick}
+                showApplyButton={false}
+                layout="horizontal"
+              />
             </div>
           </div>
         </div>

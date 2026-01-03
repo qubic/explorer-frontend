@@ -1,22 +1,23 @@
 import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { ArrowDownIcon, ArrowUpIcon, FunnelIcon, UndoIcon } from '@app/assets/icons'
-import { DateTimeInput } from '@app/components/ui'
+import { FunnelIcon, UndoIcon } from '@app/assets/icons'
 import Tooltip from '@app/components/ui/Tooltip'
-import { clsxTwMerge } from '@app/utils'
 import type { TransactionDirection, TransactionFilters } from '../../hooks/useLatestTransactions'
 import ActiveFilterChip from './ActiveFilterChip'
+import AddressFilterContent from './AddressFilterContent'
+import AmountFilterContent from './AmountFilterContent'
+import DateFilterContent from './DateFilterContent'
+import DirectionControl from './DirectionControl'
 import FilterDropdown from './FilterDropdown'
 import MobileFiltersModal from './MobileFiltersModal'
+import RangeFilterContent from './RangeFilterContent'
 import {
   AMOUNT_PRESETS,
   DATE_PRESETS,
-  DIRECTION_OPTIONS,
   formatAmountForDisplay,
   formatAmountShort,
-  getStartDateFromDays,
-  parseAmountFromDisplay
+  getStartDateFromDays
 } from './filterUtils'
 
 type Props = {
@@ -139,7 +140,7 @@ export default function TransactionFiltersBar({
   )
 
   const handleApplyAmountPreset = useCallback(
-    (preset: { labelKey: string; start: string; end: string | undefined }) => {
+    (preset: { labelKey: string; start?: string; end?: string }) => {
       const newFilters = {
         ...activeFilters,
         amountRange: { start: preset.start, end: preset.end, presetKey: preset.labelKey }
@@ -323,72 +324,6 @@ export default function TransactionFiltersBar({
     setLocalFilters(newFilters)
   }, [activeFilters, onApplyFilters])
 
-  // Segmented control for direction filter
-  const renderDirectionSegmentedControl = (showTooltips: boolean) => (
-    <div className="inline-flex rounded border border-primary-60">
-      {DIRECTION_OPTIONS.map((option, index) => {
-        const isSelected = activeFilters.direction === option.value
-        const isFirst = index === 0
-        const isLast = index === DIRECTION_OPTIONS.length - 1
-
-        const buttonContent = (
-          <button
-            key={option.labelKey}
-            type="button"
-            onClick={() => handleDirectionChange(option.value)}
-            className={clsxTwMerge(
-              'flex w-40 items-center justify-center gap-4 py-5 font-space text-xs font-medium transition duration-300',
-              isFirst && 'rounded-l',
-              isLast && 'rounded-r',
-              !isFirst && 'border-l border-primary-60',
-              isSelected ? 'bg-primary-30 text-primary-80' : 'text-gray-100 hover:bg-primary-60/60'
-            )}
-          >
-            {option.value === 'incoming' && (
-              <ArrowDownIcon
-                className={clsxTwMerge(
-                  'size-14',
-                  isSelected ? 'text-primary-80' : 'text-success-30'
-                )}
-              />
-            )}
-            {option.value === 'outgoing' && (
-              <ArrowUpIcon
-                className={clsxTwMerge('size-14', isSelected ? 'text-primary-80' : 'text-error-30')}
-              />
-            )}
-            {option.value === undefined && <span>{t(option.labelKey)}</span>}
-          </button>
-        )
-
-        if (showTooltips && option.value === 'incoming') {
-          return (
-            <Tooltip
-              key={option.labelKey}
-              tooltipId="direction-incoming"
-              content={t('directionIncomingTooltip')}
-            >
-              {buttonContent}
-            </Tooltip>
-          )
-        }
-        if (showTooltips && option.value === 'outgoing') {
-          return (
-            <Tooltip
-              key={option.labelKey}
-              tooltipId="direction-outgoing"
-              content={t('directionOutgoingTooltip')}
-            >
-              {buttonContent}
-            </Tooltip>
-          )
-        }
-
-        return buttonContent
-      })}
-    </div>
-  )
-
   return (
     <>
       {/* Mobile: Filters button on top, active filter chips below */}
@@ -448,7 +383,11 @@ export default function TransactionFiltersBar({
       <div className="mb-16 hidden w-full flex-wrap items-center gap-8 sm:flex">
         <FunnelIcon className="h-16 w-16 text-gray-50" />
 
-        {renderDirectionSegmentedControl(true)}
+        <DirectionControl
+          value={activeFilters.direction}
+          onChange={handleDirectionChange}
+          showTooltips
+        />
 
         {/* Source Filter */}
         <FilterDropdown
@@ -459,28 +398,17 @@ export default function TransactionFiltersBar({
           onClear={isSourceActive ? clearSourceFilter : undefined}
           contentClassName="min-w-[300px]"
         >
-          <div className="space-y-12">
-            <input
-              id="filter-source-desktop-standalone"
-              type="text"
-              value={localFilters.source || ''}
-              onChange={(e) => setLocalFilters((prev) => ({ ...prev, source: e.target.value }))}
-              placeholder={t('addressPlaceholder')}
-              className="w-full rounded bg-primary-60 px-10 py-6 text-xs text-white placeholder-gray-50 focus:outline-none focus:ring-1 focus:ring-primary-30"
-            />
-            <button
-              type="button"
-              onClick={() => {
-                const newFilters = { ...activeFilters, source: localFilters.source || undefined }
-                onApplyFilters(newFilters)
-                setLocalFilters(newFilters)
-                setOpenDropdown(null)
-              }}
-              className="w-full rounded bg-primary-30 px-10 py-6 text-xs text-primary-80 hover:bg-primary-40"
-            >
-              {t('filterButton')}
-            </button>
-          </div>
+          <AddressFilterContent
+            id="filter-source-desktop-standalone"
+            value={localFilters.source}
+            onChange={(value) => setLocalFilters((prev) => ({ ...prev, source: value }))}
+            onApply={() => {
+              const newFilters = { ...activeFilters, source: localFilters.source || undefined }
+              onApplyFilters(newFilters)
+              setLocalFilters(newFilters)
+              setOpenDropdown(null)
+            }}
+          />
         </FilterDropdown>
 
         {/* Destination Filter */}
@@ -492,34 +420,21 @@ export default function TransactionFiltersBar({
           onClear={isDestinationActive ? clearDestinationFilter : undefined}
           contentClassName="min-w-[300px]"
         >
-          <div className="space-y-12">
-            <input
-              id="filter-destination-desktop-standalone"
-              type="text"
-              value={localFilters.destination || ''}
-              onChange={(e) =>
-                setLocalFilters((prev) => ({ ...prev, destination: e.target.value }))
+          <AddressFilterContent
+            id="filter-destination-desktop-standalone"
+            value={localFilters.destination}
+            onChange={(value) => setLocalFilters((prev) => ({ ...prev, destination: value }))}
+            onApply={() => {
+              const newFilters = {
+                ...activeFilters,
+                destination: localFilters.destination || undefined
               }
-              placeholder={t('addressPlaceholder')}
-              className="w-full rounded bg-primary-60 px-10 py-6 text-xs text-white placeholder-gray-50 focus:outline-none focus:ring-1 focus:ring-primary-30"
-            />
-            <p className="text-xs italic text-gray-50">*{t('destinationFilterHint')}</p>
-            <button
-              type="button"
-              onClick={() => {
-                const newFilters = {
-                  ...activeFilters,
-                  destination: localFilters.destination || undefined
-                }
-                onApplyFilters(newFilters)
-                setLocalFilters(newFilters)
-                setOpenDropdown(null)
-              }}
-              className="w-full rounded bg-primary-30 px-10 py-6 text-xs text-primary-80 hover:bg-primary-40"
-            >
-              {t('filterButton')}
-            </button>
-          </div>
+              onApplyFilters(newFilters)
+              setLocalFilters(newFilters)
+              setOpenDropdown(null)
+            }}
+            hint={t('destinationFilterHint')}
+          />
         </FilterDropdown>
 
         {/* Amount Filter */}
@@ -531,103 +446,21 @@ export default function TransactionFiltersBar({
           onClear={isAmountActive ? clearAmountFilter : undefined}
           contentClassName="min-w-[200px]"
         >
-          <div className="space-y-12">
-            <div className="flex flex-wrap gap-6">
-              {AMOUNT_PRESETS.map((preset) => {
-                const isSelected = activeFilters.amountRange?.presetKey === preset.labelKey
-                const presetLabel = t(preset.labelKey)
-                return (
-                  <button
-                    key={preset.labelKey}
-                    type="button"
-                    aria-label={presetLabel}
-                    onClick={() => handleApplyAmountPreset(preset)}
-                    className={clsxTwMerge(
-                      'rounded-full border px-8 py-4 text-xs transition-colors',
-                      isSelected
-                        ? 'border-primary-30 bg-primary-60 text-primary-30'
-                        : 'border-primary-60 text-gray-50 hover:border-primary-50 hover:text-white'
-                    )}
-                  >
-                    {presetLabel}
-                  </button>
-                )
-              })}
-            </div>
-            <div className="border-t border-primary-60" />
-            <div className="space-y-8">
-              <p className="text-xs font-medium text-gray-50">{t('customRange')}</p>
-              <div>
-                <label
-                  htmlFor="filter-amount-min-desktop"
-                  className="mb-4 block text-xs text-gray-50"
-                >
-                  {t('minAmount')}
-                </label>
-                <input
-                  id="filter-amount-min-desktop"
-                  type="text"
-                  inputMode="numeric"
-                  value={formatAmountForDisplay(localFilters.amountRange?.start)}
-                  onChange={(e) => {
-                    const rawValue = parseAmountFromDisplay(e.target.value)
-                    setLocalFilters((prev) => ({
-                      ...prev,
-                      amountRange: {
-                        ...prev.amountRange,
-                        start: rawValue || undefined,
-                        presetKey: undefined
-                      }
-                    }))
-                  }}
-                  className="w-full rounded bg-primary-60 px-10 py-6 text-right text-xs text-white placeholder-gray-50 focus:outline-none focus:ring-1 focus:ring-primary-30"
-                />
-              </div>
-              <div>
-                <label
-                  htmlFor="filter-amount-max-desktop"
-                  className="mb-4 block text-xs text-gray-50"
-                >
-                  {t('maxAmount')}
-                </label>
-                <input
-                  id="filter-amount-max-desktop"
-                  type="text"
-                  inputMode="numeric"
-                  value={formatAmountForDisplay(localFilters.amountRange?.end)}
-                  onChange={(e) => {
-                    const rawValue = parseAmountFromDisplay(e.target.value)
-                    setLocalFilters((prev) => ({
-                      ...prev,
-                      amountRange: {
-                        ...prev.amountRange,
-                        end: rawValue || undefined,
-                        presetKey: undefined
-                      }
-                    }))
-                  }}
-                  className="w-full rounded bg-primary-60 px-10 py-6 text-right text-xs text-white placeholder-gray-50 focus:outline-none focus:ring-1 focus:ring-primary-30"
-                />
-              </div>
-              <p className="text-xs italic text-gray-50">*{t('amountFilterHint')}</p>
-              {validationErrors.amount && (
-                <p className="text-xs text-red-400">{validationErrors.amount}</p>
-              )}
-              <button
-                type="button"
-                onClick={() =>
-                  handleApplyRangeFilter(
-                    'amountRange',
-                    localFilters.amountRange?.start,
-                    localFilters.amountRange?.end
-                  )
-                }
-                className="w-full rounded bg-primary-30 px-10 py-6 text-xs text-primary-80 hover:bg-primary-40"
-              >
-                {t('filterButton')}
-              </button>
-            </div>
-          </div>
+          <AmountFilterContent
+            idPrefix="filter-amount-desktop"
+            value={localFilters.amountRange}
+            onChange={(value) => setLocalFilters((prev) => ({ ...prev, amountRange: value }))}
+            onApply={() =>
+              handleApplyRangeFilter(
+                'amountRange',
+                localFilters.amountRange?.start,
+                localFilters.amountRange?.end
+              )
+            }
+            onPresetSelect={(preset) => handleApplyAmountPreset(preset)}
+            selectedPresetKey={activeFilters.amountRange?.presetKey}
+            error={validationErrors.amount}
+          />
         </FilterDropdown>
 
         {/* Date Filter */}
@@ -640,76 +473,21 @@ export default function TransactionFiltersBar({
           contentClassName="min-w-[280px]"
           allowFullWidth
         >
-          <div className="space-y-12">
-            <div className="flex flex-wrap gap-6">
-              {DATE_PRESETS.map((preset) => {
-                const isSelected = activeFilters.dateRange?.presetDays === preset.days
-                const presetLabel = preset.daysCount
-                  ? t(preset.labelKey, { count: preset.daysCount })
-                  : t(preset.labelKey)
-                return (
-                  <button
-                    key={`${preset.labelKey}-${preset.days}`}
-                    type="button"
-                    aria-label={presetLabel}
-                    onClick={() => handleApplyDatePreset(preset.days)}
-                    className={clsxTwMerge(
-                      'rounded-full border px-8 py-4 text-xs transition-colors',
-                      isSelected
-                        ? 'border-primary-30 bg-primary-60 text-primary-30'
-                        : 'border-primary-60 text-gray-50 hover:border-primary-50 hover:text-white'
-                    )}
-                  >
-                    {presetLabel}
-                  </button>
-                )
-              })}
-            </div>
-            <div className="border-t border-primary-60" />
-            <div className="space-y-8">
-              <p className="text-xs font-medium text-gray-50">{t('customRange')}</p>
-              <DateTimeInput
-                id="filter-date-start-desktop"
-                label={t('startDate')}
-                value={localFilters.dateRange?.start}
-                defaultTime="00:00:00"
-                onChange={(datetime) =>
-                  setLocalFilters((prev) => ({
-                    ...prev,
-                    dateRange: { ...prev.dateRange, start: datetime, presetDays: undefined }
-                  }))
-                }
-              />
-              <DateTimeInput
-                id="filter-date-end-desktop"
-                label={t('endDate')}
-                value={localFilters.dateRange?.end}
-                defaultTime="23:59:59"
-                onChange={(datetime) =>
-                  setLocalFilters((prev) => ({
-                    ...prev,
-                    dateRange: { ...prev.dateRange, end: datetime, presetDays: undefined }
-                  }))
-                }
-              />
-              {validationErrors.date && (
-                <p className="text-xs text-red-400">{validationErrors.date}</p>
-              )}
-              <button
-                type="button"
-                onClick={() =>
-                  handleApplyRangeFilter(
-                    'dateRange',
-                    localFilters.dateRange?.start,
-                    localFilters.dateRange?.end
-                  )
-                }
-                className="w-full rounded bg-primary-30 px-10 py-6 text-xs text-primary-80 hover:bg-primary-40"
-              >
-                {t('filterButton')}
-              </button>
-            </div>
-          </div>
+          <DateFilterContent
+            idPrefix="filter-date-desktop"
+            value={localFilters.dateRange}
+            onChange={(value) => setLocalFilters((prev) => ({ ...prev, dateRange: value }))}
+            onApply={() =>
+              handleApplyRangeFilter(
+                'dateRange',
+                localFilters.dateRange?.start,
+                localFilters.dateRange?.end
+              )
+            }
+            onPresetSelect={(presetDays) => handleApplyDatePreset(presetDays)}
+            selectedPresetDays={activeFilters.dateRange?.presetDays}
+            error={validationErrors.date}
+          />
         </FilterDropdown>
 
         {/* Input Type Filter */}
@@ -721,87 +499,23 @@ export default function TransactionFiltersBar({
           onClear={isInputTypeActive ? clearInputTypeFilter : undefined}
           contentClassName="min-w-[200px]"
         >
-          <div className="space-y-12">
-            <div className="flex gap-8">
-              <div className="flex-1">
-                <label
-                  htmlFor="filter-inputtype-start-desktop"
-                  className="mb-4 block text-xs text-gray-50"
-                >
-                  {t('minInputType')}
-                </label>
-                <input
-                  id="filter-inputtype-start-desktop"
-                  type="text"
-                  inputMode="numeric"
-                  value={localFilters.inputTypeRange?.start || ''}
-                  onChange={(e) => {
-                    const rawValue = parseAmountFromDisplay(e.target.value)
-                    setLocalFilters((prev) => ({
-                      ...prev,
-                      inputTypeRange: { ...prev.inputTypeRange, start: rawValue || undefined }
-                    }))
-                  }}
-                  className="w-full rounded bg-primary-60 px-10 py-6 text-right text-xs text-white placeholder-gray-50 focus:outline-none focus:ring-1 focus:ring-primary-30"
-                />
-              </div>
-              <div className="flex-1">
-                <label
-                  htmlFor="filter-inputtype-end-desktop"
-                  className="mb-4 block text-xs text-gray-50"
-                >
-                  {t('maxInputType')}
-                </label>
-                <input
-                  id="filter-inputtype-end-desktop"
-                  type="text"
-                  inputMode="numeric"
-                  value={localFilters.inputTypeRange?.end || ''}
-                  onChange={(e) => {
-                    const rawValue = parseAmountFromDisplay(e.target.value)
-                    setLocalFilters((prev) => ({
-                      ...prev,
-                      inputTypeRange: { ...prev.inputTypeRange, end: rawValue || undefined }
-                    }))
-                  }}
-                  className="w-full rounded bg-primary-60 px-10 py-6 text-right text-xs text-white placeholder-gray-50 focus:outline-none focus:ring-1 focus:ring-primary-30"
-                />
-              </div>
-            </div>
-            {validationErrors.inputType && (
-              <p className="text-xs text-red-400">{validationErrors.inputType}</p>
-            )}
-            <button
-              type="button"
-              onClick={() => {
-                if (localFilters.inputTypeRange?.start && localFilters.inputTypeRange?.end) {
-                  const startNum = Number(localFilters.inputTypeRange.start)
-                  const endNum = Number(localFilters.inputTypeRange.end)
-                  if (startNum > endNum) {
-                    setValidationErrors((prev) => ({
-                      ...prev,
-                      inputType: t('invalidRangeInputType')
-                    }))
-                    return
-                  }
-                }
-                setValidationErrors((prev) => ({ ...prev, inputType: null }))
-                const newFilters = {
-                  ...activeFilters,
-                  inputTypeRange:
-                    localFilters.inputTypeRange?.start || localFilters.inputTypeRange?.end
-                      ? localFilters.inputTypeRange
-                      : undefined
-                }
-                onApplyFilters(newFilters)
-                setLocalFilters(newFilters)
-                setOpenDropdown(null)
-              }}
-              className="w-full rounded bg-primary-30 px-10 py-6 text-xs text-primary-80 hover:bg-primary-40"
-            >
-              {t('filterButton')}
-            </button>
-          </div>
+          <RangeFilterContent
+            idPrefix="filter-inputtype-desktop"
+            value={localFilters.inputTypeRange}
+            onChange={(value) => setLocalFilters((prev) => ({ ...prev, inputTypeRange: value }))}
+            onApply={() =>
+              handleApplyRangeFilter(
+                'inputTypeRange',
+                localFilters.inputTypeRange?.start,
+                localFilters.inputTypeRange?.end
+              )
+            }
+            startLabel={t('minInputType')}
+            endLabel={t('maxInputType')}
+            error={validationErrors.inputType}
+            layout="horizontal"
+            formatDisplay={false}
+          />
         </FilterDropdown>
 
         {/* Tick Filter */}
@@ -813,84 +527,21 @@ export default function TransactionFiltersBar({
           onClear={isTickActive ? clearTickFilter : undefined}
           contentClassName="min-w-[200px]"
         >
-          <div className="space-y-12">
-            <div className="space-y-8">
-              <div>
-                <label
-                  htmlFor="filter-tick-start-desktop"
-                  className="mb-4 block text-xs text-gray-50"
-                >
-                  {t('startTick')}
-                </label>
-                <input
-                  id="filter-tick-start-desktop"
-                  type="text"
-                  inputMode="numeric"
-                  value={formatAmountForDisplay(localFilters.tickNumberRange?.start)}
-                  onChange={(e) => {
-                    const rawValue = parseAmountFromDisplay(e.target.value)
-                    setLocalFilters((prev) => ({
-                      ...prev,
-                      tickNumberRange: { ...prev.tickNumberRange, start: rawValue || undefined }
-                    }))
-                  }}
-                  className="w-full rounded bg-primary-60 px-10 py-6 text-right text-xs text-white placeholder-gray-50 focus:outline-none focus:ring-1 focus:ring-primary-30"
-                />
-              </div>
-              <div>
-                <label
-                  htmlFor="filter-tick-end-desktop"
-                  className="mb-4 block text-xs text-gray-50"
-                >
-                  {t('endTick')}
-                </label>
-                <input
-                  id="filter-tick-end-desktop"
-                  type="text"
-                  inputMode="numeric"
-                  value={formatAmountForDisplay(localFilters.tickNumberRange?.end)}
-                  onChange={(e) => {
-                    const rawValue = parseAmountFromDisplay(e.target.value)
-                    setLocalFilters((prev) => ({
-                      ...prev,
-                      tickNumberRange: { ...prev.tickNumberRange, end: rawValue || undefined }
-                    }))
-                  }}
-                  className="w-full rounded bg-primary-60 px-10 py-6 text-right text-xs text-white placeholder-gray-50 focus:outline-none focus:ring-1 focus:ring-primary-30"
-                />
-              </div>
-            </div>
-            {validationErrors.tick && (
-              <p className="text-xs text-red-400">{validationErrors.tick}</p>
-            )}
-            <button
-              type="button"
-              onClick={() => {
-                if (localFilters.tickNumberRange?.start && localFilters.tickNumberRange?.end) {
-                  const startNum = Number(localFilters.tickNumberRange.start)
-                  const endNum = Number(localFilters.tickNumberRange.end)
-                  if (startNum >= endNum) {
-                    setValidationErrors((prev) => ({ ...prev, tick: t('invalidTickRange') }))
-                    return
-                  }
-                }
-                setValidationErrors((prev) => ({ ...prev, tick: null }))
-                const newFilters = {
-                  ...activeFilters,
-                  tickNumberRange:
-                    localFilters.tickNumberRange?.start || localFilters.tickNumberRange?.end
-                      ? localFilters.tickNumberRange
-                      : undefined
-                }
-                onApplyFilters(newFilters)
-                setLocalFilters(newFilters)
-                setOpenDropdown(null)
-              }}
-              className="w-full rounded bg-primary-30 px-10 py-6 text-xs text-primary-80 hover:bg-primary-40"
-            >
-              {t('filterButton')}
-            </button>
-          </div>
+          <RangeFilterContent
+            idPrefix="filter-tick-desktop"
+            value={localFilters.tickNumberRange}
+            onChange={(value) => setLocalFilters((prev) => ({ ...prev, tickNumberRange: value }))}
+            onApply={() =>
+              handleApplyRangeFilter(
+                'tickNumberRange',
+                localFilters.tickNumberRange?.start,
+                localFilters.tickNumberRange?.end
+              )
+            }
+            startLabel={t('startTick')}
+            endLabel={t('endTick')}
+            error={validationErrors.tick}
+          />
         </FilterDropdown>
 
         {hasActiveFilters && <div className="grow" />}

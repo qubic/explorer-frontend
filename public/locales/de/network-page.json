@@ -129,6 +129,7 @@
   "invalidRangeInputType": "Mindestwert muss kleiner oder gleich dem Höchstwert sein",
   "invalidTickRange": "Start-Tick muss kleiner als End-Tick sein",
   "invalidDateRange": "Startdatum muss vor dem Enddatum liegen",
+  "invalidAddressFormat": "Adresse muss aus 60 Großbuchstaben bestehen",
   "destinationFilterHint": "Bei Smart-Contract-Transaktionen ist dies die Vertragsadresse, nicht der endgültige Token-Empfänger.",
   "amountFilterHint": "Transaktionsbetrag in QUBIC.",
   "customRange": "Benutzerdefinierter Bereich",

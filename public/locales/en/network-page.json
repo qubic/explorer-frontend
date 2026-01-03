@@ -129,6 +129,7 @@
   "invalidRangeInputType": "Min value must be less than or equal to max value",
   "invalidTickRange": "Start tick must be less than end tick",
   "invalidDateRange": "Start date must be less than end date",
+  "invalidAddressFormat": "Address must be 60 uppercase letters",
   "destinationFilterHint": "For smart contract transactions, this is the contract address, not the final token recipient.",
   "amountFilterHint": "Transaction amount in QUBIC.",
   "customRange": "Custom range",
