@@ -15,6 +15,7 @@ import { getStartDateFromDays } from './filterUtils'
 type Props = {
   isOpen: boolean
   onClose: () => void
+  addressId: string
   activeFilters: TransactionFilters
   onApplyFilters: (filters: TransactionFilters) => void
 }
@@ -22,6 +23,7 @@ type Props = {
 export default function MobileFiltersModal({
   isOpen,
   onClose,
+  addressId,
   activeFilters,
   onApplyFilters
 }: Props) {
@@ -49,9 +51,77 @@ export default function MobileFiltersModal({
     }
   }, [isOpen])
 
-  const handleDirectionChange = useCallback((direction: TransactionDirection | undefined) => {
-    setLocalFilters((prev) => ({ ...prev, direction }))
-  }, [])
+  const handleDirectionChange = useCallback(
+    (direction: TransactionDirection | undefined) => {
+      setLocalFilters((prev) => {
+        const newFilters = { ...prev, direction }
+
+        if (direction === 'incoming') {
+          newFilters.destination = addressId
+          if (newFilters.source === addressId) {
+            newFilters.source = undefined
+          }
+        } else if (direction === 'outgoing') {
+          newFilters.source = addressId
+          if (newFilters.destination === addressId) {
+            newFilters.destination = undefined
+          }
+        } else {
+          if (newFilters.source === addressId) {
+            newFilters.source = undefined
+          }
+          if (newFilters.destination === addressId) {
+            newFilters.destination = undefined
+          }
+        }
+
+        return newFilters
+      })
+    },
+    [addressId]
+  )
+
+  const handleSourceChange = useCallback(
+    (value: string | undefined) => {
+      setLocalFilters((prev) => {
+        const newFilters = { ...prev, source: value }
+        // Auto-select direction when source matches addressId
+        if (value === addressId && prev.direction !== 'outgoing') {
+          newFilters.direction = 'outgoing'
+          if (prev.destination === addressId) {
+            newFilters.destination = undefined
+          }
+        }
+        // Clear direction when source is cleared and it was previously addressId (outgoing)
+        if (!value && prev.source === addressId && prev.direction === 'outgoing') {
+          newFilters.direction = undefined
+        }
+        return newFilters
+      })
+    },
+    [addressId]
+  )
+
+  const handleDestinationChange = useCallback(
+    (value: string | undefined) => {
+      setLocalFilters((prev) => {
+        const newFilters = { ...prev, destination: value }
+        // Auto-select direction when destination matches addressId
+        if (value === addressId && prev.direction !== 'incoming') {
+          newFilters.direction = 'incoming'
+          if (prev.source === addressId) {
+            newFilters.source = undefined
+          }
+        }
+        // Clear direction when destination is cleared and it was previously addressId (incoming)
+        if (!value && prev.destination === addressId && prev.direction === 'incoming') {
+          newFilters.direction = undefined
+        }
+        return newFilters
+      })
+    },
+    [addressId]
+  )
 
   const handleApplyAllFilters = useCallback(() => {
     // Validate before applying
@@ -174,9 +244,10 @@ export default function MobileFiltersModal({
               <AddressFilterContent
                 id="filter-source"
                 value={localFilters.source}
-                onChange={(value) => setLocalFilters((prev) => ({ ...prev, source: value }))}
+                onChange={handleSourceChange}
                 onApply={() => {}}
                 showApplyButton={false}
+                showClearButton
                 error={validationErrors.source}
               />
             </div>
@@ -187,9 +258,10 @@ export default function MobileFiltersModal({
               <AddressFilterContent
                 id="filter-destination"
                 value={localFilters.destination}
-                onChange={(value) => setLocalFilters((prev) => ({ ...prev, destination: value }))}
+                onChange={handleDestinationChange}
                 onApply={() => {}}
                 showApplyButton={false}
+                showClearButton
                 hint={t('destinationFilterHint')}
                 error={validationErrors.destination}
               />

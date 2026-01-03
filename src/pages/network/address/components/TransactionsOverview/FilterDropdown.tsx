@@ -117,18 +117,14 @@ export default function FilterDropdown({
               {label}
             </span>
             {isActive && onClear ? (
-              <span
-                role="button"
-                tabIndex={0}
+              <button
+                type="button"
                 onClick={handleClearClick}
-                onKeyDown={(e) =>
-                  e.key === 'Enter' && handleClearClick(e as unknown as React.MouseEvent)
-                }
                 className="flex items-center justify-center rounded-full p-2 hover:bg-primary-50"
                 aria-label="Clear filter"
               >
                 <XmarkIcon className="h-10 w-10" />
-              </span>
+              </button>
             ) : (
               <ChevronDownIcon
                 className={clsxTwMerge('h-12 w-12 transition-transform', show && 'rotate-180')}

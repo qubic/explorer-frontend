@@ -375,6 +375,7 @@ export default function TransactionFiltersBar({
       <MobileFiltersModal
         isOpen={isMobileModalOpen}
         onClose={() => setIsMobileModalOpen(false)}
+        addressId={addressId}
         activeFilters={activeFilters}
         onApplyFilters={onApplyFilters}
       />
@@ -404,6 +405,13 @@ export default function TransactionFiltersBar({
             onChange={(value) => setLocalFilters((prev) => ({ ...prev, source: value }))}
             onApply={() => {
               const newFilters = { ...activeFilters, source: localFilters.source || undefined }
+              // Auto-select direction when source matches addressId
+              if (localFilters.source === addressId && activeFilters.direction !== 'outgoing') {
+                newFilters.direction = 'outgoing'
+                if (newFilters.destination === addressId) {
+                  newFilters.destination = undefined
+                }
+              }
               onApplyFilters(newFilters)
               setLocalFilters(newFilters)
               setOpenDropdown(null)
@@ -428,6 +436,16 @@ export default function TransactionFiltersBar({
               const newFilters = {
                 ...activeFilters,
                 destination: localFilters.destination || undefined
+              }
+              // Auto-select direction when destination matches addressId
+              if (
+                localFilters.destination === addressId &&
+                activeFilters.direction !== 'incoming'
+              ) {
+                newFilters.direction = 'incoming'
+                if (newFilters.source === addressId) {
+                  newFilters.source = undefined
+                }
               }
               onApplyFilters(newFilters)
               setLocalFilters(newFilters)

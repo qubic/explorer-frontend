@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { XmarkIcon } from '@app/assets/icons'
 import { isValidAddressFormat } from '@app/utils'
 
 type Props = {
@@ -11,6 +12,7 @@ type Props = {
   placeholder?: string
   hint?: string
   showApplyButton?: boolean
+  showClearButton?: boolean
   error?: string | null
 }
 
@@ -22,6 +24,7 @@ export default function AddressFilterContent({
   placeholder,
   hint,
   showApplyButton = true,
+  showClearButton = false,
   error: externalError
 }: Props) {
   const { t } = useTranslation('network-page')
@@ -60,17 +63,36 @@ export default function AddressFilterContent({
     onApply()
   }
 
+  const handleClear = () => {
+    setLocalValue('')
+    onChange(undefined)
+    setInternalError(null)
+    inputRef.current?.focus()
+  }
+
   return (
     <div className="space-y-12">
-      <input
-        ref={inputRef}
-        id={id}
-        type="text"
-        value={localValue}
-        onChange={(e) => handleChange(e.target.value)}
-        placeholder={placeholder || t('addressPlaceholder')}
-        className="w-full rounded bg-primary-60 px-10 py-6 text-xs text-white placeholder-gray-50 focus:outline-none focus:ring-1 focus:ring-primary-30"
-      />
+      <div className="relative">
+        <input
+          ref={inputRef}
+          id={id}
+          type="text"
+          value={localValue}
+          onChange={(e) => handleChange(e.target.value)}
+          placeholder={placeholder || t('addressPlaceholder')}
+          className={`w-full rounded bg-primary-60 px-10 py-6 text-xs text-white placeholder-gray-50 focus:outline-none focus:ring-1 focus:ring-primary-30 ${showClearButton ? 'pr-32' : ''}`}
+        />
+        {showClearButton && localValue && (
+          <button
+            type="button"
+            onClick={handleClear}
+            className="absolute right-8 top-1/2 flex h-20 w-20 -translate-y-1/2 items-center justify-center rounded-full text-gray-50 hover:bg-primary-50 hover:text-white"
+            aria-label="Clear"
+          >
+            <XmarkIcon className="h-12 w-12" />
+          </button>
+        )}
+      </div>
       {error && <p className="text-xs text-red-400">{error}</p>}
       {hint && <p className="text-xs italic text-gray-50">*{hint}</p>}
       {showApplyButton && (
