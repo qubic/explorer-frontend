@@ -14,6 +14,9 @@ import MobileFiltersModal from './MobileFiltersModal'
 import RangeFilterContent from './RangeFilterContent'
 import {
   AMOUNT_PRESETS,
+  applyDestinationChange,
+  applyDirectionChange,
+  applySourceChange,
   DATE_PRESETS,
   formatAmountForDisplay,
   formatAmountShort,
@@ -49,7 +52,9 @@ export default function TransactionFiltersBar({
           setLocalFilters((current) => ({
             ...current,
             amountRange: undefined,
-            dateRange: undefined
+            dateRange: undefined,
+            tickNumberRange: undefined,
+            inputTypeRange: undefined
           }))
           return null
         }
@@ -154,27 +159,7 @@ export default function TransactionFiltersBar({
 
   const handleDirectionChange = useCallback(
     (direction: TransactionDirection | undefined) => {
-      const newFilters = { ...activeFilters, direction }
-
-      if (direction === 'incoming') {
-        newFilters.destination = addressId
-        if (newFilters.source === addressId) {
-          newFilters.source = undefined
-        }
-      } else if (direction === 'outgoing') {
-        newFilters.source = addressId
-        if (newFilters.destination === addressId) {
-          newFilters.destination = undefined
-        }
-      } else {
-        if (newFilters.source === addressId) {
-          newFilters.source = undefined
-        }
-        if (newFilters.destination === addressId) {
-          newFilters.destination = undefined
-        }
-      }
-
+      const newFilters = applyDirectionChange(activeFilters, direction, addressId)
       onApplyFilters(newFilters)
       setLocalFilters(newFilters)
     },
@@ -283,19 +268,13 @@ export default function TransactionFiltersBar({
 
   // Clear handlers for individual filters
   const clearSourceFilter = useCallback(() => {
-    const newFilters = { ...activeFilters, source: undefined }
-    if (activeFilters.source === addressId) {
-      newFilters.direction = undefined
-    }
+    const newFilters = applySourceChange(activeFilters, undefined, addressId)
     onApplyFilters(newFilters)
     setLocalFilters(newFilters)
   }, [activeFilters, onApplyFilters, addressId])
 
   const clearDestinationFilter = useCallback(() => {
-    const newFilters = { ...activeFilters, destination: undefined }
-    if (activeFilters.destination === addressId) {
-      newFilters.direction = undefined
-    }
+    const newFilters = applyDestinationChange(activeFilters, undefined, addressId)
     onApplyFilters(newFilters)
     setLocalFilters(newFilters)
   }, [activeFilters, onApplyFilters, addressId])
@@ -404,14 +383,11 @@ export default function TransactionFiltersBar({
             value={localFilters.source}
             onChange={(value) => setLocalFilters((prev) => ({ ...prev, source: value }))}
             onApply={() => {
-              const newFilters = { ...activeFilters, source: localFilters.source || undefined }
-              // Auto-select direction when source matches addressId
-              if (localFilters.source === addressId && activeFilters.direction !== 'outgoing') {
-                newFilters.direction = 'outgoing'
-                if (newFilters.destination === addressId) {
-                  newFilters.destination = undefined
-                }
-              }
+              const newFilters = applySourceChange(
+                activeFilters,
+                localFilters.source || undefined,
+                addressId
+              )
               onApplyFilters(newFilters)
               setLocalFilters(newFilters)
               setOpenDropdown(null)
@@ -433,20 +409,11 @@ export default function TransactionFiltersBar({
             value={localFilters.destination}
             onChange={(value) => setLocalFilters((prev) => ({ ...prev, destination: value }))}
             onApply={() => {
-              const newFilters = {
-                ...activeFilters,
-                destination: localFilters.destination || undefined
-              }
-              // Auto-select direction when destination matches addressId
-              if (
-                localFilters.destination === addressId &&
-                activeFilters.direction !== 'incoming'
-              ) {
-                newFilters.direction = 'incoming'
-                if (newFilters.source === addressId) {
-                  newFilters.source = undefined
-                }
-              }
+              const newFilters = applyDestinationChange(
+                activeFilters,
+                localFilters.destination || undefined,
+                addressId
+              )
               onApplyFilters(newFilters)
               setLocalFilters(newFilters)
               setOpenDropdown(null)

@@ -38,7 +38,7 @@ export default function AddressFilterContent({
   // Sync local value when prop changes (e.g., when modal/dropdown opens)
   // Don't validate on sync - only validate when user clicks Filter
   useEffect(() => {
-    setLocalValue(value || '')
+    setLocalValue((value || '').toUpperCase())
     setInternalError(null)
   }, [value])
 

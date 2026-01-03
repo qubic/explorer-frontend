@@ -1,4 +1,4 @@
-import type { TransactionDirection } from '../../hooks/useLatestTransactions'
+import type { TransactionDirection, TransactionFilters } from '../../hooks/useLatestTransactions'
 
 // Format a number string with thousand separators for display
 export function formatAmountForDisplay(value: string | undefined): string {
@@ -58,10 +58,15 @@ export function getStartDateFromDays(days: number | undefined): string | undefin
   return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`
 }
 
+export const DIRECTION = {
+  INCOMING: 'incoming',
+  OUTGOING: 'outgoing'
+} as const satisfies Record<string, TransactionDirection>
+
 export const DIRECTION_OPTIONS: { value: TransactionDirection | undefined; labelKey: string }[] = [
   { value: undefined, labelKey: 'directionAll' },
-  { value: 'incoming', labelKey: 'directionIncoming' },
-  { value: 'outgoing', labelKey: 'directionOutgoing' }
+  { value: DIRECTION.INCOMING, labelKey: 'directionIncoming' },
+  { value: DIRECTION.OUTGOING, labelKey: 'directionOutgoing' }
 ]
 
 export const AMOUNT_PRESETS = [
@@ -81,3 +86,92 @@ export const DATE_PRESETS = [
   { labelKey: 'dateLastNDays', days: 90, daysCount: 90 },
   { labelKey: 'dateLastNDays', days: 180, daysCount: 180 }
 ]
+
+/**
+ * Updates filters when direction changes, syncing source/destination accordingly
+ */
+export function applyDirectionChange(
+  filters: TransactionFilters,
+  direction: TransactionDirection | undefined,
+  addressId: string
+): TransactionFilters {
+  const newFilters = { ...filters, direction }
+
+  if (direction === DIRECTION.INCOMING) {
+    newFilters.destination = addressId
+    if (newFilters.source === addressId) {
+      newFilters.source = undefined
+    }
+  } else if (direction === DIRECTION.OUTGOING) {
+    newFilters.source = addressId
+    if (newFilters.destination === addressId) {
+      newFilters.destination = undefined
+    }
+  } else {
+    // "All" - clear both if they match addressId
+    if (newFilters.source === addressId) {
+      newFilters.source = undefined
+    }
+    if (newFilters.destination === addressId) {
+      newFilters.destination = undefined
+    }
+  }
+
+  return newFilters
+}
+
+/**
+ * Updates filters when source changes, auto-syncing direction if needed
+ */
+export function applySourceChange(
+  filters: TransactionFilters,
+  source: string | undefined,
+  addressId: string
+): TransactionFilters {
+  const newFilters = { ...filters, source }
+
+  // Auto-select direction when source matches addressId
+  if (source === addressId && filters.direction !== DIRECTION.OUTGOING) {
+    newFilters.direction = DIRECTION.OUTGOING
+    if (filters.destination === addressId) {
+      newFilters.destination = undefined
+    }
+  }
+
+  // Clear direction when source is cleared and it was previously addressId (outgoing)
+  if (!source && filters.source === addressId && filters.direction === DIRECTION.OUTGOING) {
+    newFilters.direction = undefined
+  }
+
+  return newFilters
+}
+
+/**
+ * Updates filters when destination changes, auto-syncing direction if needed
+ */
+export function applyDestinationChange(
+  filters: TransactionFilters,
+  destination: string | undefined,
+  addressId: string
+): TransactionFilters {
+  const newFilters = { ...filters, destination }
+
+  // Auto-select direction when destination matches addressId
+  if (destination === addressId && filters.direction !== DIRECTION.INCOMING) {
+    newFilters.direction = DIRECTION.INCOMING
+    if (filters.source === addressId) {
+      newFilters.source = undefined
+    }
+  }
+
+  // Clear direction when destination is cleared and it was previously addressId (incoming)
+  if (
+    !destination &&
+    filters.destination === addressId &&
+    filters.direction === DIRECTION.INCOMING
+  ) {
+    newFilters.direction = undefined
+  }
+
+  return newFilters
+}

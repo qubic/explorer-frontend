@@ -10,7 +10,12 @@ import AmountFilterContent from './AmountFilterContent'
 import DateFilterContent from './DateFilterContent'
 import DirectionControl from './DirectionControl'
 import RangeFilterContent from './RangeFilterContent'
-import { getStartDateFromDays } from './filterUtils'
+import {
+  applyDestinationChange,
+  applyDirectionChange,
+  applySourceChange,
+  getStartDateFromDays
+} from './filterUtils'
 
 type Props = {
   isOpen: boolean
@@ -53,90 +58,40 @@ export default function MobileFiltersModal({
 
   const handleDirectionChange = useCallback(
     (direction: TransactionDirection | undefined) => {
-      setLocalFilters((prev) => {
-        const newFilters = { ...prev, direction }
-
-        if (direction === 'incoming') {
-          newFilters.destination = addressId
-          if (newFilters.source === addressId) {
-            newFilters.source = undefined
-          }
-        } else if (direction === 'outgoing') {
-          newFilters.source = addressId
-          if (newFilters.destination === addressId) {
-            newFilters.destination = undefined
-          }
-        } else {
-          if (newFilters.source === addressId) {
-            newFilters.source = undefined
-          }
-          if (newFilters.destination === addressId) {
-            newFilters.destination = undefined
-          }
-        }
-
-        return newFilters
-      })
+      setLocalFilters((prev) => applyDirectionChange(prev, direction, addressId))
     },
     [addressId]
   )
 
   const handleSourceChange = useCallback(
     (value: string | undefined) => {
-      setLocalFilters((prev) => {
-        const newFilters = { ...prev, source: value }
-        // Auto-select direction when source matches addressId
-        if (value === addressId && prev.direction !== 'outgoing') {
-          newFilters.direction = 'outgoing'
-          if (prev.destination === addressId) {
-            newFilters.destination = undefined
-          }
-        }
-        // Clear direction when source is cleared and it was previously addressId (outgoing)
-        if (!value && prev.source === addressId && prev.direction === 'outgoing') {
-          newFilters.direction = undefined
-        }
-        return newFilters
-      })
+      setLocalFilters((prev) => applySourceChange(prev, value, addressId))
     },
     [addressId]
   )
 
   const handleDestinationChange = useCallback(
     (value: string | undefined) => {
-      setLocalFilters((prev) => {
-        const newFilters = { ...prev, destination: value }
-        // Auto-select direction when destination matches addressId
-        if (value === addressId && prev.direction !== 'incoming') {
-          newFilters.direction = 'incoming'
-          if (prev.source === addressId) {
-            newFilters.source = undefined
-          }
-        }
-        // Clear direction when destination is cleared and it was previously addressId (incoming)
-        if (!value && prev.destination === addressId && prev.direction === 'incoming') {
-          newFilters.direction = undefined
-        }
-        return newFilters
-      })
+      setLocalFilters((prev) => applyDestinationChange(prev, value, addressId))
     },
     [addressId]
   )
 
   const handleApplyAllFilters = useCallback(() => {
-    // Validate before applying
-    let hasError = false
+    // Validate before applying - track first error for scrolling
+    const errors: Record<string, string> = {}
+    let firstErrorId: string | null = null
 
     // Validate source address
     if (localFilters.source && !isValidAddressFormat(localFilters.source)) {
-      setValidationErrors((prev) => ({ ...prev, source: t('invalidAddressFormat') }))
-      hasError = true
+      errors.source = t('invalidAddressFormat')
+      if (!firstErrorId) firstErrorId = 'mobile-source-filter'
     }
 
     // Validate destination address
     if (localFilters.destination && !isValidAddressFormat(localFilters.destination)) {
-      setValidationErrors((prev) => ({ ...prev, destination: t('invalidAddressFormat') }))
-      hasError = true
+      errors.destination = t('invalidAddressFormat')
+      if (!firstErrorId) firstErrorId = 'mobile-destination-filter'
     }
 
     // Validate amount range
@@ -144,8 +99,8 @@ export default function MobileFiltersModal({
       const startNum = Number(localFilters.amountRange.start)
       const endNum = Number(localFilters.amountRange.end)
       if (startNum > endNum) {
-        setValidationErrors((prev) => ({ ...prev, amount: t('invalidRangeAmount') }))
-        hasError = true
+        errors.amount = t('invalidRangeAmount')
+        if (!firstErrorId) firstErrorId = 'mobile-amount-filter'
       }
     }
 
@@ -154,8 +109,8 @@ export default function MobileFiltersModal({
       const startDate = new Date(localFilters.dateRange.start)
       const endDate = new Date(localFilters.dateRange.end)
       if (startDate > endDate) {
-        setValidationErrors((prev) => ({ ...prev, date: t('invalidDateRange') }))
-        hasError = true
+        errors.date = t('invalidDateRange')
+        if (!firstErrorId) firstErrorId = 'mobile-date-filter'
       }
     }
 
@@ -164,8 +119,8 @@ export default function MobileFiltersModal({
       const startNum = Number(localFilters.inputTypeRange.start)
       const endNum = Number(localFilters.inputTypeRange.end)
       if (startNum > endNum) {
-        setValidationErrors((prev) => ({ ...prev, inputType: t('invalidRangeInputType') }))
-        hasError = true
+        errors.inputType = t('invalidRangeInputType')
+        if (!firstErrorId) firstErrorId = 'mobile-inputtype-filter'
       }
     }
 
@@ -174,16 +129,21 @@ export default function MobileFiltersModal({
       const startNum = Number(localFilters.tickNumberRange.start)
       const endNum = Number(localFilters.tickNumberRange.end)
       if (startNum >= endNum) {
-        setValidationErrors((prev) => ({ ...prev, tick: t('invalidTickRange') }))
-        hasError = true
-        // Scroll to tick filter error
-        setTimeout(() => {
-          document.getElementById('mobile-tick-filter')?.scrollIntoView({ behavior: 'smooth' })
-        }, 100)
+        errors.tick = t('invalidTickRange')
+        if (!firstErrorId) firstErrorId = 'mobile-tick-filter'
       }
     }
 
-    if (hasError) return
+    // If there are errors, set them and scroll to first error
+    if (Object.keys(errors).length > 0) {
+      setValidationErrors(errors)
+      if (firstErrorId) {
+        setTimeout(() => {
+          document.getElementById(firstErrorId)?.scrollIntoView({ behavior: 'smooth' })
+        }, 100)
+      }
+      return
+    }
 
     // Calculate date from presetDays at apply time (like desktop behavior)
     let filtersToApply = localFilters
@@ -239,7 +199,7 @@ export default function MobileFiltersModal({
             </div>
 
             {/* Source */}
-            <div>
+            <div id="mobile-source-filter">
               <h3 className="mb-8 text-sm font-medium text-white">{t('source')}</h3>
               <AddressFilterContent
                 id="filter-source"
@@ -253,7 +213,7 @@ export default function MobileFiltersModal({
             </div>
 
             {/* Destination */}
-            <div>
+            <div id="mobile-destination-filter">
               <h3 className="mb-8 text-sm font-medium text-white">{t('destination')}*</h3>
               <AddressFilterContent
                 id="filter-destination"
@@ -268,7 +228,7 @@ export default function MobileFiltersModal({
             </div>
 
             {/* Amount */}
-            <div>
+            <div id="mobile-amount-filter">
               <h3 className="mb-8 text-sm font-medium text-white">{t('amount')}</h3>
               <AmountFilterContent
                 idPrefix="filter-amount-mobile"
@@ -283,7 +243,7 @@ export default function MobileFiltersModal({
             </div>
 
             {/* Date */}
-            <div>
+            <div id="mobile-date-filter">
               <h3 className="mb-8 text-sm font-medium text-white">{t('date')}</h3>
               <DateFilterContent
                 idPrefix="filter-date-mobile"
@@ -297,7 +257,7 @@ export default function MobileFiltersModal({
             </div>
 
             {/* Input Type */}
-            <div>
+            <div id="mobile-inputtype-filter">
               <h3 className="mb-8 text-sm font-medium text-white">{t('inputType')}</h3>
               <RangeFilterContent
                 idPrefix="filter-inputtype-mobile"

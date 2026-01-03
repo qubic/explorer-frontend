@@ -27,6 +27,7 @@ export default function DirectionControl({ value, onChange, showTooltips = false
             key={option.labelKey}
             type="button"
             onClick={() => onChange(option.value)}
+            aria-label={option.value !== undefined ? t(option.labelKey) : undefined}
             className={clsxTwMerge(
               'flex w-40 items-center justify-center gap-4 py-5 font-space text-xs font-medium transition duration-300',
               isFirst && 'rounded-l',
