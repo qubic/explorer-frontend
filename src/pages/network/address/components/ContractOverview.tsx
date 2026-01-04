@@ -80,18 +80,18 @@ export default function ContractOverview({ asset, githubUrl, proposalUrl, contra
   }, [code, error, loading, t])
 
   return (
-    <div className="grid gap-8 rounded-lg border border-primary-60 p-20">
+    <div className="grid gap-8 rounded-lg border border-border p-20">
       <div className="grid gap-6">
         <div className="flex flex-col justify-between gap-6 sm:flex-row">
           <div className="flex flex-col gap-2 font-space">
             <p>
-              <span className="text-gray-50">{t('contractName')}: </span>
-              <span className="font-bold text-gray-100">{asset}</span>
+              <span className="text-muted-foreground">{t('contractName')}: </span>
+              <span className="font-bold text-foreground">{asset}</span>
             </p>
             {contractIndex !== undefined && (
               <p>
-                <span className="text-gray-50">{t('contractIndex')}: </span>
-                <span className="font-bold text-gray-100">{contractIndex}</span>
+                <span className="text-muted-foreground">{t('contractIndex')}: </span>
+                <span className="font-bold text-foreground">{contractIndex}</span>
               </p>
             )}
           </div>
@@ -104,7 +104,7 @@ export default function ContractOverview({ asset, githubUrl, proposalUrl, contra
           />
         </div>
 
-        <div className="flex h-400 w-full overflow-hidden rounded border border-gray-800 bg-[#101820] p-4 text-sm">
+        <div className="flex h-400 w-full overflow-hidden rounded border border-border bg-muted p-4 text-sm">
           {renderContractCode()}
         </div>
       </div>

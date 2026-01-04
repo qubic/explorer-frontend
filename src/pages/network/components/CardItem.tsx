@@ -9,9 +9,7 @@ type Props = {
 export default function CardItem({ children, className, tag }: Props) {
   const Component = tag || 'div'
   return (
-    <Component
-      className={clsxTwMerge('rounded-12 border-1 border-primary-60 bg-primary-70', className)}
-    >
+    <Component className={clsxTwMerge('rounded-12 border-1 border-border bg-card', className)}>
       {children}
     </Component>
   )

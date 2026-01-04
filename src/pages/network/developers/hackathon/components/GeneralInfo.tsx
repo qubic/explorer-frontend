@@ -6,7 +6,7 @@ export default function GeneralInfo() {
       <div className="grid gap-20 md:grid-cols-2">
         <CardItem className="p-16">
           <h3 className="text-primary-100 mb-2 text-lg font-semibold">Hackathon Repository</h3>
-          <p className="text-sm text-gray-50">
+          <p className="text-sm text-muted-foreground">
             Access all hackathon instructions, smart contract deployment scripts, and CLI examples
             in the official{' '}
             <a
@@ -23,7 +23,7 @@ export default function GeneralInfo() {
 
         <CardItem className="p-16">
           <h3 className="text-primary-100 mb-2 text-lg font-semibold">RPC Info</h3>
-          <p className="text-sm text-gray-50">
+          <p className="text-sm text-muted-foreground">
             Access the{' '}
             <a
               href="https://docs.qubic.org/api/rpc"
@@ -40,7 +40,7 @@ export default function GeneralInfo() {
 
         <CardItem className="p-16">
           <h3 className="text-primary-100 mb-2 text-lg font-semibold">Testnet Qubics</h3>
-          <p className="text-sm text-gray-50">
+          <p className="text-sm text-muted-foreground">
             Claim Qubics using the faucet in{' '}
             <a
               href="https://discord.com/channels/768887649540243497/1253254239447158827"
@@ -56,7 +56,7 @@ export default function GeneralInfo() {
 
         <CardItem className="p-16">
           <h3 className="text-primary-100 mb-2 text-lg font-semibold">Smart Contract Testing</h3>
-          <p className="text-sm text-gray-50">
+          <p className="text-sm text-muted-foreground">
             Need a dedicated testnet node for smart contract testing? Reach out in the{' '}
             <a
               href="https://discord.com/channels/768887649540243497/1087017597133922474"

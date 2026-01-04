@@ -56,7 +56,7 @@ export default function ErrorDisplay({
             </div>
 
             <div className="mx-auto max-w-[400px]">
-              <p className="mt-16 text-center font-space text-16 leading-20 text-gray-50 md:text-18">
+              <p className="mt-16 text-center font-space text-16 leading-20 text-muted-foreground md:text-18">
                 {t('error404Message')}
               </p>
             </div>
@@ -72,7 +72,7 @@ export default function ErrorDisplay({
             </div>
 
             <div className="mx-auto max-w-[400px]">
-              <p className="mt-16 text-center font-space text-16 leading-20 text-gray-50 md:text-18">
+              <p className="mt-16 text-center font-space text-16 leading-20 text-muted-foreground md:text-18">
                 {t('unexpectedError')}
               </p>
             </div>

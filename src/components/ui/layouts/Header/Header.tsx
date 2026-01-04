@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { Link, useLocation } from 'react-router-dom'
 
-import { QubicExplorerWhiteLogo } from '@app/assets/icons/logo'
+import { QubicExplorerLogoText, QubicExplorerWhiteLogo } from '@app/assets/icons/logo'
 import { Routes } from '@app/router/routes'
 import BurgerMenu from './BurgerMenu'
 import NavigationMenu from './NavigationMenu'
@@ -15,10 +15,11 @@ export default function Header() {
   return (
     <>
       <TopBar />
-      <header className="border-b border-primary-60">
+      <header className="border-b border-border bg-background">
         <div className="relative mx-auto flex h-[var(--header-height)] max-w-lg items-center justify-between gap-6 p-12 sm:h-[var(--desktop-header-height)]">
-          <Link to={Routes.NETWORK.ROOT}>
-            <QubicExplorerWhiteLogo />
+          <Link to={Routes.NETWORK.ROOT} className="flex items-center">
+            <QubicExplorerLogoText className="block dark:hidden" />
+            <QubicExplorerWhiteLogo className="hidden dark:block" />
           </Link>
 
           <nav className="hidden md:block">

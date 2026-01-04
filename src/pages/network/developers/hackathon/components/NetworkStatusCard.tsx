@@ -17,7 +17,7 @@ export default function NetworkStatusCard({ data }: Props) {
     <div className="mx-auto max-w-5xl space-y-20 rounded-2xl p-6 shadow-lg">
       <CardItem className="space-y-6 p-10">
         <h2 className="text-xl font-bold">Network Overview</h2>
-        <div className="grid grid-cols-2 gap-4 text-sm text-gray-50">
+        <div className="grid grid-cols-2 gap-4 text-sm text-muted-foreground">
           <div>
             <strong>Max Tick:</strong> {data.max_tick}
           </div>

@@ -15,8 +15,8 @@ const MenuLink = memo(({ menu, activePath, onToggleMenu }: Props) => {
   const { t } = useTranslation()
 
   const classNames = clsxTwMerge(
-    'flex w-full whitespace-nowrap rounded px-8 py-4 text-sm hover:bg-primary-80',
-    activePath === menu.href ? 'text-primary-30' : 'text-gray-50'
+    'flex w-full whitespace-nowrap rounded px-8 py-4 text-sm hover:bg-muted',
+    activePath === menu.href ? 'text-primary-30' : 'text-muted-foreground'
   )
 
   return menu.isExternal ? (

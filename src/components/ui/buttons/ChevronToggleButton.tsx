@@ -18,7 +18,7 @@ export default function ChevronToggleButton({
       {...rest}
       type="button"
       className={clsxTwMerge(
-        'flex size-fit items-center gap-12 rounded-8 px-6 py-3 hover:bg-primary-60',
+        'flex size-fit items-center gap-12 rounded-8 px-6 py-3 hover:bg-muted',
         className
       )}
       onClick={onClick}
@@ -26,7 +26,7 @@ export default function ChevronToggleButton({
       {children && <span className="text-center font-space text-sm">{children}</span>}
       <ChevronDownIcon
         className={clsxTwMerge(
-          'h-20 w-20 text-gray-50 transition-transform duration-300',
+          'h-20 w-20 text-muted-foreground transition-transform duration-300',
           isOpen ? 'rotate-180' : 'rotate-0'
         )}
       />

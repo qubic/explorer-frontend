@@ -20,7 +20,7 @@ function StatusItem({
 }) {
   return (
     <div className="flex flex-col gap-8">
-      <p className="font-space text-sm text-gray-50">{label}</p>
+      <p className="font-space text-sm text-muted-foreground">{label}</p>
       <p
         className={clsxTwMerge(
           'font-space text-base',

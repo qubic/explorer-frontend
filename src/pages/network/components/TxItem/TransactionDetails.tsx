@@ -35,9 +35,7 @@ function TransactionDetailsWrapper({
     return children
   }
 
-  return (
-    <div className="mt-14 flex flex-col gap-12 border-t-1 border-primary-60 pt-12">{children}</div>
-  )
+  return <div className="mt-14 flex flex-col gap-12 border-t-1 border-border pt-12">{children}</div>
 }
 
 export default function TransactionDetails({
@@ -168,8 +166,8 @@ export default function TransactionDetails({
           variant={variant}
           content={
             <p className="font-space text-sm">
-              <span className="text-white">{date}</span>{' '}
-              <span className="text-gray-50">{time}</span>
+              <span className="text-foreground">{date}</span>{' '}
+              <span className="text-muted-foreground">{time}</span>
             </p>
           }
         />

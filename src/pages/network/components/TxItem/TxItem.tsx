@@ -109,7 +109,7 @@ function TxItem({
           </div>
           <TxLink
             isHistoricalTx={isHistoricalTx}
-            className="text-base text-gray-50"
+            className="text-base text-muted-foreground"
             value={txId}
             copy
           />
@@ -163,11 +163,12 @@ function TxItem({
           <p className="text-center font-space text-base">
             {asset ? (
               <>
-                {formatString(asset.units)} <span className="text-gray-50">{asset.assetName}</span>
+                {formatString(asset.units)}{' '}
+                <span className="text-muted-foreground">{asset.assetName}</span>
               </>
             ) : (
               <>
-                {formatString(amount)} <span className="text-gray-50">QUBIC</span>
+                {formatString(amount)} <span className="text-muted-foreground">QUBIC</span>
               </>
             )}
           </p>

@@ -23,7 +23,7 @@ export default function OverviewCardItem({ icon: Icon, label, value, variant = '
       >
         <Icon className="h-24 w-24" />
         <div className="flex flex-col gap-8">
-          <LabelTag className="font-space text-14 text-gray-50">{label}</LabelTag>
+          <LabelTag className="font-space text-14 text-muted-foreground">{label}</LabelTag>
           <p className="font-space text-18 xs:text-24 sm:text-22">{value}</p>
         </div>
       </div>

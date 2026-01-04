@@ -23,13 +23,15 @@ function TransferList({ entries, variant = 'primary' }: Props) {
       className={clsxTwMerge(
         'flex flex-col gap-8 rounded-12 p-12 md:p-16',
         variant === 'secondary'
-          ? 'border-[1px] border-primary-60 bg-primary-70'
-          : 'my-8 bg-primary-60 transition-all duration-300'
+          ? 'border-[1px] border-border bg-card'
+          : 'my-8 border-[1px] border-border bg-card transition-all duration-300'
       )}
     >
       <div className="flex justify-between">
-        <p className="font-space text-14 leading-18 text-gray-50">{t('destination')}</p>
-        <p className="hidden font-space text-14 leading-18 text-gray-50 md:block">{t('amount')}</p>
+        <p className="font-space text-14 leading-18 text-muted-foreground">{t('destination')}</p>
+        <p className="hidden font-space text-14 leading-18 text-muted-foreground md:block">
+          {t('amount')}
+        </p>
       </div>
       <ul>
         {entries.map((item, index) => (

@@ -3,7 +3,8 @@ import { Link } from 'react-router-dom'
 
 import { QubicExplorerLogoShort } from '@app/assets/icons/logo'
 
-const footerTextClass = 'font-space text-xs text-white'
+const footerTextClass =
+  'font-space text-xs text-muted-foreground transition-colors hover:text-foreground'
 
 interface FooterLinkProps {
   label: string
@@ -34,10 +35,10 @@ function Footer() {
   ]
 
   return (
-    <footer className="flex flex-col items-center justify-center gap-10 px-12 py-20 md:flex-row md:gap-32 md:py-40">
+    <footer className="flex flex-col items-center justify-center gap-10 border-t border-border bg-background px-12 py-20 md:flex-row md:gap-32 md:py-40">
       <div className="flex items-center gap-10">
         <QubicExplorerLogoShort />
-        <p className="font-space text-xs text-gray-50">
+        <p className="font-space text-xs text-muted-foreground">
           {'\u00A9'} {new Date().getFullYear()} Qubic.
         </p>
       </div>
@@ -45,11 +46,11 @@ function Footer() {
         {linkItems.map((item, index) => (
           <React.Fragment key={item.label}>
             <FooterLink label={item.label} to={item.to} isInternal={item.isInternal} />
-            {index < linkItems.length - 1 && <span className="text-gray-50">•</span>}
+            {index < linkItems.length - 1 && <span className="text-muted-foreground">•</span>}
           </React.Fragment>
         ))}
       </div>
-      <p className="font-space text-xs text-gray-50">Version {__APP_VERSION__}</p>
+      <p className="font-space text-xs text-muted-foreground">Version {__APP_VERSION__}</p>
     </footer>
   )
 }

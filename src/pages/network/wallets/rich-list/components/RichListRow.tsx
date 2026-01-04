@@ -14,7 +14,7 @@ function RichListRow({ entity, isMobile }: Props) {
   const addressNameData = useGetAddressName(entity.identity)
 
   return (
-    <tr key={entity.identity} className="border-b border-primary-60">
+    <tr key={entity.identity} className="border-b border-border">
       <td className="px-8 py-16 text-center font-space text-xs xs:text-sm sm:p-16">
         {entity.rank}
       </td>
