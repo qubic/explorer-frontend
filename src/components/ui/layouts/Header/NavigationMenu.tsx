@@ -22,7 +22,7 @@ export default function NavigationMenu({ label, items, activePath, className }: 
 
   return (
     <DropdownMenu show={showMenu} onToggle={handleToggleMenu}>
-      <DropdownMenu.Trigger className="flex items-center gap-4 rounded p-8 text-sm text-gray-400 transition-colors duration-500 ease-in-out hover:bg-primary-70">
+      <DropdownMenu.Trigger className="flex items-center gap-4 rounded p-8 text-sm text-muted-foreground transition-colors duration-500 ease-in-out hover:bg-muted">
         {label}
         <ChevronDownIcon
           className={clsxTwMerge(
@@ -33,7 +33,7 @@ export default function NavigationMenu({ label, items, activePath, className }: 
       </DropdownMenu.Trigger>
       <DropdownMenu.Content
         className={clsxTwMerge(
-          'rounded-t-0 border-t-2 border-primary-60 border-t-primary-30 bg-primary-70',
+          'rounded-t-0 border-t-2 border-border border-t-primary-30 bg-popover',
           className
         )}
       >

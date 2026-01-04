@@ -106,7 +106,7 @@ function AddressPage() {
       </Breadcrumbs>
 
       <div className="flex items-center gap-12 pb-6 pt-16">
-        <p className="break-all font-space text-base text-gray-50">{addressId}</p>
+        <p className="break-all font-space text-base text-muted-foreground">{addressId}</p>
         <div className="flex items-center gap-8">
           <CopyTextButton text={addressId} type={COPY_BUTTON_TYPES.ADDRESS} />
           <QRCodeButton address={addressId} />
@@ -127,7 +127,7 @@ function AddressPage() {
             size="xs"
             variant="outlined"
             className={clsxTwMerge({
-              'hover:bg-primary-60': addressName.website
+              'hover:bg-muted': addressName.website
             })}
           >
             {addressName.website ? (
@@ -152,7 +152,7 @@ function AddressPage() {
           <div className="flex items-center gap-10">
             <p className="w-fit break-all font-space text-2xl sm:text-36">
               {formatString(addressBalances.data.balance)}{' '}
-              <span className="text-gray-50">QUBIC</span>
+              <span className="text-muted-foreground">QUBIC</span>
             </p>
             <ChevronToggleButton
               aria-label="toggle-address-details"
@@ -160,7 +160,9 @@ function AddressPage() {
               onClick={handleToggleDetails}
             />
           </div>
-          <p className="mb-12 mt-8 font-space text-base text-gray-50">${formattedBalanceUsd}</p>
+          <p className="mb-12 mt-8 font-space text-base text-muted-foreground">
+            ${formattedBalanceUsd}
+          </p>
         </div>
 
         <AddressDetails

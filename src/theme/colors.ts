@@ -1,9 +1,39 @@
 import type { PluginUtils, ThemeConfig } from 'tailwindcss/types/config'
 
+/**
+ * NOTE: This project supports light & dark themes via CSS variables (see src/index.css).
+ * These semantic colors map Tailwind classes (bg-background, text-foreground, bg-card, etc.)
+ * to CSS variables so components can stay theme-agnostic.
+ */
 export const colors: ThemeConfig['colors'] = ({ colors: defaultColors }: PluginUtils) => ({
   inherit: defaultColors.inherit,
   current: defaultColors.current,
   transparent: 'transparent',
+
+  // ---- Semantic tokens (theme-aware) ----
+  background: 'rgb(var(--background) / <alpha-value>)',
+  foreground: 'rgb(var(--foreground) / <alpha-value>)',
+  border: 'rgb(var(--border) / <alpha-value>)',
+  input: 'rgb(var(--input) / <alpha-value>)',
+  ring: 'rgb(var(--ring) / <alpha-value>)',
+  card: {
+    DEFAULT: 'rgb(var(--card) / <alpha-value>)',
+    foreground: 'rgb(var(--card-foreground) / <alpha-value>)'
+  },
+  popover: {
+    DEFAULT: 'rgb(var(--popover) / <alpha-value>)',
+    foreground: 'rgb(var(--popover-foreground) / <alpha-value>)'
+  },
+  muted: {
+    DEFAULT: 'rgb(var(--muted) / <alpha-value>)',
+    foreground: 'rgb(var(--muted-foreground) / <alpha-value>)'
+  },
+  accent: {
+    DEFAULT: 'rgb(var(--accent) / <alpha-value>)',
+    foreground: 'rgb(var(--accent-foreground) / <alpha-value>)'
+  },
+
+  // ---- Existing palette ----
   black: '#22292F',
   white: '#fff',
   primary: {

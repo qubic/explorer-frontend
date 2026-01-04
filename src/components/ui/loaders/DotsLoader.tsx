@@ -18,7 +18,7 @@ export default function DotsLoader({ className, showLoadingText, loadingText = '
       )}
     >
       {showLoadingText && (
-        <span className="font-sans text-sm font-medium capitalize text-gray-50 sm:text-base">
+        <span className="font-sans text-sm font-medium capitalize text-muted-foreground sm:text-base">
           {loadingText || t('loading')}
         </span>
       )}

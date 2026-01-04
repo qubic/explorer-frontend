@@ -75,7 +75,7 @@ export default function LatestTransactions({
         loader={<DotsLoader showLoadingText />}
         error={error && t('loadingTransactionsError')}
         endMessage={
-          <p className="py-32 text-center text-sm text-gray-50">
+          <p className="py-32 text-center text-sm text-muted-foreground">
             {transactions.length === 0 ? t('noTransactions') : t('allTransactionsLoaded')}
           </p>
         }

@@ -20,9 +20,9 @@ function ResultItem({ icon, title, link, items, result, label, info, onClick }: 
   return (
     <>
       <div className="mt-20 space-y-2 px-12">
-        <p className="font-space text-12 text-gray-50">{title}</p>
+        <p className="font-space text-12 text-muted-foreground">{title}</p>
         <Link
-          className="flex items-center gap-5 break-all rounded-12 p-10 hover:bg-primary-60"
+          className="flex items-center gap-5 break-all rounded-12 p-10 hover:bg-muted"
           to={link}
           role="button"
           onClick={onClick}
@@ -31,19 +31,20 @@ function ResultItem({ icon, title, link, items, result, label, info, onClick }: 
           <p className="font-sans text-xs">
             {result}
             <br />
-            <span className="text-gray-50">{label}</span> <span className="font-light">{info}</span>
+            <span className="text-muted-foreground">{label}</span>{' '}
+            <span className="font-light">{info}</span>
           </p>
         </Link>
       </div>
       {items && (
         <div className="mt-16 space-y-2 px-12">
-          <p className="font-space text-xs text-gray-50">{t('transactions')}</p>
+          <p className="font-space text-xs text-muted-foreground">{t('transactions')}</p>
           <ul className="grid gap-4">
             {items.map((item) => (
               <li key={item}>
                 <Link
                   role="button"
-                  className="flex items-center gap-5 break-all rounded-12 px-10 py-8 text-xs hover:bg-primary-60"
+                  className="flex items-center gap-5 break-all rounded-12 px-10 py-8 text-xs hover:bg-muted"
                   to={Routes.NETWORK.TX(item)}
                   onClick={onClick}
                 >

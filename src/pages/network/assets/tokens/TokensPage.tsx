@@ -95,16 +95,16 @@ function TokensPage() {
             showAll
           />
         )}
-        <div className="w-full rounded-12 border-1 border-primary-60 bg-primary-70">
+        <div className="w-full rounded-12 border-1 border-border bg-card">
           <div className="overflow-x-scroll">
             <table className="w-full">
-              <thead className="border-b-1 border-primary-60 text-left font-space text-sm text-gray-50">
+              <thead className="border-b-1 border-border text-left font-space text-sm text-muted-foreground">
                 <tr>
                   <th className="px-10 py-16 text-left text-xs font-400 sm:text-sm">
-                    <span className="text-gray-50">{t('name')}</span>
+                    <span className="text-muted-foreground">{t('name')}</span>
                   </th>
                   <th className="px-10 py-16 text-xs font-400 sm:p-16 sm:text-sm">
-                    <span className="text-gray-50">{t('issuer')}</span>
+                    <span className="text-muted-foreground">{t('issuer')}</span>
                   </th>
                 </tr>
               </thead>

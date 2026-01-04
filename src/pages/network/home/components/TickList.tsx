@@ -50,7 +50,7 @@ export default function TickList({ data, isLoading, isError, onPageChange }: Pro
         value={item.tickNumber}
         className={clsxTwMerge(
           'w-fit font-space text-xs',
-          item.isEmpty ? 'text-error-40' : 'text-gray-50'
+          item.isEmpty ? 'text-error-40' : 'text-muted-foreground'
         )}
       />
     ))
@@ -62,7 +62,7 @@ export default function TickList({ data, isLoading, isError, onPageChange }: Pro
         <div className="flex flex-col justify-between gap-20 sm:flex-row sm:gap-8 md:gap-10 lg:gap-20">
           <div className="flex items-center justify-between gap-8 sm:justify-start">
             <p className="font-space text-22 font-500">{t('ticks')}</p>
-            <p className="align-middle font-space text-14 text-gray-50">
+            <p className="align-middle font-space text-14 text-muted-foreground">
               ( {tickRange.firstTick} - {tickRange.lastTick} )
             </p>
           </div>

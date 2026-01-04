@@ -1,6 +1,5 @@
-import { useTranslation } from 'react-i18next'
 import { CheckCircleFilledIcon, CheckCircleIcon, XCircleFilledIcon } from '@app/assets/icons'
-import Tooltip from '@app/components/ui/Tooltip'
+import { useTranslation } from 'react-i18next'
 import type { TxStatusType } from './TxStatus.utils'
 
 type Props = {
@@ -30,10 +29,9 @@ export default function TxStatus({ status }: Props) {
   const { Icon, colorClass, labelKey } = STATUS_CONFIG[status]
 
   return (
-    <div className="flex items-center">
-      <Tooltip tooltipId={`tx-status-${status}`} content={t(labelKey)}>
-        <Icon className={`size-20 ${colorClass}`} />
-      </Tooltip>
+    <div className="flex w-fit items-center gap-4 rounded-full border border-border bg-muted px-8 py-4">
+      <p className="font-space text-xs text-muted-foreground">TX</p>
+      {isTransferTx && <TxSatusIcon executed={executed} />}
     </div>
   )
 }
