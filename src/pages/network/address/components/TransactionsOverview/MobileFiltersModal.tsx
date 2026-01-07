@@ -11,10 +11,10 @@ import DateFilterContent from './DateFilterContent'
 import DirectionControl from './DirectionControl'
 import RangeFilterContent from './RangeFilterContent'
 import {
+  applyDatePresetCalculation,
   applyDestinationChange,
   applyDirectionChange,
-  applySourceChange,
-  getStartDateFromDays
+  applySourceChange
 } from './filterUtils'
 
 type Props = {
@@ -145,20 +145,8 @@ export default function MobileFiltersModal({
       return
     }
 
-    // Calculate date from presetDays at apply time (like desktop behavior)
-    let filtersToApply = localFilters
-    if (localFilters.dateRange?.presetDays !== undefined && !localFilters.dateRange?.start) {
-      const startDate = getStartDateFromDays(localFilters.dateRange.presetDays)
-      filtersToApply = {
-        ...localFilters,
-        dateRange: {
-          start: startDate,
-          end: undefined,
-          presetDays: localFilters.dateRange.presetDays
-        }
-      }
-    }
-
+    // Calculate date from presetDays at apply time (shared utility with desktop)
+    const filtersToApply = applyDatePresetCalculation(localFilters)
     onApplyFilters(filtersToApply)
     onClose()
     setValidationErrors({})

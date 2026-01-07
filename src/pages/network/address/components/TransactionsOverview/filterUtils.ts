@@ -88,6 +88,25 @@ export const DATE_PRESETS = [
 ]
 
 /**
+ * Calculates start date from presetDays if a date preset is selected.
+ * This ensures consistent date calculation timing across desktop and mobile.
+ */
+export function applyDatePresetCalculation(filters: TransactionFilters): TransactionFilters {
+  if (filters.dateRange?.presetDays !== undefined) {
+    const startDate = getStartDateFromDays(filters.dateRange.presetDays)
+    return {
+      ...filters,
+      dateRange: {
+        start: startDate,
+        end: undefined,
+        presetDays: filters.dateRange.presetDays
+      }
+    }
+  }
+  return filters
+}
+
+/**
  * Updates filters when direction changes, syncing source/destination accordingly
  */
 export function applyDirectionChange(

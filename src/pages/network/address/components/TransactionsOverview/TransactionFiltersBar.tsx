@@ -14,13 +14,13 @@ import MobileFiltersModal from './MobileFiltersModal'
 import RangeFilterContent from './RangeFilterContent'
 import {
   AMOUNT_PRESETS,
+  applyDatePresetCalculation,
   applyDestinationChange,
   applyDirectionChange,
   applySourceChange,
   DATE_PRESETS,
   formatAmountForDisplay,
-  formatAmountShort,
-  getStartDateFromDays
+  formatAmountShort
 } from './filterUtils'
 
 type Props = {
@@ -132,11 +132,12 @@ export default function TransactionFiltersBar({
 
   const handleApplyDatePreset = useCallback(
     (presetDays: number) => {
-      const startDate = getStartDateFromDays(presetDays)
-      const newFilters = {
+      // Store presetDays first, then calculate date at apply time (unified with mobile approach)
+      const filtersWithPreset = {
         ...activeFilters,
-        dateRange: { start: startDate, end: undefined, presetDays }
+        dateRange: { presetDays, start: undefined, end: undefined }
       }
+      const newFilters = applyDatePresetCalculation(filtersWithPreset)
       onApplyFilters(newFilters)
       setLocalFilters(newFilters)
       setOpenDropdown(null)
