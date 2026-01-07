@@ -4,11 +4,12 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import type { AppDispatch, RootState } from '@app/store'
 import type { GetTickDataResponse } from './apis/archiver-v1'
 import { archiverV1Api } from './apis/archiver-v1'
-import { archiverV2Api, type Transaction } from './apis/archiver-v2'
+import type { QueryServiceTransaction } from './apis/query-service'
+import { rpcQueryServiceApi } from './apis/query-service'
 import type { GetAddressBalancesResponse } from './apis/rpc-live'
 import { rpcLiveApi } from './apis/rpc-live'
 
-type HandlerResponse = GetAddressBalancesResponse | GetTickDataResponse | Transaction
+type HandlerResponse = GetAddressBalancesResponse | GetTickDataResponse | QueryServiceTransaction
 
 export interface SearchState {
   result: HandlerResponse | null
@@ -50,7 +51,7 @@ const makeSearchHandlers = (
   },
   [SearchType.TX]: async (query) => {
     const transaction = await dispatch(
-      archiverV2Api.endpoints.getTransaction.initiate(query)
+      rpcQueryServiceApi.endpoints.getTransactionByHash.initiate(query)
     ).unwrap()
     return transaction
   }
