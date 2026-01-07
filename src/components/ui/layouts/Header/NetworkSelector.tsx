@@ -16,7 +16,7 @@ export default function NetworkSelector() {
     <ErrorBoundary fallback={<Alert variant="error" className="mx-5 my-2.5" />}>
       <DropdownMenu show={showDropdown} onToggle={handleDropdownToggle}>
         <DropdownMenu.Trigger className="rounded-full p-8 transition-colors duration-500 ease-in-out hover:bg-card">
-          <QubicWhiteLogo className="size-28 shrink-0 rounded border border-border p-4" />
+          <QubicWhiteLogo className="size-28 shrink-0 rounded border border-border p-4 text-foreground" />
         </DropdownMenu.Trigger>
         <DropdownMenu.Content className="ltr:left-auto ltr:right-0">
           <ul className="grid gap-2 p-10">
