@@ -1,13 +1,14 @@
+import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Alert } from '@app/components/ui'
-import type { Transaction } from '@app/store/apis/archiver-v2/archiver-v2.types'
-import { useGetSmartContractsQuery } from '@app/store/apis/qubic-static'
-import { clsxTwMerge, formatDate, formatString } from '@app/utils'
-import { getProcedureName } from '@app/utils/qubic'
+import { COPY_BUTTON_TYPES, CopyTextButton } from '@app/components/ui/buttons'
 import { useGetAddressName } from '@app/hooks'
+import { useGetSmartContractsQuery } from '@app/store/apis/qubic-static'
+import type { QueryServiceTransaction } from '@app/store/apis/query-service'
+import { clsxTwMerge, formatDate, formatHex, formatString } from '@app/utils'
+import { getProcedureName } from '@app/utils/qubic'
 import { type AssetTransfer, type Transfer, isSmartContractTx } from '@app/utils/qubic-ts'
-import { useMemo } from 'react'
 import AddressLink from '../AddressLink'
 import SubCardItem from '../SubCardItem'
 import TickLink from '../TickLink'
@@ -16,12 +17,13 @@ import TransferList from './TransferList/TransferList'
 import type { TxItemVariant } from './TxItem.types'
 
 type Props = {
-  readonly txDetails: Omit<Transaction['transaction'], 'inputSize' | 'signatureHex' | 'inputHex'>
+  readonly txDetails: Omit<QueryServiceTransaction, 'inputSize' | 'moneyFlew' | 'timestamp'>
   readonly entries: Transfer[]
   readonly isHistoricalTx?: boolean
   readonly variant?: TxItemVariant
   readonly assetDetails?: AssetTransfer
   readonly timestamp?: string
+  readonly showExtendedDetails?: boolean
 }
 
 function TransactionDetailsWrapper({
@@ -41,35 +43,38 @@ function TransactionDetailsWrapper({
 }
 
 export default function TransactionDetails({
-  txDetails: { txId, sourceId, tickNumber, destId, inputType, amount },
+  txDetails: { hash, source, tickNumber, destination, inputType, amount, inputData, signature },
   assetDetails,
   entries,
   isHistoricalTx = false,
   timestamp,
-  variant = 'primary'
+  variant = 'primary',
+  showExtendedDetails = false
 }: Props) {
   const { t } = useTranslation('network-page')
   const { data: smartContracts } = useGetSmartContractsQuery()
+  const [inputDataFormat, setInputDataFormat] = useState<'base64' | 'hex'>('hex')
 
   const isSecondaryVariant = variant === 'secondary'
   const { date, time } = useMemo(() => formatDate(timestamp, { split: true }), [timestamp])
+  const inputDataHex = useMemo(() => formatHex(inputData), [inputData])
 
-  const destAddress = assetDetails?.newOwnerAndPossessor ?? destId
-  const sourceAddressNameData = useGetAddressName(sourceId)
+  const destAddress = assetDetails?.newOwnerAndPossessor ?? destination
+  const sourceAddressNameData = useGetAddressName(source)
   const destinationAddressNameData = useGetAddressName(destAddress)
 
   const procedureName = useMemo(
-    () => getProcedureName(destId, inputType, smartContracts),
-    [destId, inputType, smartContracts]
+    () => getProcedureName(destination, inputType, smartContracts),
+    [destination, inputType, smartContracts]
   )
 
   const transactionTypeDisplay = useMemo(() => {
     const baseType = formatString(inputType)
-    const txCategory = isSmartContractTx(destId, inputType) ? 'SC' : 'Standard'
+    const txCategory = isSmartContractTx(destination, inputType) ? 'SC' : 'Standard'
     return procedureName
       ? `${baseType} ${txCategory} (${procedureName})`
       : `${baseType} ${txCategory}`
-  }, [inputType, destId, procedureName])
+  }, [inputType, destination, procedureName])
 
   return (
     <TransactionDetailsWrapper variant={variant}>
@@ -102,7 +107,7 @@ export default function TransactionDetails({
             <TxLink
               isHistoricalTx={isHistoricalTx}
               className="text-sm text-primary-30"
-              value={txId}
+              value={hash}
               copy
             />
           }
@@ -124,7 +129,7 @@ export default function TransactionDetails({
           <AddressLink
             label={sourceAddressNameData?.name}
             showTooltip={!!sourceAddressNameData?.name}
-            value={sourceId}
+            value={source}
             copy
           />
         }
@@ -136,7 +141,7 @@ export default function TransactionDetails({
           <AddressLink
             label={destinationAddressNameData?.name}
             showTooltip={!!destinationAddressNameData?.name}
-            value={assetDetails?.newOwnerAndPossessor ?? destId}
+            value={assetDetails?.newOwnerAndPossessor ?? destination}
             copy
           />
         }
@@ -171,6 +176,51 @@ export default function TransactionDetails({
               <span className="text-white">{date}</span>{' '}
               <span className="text-gray-50">{time}</span>
             </p>
+          }
+        />
+      )}
+
+      {showExtendedDetails && signature && (
+        <SubCardItem
+          title={t('signature')}
+          variant={variant}
+          content={
+            <div className="flex items-start gap-10">
+              <p className="break-all font-space text-sm">{signature}</p>
+              <CopyTextButton text={signature} type={COPY_BUTTON_TYPES.GENERIC} />
+            </div>
+          }
+        />
+      )}
+
+      {showExtendedDetails && inputData && inputData.length > 0 && (
+        <SubCardItem
+          title={t('data')}
+          variant={variant}
+          content={
+            <div className="min-w-0 flex-1">
+              <p className="break-all rounded-8 bg-primary-60 p-12 font-space text-sm text-gray-50">
+                <span className="float-right mb-4 ml-8 inline-flex overflow-hidden rounded-8 border border-gray-50 bg-primary-80">
+                  {(['hex', 'base64'] as const).map((format, index) => (
+                    <button
+                      key={format}
+                      type="button"
+                      onClick={() => setInputDataFormat(format)}
+                      className={clsxTwMerge(
+                        'px-8 py-2 text-xs font-medium transition-colors',
+                        index > 0 && 'border-l border-gray-50',
+                        inputDataFormat === format
+                          ? 'bg-primary-60 text-white'
+                          : 'bg-transparent text-gray-50 hover:bg-primary-70 hover:text-white'
+                      )}
+                    >
+                      {format === 'hex' ? 'Hex' : 'Base64'}
+                    </button>
+                  ))}
+                </span>
+                {inputDataFormat === 'hex' ? `0x${inputDataHex}` : inputData}
+              </p>
+            </div>
           }
         />
       )}

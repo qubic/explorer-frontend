@@ -1,13 +1,22 @@
-import { memo, useCallback, useMemo } from 'react'
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router-dom'
 
 import { Skeleton } from '@app/components/ui'
 import { Button } from '@app/components/ui/buttons'
-import type { IssuedAsset } from '@app/store/apis/archiver-v1'
-import { useGetAssetsIssuancesQuery } from '@app/store/apis/archiver-v1'
-import { clsxTwMerge } from '@app/utils'
-import { ASSETS_ISSUER_ADDRESS } from '@app/utils/qubic-ts'
+import type { IssuedAsset } from '@app/store/apis/rpc-live'
+import { useGetAssetsIssuancesQuery } from '@app/store/apis/rpc-live'
+import { useGetTokenCategoriesQuery } from '@app/store/apis/qubic-static'
+import {
+  clsxTwMerge,
+  ASSET_CATEGORY_SC_SHARES,
+  QX_ASSET_NAME,
+  isAssetsIssuerAddress,
+  type CategoryFilter,
+  filterTokensByCategory,
+  findTokenCategory
+} from '@app/utils'
+import { CategoryChips } from '@app/pages/network/assets/tokens/components'
 
 const AssetTabsSkeleton = memo(({ items }: { items: number }) =>
   Array.from({ length: items }).map((_, index) => (
@@ -15,58 +24,15 @@ const AssetTabsSkeleton = memo(({ items }: { items: number }) =>
   ))
 )
 
-function AssetsTabsSection({
-  title,
-  assets,
-  isLoading,
-  skeletonItems = 5,
-  onTabChange,
-  selectedAsset
-}: {
-  title: string
-  assets: IssuedAsset[]
-  isLoading?: boolean
-  skeletonItems?: number
-  onTabChange: (asset: IssuedAsset) => void
-  selectedAsset?: Pick<IssuedAsset, 'name' | 'issuerIdentity'>
-}) {
-  return (
-    <section className="flex flex-col gap-10">
-      <h2>{title}</h2>
-      <ul className="flex flex-wrap gap-10">
-        {isLoading ? (
-          <AssetTabsSkeleton items={skeletonItems} />
-        ) : (
-          assets?.map((asset) => {
-            const isSelected =
-              selectedAsset?.issuerIdentity === asset.issuerIdentity &&
-              selectedAsset?.name === asset.name
-            return (
-              <li key={asset.name}>
-                <Button
-                  className={clsxTwMerge(
-                    isSelected
-                      ? 'bg-primary-30 text-primary-80 hover:bg-primary-30 hover:text-primary-80'
-                      : 'hover:text-primary-30'
-                  )}
-                  variant="outlined"
-                  size="xs"
-                  onClick={() => onTabChange(asset)}
-                >
-                  {asset.name}
-                </Button>
-              </li>
-            )
-          })
-        )}
-      </ul>
-    </section>
-  )
-}
+type AssetSelection = Pick<IssuedAsset, 'name' | 'issuerIdentity'>
 
 export default function AssetsTabs() {
   const { t } = useTranslation('network-page')
   const [searchParams, setSearchParams] = useSearchParams()
+  const [selectedCategory, setSelectedCategory] = useState<CategoryFilter>(ASSET_CATEGORY_SC_SHARES)
+  const [categorySelections, setCategorySelections] = useState<Record<string, AssetSelection>>({})
+  const [hasInitializedCategory, setHasInitializedCategory] = useState(false)
+  const hasInvalidUrlParams = useRef(false)
 
   const assetParam = searchParams.get('asset') || ''
   const issuerParam = searchParams.get('issuer') || ''
@@ -78,10 +44,12 @@ export default function AssetsTabs() {
     }),
     [assetParam, issuerParam]
   )
-  const { data, isFetching } = useGetAssetsIssuancesQuery()
 
-  const handleAssetChange = useCallback(
-    ({ issuerIdentity, name }: IssuedAsset) => {
+  const { data, isFetching } = useGetAssetsIssuancesQuery()
+  const { data: categoriesData } = useGetTokenCategoriesQuery()
+
+  const updateUrlParams = useCallback(
+    ({ issuerIdentity, name }: AssetSelection) => {
       setSearchParams((prev) => ({
         ...Object.fromEntries(prev.entries()),
         issuer: issuerIdentity,
@@ -92,43 +60,181 @@ export default function AssetsTabs() {
     [setSearchParams]
   )
 
-  const { smartContractShares, tokens } = useMemo(() => {
-    const result = [...(data?.assets ?? [])].reduce(
-      (acc: { smartContractShares: IssuedAsset[]; tokens: IssuedAsset[] }, asset) => {
-        const key =
-          asset.data.issuerIdentity === ASSETS_ISSUER_ADDRESS ? 'smartContractShares' : 'tokens'
-        acc[key].push(asset.data)
-        return acc
-      },
-      { smartContractShares: [], tokens: [] }
-    )
+  const handleAssetChange = useCallback(
+    (asset: IssuedAsset) => {
+      // Reset invalid URL params flag when user manually selects a valid asset
+      hasInvalidUrlParams.current = false
+      // Remember selection for current category
+      setCategorySelections((prev) => ({
+        ...prev,
+        [selectedCategory]: { name: asset.name, issuerIdentity: asset.issuerIdentity }
+      }))
+      updateUrlParams(asset)
+    },
+    [selectedCategory, updateUrlParams]
+  )
 
-    // Sort both arrays alphabetically by name (case-insensitive)
-    result.tokens.sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }))
-    result.smartContractShares.sort((a, b) =>
-      a.name.localeCompare(b.name, undefined, { sensitivity: 'base' })
-    )
-
-    return result
+  const allAssets = useMemo(() => {
+    const assets = data?.assets.map((a) => a.data) ?? []
+    return assets.sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }))
   }, [data])
 
+  // Detect category from URL params on initial load
+  useEffect(() => {
+    if (hasInitializedCategory || !allAssets.length || !assetParam || !issuerParam) return
+
+    const urlAsset = allAssets.find(
+      (asset) => asset.name === assetParam && asset.issuerIdentity === issuerParam
+    )
+
+    if (!urlAsset) {
+      // URL has invalid asset/issuer combination - mark as invalid to prevent auto-select
+      setHasInitializedCategory(true)
+      hasInvalidUrlParams.current = true
+      return
+    }
+
+    // Check if it's an SC Share - no need to wait for categories
+    if (isAssetsIssuerAddress(urlAsset.issuerIdentity)) {
+      setHasInitializedCategory(true)
+      setSelectedCategory(ASSET_CATEGORY_SC_SHARES)
+      return
+    }
+
+    // For non-SC assets, wait for categories data before determining category
+    if (!categoriesData?.categories) return
+
+    // Mark as initialized now that we have all necessary data
+    setHasInitializedCategory(true)
+
+    // Find the category for non-SC assets
+    const detectedCategory = findTokenCategory(urlAsset, categoriesData.categories)
+    setSelectedCategory(detectedCategory)
+  }, [allAssets, assetParam, issuerParam, categoriesData, hasInitializedCategory])
+
+  const filteredAssets = useMemo(() => {
+    const categories = categoriesData?.categories ?? []
+
+    if (selectedCategory === ASSET_CATEGORY_SC_SHARES) {
+      return allAssets.filter((asset) => isAssetsIssuerAddress(asset.issuerIdentity))
+    }
+
+    // Filter out SC shares for non-SC categories
+    const nonScAssets = allAssets.filter((asset) => !isAssetsIssuerAddress(asset.issuerIdentity))
+
+    const tokenData = nonScAssets.map((asset) => ({
+      name: asset.name,
+      issuerIdentity: asset.issuerIdentity
+    }))
+
+    const filteredTokenData = filterTokensByCategory(tokenData, selectedCategory, categories)
+    const filteredKeys = new Set(
+      filteredTokenData.map((token) => `${token.name}-${token.issuerIdentity}`)
+    )
+
+    return nonScAssets.filter((asset) => filteredKeys.has(`${asset.name}-${asset.issuerIdentity}`))
+  }, [allAssets, categoriesData, selectedCategory])
+
+  // Auto-select asset when category changes and current selection is not in filtered list
+  // Prioritizes remembered selection for the category, then falls back to first asset
+  // Exception: SC Shares defaults to QX
+  // Skip if URL has invalid params to let the API return an error
+  // Skip if URL params are present but category hasn't been initialized yet (let category detection run first)
+  useEffect(() => {
+    if (filteredAssets.length === 0 || hasInvalidUrlParams.current) return
+
+    // If URL has asset params but category hasn't been initialized, wait for category detection
+    if (assetParam && issuerParam && !hasInitializedCategory) return
+
+    const currentAssetInList = filteredAssets.some(
+      (asset) =>
+        asset.issuerIdentity === selectedAsset.issuerIdentity && asset.name === selectedAsset.name
+    )
+
+    if (!currentAssetInList) {
+      // Check if we have a remembered selection for this category
+      const rememberedSelection = categorySelections[selectedCategory]
+      if (rememberedSelection) {
+        const rememberedAssetInList = filteredAssets.find(
+          (asset) =>
+            asset.issuerIdentity === rememberedSelection.issuerIdentity &&
+            asset.name === rememberedSelection.name
+        )
+        if (rememberedAssetInList) {
+          updateUrlParams(rememberedSelection)
+          return
+        }
+      }
+
+      // For SC Shares category, default to QX if available
+      if (selectedCategory === ASSET_CATEGORY_SC_SHARES) {
+        const qxAsset = filteredAssets.find((asset) => asset.name === QX_ASSET_NAME)
+        if (qxAsset) {
+          handleAssetChange(qxAsset)
+          return
+        }
+      }
+
+      // Fall back to first asset if no remembered selection or it's not in the list
+      const firstAsset = filteredAssets[0]
+      handleAssetChange(firstAsset)
+    }
+  }, [
+    filteredAssets,
+    selectedAsset,
+    selectedCategory,
+    categorySelections,
+    handleAssetChange,
+    updateUrlParams,
+    assetParam,
+    issuerParam,
+    hasInitializedCategory
+  ])
+
+  const getButtonClasses = (isSelected: boolean) =>
+    clsxTwMerge(
+      isSelected
+        ? 'bg-primary-30 text-primary-80 hover:bg-primary-30 hover:text-primary-80'
+        : 'hover:text-primary-30'
+    )
+
   return (
-    <div className="grid gap-14">
-      <AssetsTabsSection
-        title={t('tokens')}
-        assets={tokens}
-        isLoading={isFetching}
-        onTabChange={handleAssetChange}
-        selectedAsset={selectedAsset}
-      />
-      <AssetsTabsSection
-        title={t('smartContracts')}
-        assets={smartContractShares}
-        isLoading={isFetching}
-        skeletonItems={9}
-        onTabChange={handleAssetChange}
-        selectedAsset={selectedAsset}
-      />
+    <div className="grid gap-20">
+      {categoriesData && categoriesData.categories.length > 0 && (
+        <CategoryChips
+          categoriesData={categoriesData}
+          selectedCategory={selectedCategory}
+          onCategoryChange={setSelectedCategory}
+          showScShares
+          label={t('filterByCategory')}
+        />
+      )}
+      <div className="flex flex-col gap-10">
+        <h3 className="text-sm text-gray-50">{t('selectAsset')}</h3>
+        <ul className="flex flex-wrap gap-10">
+          {isFetching ? (
+            <AssetTabsSkeleton items={8} />
+          ) : (
+            filteredAssets.map((asset) => {
+              const isSelected =
+                selectedAsset.issuerIdentity === asset.issuerIdentity &&
+                selectedAsset.name === asset.name
+              return (
+                <li key={`${asset.name}-${asset.issuerIdentity}`}>
+                  <Button
+                    className={getButtonClasses(isSelected)}
+                    variant="outlined"
+                    size="xs"
+                    onClick={() => handleAssetChange(asset)}
+                  >
+                    {asset.name}
+                  </Button>
+                </li>
+              )
+            })
+          )}
+        </ul>
+      </div>
     </div>
   )
 }

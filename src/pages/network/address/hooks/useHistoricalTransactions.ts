@@ -1,11 +1,11 @@
+import type { Transaction } from '@app/store/apis/archiver-v2'
 import { useLazyGetAddressHistoryQuery } from '@app/store/apis/qli'
-import type { TransactionWithType } from '@app/types'
 import { useCallback, useEffect, useState } from 'react'
 
 const PAGE_SIZE = 50
 
 export interface UseHistoricalTransactionsOutput {
-  historicalTransactions: TransactionWithType[]
+  historicalTransactions: Transaction[]
   loadMoreTransactions: () => Promise<void>
   hasMore: boolean
   isLoading: boolean
@@ -18,7 +18,7 @@ export default function useHistoricalTransactions(
 ): UseHistoricalTransactionsOutput {
   const [triggerGetHistory, { isFetching, error }] = useLazyGetAddressHistoryQuery()
 
-  const [historicalTxs, setHistoricalTxs] = useState<TransactionWithType[]>([])
+  const [historicalTxs, setHistoricalTxs] = useState<Transaction[]>([])
   const [page, setPage] = useState<number>(0)
   const [hasMore, setHasMore] = useState<boolean>(true)
 
@@ -30,9 +30,16 @@ export default function useHistoricalTransactions(
 
       if (result?.length) {
         setHistoricalTxs((prev) => {
-          const txIdSet = new Set(prev.map(({ transaction }) => transaction.txId))
-          const uniqueTxs = result.filter(({ transaction }) => !txIdSet.has(transaction.txId))
-          return [...prev, ...uniqueTxs]
+          // Create a set of existing transaction IDs for deduplication
+          const existingTxIds = new Set(prev.map(({ transaction }) => transaction.txId))
+
+          // Filter out transactions that already exist
+          const newUniqueTxs = result.filter(({ transaction }) => {
+            return !existingTxIds.has(transaction.txId)
+          })
+
+          // Return the combined array
+          return [...prev, ...newUniqueTxs]
         })
 
         setHasMore(result.length === PAGE_SIZE)

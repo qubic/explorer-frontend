@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { ChevronToggleButton } from '@app/components/ui/buttons'
-import { useGetAddressOwnedAssetsQuery } from '@app/store/apis/archiver-v1'
+import { useGetAddressOwnedAssetsQuery } from '@app/store/apis/rpc-live'
 import { useGetSmartContractsQuery } from '@app/store/apis/qubic-static'
 import { formatString } from '@app/utils'
 import { isAssetsIssuerAddress } from '@app/utils/qubic-ts'

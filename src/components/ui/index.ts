@@ -1,6 +1,7 @@
 export { default as Alert } from './Alert'
 export { default as Badge } from './Badge'
 export { default as Breadcrumbs } from './Breadcrumbs'
+export { default as DateTimeInput } from './DateTimeInput'
 export { default as DropdownMenu } from './DropdownMenu'
 export { default as InfiniteScroll } from './InfiniteScroll'
 export { default as Modal } from './Modal'

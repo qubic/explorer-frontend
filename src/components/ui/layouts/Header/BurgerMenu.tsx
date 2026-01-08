@@ -41,17 +41,24 @@ export default function BurgerMenu({ navigationMenus, activePath }: Props) {
       </DropdownMenu.Trigger>
       <DropdownMenu.Content className="min-w-256 ltr:left-auto ltr:right-0">
         <ul className="grid gap-8 p-16">
-          {navigationMenus.map(({ i18nKey, items }) => (
-            <Accordion key={i18nKey} as="li" label={t(i18nKey)}>
-              <ul className="mt-4">
-                {items.map((menu) => (
-                  <li key={menu.i18nKey}>
-                    <MenuLink menu={menu} activePath={activePath} onToggleMenu={handleToggleMenu} />
-                  </li>
-                ))}
-              </ul>
-            </Accordion>
-          ))}
+          {navigationMenus.map(
+            (menu) =>
+              menu.items && (
+                <Accordion key={menu.i18nKey} as="li" label={t(menu.i18nKey)}>
+                  <ul className="mt-4">
+                    {menu.items.map((item) => (
+                      <li key={item.i18nKey}>
+                        <MenuLink
+                          menu={item}
+                          activePath={activePath}
+                          onToggleMenu={handleToggleMenu}
+                        />
+                      </li>
+                    ))}
+                  </ul>
+                </Accordion>
+              )
+          )}
         </ul>
       </DropdownMenu.Content>
     </DropdownMenu>

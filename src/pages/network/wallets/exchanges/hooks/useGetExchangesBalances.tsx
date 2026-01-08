@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 
-import { useLazyGetAddressBalancesQuery } from '@app/store/apis/archiver-v1'
+import { useLazyGetAddressBalancesQuery } from '@app/store/apis/rpc-live'
 import { useGetExchangesQuery } from '@app/store/apis/qubic-static'
 import type { ExchangeWallet } from '@app/types'
 import type { ExchangeWalletWithBalance } from '../types'
