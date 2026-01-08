@@ -16,7 +16,7 @@ import TransactionDetails from './TransactionDetails'
 import type { TxItemVariant } from './TxItem.types'
 
 type Props = {
-  readonly tx: Omit<QueryServiceTransaction, 'inputSize' | 'signature' | 'moneyFlew' | 'timestamp'>
+  readonly tx: Omit<QueryServiceTransaction, 'inputSize' | 'moneyFlew' | 'timestamp'>
   readonly identity?: string
   readonly nonExecutedTxIds: string[]
   readonly variant?: TxItemVariant
@@ -27,7 +27,7 @@ type Props = {
 }
 
 function TxItem({
-  tx: { hash, source, tickNumber, destination, inputType, amount, inputData },
+  tx: { hash, source, tickNumber, destination, inputType, amount, inputData, signature },
   identity,
   nonExecutedTxIds,
   variant = 'primary',
@@ -109,12 +109,22 @@ function TxItem({
           />
         </div>
         <TransactionDetails
-          txDetails={{ hash, source, tickNumber, destination, inputType, amount }}
+          txDetails={{
+            hash,
+            source,
+            tickNumber,
+            destination,
+            inputType,
+            amount,
+            inputData,
+            signature
+          }}
           isHistoricalTx={isHistoricalTx}
           variant={variant}
           entries={entries}
           assetDetails={asset}
           timestamp={timestamp}
+          showExtendedDetails
         />
       </>
     )
@@ -171,7 +181,16 @@ function TxItem({
       </div>
       {detailsOpen && (
         <TransactionDetails
-          txDetails={{ hash, source, tickNumber, destination, inputType, amount }}
+          txDetails={{
+            hash,
+            source,
+            tickNumber,
+            destination,
+            inputType,
+            amount,
+            inputData,
+            signature
+          }}
           isHistoricalTx={isHistoricalTx}
           variant={variant}
           entries={entries}
