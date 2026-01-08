@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 
 import { Alert } from '@app/components/ui'
-import type { Transaction } from '@app/store/apis/archiver-v2/archiver-v2.types'
+import type { QueryServiceTransaction } from '@app/store/apis/query-service'
 import { useGetSmartContractsQuery } from '@app/store/apis/qubic-static'
 import { clsxTwMerge, formatDate, formatString } from '@app/utils'
 import { getProcedureName } from '@app/utils/qubic'
@@ -16,7 +16,10 @@ import TransferList from './TransferList/TransferList'
 import type { TxItemVariant } from './TxItem.types'
 
 type Props = {
-  readonly txDetails: Omit<Transaction['transaction'], 'inputSize' | 'signatureHex' | 'inputHex'>
+  readonly txDetails: Omit<
+    QueryServiceTransaction,
+    'inputSize' | 'signature' | 'inputData' | 'moneyFlew' | 'timestamp'
+  >
   readonly entries: Transfer[]
   readonly isHistoricalTx?: boolean
   readonly variant?: TxItemVariant
@@ -39,7 +42,7 @@ function TransactionDetailsWrapper({
 }
 
 export default function TransactionDetails({
-  txDetails: { txId, sourceId, tickNumber, destId, inputType, amount },
+  txDetails: { hash, source, tickNumber, destination, inputType, amount },
   assetDetails,
   entries,
   isHistoricalTx = false,
@@ -52,22 +55,22 @@ export default function TransactionDetails({
   const isSecondaryVariant = variant === 'secondary'
   const { date, time } = useMemo(() => formatDate(timestamp, { split: true }), [timestamp])
 
-  const destAddress = assetDetails?.newOwnerAndPossessor ?? destId
-  const sourceAddressNameData = useGetAddressName(sourceId)
+  const destAddress = assetDetails?.newOwnerAndPossessor ?? destination
+  const sourceAddressNameData = useGetAddressName(source)
   const destinationAddressNameData = useGetAddressName(destAddress)
 
   const procedureName = useMemo(
-    () => getProcedureName(destId, inputType, smartContracts),
-    [destId, inputType, smartContracts]
+    () => getProcedureName(destination, inputType, smartContracts),
+    [destination, inputType, smartContracts]
   )
 
   const transactionTypeDisplay = useMemo(() => {
     const baseType = formatString(inputType)
-    const txCategory = isSmartContractTx(destId, inputType) ? 'SC' : 'Standard'
+    const txCategory = isSmartContractTx(destination, inputType) ? 'SC' : 'Standard'
     return procedureName
       ? `${baseType} ${txCategory} (${procedureName})`
       : `${baseType} ${txCategory}`
-  }, [inputType, destId, procedureName])
+  }, [inputType, destination, procedureName])
 
   return (
     <TransactionDetailsWrapper variant={variant}>
@@ -100,7 +103,7 @@ export default function TransactionDetails({
             <TxLink
               isHistoricalTx={isHistoricalTx}
               className="text-sm text-primary-30"
-              value={txId}
+              value={hash}
               copy
             />
           }
@@ -122,7 +125,7 @@ export default function TransactionDetails({
           <AddressLink
             label={sourceAddressNameData?.name}
             showTooltip={!!sourceAddressNameData?.name}
-            value={sourceId}
+            value={source}
             copy
           />
         }
@@ -134,7 +137,7 @@ export default function TransactionDetails({
           <AddressLink
             label={destinationAddressNameData?.name}
             showTooltip={!!destinationAddressNameData?.name}
-            value={assetDetails?.newOwnerAndPossessor ?? destId}
+            value={assetDetails?.newOwnerAndPossessor ?? destination}
             copy
           />
         }

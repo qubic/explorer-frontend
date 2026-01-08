@@ -81,17 +81,25 @@ export const isAssetsIssuerAddress = (address: string): boolean => address === A
  * @param skipCryptographicValidation - If true, only performs basic format validation (for internal links)
  * @returns Promise<boolean> - True if the address is valid, false otherwise
  */
+/**
+ * Validates basic Qubic address format (sync version)
+ * Checks if address is exactly 60 uppercase letters
+ * @param address - The address string to validate
+ * @returns boolean - True if format is valid
+ */
+export const isValidAddressFormat = (address: string | undefined): boolean => {
+  if (!address || typeof address !== 'string') {
+    return false
+  }
+  return address.length === 60 && /^[A-Z]+$/.test(address)
+}
+
 export const isValidQubicAddress = async (
   address: string,
   skipCryptographicValidation = false
 ): Promise<boolean> => {
-  if (!address || typeof address !== 'string') {
-    return false
-  }
-
-  // Basic format validation first (no cryptographic operations needed)
-  // Qubic addresses must be exactly 60 characters and all uppercase
-  if (address.length !== 60 || !/^[A-Z]+$/.test(address)) {
+  // Use shared format validation
+  if (!isValidAddressFormat(address)) {
     return false
   }
 

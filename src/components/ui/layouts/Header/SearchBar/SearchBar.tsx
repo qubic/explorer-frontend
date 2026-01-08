@@ -140,14 +140,14 @@ export default function SearchBar() {
                   onClick={handleCloseCallback}
                 />
               )}
-              {'transaction' in searchResult && (
+              {'hash' in searchResult && (
                 <ResultItem
                   icon={<CameraIcon className="mr-6 h-16 w-16" />}
                   title={t('transaction')}
-                  result={formatString(searchResult.transaction.txId)}
+                  result={formatString(searchResult.hash)}
                   label={t('tick')}
-                  info={formatString(searchResult.transaction.tickNumber)}
-                  link={Routes.NETWORK.TX(searchResult.transaction.txId)}
+                  info={formatString(searchResult.tickNumber)}
+                  link={Routes.NETWORK.TX(searchResult.hash)}
                   onClick={handleCloseCallback}
                 />
               )}
