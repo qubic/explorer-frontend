@@ -46,6 +46,7 @@
   "ticksThisEpochTooltip": "Totaal aantal verwerkte ticks in deze epoch en het aantal lege ticks tussen haakjes",
   "transactionPreview": "Transactievoorvertoning",
   "transactions": "Transacties",
+  "data": "Data",
   "type": "Type",
   "unexecuted": "Niet uitgevoerd",
   "value": "Waarde",
