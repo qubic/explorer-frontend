@@ -46,6 +46,7 @@
   "ticksThisEpochTooltip": "このエポックで処理された刻み数と空刻みの数（カッコ内に表示）",
   "transactionPreview": "トランザクションのプレビュー",
   "transactions": "トランザクション",
+  "data": "データ",
   "type": "タイプ",
   "unexecuted": "未実行",
   "value": "値",
