@@ -1,7 +1,7 @@
 import { clsxTwMerge } from '@app/utils'
 
 type Props = {
-  title: React.ReactNode
+  title: string
   content: React.ReactNode
   variant?: 'primary' | 'secondary'
 }
@@ -17,11 +17,9 @@ export default function SubCardItem({ title, content, variant = 'primary' }: Pro
           : 'gap-8 md:justify-between'
       )}
     >
-      <div
-        className={clsxTwMerge('font-space text-sm text-gray-50', isSecondaryVariant && 'w-120')}
-      >
+      <p className={clsxTwMerge('font-space text-sm text-gray-50', isSecondaryVariant && 'w-120')}>
         {title}
-      </div>
+      </p>
       {content}
     </div>
   )

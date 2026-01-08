@@ -46,7 +46,6 @@
   "ticksThisEpochTooltip": "Total number of ticks processed this epoch and empty ticks count in parentheses",
   "transactionPreview": "Transaction Preview",
   "transactions": "Transactions",
-  "data": "Data",
   "type": "Type",
   "unexecuted": "Unexecuted",
   "value": "Value",

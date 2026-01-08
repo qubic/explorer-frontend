@@ -46,7 +46,6 @@
   "ticksThisEpochTooltip": "Gesamtzahl der in dieser Epoche verarbeiteten Ticks und die Anzahl leerer Ticks in Klammern",
   "transactionPreview": "Transaktionsvorschau",
   "transactions": "Transaktionen",
-  "data": "Daten",
   "type": "Typ",
   "unexecuted": "Nicht ausgeführt",
   "value": "Wert",
