@@ -1,7 +1,10 @@
+import { SmartContractIcon } from '@app/assets/icons'
 import { Tooltip } from '@app/components/ui'
 import { CopyTextButton, COPY_BUTTON_TYPES } from '@app/components/ui/buttons'
+import { useGetAddressName } from '@app/hooks'
 import { Routes } from '@app/router'
 import { clsxTwMerge, formatEllipsis } from '@app/utils'
+import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 
 type LinkElementProps = {
@@ -42,19 +45,30 @@ export default function AddressLink({
   ellipsis = false,
   showTooltip = false
 }: AddressLinkProps) {
+  const { t } = useTranslation('network-page')
+  const addressName = useGetAddressName(value)
+  const showSmartContractIcon = addressName?.i18nKey === 'smartContract' && Boolean(label)
+
   const linkElement = (
     <LinkElement value={value} label={label} ellipsis={ellipsis} className={className} />
   )
 
   return (
     <div className="flex items-center gap-10">
-      {showTooltip ? (
-        <Tooltip tooltipId="address-link" content={value}>
-          {linkElement}
-        </Tooltip>
-      ) : (
-        linkElement
-      )}
+      <div className="flex items-center gap-4">
+        {showSmartContractIcon && (
+          <Tooltip tooltipId="smart-contract" content={t('smartContract')}>
+            <SmartContractIcon className="size-14 text-primary-30" />
+          </Tooltip>
+        )}
+        {showTooltip ? (
+          <Tooltip tooltipId="address-link" content={value}>
+            {linkElement}
+          </Tooltip>
+        ) : (
+          linkElement
+        )}
+      </div>
       {copy && <CopyTextButton text={value} type={COPY_BUTTON_TYPES.ADDRESS} />}
     </div>
   )

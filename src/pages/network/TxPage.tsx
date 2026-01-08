@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 
@@ -6,7 +7,8 @@ import { Alert, Breadcrumbs } from '@app/components/ui'
 import { ErrorFallback } from '@app/components/ui/error-boundaries'
 import { PageLayout } from '@app/components/ui/layouts'
 import { LinearProgress } from '@app/components/ui/loaders'
-import { useGetTransactionQuery } from '@app/store/apis/archiver-v2'
+import { useGetTransactionByHashQuery } from '@app/store/apis/query-service'
+import { convertToQueryServiceTx } from '@app/store/apis/query-service/query-service.adapters'
 import { useGetQliTransactionQuery } from '@app/store/apis/qli'
 import { formatEllipsis } from '@app/utils'
 import { HomeLink, TickLink, TxItem } from './components'
@@ -17,20 +19,28 @@ function TxPage() {
   const { txId = '' } = useParams()
   const txEra = useValidatedTxEra()
 
-  const archiverTx = useGetTransactionQuery(txId, {
+  const queryServiceTx = useGetTransactionByHashQuery(txId, {
     skip: !txId || txEra === 'historical'
   })
   const qliTx = useGetQliTransactionQuery(txId, {
     skip: !txId || txEra === 'latest'
   })
 
-  const { transaction, moneyFlew, timestamp } = archiverTx.data ?? qliTx.data ?? {}
+  const tx = useMemo(() => {
+    if (queryServiceTx.data) {
+      return queryServiceTx.data
+    }
+    if (qliTx.data) {
+      return convertToQueryServiceTx(qliTx.data)
+    }
+    return undefined
+  }, [queryServiceTx.data, qliTx.data])
 
-  if (archiverTx.isFetching || qliTx.isFetching) {
+  if (queryServiceTx.isFetching || qliTx.isFetching) {
     return <LinearProgress />
   }
 
-  if (!transaction) {
+  if (!tx) {
     return <ErrorFallback message={t('transactionNotFound')} hideErrorHeader />
   }
 
@@ -44,16 +54,16 @@ function TxPage() {
       <Breadcrumbs aria-label="breadcrumb">
         <HomeLink />
         <p className="font-space text-xs text-gray-50">
-          {t('tick')} <TickLink className="text-xs text-gray-50" value={transaction.tickNumber} />
+          {t('tick')} <TickLink className="text-xs text-gray-50" value={tx.tickNumber} />
         </p>
-        <p className="font-space text-xs text-primary-30">{formatEllipsis(transaction.txId)}</p>
+        <p className="font-space text-xs text-primary-30">{formatEllipsis(tx.hash)}</p>
       </Breadcrumbs>
       <p className="my-16 font-space text-24 leading-28">{t('transactionPreview')}</p>
       <TxItem
-        tx={transaction}
-        nonExecutedTxIds={moneyFlew ? [] : [transaction.txId]}
+        tx={tx}
+        nonExecutedTxIds={tx.moneyFlew ? [] : [tx.hash]}
         variant="secondary"
-        timestamp={timestamp}
+        timestamp={tx.timestamp}
       />
     </PageLayout>
   )

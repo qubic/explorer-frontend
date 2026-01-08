@@ -2,26 +2,21 @@ import { memo, useEffect, useMemo, useState } from 'react'
 
 import { ArrowDownIcon, ArrowUpIcon } from '@app/assets/icons'
 import { ChevronToggleButton } from '@app/components/ui/buttons'
-import type { Transaction } from '@app/store/apis/archiver-v2'
-import { formatString } from '@app/utils'
+import type { QueryServiceTransaction } from '@app/store/apis/query-service'
+import { formatHex, formatString } from '@app/utils'
 import { useGetAddressName } from '@app/hooks'
 import type { AssetTransfer, Transfer } from '@app/utils/qubic-ts'
-import {
-  getAssetsTransfers,
-  getTransfers,
-  isTransferTx,
-  QUTIL_ADDRESS,
-  QX_ADDRESS
-} from '@app/utils/qubic-ts'
+import { getAssetsTransfers, getTransfers, isSendManyTx, QX_ADDRESS } from '@app/utils/qubic-ts'
 import AddressLink from '../AddressLink'
 import CardItem from '../CardItem'
 import TxLink from '../TxLink'
 import TxStatus from '../TxStatus'
+import { getTxStatus } from '../TxStatus.utils'
 import TransactionDetails from './TransactionDetails'
 import type { TxItemVariant } from './TxItem.types'
 
 type Props = {
-  readonly tx: Omit<Transaction['transaction'], 'inputSize' | 'signatureHex'>
+  readonly tx: Omit<QueryServiceTransaction, 'inputSize' | 'moneyFlew' | 'timestamp'>
   readonly identity?: string
   readonly nonExecutedTxIds: string[]
   readonly variant?: TxItemVariant
@@ -32,7 +27,7 @@ type Props = {
 }
 
 function TxItem({
-  tx: { txId, sourceId, tickNumber, destId, inputType, amount, inputHex },
+  tx: { hash, source, tickNumber, destination, inputType, amount, inputData, signature },
   identity,
   nonExecutedTxIds,
   variant = 'primary',
@@ -50,32 +45,36 @@ function TxItem({
 
   const handleToggleDetails = () => {
     if (onToggle) {
-      onToggle(txId, !detailsOpen)
+      onToggle(hash, !detailsOpen)
     } else {
       setInternalDetailsOpen((prev) => !prev)
     }
   }
 
-  const isTransferTransaction = useMemo(
-    () => isTransferTx(sourceId, destId, amount),
-    [sourceId, destId, amount]
+  const txStatus = useMemo(
+    () =>
+      getTxStatus(inputType, Number(amount), !(nonExecutedTxIds || []).includes(hash), destination),
+    [inputType, amount, nonExecutedTxIds, hash, destination]
   )
 
   const addressLabel = useMemo(() => {
     if (asset) {
       return asset.newOwnerAndPossessor
     }
-    return identity === sourceId ? destId : sourceId
-  }, [asset, identity, sourceId, destId])
+    return identity === source ? destination : source
+  }, [asset, identity, source, destination])
 
   const addressNameData = useGetAddressName(addressLabel)
   const addressName = addressNameData?.name
 
   useEffect(() => {
-    if (destId === QUTIL_ADDRESS && inputType === 1 && inputHex) {
+    // Convert base64 to hex for parsing (query-service returns base64)
+    const inputDataHex = formatHex(inputData)
+
+    if (isSendManyTx(destination, inputType) && inputDataHex) {
       ;(async () => {
         try {
-          const transfers = await getTransfers(inputHex)
+          const transfers = await getTransfers(inputDataHex)
           setEntries(transfers)
         } catch (error) {
           // eslint-disable-next-line no-console
@@ -83,10 +82,10 @@ function TxItem({
         }
       })()
     }
-    if (destId === QX_ADDRESS && inputType === 2 && inputHex) {
+    if (destination === QX_ADDRESS && inputType === 2 && inputDataHex) {
       ;(async () => {
         try {
-          const assetTransfer = await getAssetsTransfers(inputHex)
+          const assetTransfer = await getAssetsTransfers(inputDataHex)
           if (!assetTransfer) return
           setAsset(assetTransfer)
         } catch (error) {
@@ -95,32 +94,37 @@ function TxItem({
         }
       })()
     }
-  }, [destId, inputHex, inputType])
+  }, [destination, inputData, inputType])
 
   if (variant === 'secondary') {
     return (
       <>
-        <div className="mb-24 flex flex-col gap-10 md:flex-row md:items-center md:gap-16">
-          <div className="">
-            <TxStatus
-              executed={!(nonExecutedTxIds || []).includes(txId)}
-              isTransferTx={isTransferTransaction}
-            />
-          </div>
+        <div className="mb-24 flex items-center gap-10 md:gap-16">
+          <TxStatus status={txStatus} />
           <TxLink
             isHistoricalTx={isHistoricalTx}
             className="text-base text-gray-50"
-            value={txId}
+            value={hash}
             copy
           />
         </div>
         <TransactionDetails
-          txDetails={{ txId, sourceId, tickNumber, destId, inputType, amount }}
+          txDetails={{
+            hash,
+            source,
+            tickNumber,
+            destination,
+            inputType,
+            amount,
+            inputData,
+            signature
+          }}
           isHistoricalTx={isHistoricalTx}
           variant={variant}
           entries={entries}
           assetDetails={asset}
           timestamp={timestamp}
+          showExtendedDetails
         />
       </>
     )
@@ -129,14 +133,11 @@ function TxItem({
   return (
     <CardItem className="flex flex-col rounded-12 p-12 transition-all duration-300">
       <div className="flex items-center justify-between gap-8">
-        <TxStatus
-          executed={!(nonExecutedTxIds || []).includes(txId)}
-          isTransferTx={isTransferTransaction}
-        />
+        <TxStatus status={txStatus} />
         <div className="flex flex-grow flex-col items-start gap-8 sm:flex-row sm:items-center sm:justify-between">
           {identity ? (
             <div className="flex items-center gap-8">
-              {identity === sourceId ? (
+              {identity === source ? (
                 <ArrowUpIcon className="size-12 text-error-30" />
               ) : (
                 <ArrowDownIcon className="size-12 text-success-30" />
@@ -153,7 +154,7 @@ function TxItem({
           ) : (
             <TxLink
               isHistoricalTx={isHistoricalTx}
-              value={txId}
+              value={hash}
               className="text-primary-30"
               showTooltip
               ellipsis
@@ -180,7 +181,16 @@ function TxItem({
       </div>
       {detailsOpen && (
         <TransactionDetails
-          txDetails={{ txId, sourceId, tickNumber, destId, inputType, amount }}
+          txDetails={{
+            hash,
+            source,
+            tickNumber,
+            destination,
+            inputType,
+            amount,
+            inputData,
+            signature
+          }}
           isHistoricalTx={isHistoricalTx}
           variant={variant}
           entries={entries}

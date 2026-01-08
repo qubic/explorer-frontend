@@ -3,10 +3,12 @@ import type { Config } from 'tailwindcss'
 import aspectRatioPlugin from '@tailwindcss/aspect-ratio'
 import formsPlugin from '@tailwindcss/forms'
 import typographyPlugin from '@tailwindcss/typography'
-import scrollbarPlugin from 'tailwind-scrollbar'
-
 import { colors } from './src/theme/colors'
 import { screens } from './src/theme/screens'
+
+// Use require for tailwind-scrollbar due to ESM/CJS interop issues with prettier-plugin-tailwindcss
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const scrollbarPlugin = require('tailwind-scrollbar')
 
 const tailwindConfig: Config = {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],

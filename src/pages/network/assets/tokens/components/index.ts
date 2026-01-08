@@ -1,5 +1,4 @@
-export { default as CategoryChips, CATEGORY_ALL, CATEGORY_STANDARD } from './CategoryChips'
-export type { CategoryFilter } from './CategoryChips'
+export { default as CategoryChips } from './CategoryChips'
 export { default as TokenRow } from './TokenRow'
 export { default as TokensErrorRow } from './TokensErrorRow'
 export { default as TokenSkeletonRow } from './TokenSkeletonRow'

@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import type { GetAddressBalancesResponse } from '@app/store/apis/archiver-v1'
+import type { GetAddressBalancesResponse } from '@app/store/apis/rpc-live'
 import { clsxTwMerge, formatString } from '@app/utils'
 import { CardItem, TickLink } from '../../components'
 

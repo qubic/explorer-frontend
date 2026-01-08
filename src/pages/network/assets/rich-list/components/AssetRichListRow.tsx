@@ -1,7 +1,7 @@
 import { memo } from 'react'
 
 import { AddressLink } from '@app/pages/network/components'
-import type { Owner } from '@app/store/apis/archiver-v1'
+import type { Owner } from '@app/store/apis/rpc-stats'
 import { formatString } from '@app/utils'
 import { useGetAddressName } from '@app/hooks'
 

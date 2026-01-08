@@ -52,3 +52,22 @@ export function formatQubicPrice(price: number | undefined | null): string {
   const pricePerBillion = (price ?? 0) * 1_000_000_000
   return `$${formatString(pricePerBillion)} / bQUBIC`
 }
+
+/**
+ * Converts base64 to hex string
+ * @param base64 - The base64 string to convert
+ * @returns Hex encoded string
+ */
+export function formatHex(base64: string | undefined): string {
+  if (!base64) return ''
+  try {
+    const binaryString = atob(base64)
+    return Array.from(binaryString, (char) =>
+      char.charCodeAt(0).toString(16).padStart(2, '0')
+    ).join('')
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.warn('formatHex: Failed to decode base64 string', error)
+  }
+  return ''
+}

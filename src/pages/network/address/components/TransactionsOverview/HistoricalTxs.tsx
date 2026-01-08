@@ -1,4 +1,4 @@
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { ChevronDownIcon, Infocon } from '@app/assets/icons'
@@ -6,12 +6,14 @@ import { InfiniteScroll } from '@app/components/ui'
 import { Button } from '@app/components/ui/buttons'
 import { DotsLoader } from '@app/components/ui/loaders'
 import { useTransactionExpandCollapse } from '@app/hooks'
-import type { TransactionWithType } from '@app/types'
+import type { QueryServiceTransaction } from '@app/store/apis/query-service'
+import { convertToQueryServiceTx } from '@app/store/apis/query-service/query-service.adapters'
+import type { Transaction } from '@app/store/apis/archiver-v2'
 import { TxItem } from '../../../components'
 
 type Props = {
   addressId: string
-  transactions: TransactionWithType[]
+  transactions: Transaction[]
   loadMore: () => Promise<void>
   hasMore: boolean
   isLoading: boolean
@@ -28,23 +30,30 @@ export default function HistoricalTxs({
 }: Props) {
   const { t } = useTranslation('network-page')
 
-  // Use shared expand/collapse hook
+  // Convert transactions to QueryServiceTransaction format
+  const convertedTransactions = useMemo(
+    () => transactions.map(convertToQueryServiceTx),
+    [transactions]
+  )
+
+  // Use shared expand/collapse hook with custom ID extractor
   const { expandAll, expandedTxIds, handleExpandAllChange, handleTxToggle } =
     useTransactionExpandCollapse({
-      transactions,
+      transactions: convertedTransactions,
+      getTransactionId: (tx: QueryServiceTransaction) => tx.hash,
       resetDependency: addressId
     })
 
   const renderTxItem = useCallback(
-    ({ transaction, moneyFlew }: TransactionWithType) => (
+    (tx: QueryServiceTransaction) => (
       <TxItem
-        key={transaction.txId}
-        tx={transaction}
+        key={tx.hash}
+        tx={tx}
         identity={addressId}
         variant="primary"
         isHistoricalTx
-        nonExecutedTxIds={moneyFlew ? [] : [transaction?.txId]}
-        isExpanded={expandedTxIds.has(transaction.txId)}
+        nonExecutedTxIds={tx.moneyFlew ? [] : [tx.hash]}
+        isExpanded={expandedTxIds.has(tx.hash)}
         onToggle={handleTxToggle}
       />
     ),
@@ -75,7 +84,7 @@ export default function HistoricalTxs({
       )}
 
       <InfiniteScroll
-        items={transactions}
+        items={convertedTransactions}
         loadMore={loadMore}
         hasMore={hasMore}
         isLoading={isLoading}
@@ -83,7 +92,7 @@ export default function HistoricalTxs({
         error={error && t('loadingTransactionsError')}
         endMessage={
           <p className="py-32 text-center text-14 text-gray-50">
-            {transactions.length === 0 ? t('noTransactions') : t('allTransactionsLoaded')}
+            {convertedTransactions.length === 0 ? t('noTransactions') : t('allTransactionsLoaded')}
           </p>
         }
         renderItem={renderTxItem}
