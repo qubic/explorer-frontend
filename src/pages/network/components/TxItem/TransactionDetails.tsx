@@ -2,11 +2,12 @@ import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Alert } from '@app/components/ui'
-import type { QueryServiceTransaction } from '@app/store/apis/query-service'
+import { COPY_BUTTON_TYPES, CopyTextButton } from '@app/components/ui/buttons'
+import { useGetAddressName } from '@app/hooks'
 import { useGetSmartContractsQuery } from '@app/store/apis/qubic-static'
+import type { QueryServiceTransaction } from '@app/store/apis/query-service'
 import { clsxTwMerge, formatDate, formatHex, formatString } from '@app/utils'
 import { getProcedureName } from '@app/utils/qubic'
-import { useGetAddressName } from '@app/hooks'
 import { type AssetTransfer, type Transfer, isSmartContractTx } from '@app/utils/qubic-ts'
 import AddressLink from '../AddressLink'
 import SubCardItem from '../SubCardItem'
@@ -183,7 +184,12 @@ export default function TransactionDetails({
         <SubCardItem
           title={t('signature')}
           variant={variant}
-          content={<p className="break-all font-space text-sm">{signature}</p>}
+          content={
+            <div className="flex items-start gap-10">
+              <p className="break-all font-space text-sm">{signature}</p>
+              <CopyTextButton text={signature} type={COPY_BUTTON_TYPES.GENERIC} />
+            </div>
+          }
         />
       )}
 
