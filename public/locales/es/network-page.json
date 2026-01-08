@@ -46,6 +46,7 @@
   "ticksThisEpochTooltip": "Número total de ticks procesados en este epoch y la cantidad de ticks vacíos entre paréntesis",
   "transactionPreview": "Vista previa de las transacciones",
   "transactions": "Transacciones",
+  "data": "Datos",
   "type": "Tipo",
   "unexecuted": "No ejecutado",
   "value": "Valor",
