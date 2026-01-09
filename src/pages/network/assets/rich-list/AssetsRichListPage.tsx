@@ -80,13 +80,10 @@ function AssetsRichListPage() {
 
   const handlePageChange = useCallback(
     (value: number) => {
-      setSearchParams(
-        (prev) => ({
-          ...Object.fromEntries(prev.entries()),
-          page: value.toString()
-        }),
-        { replace: true }
-      )
+      setSearchParams((prev) => ({
+        ...Object.fromEntries(prev.entries()),
+        page: value.toString()
+      }))
     },
     [setSearchParams]
   )
@@ -114,21 +111,23 @@ function AssetsRichListPage() {
     [data, pageSize]
   )
 
+  // Set URL defaults only on initial mount
   useEffect(() => {
-    const params = new URLSearchParams(searchParams)
-    let hasChanges = false
-    if (!params.has('page')) {
-      params.set('page', '1')
-      hasChanges = true
+    const hasPage = searchParams.has('page')
+    const hasValidPageSize = searchParams.has('pageSize') && pageSizeParam === pageSize
+
+    if (!hasPage || !hasValidPageSize) {
+      setSearchParams(
+        (prev) => ({
+          ...Object.fromEntries(prev.entries()),
+          ...(!prev.has('page') && { page: '1' }),
+          ...(!prev.has('pageSize') && { pageSize: String(pageSize) })
+        }),
+        { replace: true }
+      )
     }
-    if (!params.has('pageSize') || pageSizeParam !== pageSize) {
-      params.set('pageSize', String(pageSize))
-      hasChanges = true
-    }
-    if (hasChanges) {
-      setSearchParams(params, { replace: true })
-    }
-  }, [searchParams, setSearchParams, pageSizeParam, pageSize])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const renderTableContent = useCallback(() => {
     if (isFetching) return <RichListLoadingRows pageSize={pageSize} />
