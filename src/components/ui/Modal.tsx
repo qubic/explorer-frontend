@@ -66,6 +66,20 @@ export default function Modal({
 }: ModalProps) {
   useEffect(() => {
     const handleTouchMove = (e: TouchEvent) => {
+      // Allow scrolling inside elements with overflow-y-auto or overflow-auto
+      let target = e.target as HTMLElement | null
+      while (target && target !== document.body) {
+        const style = window.getComputedStyle(target)
+        const overflowY = style.getPropertyValue('overflow-y')
+        if (overflowY === 'auto' || overflowY === 'scroll') {
+          // Check if the element is actually scrollable (has overflow content)
+          if (target.scrollHeight > target.clientHeight) {
+            return // Allow scroll inside scrollable container
+          }
+        }
+        target = target.parentElement
+      }
+      // Prevent scroll on background
       e.preventDefault()
     }
 
@@ -73,7 +87,7 @@ export default function Modal({
       // Disable scrolling on body (desktop)
       document.body.classList.add('overflow-hidden')
 
-      // Disable touch scrolling (mobile)
+      // Disable touch scrolling (mobile) except inside scrollable areas
       document.addEventListener('touchmove', handleTouchMove, { passive: false })
     }
 
