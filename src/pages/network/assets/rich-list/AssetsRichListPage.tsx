@@ -161,7 +161,7 @@ function AssetsRichListPage() {
         <div className="flex flex-col justify-between space-y-10 sm:flex-row sm:items-end">
           <div>
             <p className="font-space text-24 font-500 leading-26">{t('assetsRichList')}</p>
-            <p className="text-left text-sm text-gray-50">{t('assetsRichListDesc')}</p>
+            <p className="text-left text-sm text-muted-foreground">{t('assetsRichListDesc')}</p>
           </div>
         </div>
 
@@ -177,22 +177,24 @@ function AssetsRichListPage() {
           />
         </div>
 
-        <div className="w-full rounded-12 border-1 border-primary-60 bg-primary-70">
+        <div className="w-full rounded-12 border-1 border-border bg-card">
           <div className="overflow-x-scroll">
             <table className="w-full">
-              <thead className="border-b-1 border-primary-60 text-left font-space text-sm text-gray-50">
+              <thead className="border-b-1 border-border text-left font-space text-sm text-muted-foreground">
                 <tr>
                   <th className="p-16 text-center font-400 sm:w-52">
-                    <span className="hidden text-gray-50 sm:block">{t('rank')}</span>
+                    <span className="hidden text-muted-foreground sm:block">{t('rank')}</span>
                   </th>
                   <th className="p-16 font-400 md:min-w-[581px]">
-                    <span className="whitespace-nowrap text-gray-50">{t('addressID')}</span>
+                    <span className="whitespace-nowrap text-muted-foreground">
+                      {t('addressID')}
+                    </span>
                   </th>
                   <th className="p-16 font-400">
-                    <span className="text-gray-50">{t('name')}</span>
+                    <span className="text-muted-foreground">{t('name')}</span>
                   </th>
                   <th className="w-[166px] whitespace-nowrap p-16 text-right font-400">
-                    <span className="text-gray-50">{t('amount')}</span>
+                    <span className="text-muted-foreground">{t('amount')}</span>
                   </th>
                 </tr>
               </thead>

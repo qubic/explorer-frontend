@@ -23,9 +23,9 @@ function AmountDetails({
   className: string
 }) {
   return (
-    <div className={`space-y-2 text-gray-50 ${className}`}>
+    <div className={`space-y-2 text-muted-foreground ${className}`}>
       <p>{title}</p>
-      <p className="text-sm font-500 text-white sm:text-base">
+      <p className="text-sm font-500 text-foreground sm:text-base">
         {amount} <span>QUBIC</span>
       </p>
       <p className="text-xs sm:text-sm">${amountUsd}</p>
@@ -47,9 +47,9 @@ function TransferDetails({
   className: string
 }) {
   return (
-    <div className={`space-y-2 text-gray-50 ${className}`}>
+    <div className={`space-y-2 text-muted-foreground ${className}`}>
       <p>{title}</p>
-      <p className="text-sm font-500 text-white sm:text-base">{transfersCount}</p>
+      <p className="text-sm font-500 text-foreground sm:text-base">{transfersCount}</p>
       {latestTransferTick > 0 && (
         <p className="text-xs sm:text-sm">
           {label}: <TickLink value={latestTransferTick} className="text-primary-30" />

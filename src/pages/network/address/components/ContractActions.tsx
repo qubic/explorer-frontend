@@ -32,7 +32,7 @@ export default function ContractActions({ asset, code, githubUrl, proposalUrl }:
       <a
         href={githubUrl}
         aria-label="Open GitHub code file"
-        className="rounded-8 border border-primary-60 p-5 hover:bg-primary-60"
+        className="rounded-8 border border-border p-5 text-muted-foreground hover:bg-muted hover:text-foreground"
         target="_blank"
         rel="noreferrer"
       >
@@ -44,7 +44,7 @@ export default function ContractActions({ asset, code, githubUrl, proposalUrl }:
         <a
           href={proposalUrl}
           aria-label="Open GitHub proposal file"
-          className="rounded-8 border border-primary-60 p-5 hover:bg-primary-60"
+          className="rounded-8 border border-border p-5 text-muted-foreground hover:bg-muted hover:text-foreground"
           target="_blank"
           rel="noreferrer"
         >
@@ -53,10 +53,7 @@ export default function ContractActions({ asset, code, githubUrl, proposalUrl }:
           </Tooltip>
         </a>
       )}
-      <CopyTextButton
-        text={code}
-        className="border border-primary-60 p-7 text-white hover:bg-primary-60"
-      />
+      <CopyTextButton text={code} className="border border-border p-7 hover:bg-muted" />
     </div>
   )
 }

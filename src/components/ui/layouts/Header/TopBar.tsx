@@ -8,6 +8,7 @@ import { formatQubicPrice } from '@app/utils'
 import LanguagePicker from './LanguagePicker'
 import NetworkSelector from './NetworkSelector'
 import SearchBar from './SearchBar/SearchBar'
+import ThemeToggle from './ThemeToggle'
 
 export default function TopBar() {
   const { t } = useTranslation('network-page')
@@ -32,13 +33,15 @@ export default function TopBar() {
   }, [data, isLoading, isError, t])
 
   return (
-    <section className="sticky top-0 z-99 border-b border-primary-60 bg-primary-80">
+    <section className="sticky top-0 z-99 border-b border-border bg-background">
       <div className="relative mx-auto flex max-w-lg items-center justify-between px-12 py-4">
-        <p className="flex items-center gap-4 text-xs text-gray-50">
+        <p className="flex items-center gap-4 text-xs text-muted-foreground">
           QUBIC {t('price')}: {renderQubicPrice()}
         </p>
         <div className="flex items-center gap-8">
           <SearchBar />
+
+          <ThemeToggle />
 
           <LanguagePicker />
 

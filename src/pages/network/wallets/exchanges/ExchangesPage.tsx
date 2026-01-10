@@ -46,19 +46,19 @@ function ExchangesPage() {
             <p className="font-space text-24 font-500 leading-26">{t('exchanges')}</p>
           </div>
         </div>
-        <div className="w-full rounded-12 border-1 border-primary-60 bg-primary-70">
+        <div className="w-full rounded-12 border-1 border-border bg-card">
           <div className="overflow-x-scroll">
             <table className="w-full">
-              <thead className="border-b-1 border-primary-60 text-left font-space text-sm text-gray-50">
+              <thead className="border-b-1 border-border text-left font-space text-sm text-muted-foreground">
                 <tr>
                   <th className="px-10 py-16 text-left text-xs font-400 sm:w-72 sm:p-16 sm:text-sm">
-                    <span className="text-gray-50">{t('exchange')}</span>
+                    <span className="text-muted-foreground">{t('exchange')}</span>
                   </th>
                   <th className="px-10 py-16 text-xs font-400 sm:p-16 sm:text-sm">
-                    <span className="text-gray-50">{t('addressID')}</span>
+                    <span className="text-muted-foreground">{t('addressID')}</span>
                   </th>
                   <th className="px-10 py-16 text-right text-xs font-400 sm:p-16 sm:text-sm">
-                    <span className="text-gray-50">{t('amount')} (QUBIC)</span>
+                    <span className="text-muted-foreground">{t('amount')} (QUBIC)</span>
                   </th>
                 </tr>
               </thead>

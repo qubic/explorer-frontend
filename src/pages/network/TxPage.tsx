@@ -53,8 +53,8 @@ function TxPage() {
       )}
       <Breadcrumbs aria-label="breadcrumb">
         <HomeLink />
-        <p className="font-space text-xs text-gray-50">
-          {t('tick')} <TickLink className="text-xs text-gray-50" value={tx.tickNumber} />
+        <p className="font-space text-xs text-muted-foreground">
+          {t('tick')} <TickLink className="text-xs text-muted-foreground" value={tx.tickNumber} />
         </p>
         <p className="font-space text-xs text-primary-30">{formatEllipsis(tx.hash)}</p>
       </Breadcrumbs>
