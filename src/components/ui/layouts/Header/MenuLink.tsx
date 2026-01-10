@@ -14,14 +14,9 @@ type Props = {
 const MenuLink = memo(({ menu, activePath, onToggleMenu }: Props) => {
   const { t } = useTranslation()
 
-  const classNames = clsxTwMerge(
-    'flex w-full whitespace-nowrap rounded px-8 py-4 text-sm hover:bg-muted',
-    activePath === menu.href ? 'text-primary-30' : 'text-muted-foreground'
-  )
-
-  return menu.isExternal ? (
-    <a
-      href={menu.href}
+  return (
+    <Link
+      to={menu.href}
       target="_blank"
       rel="noreferrer"
       onClick={onToggleMenu}
