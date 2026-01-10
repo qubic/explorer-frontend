@@ -80,13 +80,10 @@ function AssetsRichListPage() {
 
   const handlePageChange = useCallback(
     (value: number) => {
-      setSearchParams(
-        (prev) => ({
-          ...Object.fromEntries(prev.entries()),
-          page: value.toString()
-        }),
-        { replace: true }
-      )
+      setSearchParams((prev) => ({
+        ...Object.fromEntries(prev.entries()),
+        page: value.toString()
+      }))
     },
     [setSearchParams]
   )
@@ -114,21 +111,27 @@ function AssetsRichListPage() {
     [data, pageSize]
   )
 
+  // Set URL defaults for page/pageSize only when asset/issuer are already present
+  // This prevents interfering with AssetsTabs which handles initial asset selection
   useEffect(() => {
-    const params = new URLSearchParams(searchParams)
-    let hasChanges = false
-    if (!params.has('page')) {
-      params.set('page', '1')
-      hasChanges = true
+    const hasAsset = searchParams.has('asset') && searchParams.has('issuer')
+    const hasPage = searchParams.has('page')
+    const hasValidPageSize =
+      searchParams.has('pageSize') &&
+      VALID_PAGE_SIZES.includes(pageSizeParam as (typeof VALID_PAGE_SIZES)[number])
+
+    // Only set page/pageSize defaults if asset/issuer already exist
+    if (hasAsset && (!hasPage || !hasValidPageSize)) {
+      setSearchParams(
+        (prev) => ({
+          ...Object.fromEntries(prev.entries()),
+          ...(!prev.has('page') && { page: '1' }),
+          ...(!prev.has('pageSize') && { pageSize: String(DEFAULT_PAGE_SIZE) })
+        }),
+        { replace: true }
+      )
     }
-    if (!params.has('pageSize') || pageSizeParam !== pageSize) {
-      params.set('pageSize', String(pageSize))
-      hasChanges = true
-    }
-    if (hasChanges) {
-      setSearchParams(params, { replace: true })
-    }
-  }, [searchParams, setSearchParams, pageSizeParam, pageSize])
+  }, [searchParams, setSearchParams, pageSizeParam])
 
   const renderTableContent = useCallback(() => {
     if (isFetching) return <RichListLoadingRows pageSize={pageSize} />

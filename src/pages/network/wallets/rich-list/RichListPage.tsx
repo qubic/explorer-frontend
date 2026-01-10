@@ -83,14 +83,19 @@ function RichListPage() {
   )
 
   useEffect(() => {
-    const params = new URLSearchParams(searchParams)
-    if (!params.has('page')) {
-      params.set('page', '1')
+    const hasPage = searchParams.has('page')
+    const hasPageSize = searchParams.has('pageSize')
+
+    if (!hasPage || !hasPageSize) {
+      setSearchParams(
+        (prev) => ({
+          ...Object.fromEntries(prev.entries()),
+          ...(!prev.has('page') && { page: '1' }),
+          ...(!prev.has('pageSize') && { pageSize: String(DEFAULT_PAGE_SIZE) })
+        }),
+        { replace: true }
+      )
     }
-    if (!params.has('pageSize')) {
-      params.set('pageSize', String(DEFAULT_PAGE_SIZE))
-    }
-    setSearchParams(params, { replace: true })
   }, [searchParams, setSearchParams])
 
   const renderTableContent = useCallback(() => {
