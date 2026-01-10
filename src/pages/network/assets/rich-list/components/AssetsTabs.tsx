@@ -88,11 +88,9 @@ export default function AssetsTabs() {
   // Detect category from URL params on initial load - only runs once
   const hasRunCategoryDetection = useRef(false)
   useEffect(() => {
-    // Only run once
     if (hasRunCategoryDetection.current) return
     if (!allAssets.length) return
     if (!assetParam || !issuerParam) {
-      // No URL params, mark as initialized and let auto-select handle it
       hasRunCategoryDetection.current = true
       setHasInitializedCategory(true)
       return
@@ -103,7 +101,6 @@ export default function AssetsTabs() {
     )
 
     if (!urlAsset) {
-      // URL has invalid asset/issuer combination - mark as invalid to prevent auto-select
       hasRunCategoryDetection.current = true
       setHasInitializedCategory(true)
       hasInvalidUrlParams.current = true
@@ -121,11 +118,9 @@ export default function AssetsTabs() {
     // For non-SC assets, wait for categories data before determining category
     if (!categoriesData?.categories) return
 
-    // Mark as initialized now that we have all necessary data
     hasRunCategoryDetection.current = true
     setHasInitializedCategory(true)
 
-    // Find the category for non-SC assets
     const detectedCategory = findTokenCategory(urlAsset, categoriesData.categories)
     setSelectedCategory(detectedCategory)
   }, [allAssets, assetParam, issuerParam, categoriesData])
@@ -211,7 +206,6 @@ export default function AssetsTabs() {
 
   // Initial asset selection - runs once when assets are loaded and no URL params exist
   useEffect(() => {
-    // Skip if already initialized or no assets
     if (hasSelectedInitialAsset.current) return
     if (filteredAssets.length === 0) return
     if (hasInvalidUrlParams.current) return
@@ -226,14 +220,15 @@ export default function AssetsTabs() {
         return
       }
       // If URL has invalid params, wait for category detection
-      if (!hasInitializedCategory) {
-        return
-      }
+      if (!hasInitializedCategory) return
     }
 
     // No URL params or invalid params - select default asset
-    hasSelectedInitialAsset.current = true
-    selectDefaultAsset(filteredAssets, selectedCategory)
+    if (selectDefaultAsset(filteredAssets, selectedCategory)) {
+      hasSelectedInitialAsset.current = true
+      // Also prevent Category Detection from re-running and changing category
+      hasRunCategoryDetection.current = true
+    }
   }, [
     filteredAssets,
     assetParam,
@@ -245,14 +240,18 @@ export default function AssetsTabs() {
 
   // Category change handler - runs when user changes category
   useEffect(() => {
-    // Skip on initial render or if category hasn't changed
-    if (lastCategoryRef.current === selectedCategory) {
+    // Skip during initial setup - wait for initial selection to complete
+    if (!hasSelectedInitialAsset.current) {
+      // Still update the ref to avoid false positives later
+      lastCategoryRef.current = selectedCategory
       return
     }
 
+    // Skip if category hasn't changed
+    if (lastCategoryRef.current === selectedCategory) return
+
     lastCategoryRef.current = selectedCategory
 
-    // Skip if no assets
     if (filteredAssets.length === 0) return
 
     // Check for remembered selection

@@ -111,23 +111,27 @@ function AssetsRichListPage() {
     [data, pageSize]
   )
 
-  // Set URL defaults only on initial mount
+  // Set URL defaults for page/pageSize only when asset/issuer are already present
+  // This prevents interfering with AssetsTabs which handles initial asset selection
   useEffect(() => {
+    const hasAsset = searchParams.has('asset') && searchParams.has('issuer')
     const hasPage = searchParams.has('page')
-    const hasValidPageSize = searchParams.has('pageSize') && pageSizeParam === pageSize
+    const hasValidPageSize =
+      searchParams.has('pageSize') &&
+      VALID_PAGE_SIZES.includes(pageSizeParam as (typeof VALID_PAGE_SIZES)[number])
 
-    if (!hasPage || !hasValidPageSize) {
+    // Only set page/pageSize defaults if asset/issuer already exist
+    if (hasAsset && (!hasPage || !hasValidPageSize)) {
       setSearchParams(
         (prev) => ({
           ...Object.fromEntries(prev.entries()),
           ...(!prev.has('page') && { page: '1' }),
-          ...(!prev.has('pageSize') && { pageSize: String(pageSize) })
+          ...(!prev.has('pageSize') && { pageSize: String(DEFAULT_PAGE_SIZE) })
         }),
         { replace: true }
       )
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [searchParams, setSearchParams, pageSizeParam])
 
   const renderTableContent = useCallback(() => {
     if (isFetching) return <RichListLoadingRows pageSize={pageSize} />
