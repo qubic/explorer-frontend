@@ -1,3 +1,39 @@
+# [1.31.0](https://github.com/qubic/explorer-frontend/compare/v1.30.0...v1.31.0) (2026-01-08)
+
+
+### Bug Fixes
+
+* **assets-rich-list:** wait for category detection before auto-select on URL navigation ([f45ff74](https://github.com/qubic/explorer-frontend/commit/f45ff74b600ef9f508f0a5d18114f960f8c2f625))
+* restrict deploy workflow to merged PRs on target branches only ([3493061](https://github.com/qubic/explorer-frontend/commit/3493061e56ff62baa13b4af8207a00d629835aa6))
+
+
+### Features
+
+* add signature and input data fields to transaction details ([#386](https://github.com/qubic/explorer-frontend/issues/386)) ([0b7d725](https://github.com/qubic/explorer-frontend/commit/0b7d725eca7361b9b6d486df2873b674ed2eccff))
+* **address:** add smart contract icon indicator for SC addresses ([375d13e](https://github.com/qubic/explorer-frontend/commit/375d13eb01cfc896a062f77bc21cfe54a63fada8))
+* **assets-rich-list:** validate URL params and show specific error for invalid assets ([ce4d497](https://github.com/qubic/explorer-frontend/commit/ce4d49718735b2c92f3a291fd76889c3ff954f8a))
+* display transaction status with icons instead of TX label ([#377](https://github.com/qubic/explorer-frontend/issues/377)) ([13ee569](https://github.com/qubic/explorer-frontend/commit/13ee56923228cd0c3b756b069692de0f250f082b))
+* filters added to the address page transactions ([#379](https://github.com/qubic/explorer-frontend/issues/379)) ([5a2c2ab](https://github.com/qubic/explorer-frontend/commit/5a2c2abdf05a9e4a93089fc5834486ce897a0e21))
+* **rich-list:** add Smart Contract Shares and token category filtering ([64fc8c5](https://github.com/qubic/explorer-frontend/commit/64fc8c5f706f741df988e067ffb0d15ac546d98b))
+
+# [1.31.0-rc.1](https://github.com/qubic/explorer-frontend/compare/v1.30.0...v1.31.0-rc.1) (2026-01-08)
+
+
+### Bug Fixes
+
+* **assets-rich-list:** wait for category detection before auto-select on URL navigation ([f45ff74](https://github.com/qubic/explorer-frontend/commit/f45ff74b600ef9f508f0a5d18114f960f8c2f625))
+* restrict deploy workflow to merged PRs on target branches only ([3493061](https://github.com/qubic/explorer-frontend/commit/3493061e56ff62baa13b4af8207a00d629835aa6))
+
+
+### Features
+
+* add signature and input data fields to transaction details ([#386](https://github.com/qubic/explorer-frontend/issues/386)) ([0b7d725](https://github.com/qubic/explorer-frontend/commit/0b7d725eca7361b9b6d486df2873b674ed2eccff))
+* **address:** add smart contract icon indicator for SC addresses ([375d13e](https://github.com/qubic/explorer-frontend/commit/375d13eb01cfc896a062f77bc21cfe54a63fada8))
+* **assets-rich-list:** validate URL params and show specific error for invalid assets ([ce4d497](https://github.com/qubic/explorer-frontend/commit/ce4d49718735b2c92f3a291fd76889c3ff954f8a))
+* display transaction status with icons instead of TX label ([#377](https://github.com/qubic/explorer-frontend/issues/377)) ([13ee569](https://github.com/qubic/explorer-frontend/commit/13ee56923228cd0c3b756b069692de0f250f082b))
+* filters added to the address page transactions ([#379](https://github.com/qubic/explorer-frontend/issues/379)) ([5a2c2ab](https://github.com/qubic/explorer-frontend/commit/5a2c2abdf05a9e4a93089fc5834486ce897a0e21))
+* **rich-list:** add Smart Contract Shares and token category filtering ([64fc8c5](https://github.com/qubic/explorer-frontend/commit/64fc8c5f706f741df988e067ffb0d15ac546d98b))
+
 # [1.30.0](https://github.com/qubic/explorer-frontend/compare/v1.29.0...v1.30.0) (2025-12-08)
 
 
