@@ -1,3 +1,19 @@
+## [1.31.1](https://github.com/qubic/explorer-frontend/compare/v1.31.0...v1.31.1) (2026-01-12)
+
+
+### Bug Fixes
+
+* resolve pagination reset issue on assets rich list page ([c41a7ca](https://github.com/qubic/explorer-frontend/commit/c41a7ca1e59bb019fd48f5e6c6ae25a0b5c98e84))
+* resolve race condition preventing QX default selection on assets rich list ([1e3adf7](https://github.com/qubic/explorer-frontend/commit/1e3adf7ca795dc324d9bcbd578d4a53ed2013188))
+
+## [1.31.1-rc.1](https://github.com/qubic/explorer-frontend/compare/v1.31.0...v1.31.1-rc.1) (2026-01-12)
+
+
+### Bug Fixes
+
+* resolve pagination reset issue on assets rich list page ([c41a7ca](https://github.com/qubic/explorer-frontend/commit/c41a7ca1e59bb019fd48f5e6c6ae25a0b5c98e84))
+* resolve race condition preventing QX default selection on assets rich list ([1e3adf7](https://github.com/qubic/explorer-frontend/commit/1e3adf7ca795dc324d9bcbd578d4a53ed2013188))
+
 # [1.31.0](https://github.com/qubic/explorer-frontend/compare/v1.30.0...v1.31.0) (2026-01-08)
 
 

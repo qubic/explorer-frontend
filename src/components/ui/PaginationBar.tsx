@@ -136,11 +136,11 @@ export default function PaginationBar({ pageCount, page, onPageChange, className
         className={clsxTwMerge(
           arrowButtonClasses,
           transitionClasses,
-          page === pageCount ? 'cursor-not-allowed opacity-40' : 'hover:bg-muted'
+          page >= pageCount ? 'cursor-not-allowed opacity-40' : 'hover:bg-muted'
         )}
         aria-label="Next Page"
         onClick={() => onPageChange(page + 1)}
-        disabled={page === pageCount}
+        disabled={page >= pageCount}
       >
         <ArrowRightIcon aria-hidden="true" className="size-20 rtl:rotate-180 rtl:transform" />
       </button>
