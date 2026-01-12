@@ -49,27 +49,33 @@ export default function AssetsTabs() {
   const { data: categoriesData } = useGetTokenCategoriesQuery()
 
   const updateUrlParams = useCallback(
-    ({ issuerIdentity, name }: AssetSelection) => {
+    ({ issuerIdentity, name }: AssetSelection, forceResetPage = false) => {
+      const currentIssuer = searchParams.get('issuer')
+      const currentAsset = searchParams.get('asset')
+      const isAssetChanging = currentIssuer !== issuerIdentity || currentAsset !== name
+
+      if (!isAssetChanging && !forceResetPage) {
+        return
+      }
+
       setSearchParams((prev) => ({
         ...Object.fromEntries(prev.entries()),
         issuer: issuerIdentity,
         asset: name,
-        page: '1'
+        ...((isAssetChanging || forceResetPage) && { page: '1' })
       }))
     },
-    [setSearchParams]
+    [searchParams, setSearchParams]
   )
 
   const handleAssetChange = useCallback(
     (asset: IssuedAsset) => {
-      // Reset invalid URL params flag when user manually selects a valid asset
       hasInvalidUrlParams.current = false
-      // Remember selection for current category
       setCategorySelections((prev) => ({
         ...prev,
         [selectedCategory]: { name: asset.name, issuerIdentity: asset.issuerIdentity }
       }))
-      updateUrlParams(asset)
+      updateUrlParams(asset, true)
     },
     [selectedCategory, updateUrlParams]
   )
@@ -79,16 +85,23 @@ export default function AssetsTabs() {
     return assets.sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }))
   }, [data])
 
-  // Detect category from URL params on initial load
+  // Detect category from URL params on initial load - only runs once
+  const hasRunCategoryDetection = useRef(false)
   useEffect(() => {
-    if (hasInitializedCategory || !allAssets.length || !assetParam || !issuerParam) return
+    if (hasRunCategoryDetection.current) return
+    if (!allAssets.length) return
+    if (!assetParam || !issuerParam) {
+      hasRunCategoryDetection.current = true
+      setHasInitializedCategory(true)
+      return
+    }
 
     const urlAsset = allAssets.find(
       (asset) => asset.name === assetParam && asset.issuerIdentity === issuerParam
     )
 
     if (!urlAsset) {
-      // URL has invalid asset/issuer combination - mark as invalid to prevent auto-select
+      hasRunCategoryDetection.current = true
       setHasInitializedCategory(true)
       hasInvalidUrlParams.current = true
       return
@@ -96,6 +109,7 @@ export default function AssetsTabs() {
 
     // Check if it's an SC Share - no need to wait for categories
     if (isAssetsIssuerAddress(urlAsset.issuerIdentity)) {
+      hasRunCategoryDetection.current = true
       setHasInitializedCategory(true)
       setSelectedCategory(ASSET_CATEGORY_SC_SHARES)
       return
@@ -104,13 +118,12 @@ export default function AssetsTabs() {
     // For non-SC assets, wait for categories data before determining category
     if (!categoriesData?.categories) return
 
-    // Mark as initialized now that we have all necessary data
+    hasRunCategoryDetection.current = true
     setHasInitializedCategory(true)
 
-    // Find the category for non-SC assets
     const detectedCategory = findTokenCategory(urlAsset, categoriesData.categories)
     setSelectedCategory(detectedCategory)
-  }, [allAssets, assetParam, issuerParam, categoriesData, hasInitializedCategory])
+  }, [allAssets, assetParam, issuerParam, categoriesData])
 
   const filteredAssets = useMemo(() => {
     const categories = categoriesData?.categories ?? []
@@ -135,61 +148,134 @@ export default function AssetsTabs() {
     return nonScAssets.filter((asset) => filteredKeys.has(`${asset.name}-${asset.issuerIdentity}`))
   }, [allAssets, categoriesData, selectedCategory])
 
-  // Auto-select asset when category changes and current selection is not in filtered list
-  // Prioritizes remembered selection for the category, then falls back to first asset
-  // Exception: SC Shares defaults to QX
-  // Skip if URL has invalid params to let the API return an error
-  // Skip if URL params are present but category hasn't been initialized yet (let category detection run first)
+  // Handle category change from user action
+  const handleCategoryChange = useCallback((category: CategoryFilter) => {
+    setSelectedCategory(category)
+  }, [])
+
+  // Store category selections in a ref to avoid effect re-runs
+  const categorySelectionsRef = useRef<Record<string, AssetSelection>>({})
+  const lastCategoryRef = useRef(selectedCategory)
+  const hasSelectedInitialAsset = useRef(false)
+
+  // Sync ref with state
   useEffect(() => {
-    if (filteredAssets.length === 0 || hasInvalidUrlParams.current) return
+    categorySelectionsRef.current = categorySelections
+  }, [categorySelections])
 
-    // If URL has asset params but category hasn't been initialized, wait for category detection
-    if (assetParam && issuerParam && !hasInitializedCategory) return
-
-    const currentAssetInList = filteredAssets.some(
-      (asset) =>
-        asset.issuerIdentity === selectedAsset.issuerIdentity && asset.name === selectedAsset.name
-    )
-
-    if (!currentAssetInList) {
-      // Check if we have a remembered selection for this category
-      const rememberedSelection = categorySelections[selectedCategory]
-      if (rememberedSelection) {
-        const rememberedAssetInList = filteredAssets.find(
-          (asset) =>
-            asset.issuerIdentity === rememberedSelection.issuerIdentity &&
-            asset.name === rememberedSelection.name
-        )
-        if (rememberedAssetInList) {
-          updateUrlParams(rememberedSelection)
-          return
-        }
-      }
-
-      // For SC Shares category, default to QX if available
-      if (selectedCategory === ASSET_CATEGORY_SC_SHARES) {
-        const qxAsset = filteredAssets.find((asset) => asset.name === QX_ASSET_NAME)
+  // Helper to select an asset for the current category
+  const selectDefaultAsset = useCallback(
+    (assets: IssuedAsset[], category: CategoryFilter) => {
+      // For SC Shares, prefer QX
+      if (category === ASSET_CATEGORY_SC_SHARES) {
+        const qxAsset = assets.find((asset) => asset.name === QX_ASSET_NAME)
         if (qxAsset) {
-          handleAssetChange(qxAsset)
-          return
+          setCategorySelections((prev) => ({
+            ...prev,
+            [category]: { name: qxAsset.name, issuerIdentity: qxAsset.issuerIdentity }
+          }))
+          setSearchParams((prev) => ({
+            issuer: qxAsset.issuerIdentity,
+            asset: qxAsset.name,
+            page: '1',
+            pageSize: prev.get('pageSize') || '15'
+          }))
+          return true
         }
       }
 
-      // Fall back to first asset if no remembered selection or it's not in the list
-      const firstAsset = filteredAssets[0]
-      handleAssetChange(firstAsset)
+      // Fall back to first asset
+      const firstAsset = assets[0]
+      if (firstAsset) {
+        setCategorySelections((prev) => ({
+          ...prev,
+          [category]: { name: firstAsset.name, issuerIdentity: firstAsset.issuerIdentity }
+        }))
+        setSearchParams((prev) => ({
+          issuer: firstAsset.issuerIdentity,
+          asset: firstAsset.name,
+          page: '1',
+          pageSize: prev.get('pageSize') || '15'
+        }))
+        return true
+      }
+      return false
+    },
+    [setSearchParams]
+  )
+
+  // Initial asset selection - runs once when assets are loaded and no URL params exist
+  useEffect(() => {
+    if (hasSelectedInitialAsset.current) return
+    if (filteredAssets.length === 0) return
+    if (hasInvalidUrlParams.current) return
+
+    // If URL already has valid asset params, mark as initialized
+    if (assetParam && issuerParam) {
+      const currentAssetInList = filteredAssets.some(
+        (asset) => asset.issuerIdentity === issuerParam && asset.name === assetParam
+      )
+      if (currentAssetInList) {
+        hasSelectedInitialAsset.current = true
+        return
+      }
+      // If URL has invalid params, wait for category detection
+      if (!hasInitializedCategory) return
+    }
+
+    // No URL params or invalid params - select default asset
+    if (selectDefaultAsset(filteredAssets, selectedCategory)) {
+      hasSelectedInitialAsset.current = true
+      // Also prevent Category Detection from re-running and changing category
+      hasRunCategoryDetection.current = true
     }
   }, [
     filteredAssets,
-    selectedAsset,
-    selectedCategory,
-    categorySelections,
-    handleAssetChange,
-    updateUrlParams,
     assetParam,
     issuerParam,
-    hasInitializedCategory
+    hasInitializedCategory,
+    selectedCategory,
+    selectDefaultAsset
   ])
+
+  // Category change handler - runs when user changes category
+  useEffect(() => {
+    // Skip during initial setup - wait for initial selection to complete
+    if (!hasSelectedInitialAsset.current) {
+      // Still update the ref to avoid false positives later
+      lastCategoryRef.current = selectedCategory
+      return
+    }
+
+    // Skip if category hasn't changed
+    if (lastCategoryRef.current === selectedCategory) return
+
+    lastCategoryRef.current = selectedCategory
+
+    if (filteredAssets.length === 0) return
+
+    // Check for remembered selection
+    const rememberedSelection = categorySelectionsRef.current[selectedCategory]
+    if (rememberedSelection) {
+      const rememberedAssetInList = filteredAssets.find(
+        (asset) =>
+          asset.issuerIdentity === rememberedSelection.issuerIdentity &&
+          asset.name === rememberedSelection.name
+      )
+      if (rememberedAssetInList) {
+        setSearchParams((prev) => ({
+          issuer: rememberedSelection.issuerIdentity,
+          asset: rememberedSelection.name,
+          page: '1',
+          pageSize: prev.get('pageSize') || '15'
+        }))
+        return
+      }
+    }
+
+    // Select default for this category
+    selectDefaultAsset(filteredAssets, selectedCategory)
+  }, [selectedCategory, filteredAssets, setSearchParams, selectDefaultAsset])
 
   const getButtonClasses = (isSelected: boolean) =>
     clsxTwMerge(
@@ -204,7 +290,7 @@ export default function AssetsTabs() {
         <CategoryChips
           categoriesData={categoriesData}
           selectedCategory={selectedCategory}
-          onCategoryChange={setSelectedCategory}
+          onCategoryChange={handleCategoryChange}
           showScShares
           label={t('filterByCategory')}
         />
