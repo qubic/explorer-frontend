@@ -61,12 +61,12 @@ export default function Select<ValueType = string>({
     onSelect(option)
   }
 
+  // Sync internal state with defaultValue when it changes
   useEffect(() => {
-    if (options && defaultValue) {
-      setSelected((prev) => options.find((option) => option.value === prev.value) || options[0])
-      onSelect(selected)
+    if (defaultValue) {
+      setSelected(defaultValue)
     }
-  }, [defaultValue, onSelect, options, selected])
+  }, [defaultValue])
 
   return (
     <div>
