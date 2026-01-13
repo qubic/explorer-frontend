@@ -94,7 +94,8 @@ export function useTransactionExpandCollapse<T>({
         return prev
       })
     }
-  }, [transactionIds, expandAll, manuallyCollapsedTxIds])
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- manuallyCollapsedTxIds is checked inside but doesn't need to trigger re-run
+  }, [transactionIds, expandAll])
 
   const handleExpandAllChange = useCallback(
     (checked: boolean) => {
