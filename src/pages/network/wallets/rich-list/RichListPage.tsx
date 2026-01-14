@@ -8,7 +8,7 @@ import { Breadcrumbs, PaginationBar, Select } from '@app/components/ui'
 import { PageLayout } from '@app/components/ui/layouts'
 import type { Option } from '@app/components/ui/Select'
 import { useTailwindBreakpoint } from '@app/hooks'
-import { useGetRichListQuery } from '@app/store/apis/archiver-v1'
+import { useGetRichListQuery } from '@app/store/apis/rpc-stats'
 import { HomeLink } from '../../components'
 import { RichListErrorRow, RichListRow, RichListSkeletonRow } from './components'
 
@@ -83,14 +83,19 @@ function RichListPage() {
   )
 
   useEffect(() => {
-    const params = new URLSearchParams(searchParams)
-    if (!params.has('page')) {
-      params.set('page', '1')
+    const hasPage = searchParams.has('page')
+    const hasPageSize = searchParams.has('pageSize')
+
+    if (!hasPage || !hasPageSize) {
+      setSearchParams(
+        (prev) => ({
+          ...Object.fromEntries(prev.entries()),
+          ...(!prev.has('page') && { page: '1' }),
+          ...(!prev.has('pageSize') && { pageSize: String(DEFAULT_PAGE_SIZE) })
+        }),
+        { replace: true }
+      )
     }
-    if (!params.has('pageSize')) {
-      params.set('pageSize', String(DEFAULT_PAGE_SIZE))
-    }
-    setSearchParams(params, { replace: true })
   }, [searchParams, setSearchParams])
 
   const renderTableContent = useCallback(() => {

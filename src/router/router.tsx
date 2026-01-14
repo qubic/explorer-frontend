@@ -6,7 +6,6 @@ import {
   AddressPageLazy,
   AssetsRichListPageLazy,
   ExchangesPageLazy,
-  HackathonPageLazy,
   OverviewPage,
   RichListPageLazy,
   SmartContractsPageLazy,
@@ -64,10 +63,6 @@ const router: ReturnType<typeof createBrowserRouter> = createBrowserRouter([
           {
             path: Routes.NETWORK.ASSETS.RICH_LIST(),
             element: <AssetsRichListPageLazy />
-          },
-          {
-            path: Routes.NETWORK.DEVELOPERS.HACKATHON,
-            element: <HackathonPageLazy />
           }
         ]
       }

@@ -7,6 +7,7 @@ import BurgerMenu from './BurgerMenu'
 import NavigationMenu from './NavigationMenu'
 import TopBar from './TopBar'
 import { NAVIGATION_MENU_ITEMS } from './constants'
+import type { NavigationMenuItem } from './types'
 
 export default function Header() {
   const location = useLocation()
@@ -23,15 +24,18 @@ export default function Header() {
 
           <nav className="hidden md:block">
             <ul className="flex gap-6">
-              {NAVIGATION_MENU_ITEMS.map((menu) => (
-                <NavigationMenu
-                  key={menu.i18nKey}
-                  label={t(menu.i18nKey)}
-                  className={menu.className}
-                  items={menu.items}
-                  activePath={location.pathname}
-                />
-              ))}
+              {NAVIGATION_MENU_ITEMS.map(
+                (menu: NavigationMenuItem) =>
+                  menu.items && (
+                    <NavigationMenu
+                      key={menu.i18nKey}
+                      label={t(menu.i18nKey)}
+                      className={menu.className}
+                      items={menu.items}
+                      activePath={location.pathname}
+                    />
+                  )
+              )}
             </ul>
           </nav>
           <div className="absolute flex items-center gap-8 ltr:right-2 ltr:sm:right-24 rtl:left-2 rtl:sm:left-24">

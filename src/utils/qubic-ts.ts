@@ -7,6 +7,12 @@ export const { QUTIL_ADDRESS, ARBITRATOR, EMPTY_ADDRESS, QX_ADDRESS } = QubicDef
 
 export const ASSETS_ISSUER_ADDRESS = EMPTY_ADDRESS
 
+// Asset category constant for Smart Contract Shares in asset filtering UI
+export const ASSET_CATEGORY_SC_SHARES = 'sc-shares'
+
+// QX asset name constant
+export const QX_ASSET_NAME = 'QX'
+
 export type Transfer = {
   amount: string
   destId: string
@@ -60,13 +66,11 @@ export const isProtocolMessage = (address: string): boolean =>
 export const isSmartContractTx = (destination: string, inputType: number): boolean =>
   !isProtocolMessage(destination) && inputType > 0
 
-export const isTransferTx = (
-  sourceId: string,
-  destId: string,
-  amount: string | number
-): boolean => {
-  return !isProtocolMessage(sourceId) && !isProtocolMessage(destId) && Number(amount) > 0
-}
+export const isSendManyTx = (destination: string, inputType: number): boolean =>
+  destination === QUTIL_ADDRESS && inputType === 1
+
+export const isSimpleTransfer = (inputType: number, amount: number): boolean =>
+  inputType === 0 && amount > 0
 
 export const isAssetsIssuerAddress = (address: string): boolean => address === ASSETS_ISSUER_ADDRESS
 
@@ -77,17 +81,25 @@ export const isAssetsIssuerAddress = (address: string): boolean => address === A
  * @param skipCryptographicValidation - If true, only performs basic format validation (for internal links)
  * @returns Promise<boolean> - True if the address is valid, false otherwise
  */
+/**
+ * Validates basic Qubic address format (sync version)
+ * Checks if address is exactly 60 uppercase letters
+ * @param address - The address string to validate
+ * @returns boolean - True if format is valid
+ */
+export const isValidAddressFormat = (address: string | undefined): boolean => {
+  if (!address || typeof address !== 'string') {
+    return false
+  }
+  return address.length === 60 && /^[A-Z]+$/.test(address)
+}
+
 export const isValidQubicAddress = async (
   address: string,
   skipCryptographicValidation = false
 ): Promise<boolean> => {
-  if (!address || typeof address !== 'string') {
-    return false
-  }
-
-  // Basic format validation first (no cryptographic operations needed)
-  // Qubic addresses must be exactly 60 characters and all uppercase
-  if (address.length !== 60 || !/^[A-Z]+$/.test(address)) {
+  // Use shared format validation
+  if (!isValidAddressFormat(address)) {
     return false
   }
 

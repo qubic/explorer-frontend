@@ -6,16 +6,21 @@ import { InfiniteScroll } from '@app/components/ui'
 import { Button } from '@app/components/ui/buttons'
 import { DotsLoader } from '@app/components/ui/loaders'
 import { useTransactionExpandCollapse } from '@app/hooks'
-import type { Transaction } from '@app/store/apis/archiver-v2'
+import type { QueryServiceTransaction } from '@app/store/apis/query-service'
 import { TxItem } from '../../../components'
+import type { TransactionFilters } from '../../hooks/useLatestTransactions'
+import TransactionFiltersBar from './TransactionFiltersBar'
 
 type Props = {
   addressId: string
-  transactions: Transaction[]
+  transactions: QueryServiceTransaction[]
   loadMore: () => Promise<void>
   hasMore: boolean
   isLoading: boolean
   error: string | null
+  onApplyFilters: (filters: TransactionFilters) => void
+  onClearFilters: () => void
+  activeFilters: TransactionFilters
 }
 
 export default function LatestTransactions({
@@ -24,27 +29,31 @@ export default function LatestTransactions({
   loadMore,
   hasMore,
   isLoading,
-  error
+  error,
+  onApplyFilters,
+  onClearFilters,
+  activeFilters
 }: Props) {
   const { t } = useTranslation('network-page')
 
-  // Use shared expand/collapse hook
+  // Use shared expand/collapse hook with custom ID extractor for QueryServiceTransaction
   const { expandAll, expandedTxIds, handleExpandAllChange, handleTxToggle } =
     useTransactionExpandCollapse({
       transactions,
+      getTransactionId: (tx) => tx.hash,
       resetDependency: addressId
     })
 
   const renderTxItem = useCallback(
-    ({ transaction, moneyFlew, timestamp }: Transaction) => (
+    (tx: QueryServiceTransaction) => (
       <TxItem
-        key={transaction.txId}
-        tx={transaction}
+        key={tx.hash}
+        tx={tx}
         identity={addressId}
         variant="primary"
-        nonExecutedTxIds={moneyFlew ? [] : [transaction.txId]}
-        timestamp={timestamp}
-        isExpanded={expandedTxIds.has(transaction.txId)}
+        nonExecutedTxIds={tx.moneyFlew ? [] : [tx.hash]}
+        timestamp={tx.timestamp}
+        isExpanded={expandedTxIds.has(tx.hash)}
         onToggle={handleTxToggle}
       />
     ),
@@ -53,18 +62,27 @@ export default function LatestTransactions({
 
   return (
     <div className="flex w-full flex-col gap-10">
+      <TransactionFiltersBar
+        addressId={addressId}
+        activeFilters={activeFilters}
+        onApplyFilters={onApplyFilters}
+        onClearFilters={onClearFilters}
+      />
+
       {transactions.length > 0 && (
-        <Button
-          variant="link"
-          size="sm"
-          onClick={() => handleExpandAllChange(!expandAll)}
-          className="ml-auto w-fit gap-6 pb-8"
-        >
-          <ChevronDownIcon
-            className={`h-16 w-16 transition-transform duration-300 ${expandAll ? 'rotate-180' : 'rotate-0'}`}
-          />
-          {expandAll ? t('collapseAll') : t('expandAll')}
-        </Button>
+        <div className="flex items-center justify-end">
+          <Button
+            variant="link"
+            size="sm"
+            onClick={() => handleExpandAllChange(!expandAll)}
+            className="w-fit gap-6"
+          >
+            <ChevronDownIcon
+              className={`h-16 w-16 transition-transform duration-300 ${expandAll ? 'rotate-180' : 'rotate-0'}`}
+            />
+            {expandAll ? t('collapseAll') : t('expandAll')}
+          </Button>
+        </div>
       )}
 
       <InfiniteScroll

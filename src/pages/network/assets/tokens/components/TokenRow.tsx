@@ -1,7 +1,7 @@
 import { memo } from 'react'
 
 import { AddressLink } from '@app/pages/network/components'
-import type { IssuedAsset } from '@app/store/apis/archiver-v1'
+import type { IssuedAsset } from '@app/store/apis/rpc-live'
 
 type Props = Readonly<{
   asset: IssuedAsset

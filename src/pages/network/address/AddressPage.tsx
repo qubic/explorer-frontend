@@ -14,7 +14,8 @@ import {
 import { ErrorFallback } from '@app/components/ui/error-boundaries'
 import { PageLayout } from '@app/components/ui/layouts'
 import { LinearProgress } from '@app/components/ui/loaders'
-import { useGetAddressBalancesQuery, useGetLatestStatsQuery } from '@app/store/apis/archiver-v1'
+import { useGetLatestStatsQuery } from '@app/store/apis/rpc-stats'
+import { useGetAddressBalancesQuery } from '@app/store/apis/rpc-live'
 import { useGetSmartContractsQuery } from '@app/store/apis/qubic-static'
 import { clsxTwMerge, formatEllipsis, formatString, isValidQubicAddress } from '@app/utils'
 import { useGetAddressName } from '@app/hooks'
@@ -178,7 +179,7 @@ function AddressPage() {
         </Tabs.List>
         <Tabs.Panels>
           <Tabs.Panel>
-            <TransactionsOverview address={addressBalances.data} addressId={addressId} />
+            <TransactionsOverview addressId={addressId} />
           </Tabs.Panel>
           {isSmartContract && smartContractDetails && (
             <Tabs.Panel>

@@ -37,9 +37,6 @@ export const Routes = {
       SMART_CONTRACTS: '/network/assets/smart-contracts',
       RICH_LIST: (issuer?: string, asset?: string) =>
         buildUrlWithQueryParams(`${Routes.NETWORK.ROOT}/assets/rich-list`, { issuer, asset })
-    },
-    DEVELOPERS: {
-      HACKATHON: '/network/developers/hackathon'
     }
   },
   NOT_FOUND: '/404'
