@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 // Default function for extracting transaction ID
 const defaultGetTransactionId = <T>(tx: T): string =>
@@ -55,6 +55,12 @@ export function useTransactionExpandCollapse<T>({
 }: UseTransactionExpandCollapseOptions<T>): UseTransactionExpandCollapseReturn {
   const [expandAll, setExpandAll] = useState(false)
   const [expandedTxIds, setExpandedTxIds] = useState<Set<string>>(new Set())
+  // Track items manually collapsed by user while expandAll is active
+  const [manuallyCollapsedTxIds, setManuallyCollapsedTxIds] = useState<Set<string>>(new Set())
+
+  // Use ref to access expandAll in handleTxToggle without recreating the callback
+  const expandAllRef = useRef(expandAll)
+  expandAllRef.current = expandAll
 
   // Use stable reference for the ID extractor function
   const getIdFn = getTransactionId || defaultGetTransactionId
@@ -66,16 +72,18 @@ export function useTransactionExpandCollapse<T>({
   useEffect(() => {
     setExpandAll(false)
     setExpandedTxIds(new Set())
+    setManuallyCollapsedTxIds(new Set())
   }, [resetDependency])
 
   // Auto-expand newly loaded transactions when expandAll is active
+  // Skip items that user has manually collapsed
   useEffect(() => {
     if (expandAll && transactionIds.length > 0) {
       setExpandedTxIds((prev) => {
         const newSet = new Set(prev)
-        // Only add transaction IDs that don't already exist
+        // Only add transaction IDs that don't already exist and weren't manually collapsed
         transactionIds.forEach((txId) => {
-          if (!newSet.has(txId)) {
+          if (!newSet.has(txId) && !manuallyCollapsedTxIds.has(txId)) {
             newSet.add(txId)
           }
         })
@@ -86,24 +94,41 @@ export function useTransactionExpandCollapse<T>({
         return prev
       })
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- manuallyCollapsedTxIds is checked inside but doesn't need to trigger re-run
   }, [transactionIds, expandAll])
 
   const handleExpandAllChange = useCallback(
     (checked: boolean) => {
       setExpandAll(checked)
+      // Clear manually collapsed tracking on any expand/collapse all action
+      setManuallyCollapsedTxIds(new Set())
       if (checked) {
         // Expand all displayed transactions
-        const allTxIds = new Set(transactions.map(getIdFn))
-        setExpandedTxIds(allTxIds)
+        setExpandedTxIds(new Set(transactionIds))
       } else {
         // Collapse all
         setExpandedTxIds(new Set())
       }
     },
-    [transactions, getIdFn]
+    [transactionIds]
   )
 
   const handleTxToggle = useCallback((txId: string, isOpen: boolean) => {
+    // Track manually collapsed items when expandAll is active (use ref for stable callback)
+    if (!isOpen && expandAllRef.current) {
+      setManuallyCollapsedTxIds((prev) => new Set(prev).add(txId))
+    }
+    // If user expands an item that was manually collapsed, remove from tracking
+    if (isOpen) {
+      setManuallyCollapsedTxIds((prev) => {
+        if (prev.has(txId)) {
+          const newSet = new Set(prev)
+          newSet.delete(txId)
+          return newSet
+        }
+        return prev
+      })
+    }
     setExpandedTxIds((prev) => {
       const newSet = new Set(prev)
       if (isOpen) {
