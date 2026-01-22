@@ -161,5 +161,11 @@
   "directionIncomingTooltip": "Incoming transactions",
   "directionOutgoingTooltip": "Outgoing transactions",
   "direction": "Direction",
-  "inputType": "Input Type"
+  "inputType": "Input Type",
+  "include": "Include",
+  "exclude": "Exclude",
+  "addAddress": "Add Address",
+  "removeAddress": "Remove address",
+  "maxAddressesReached": "Maximum 5 addresses reached",
+  "duplicateAddress": "Duplicate address"
 }

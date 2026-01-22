@@ -161,5 +161,11 @@
   "direction": "方向",
   "inputType": "入力タイプ",
   "minInputType": "最小値",
-  "maxInputType": "最大値"
+  "maxInputType": "最大値",
+  "include": "含める",
+  "exclude": "除外",
+  "addAddress": "アドレスを追加",
+  "removeAddress": "アドレスを削除",
+  "maxAddressesReached": "最大5アドレスに達しました",
+  "duplicateAddress": "重複アドレス"
 }

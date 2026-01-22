@@ -161,5 +161,11 @@
   "direction": "Richting",
   "inputType": "Invoertype",
   "minInputType": "Min. waarde",
-  "maxInputType": "Max. waarde"
+  "maxInputType": "Max. waarde",
+  "include": "Opnemen",
+  "exclude": "Uitsluiten",
+  "addAddress": "Adres toevoegen",
+  "removeAddress": "Adres verwijderen",
+  "maxAddressesReached": "Maximum 5 adressen bereikt",
+  "duplicateAddress": "Dubbel adres"
 }

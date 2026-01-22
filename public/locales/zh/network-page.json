@@ -161,5 +161,11 @@
   "direction": "方向",
   "inputType": "输入类型",
   "minInputType": "最小值",
-  "maxInputType": "最大值"
+  "maxInputType": "最大值",
+  "include": "包含",
+  "exclude": "排除",
+  "addAddress": "添加地址",
+  "removeAddress": "删除地址",
+  "maxAddressesReached": "已达到最多5个地址",
+  "duplicateAddress": "重复地址"
 }

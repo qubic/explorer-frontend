@@ -32,8 +32,10 @@ export interface Range {
 export interface GetTransactionsForIdentityRequest {
   identity: string
   filters?: {
-    source?: string
-    destination?: string
+    source?: string // Comma-separated addresses (up to 5) to include
+    'source-exclude'?: string // Comma-separated addresses (up to 5) to exclude
+    destination?: string // Comma-separated addresses (up to 5) to include
+    'destination-exclude'?: string // Comma-separated addresses (up to 5) to exclude
     amount?: string
     inputType?: string
   }

@@ -161,5 +161,11 @@
   "direction": "Направление",
   "inputType": "Тип ввода",
   "minInputType": "Мин. значение",
-  "maxInputType": "Макс. значение"
+  "maxInputType": "Макс. значение",
+  "include": "Включить",
+  "exclude": "Исключить",
+  "addAddress": "Добавить адрес",
+  "removeAddress": "Удалить адрес",
+  "maxAddressesReached": "Достигнуто максимум 5 адресов",
+  "duplicateAddress": "Повторяющийся адрес"
 }

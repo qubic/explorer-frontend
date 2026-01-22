@@ -161,5 +161,11 @@
   "direction": "Hướng",
   "inputType": "Loại đầu vào",
   "minInputType": "Giá trị tối thiểu",
-  "maxInputType": "Giá trị tối đa"
+  "maxInputType": "Giá trị tối đa",
+  "include": "Bao gồm",
+  "exclude": "Loại trừ",
+  "addAddress": "Thêm địa chỉ",
+  "removeAddress": "Xóa địa chỉ",
+  "maxAddressesReached": "Đã đạt tối đa 5 địa chỉ",
+  "duplicateAddress": "Địa chỉ trùng lặp"
 }

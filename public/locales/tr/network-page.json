@@ -161,5 +161,11 @@
   "direction": "Yön",
   "inputType": "Giriş Türü",
   "minInputType": "Min. Değer",
-  "maxInputType": "Maks. Değer"
+  "maxInputType": "Maks. Değer",
+  "include": "Dahil et",
+  "exclude": "Hariç tut",
+  "addAddress": "Adres ekle",
+  "removeAddress": "Adresi kaldır",
+  "maxAddressesReached": "Maksimum 5 adrese ulaşıldı",
+  "duplicateAddress": "Yinelenen adres"
 }

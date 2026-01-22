@@ -4,17 +4,21 @@ import { useTranslation } from 'react-i18next'
 import { XmarkIcon } from '@app/assets/icons'
 import { Modal } from '@app/components/ui'
 import { isValidAddressFormat } from '@app/utils'
-import type { TransactionDirection, TransactionFilters } from '../../hooks/useLatestTransactions'
-import AddressFilterContent from './AddressFilterContent'
+import type {
+  AddressFilter,
+  TransactionDirection,
+  TransactionFilters
+} from '../../hooks/useLatestTransactions'
 import AmountFilterContent from './AmountFilterContent'
 import DateFilterContent from './DateFilterContent'
 import DirectionControl from './DirectionControl'
+import MultiAddressFilterContent from './MultiAddressFilterContent'
 import RangeFilterContent from './RangeFilterContent'
 import {
   applyDatePresetCalculation,
-  applyDestinationChange,
+  applyDestinationFilterChange,
   applyDirectionChange,
-  applySourceChange
+  applySourceFilterChange
 } from './filterUtils'
 
 type Props = {
@@ -63,16 +67,16 @@ export default function MobileFiltersModal({
     [addressId]
   )
 
-  const handleSourceChange = useCallback(
-    (value: string | undefined) => {
-      setLocalFilters((prev) => applySourceChange(prev, value, addressId))
+  const handleSourceFilterChange = useCallback(
+    (value: AddressFilter | undefined) => {
+      setLocalFilters((prev) => applySourceFilterChange(prev, value, addressId))
     },
     [addressId]
   )
 
-  const handleDestinationChange = useCallback(
-    (value: string | undefined) => {
-      setLocalFilters((prev) => applyDestinationChange(prev, value, addressId))
+  const handleDestinationFilterChange = useCallback(
+    (value: AddressFilter | undefined) => {
+      setLocalFilters((prev) => applyDestinationFilterChange(prev, value, addressId))
     },
     [addressId]
   )
@@ -82,16 +86,54 @@ export default function MobileFiltersModal({
     const errors: Record<string, string> = {}
     let firstErrorId: string | null = null
 
-    // Validate source address
-    if (localFilters.source && !isValidAddressFormat(localFilters.source)) {
-      errors.source = t('invalidAddressFormat')
-      if (!firstErrorId) firstErrorId = 'mobile-source-filter'
+    // Validate source addresses (multi-address) - format and duplicates
+    if (localFilters.sourceFilter?.addresses) {
+      const nonEmptyAddresses = localFilters.sourceFilter.addresses.filter(
+        (addr) => addr.trim() !== ''
+      )
+      const invalidAddress = nonEmptyAddresses.find((addr) => !isValidAddressFormat(addr.trim()))
+      if (invalidAddress) {
+        errors.source = t('invalidAddressFormat')
+        if (!firstErrorId) firstErrorId = 'mobile-source-filter'
+      } else {
+        // Check for duplicates
+        const seen = new Set<string>()
+        const hasDuplicate = nonEmptyAddresses.some((addr) => {
+          const upper = addr.trim().toUpperCase()
+          if (seen.has(upper)) return true
+          seen.add(upper)
+          return false
+        })
+        if (hasDuplicate) {
+          errors.source = t('duplicateAddress')
+          if (!firstErrorId) firstErrorId = 'mobile-source-filter'
+        }
+      }
     }
 
-    // Validate destination address
-    if (localFilters.destination && !isValidAddressFormat(localFilters.destination)) {
-      errors.destination = t('invalidAddressFormat')
-      if (!firstErrorId) firstErrorId = 'mobile-destination-filter'
+    // Validate destination addresses (multi-address) - format and duplicates
+    if (localFilters.destinationFilter?.addresses) {
+      const nonEmptyAddresses = localFilters.destinationFilter.addresses.filter(
+        (addr) => addr.trim() !== ''
+      )
+      const invalidAddress = nonEmptyAddresses.find((addr) => !isValidAddressFormat(addr.trim()))
+      if (invalidAddress) {
+        errors.destination = t('invalidAddressFormat')
+        if (!firstErrorId) firstErrorId = 'mobile-destination-filter'
+      } else {
+        // Check for duplicates
+        const seen = new Set<string>()
+        const hasDuplicate = nonEmptyAddresses.some((addr) => {
+          const upper = addr.trim().toUpperCase()
+          if (seen.has(upper)) return true
+          seen.add(upper)
+          return false
+        })
+        if (hasDuplicate) {
+          errors.destination = t('duplicateAddress')
+          if (!firstErrorId) firstErrorId = 'mobile-destination-filter'
+        }
+      }
     }
 
     // Validate amount range
@@ -189,13 +231,12 @@ export default function MobileFiltersModal({
             {/* Source */}
             <div id="mobile-source-filter">
               <h3 className="mb-8 text-sm font-medium text-white">{t('source')}</h3>
-              <AddressFilterContent
-                id="filter-source"
-                value={localFilters.source}
-                onChange={handleSourceChange}
+              <MultiAddressFilterContent
+                id="filter-source-mobile"
+                value={localFilters.sourceFilter}
+                onChange={handleSourceFilterChange}
                 onApply={() => {}}
                 showApplyButton={false}
-                showClearButton
                 error={validationErrors.source}
               />
             </div>
@@ -203,13 +244,12 @@ export default function MobileFiltersModal({
             {/* Destination */}
             <div id="mobile-destination-filter">
               <h3 className="mb-8 text-sm font-medium text-white">{t('destination')}*</h3>
-              <AddressFilterContent
-                id="filter-destination"
-                value={localFilters.destination}
-                onChange={handleDestinationChange}
+              <MultiAddressFilterContent
+                id="filter-destination-mobile"
+                value={localFilters.destinationFilter}
+                onChange={handleDestinationFilterChange}
                 onApply={() => {}}
                 showApplyButton={false}
-                showClearButton
                 hint={t('destinationFilterHint')}
                 error={validationErrors.destination}
               />
