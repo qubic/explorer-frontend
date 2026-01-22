@@ -30,7 +30,7 @@ importers:
         specifier: ^0.5.13
         version: 0.5.13(tailwindcss@3.4.4)
       axios:
-        specifier: ^1.7.4
+        specifier: ^1.8.2
         version: 1.13.2
       clsx:
         specifier: ^2.1.1
