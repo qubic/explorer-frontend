@@ -65,24 +65,12 @@ export default function Modal({
   onClose
 }: ModalProps) {
   useEffect(() => {
-    const handleTouchMove = (e: TouchEvent) => {
-      e.preventDefault()
-    }
-
     if (isOpen) {
-      // Disable scrolling on body (desktop)
       document.body.classList.add('overflow-hidden')
-
-      // Disable touch scrolling (mobile)
-      document.addEventListener('touchmove', handleTouchMove, { passive: false })
     }
 
     return () => {
-      // Enable scrolling on body (desktop)
       document.body.classList.remove('overflow-hidden')
-
-      // Enable touch scrolling (mobile)
-      document.removeEventListener('touchmove', handleTouchMove)
     }
   }, [isOpen])
 
