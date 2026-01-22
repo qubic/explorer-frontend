@@ -83,11 +83,7 @@ export default function TransactionFiltersBar({
         { dropdownKey: string; errorKey: string; strictComparison?: boolean }
       > = {
         amountRange: { dropdownKey: 'amount', errorKey: 'invalidRangeAmount' },
-        tickNumberRange: {
-          dropdownKey: 'tick',
-          errorKey: 'invalidTickRange',
-          strictComparison: true
-        },
+        tickNumberRange: { dropdownKey: 'tick', errorKey: 'invalidTickRange' },
         dateRange: { dropdownKey: 'date', errorKey: 'invalidDateRange' },
         inputTypeRange: { dropdownKey: 'inputType', errorKey: 'invalidRangeInputType' }
       }

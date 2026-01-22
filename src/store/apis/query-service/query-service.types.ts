@@ -36,6 +36,7 @@ export interface GetTransactionsForIdentityRequest {
     destination?: string
     amount?: string
     inputType?: string
+    tickNumber?: string
   }
   ranges?: {
     amount?: Range
