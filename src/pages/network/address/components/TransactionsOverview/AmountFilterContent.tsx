@@ -121,7 +121,7 @@ export default function AmountFilterContent({
               inputMode="numeric"
               value={displayStart}
               onChange={(e) => handleStartChange(parseAmountFromDisplay(e.target.value))}
-              className="w-full rounded bg-primary-60 px-10 py-6 text-right text-xs text-white placeholder-gray-50 focus:outline-none focus:ring-1 focus:ring-primary-30"
+              className="w-full rounded bg-primary-60 px-10 py-6 text-right text-base text-white placeholder-gray-50 focus:outline-none focus:ring-1 focus:ring-primary-30 md:text-xs"
             />
           </div>
           <div className={layout === 'horizontal' ? 'flex-1' : ''}>
@@ -134,7 +134,7 @@ export default function AmountFilterContent({
               inputMode="numeric"
               value={displayEnd}
               onChange={(e) => handleEndChange(parseAmountFromDisplay(e.target.value))}
-              className="w-full rounded bg-primary-60 px-10 py-6 text-right text-xs text-white placeholder-gray-50 focus:outline-none focus:ring-1 focus:ring-primary-30"
+              className="w-full rounded bg-primary-60 px-10 py-6 text-right text-base text-white placeholder-gray-50 focus:outline-none focus:ring-1 focus:ring-primary-30 md:text-xs"
             />
           </div>
         </div>
