@@ -1,3 +1,11 @@
+## [1.31.2](https://github.com/qubic/explorer-frontend/compare/v1.31.1...v1.31.2) (2026-01-22)
+
+
+### Bug Fixes
+
+* enable scrolling inside modal on iOS devices ([5260789](https://github.com/qubic/explorer-frontend/commit/5260789eab62d94b3df14aa8c3d6b596da8301f7))
+* improve mobile filters modal UX ([4f17363](https://github.com/qubic/explorer-frontend/commit/4f173637677e10d9dd47370098a25dc347732ac3))
+
 ## [1.31.1](https://github.com/qubic/explorer-frontend/compare/v1.31.0...v1.31.1) (2026-01-12)
 
 
