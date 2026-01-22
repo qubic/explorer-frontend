@@ -45,7 +45,7 @@ export default function DateTimeInput({ id, label, value, defaultTime, onChange 
           value={datePart}
           onChange={handleDateChange}
           className={clsxTwMerge(
-            'flex-1 rounded bg-primary-60 px-10 py-6 text-xs focus:outline-none focus:ring-1 focus:ring-primary-30 [&::-webkit-calendar-picker-indicator]:invert',
+            'flex-1 rounded bg-primary-60 px-10 py-6 text-base focus:outline-none focus:ring-1 focus:ring-primary-30 md:text-xs [&::-webkit-calendar-picker-indicator]:invert',
             value
               ? 'text-white [&::-webkit-calendar-picker-indicator]:opacity-100'
               : 'text-gray-50 [&::-webkit-calendar-picker-indicator]:opacity-50'
@@ -60,7 +60,7 @@ export default function DateTimeInput({ id, label, value, defaultTime, onChange 
           disabled={!value}
           className={clsxTwMerge(
             TIME_INPUT_WIDTH,
-            'rounded bg-primary-60 px-10 py-6 text-xs focus:outline-none focus:ring-1 focus:ring-primary-30 [&::-webkit-calendar-picker-indicator]:invert',
+            'rounded bg-primary-60 px-10 py-6 text-base focus:outline-none focus:ring-1 focus:ring-primary-30 md:text-xs [&::-webkit-calendar-picker-indicator]:invert',
             value ? 'text-white' : 'cursor-not-allowed text-gray-50 opacity-50'
           )}
         />

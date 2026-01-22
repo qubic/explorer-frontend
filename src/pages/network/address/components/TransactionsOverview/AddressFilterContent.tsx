@@ -80,7 +80,7 @@ export default function AddressFilterContent({
           value={localValue}
           onChange={(e) => handleChange(e.target.value)}
           placeholder={placeholder || t('addressPlaceholder')}
-          className={`w-full rounded bg-primary-60 px-10 py-6 text-xs text-white placeholder-gray-50 focus:outline-none focus:ring-1 focus:ring-primary-30 ${showClearButton ? 'pr-32' : ''}`}
+          className={`w-full rounded bg-primary-60 px-10 py-6 text-base text-white placeholder-gray-50 focus:outline-none focus:ring-1 focus:ring-primary-30 md:text-xs ${showClearButton ? 'pr-32' : ''}`}
         />
         {showClearButton && localValue && (
           <button
