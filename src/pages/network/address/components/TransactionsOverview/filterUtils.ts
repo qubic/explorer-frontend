@@ -1,6 +1,7 @@
 import { isValidAddressFormat } from '@app/utils'
 import type {
   AddressFilter,
+  AddressFilterMode,
   TransactionDirection,
   TransactionFilters
 } from '../../hooks/useLatestTransactions'
@@ -175,6 +176,11 @@ export const DIRECTION = {
   OUTGOING: 'outgoing'
 } as const satisfies Record<string, TransactionDirection>
 
+export const MODE = {
+  INCLUDE: 'include',
+  EXCLUDE: 'exclude'
+} as const satisfies Record<string, AddressFilterMode>
+
 export const DIRECTION_OPTIONS: { value: TransactionDirection | undefined; labelKey: string }[] = [
   { value: undefined, labelKey: 'directionAll' },
   { value: DIRECTION.INCOMING, labelKey: 'directionIncoming' },
@@ -239,14 +245,14 @@ export function applyDirectionChange(
 
   if (direction === DIRECTION.INCOMING) {
     // Set destination filter with page address (include mode)
-    newFilters.destinationFilter = { mode: 'include', addresses: [addressId] }
+    newFilters.destinationFilter = { mode: MODE.INCLUDE, addresses: [addressId] }
     // Clear source filter if it only contains the page address
     if (isOnlyPageAddress(newFilters.sourceFilter, addressId)) {
       newFilters.sourceFilter = undefined
     }
   } else if (direction === DIRECTION.OUTGOING) {
     // Set source filter with page address (include mode)
-    newFilters.sourceFilter = { mode: 'include', addresses: [addressId] }
+    newFilters.sourceFilter = { mode: MODE.INCLUDE, addresses: [addressId] }
     // Clear destination filter if it only contains the page address
     if (isOnlyPageAddress(newFilters.destinationFilter, addressId)) {
       newFilters.destinationFilter = undefined
@@ -281,7 +287,7 @@ export function applySourceFilterChange(
   if (
     validAddresses.length === 1 &&
     validAddresses[0] === addressId &&
-    sourceFilter?.mode === 'include' &&
+    sourceFilter?.mode === MODE.INCLUDE &&
     filters.direction !== DIRECTION.OUTGOING
   ) {
     newFilters.direction = DIRECTION.OUTGOING
@@ -298,6 +304,23 @@ export function applySourceFilterChange(
     isOnlyPageAddress(filters.sourceFilter, addressId) &&
     filters.direction === DIRECTION.OUTGOING
   ) {
+    newFilters.direction = undefined
+  }
+
+  // Clear direction when mode changes to "exclude" while having page address
+  // (direction should only be auto-selected for "include" mode)
+  if (
+    validAddresses.length === 1 &&
+    validAddresses[0] === addressId &&
+    sourceFilter?.mode === MODE.EXCLUDE &&
+    filters.direction === DIRECTION.OUTGOING
+  ) {
+    newFilters.direction = undefined
+  }
+
+  // Clear direction when more addresses are added beyond just the page address
+  // (direction should only be auto-selected for single page address)
+  if (validAddresses.length > 1 && filters.direction === DIRECTION.OUTGOING) {
     newFilters.direction = undefined
   }
 
@@ -321,7 +344,7 @@ export function applyDestinationFilterChange(
   if (
     validAddresses.length === 1 &&
     validAddresses[0] === addressId &&
-    destinationFilter?.mode === 'include' &&
+    destinationFilter?.mode === MODE.INCLUDE &&
     filters.direction !== DIRECTION.INCOMING
   ) {
     newFilters.direction = DIRECTION.INCOMING
@@ -338,6 +361,23 @@ export function applyDestinationFilterChange(
     isOnlyPageAddress(filters.destinationFilter, addressId) &&
     filters.direction === DIRECTION.INCOMING
   ) {
+    newFilters.direction = undefined
+  }
+
+  // Clear direction when mode changes to "exclude" while having page address
+  // (direction should only be auto-selected for "include" mode)
+  if (
+    validAddresses.length === 1 &&
+    validAddresses[0] === addressId &&
+    destinationFilter?.mode === MODE.EXCLUDE &&
+    filters.direction === DIRECTION.INCOMING
+  ) {
+    newFilters.direction = undefined
+  }
+
+  // Clear direction when more addresses are added beyond just the page address
+  // (direction should only be auto-selected for single page address)
+  if (validAddresses.length > 1 && filters.direction === DIRECTION.INCOMING) {
     newFilters.direction = undefined
   }
 

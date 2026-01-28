@@ -4,13 +4,13 @@ import { useTranslation } from 'react-i18next'
 import { PlusIcon, XmarkIcon } from '@app/assets/icons'
 import { clsxTwMerge } from '@app/utils'
 import type { AddressFilter, AddressFilterMode } from '../../hooks/useLatestTransactions'
-import { validateAddresses } from './filterUtils'
+import { MODE, validateAddresses } from './filterUtils'
 
 const MAX_ADDRESSES = 5
 
 const MODE_OPTIONS: { value: AddressFilterMode; labelKey: string }[] = [
-  { value: 'include', labelKey: 'include' },
-  { value: 'exclude', labelKey: 'exclude' }
+  { value: MODE.INCLUDE, labelKey: 'include' },
+  { value: MODE.EXCLUDE, labelKey: 'exclude' }
 ]
 
 type Props = {
@@ -37,7 +37,7 @@ export default function MultiAddressFilterContent({
   const { t } = useTranslation('network-page')
 
   // Local state for editing - initialize with at least one empty address field
-  const [localMode, setLocalMode] = useState<AddressFilterMode>(value?.mode ?? 'include')
+  const [localMode, setLocalMode] = useState<AddressFilterMode>(value?.mode ?? MODE.INCLUDE)
   const [localAddresses, setLocalAddresses] = useState<string[]>(
     value?.addresses && value.addresses.length > 0 ? value.addresses : ['']
   )
@@ -51,7 +51,7 @@ export default function MultiAddressFilterContent({
 
   // Sync local state when prop changes (e.g., when modal/dropdown opens)
   useEffect(() => {
-    setLocalMode(value?.mode ?? 'include')
+    setLocalMode(value?.mode ?? MODE.INCLUDE)
     const addresses = value?.addresses && value.addresses.length > 0 ? value.addresses : ['']
     setLocalAddresses(addresses)
     setInternalErrors([])
