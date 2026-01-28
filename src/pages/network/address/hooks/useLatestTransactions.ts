@@ -31,6 +31,7 @@ export interface TransactionFilters {
   destination?: string
   amount?: string
   inputType?: string // Exact match filter for input type
+  tickNumber?: string // Exact match filter for tick number
   amountRange?: {
     start?: string
     end?: string
