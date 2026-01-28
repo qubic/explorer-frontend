@@ -38,6 +38,7 @@ export interface GetTransactionsForIdentityRequest {
     'destination-exclude'?: string // Comma-separated addresses (up to 5) to exclude
     amount?: string
     inputType?: string
+    tickNumber?: string
   }
   ranges?: {
     amount?: Range

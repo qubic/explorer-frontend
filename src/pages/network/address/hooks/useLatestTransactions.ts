@@ -38,6 +38,7 @@ export interface TransactionFilters {
   destinationFilter?: AddressFilter // Multi-address filter with include/exclude
   amount?: string
   inputType?: string // Exact match filter for input type
+  tickNumber?: string // Exact match filter for tick number
   amountRange?: {
     start?: string
     end?: string
@@ -165,6 +166,15 @@ export default function useLatestTransactions(addressId: string): UseLatestTrans
         cleanFilters.inputType = filters.inputTypeRange.start.trim()
       }
 
+      // Handle tickNumber range - if start equals end, use exact match
+      if (
+        filters.tickNumberRange?.start &&
+        filters.tickNumberRange?.end &&
+        filters.tickNumberRange.start.trim() === filters.tickNumberRange.end.trim()
+      ) {
+        cleanFilters.tickNumber = filters.tickNumberRange.start.trim()
+      }
+
       // Check if amount range should be used (has values and is not an exact match)
       const hasAmountRange = filters.amountRange?.start || filters.amountRange?.end
       const isExactAmountMatch =
@@ -180,6 +190,14 @@ export default function useLatestTransactions(addressId: string): UseLatestTrans
         filters.inputTypeRange?.end &&
         filters.inputTypeRange.start.trim() === filters.inputTypeRange.end.trim()
       const shouldUseInputTypeRange = hasInputTypeRange && !isExactInputTypeMatch
+
+      // Check if tickNumber range should be used (has values and is not an exact match)
+      const hasTickNumberRange = filters.tickNumberRange?.start || filters.tickNumberRange?.end
+      const isExactTickNumberMatch =
+        filters.tickNumberRange?.start &&
+        filters.tickNumberRange?.end &&
+        filters.tickNumberRange.start.trim() === filters.tickNumberRange.end.trim()
+      const shouldUseTickNumberRange = hasTickNumberRange && !isExactTickNumberMatch
 
       const ranges = {
         // Handle inputType range (when not exact match)
@@ -204,18 +222,17 @@ export default function useLatestTransactions(addressId: string): UseLatestTrans
               : {})
           }
         }),
-        ...(filters.tickNumberRange?.start || filters.tickNumberRange?.end
-          ? {
-              tickNumber: {
-                ...(filters.tickNumberRange.start && filters.tickNumberRange.start.trim() !== ''
-                  ? { gte: filters.tickNumberRange.start.trim() }
-                  : {}),
-                ...(filters.tickNumberRange.end && filters.tickNumberRange.end.trim() !== ''
-                  ? { lte: filters.tickNumberRange.end.trim() }
-                  : {})
-              }
-            }
-          : {}),
+        // Handle tickNumber range (when not exact match)
+        ...(shouldUseTickNumberRange && {
+          tickNumber: {
+            ...(filters.tickNumberRange?.start && filters.tickNumberRange.start.trim() !== ''
+              ? { gte: filters.tickNumberRange.start.trim() }
+              : {}),
+            ...(filters.tickNumberRange?.end && filters.tickNumberRange.end.trim() !== ''
+              ? { lte: filters.tickNumberRange.end.trim() }
+              : {})
+          }
+        }),
         // Handle date range - recalculate from presetDays if set (so "Last 24 hours" is always fresh)
         ...(() => {
           // If presetDays is set, calculate the start date now (at request time)
