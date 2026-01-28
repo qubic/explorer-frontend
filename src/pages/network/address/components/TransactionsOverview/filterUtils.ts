@@ -7,6 +7,58 @@ import type {
 } from '../../hooks/useLatestTransactions'
 
 // ============================================================================
+// ERROR PARSING UTILITIES
+// ============================================================================
+
+export type ParsedApiError = {
+  messageKey: string
+  address?: string
+}
+
+/**
+ * Extracts error message string from RTK Query error object.
+ * RTK Query FetchBaseQueryError has data property with the response body.
+ */
+export function extractErrorMessage(error: unknown): string | null {
+  if (!error) return null
+  if (typeof error === 'object' && 'data' in error) {
+    const { data } = error as { data: unknown }
+    if (typeof data === 'string') return data
+    if (typeof data === 'object' && data !== null && 'message' in data) {
+      return String((data as { message: unknown }).message)
+    }
+  }
+  return String(error)
+}
+
+/**
+ * Parses API error messages and returns a translation key with optional address.
+ * Handles errors like:
+ * - "invalid filter: invalid source filter: invalid identity [ADDRESS]"
+ * - "invalid filter: invalid destination filter: invalid identity [ADDRESS]"
+ * - "invalid filter: invalid source-exclude filter: invalid identity [ADDRESS]"
+ * - "invalid filter: invalid destination-exclude filter: invalid identity [ADDRESS]"
+ */
+export function parseFilterApiError(error: string | null): ParsedApiError | null {
+  if (!error) return null
+
+  // Match pattern: invalid (source|destination)[-exclude]? filter: invalid identity [ADDRESS]
+  const match = error.match(
+    /invalid (source|destination)(?:-exclude)? filter: invalid identity \[([A-Z]+)\]/
+  )
+
+  if (match) {
+    const [, filterType, address] = match
+    const messageKey =
+      filterType === 'source' ? 'invalidSourceIdentity' : 'invalidDestinationIdentity'
+    return { messageKey, address }
+  }
+
+  // Fallback for unknown errors
+  return null
+}
+
+// ============================================================================
 // VALIDATION UTILITIES
 // ============================================================================
 
@@ -79,7 +131,7 @@ export function validateAddressFilter(filter: AddressFilter | undefined): Valida
  * @param strictComparison - If true, start must be < end (not <=)
  * Returns an error message key or null if valid.
  */
-export function validateNumericRange(
+function validateNumericRange(
   start: string | undefined,
   end: string | undefined,
   strictComparison = false
@@ -91,6 +143,89 @@ export function validateNumericRange(
   const isInvalid = strictComparison ? startNum >= endNum : startNum > endNum
 
   return isInvalid ? 'invalid' : null
+}
+
+// Maximum value for uint32 fields (inputType, tick)
+export const MAX_UINT32 = 2 ** 32 - 1
+
+// Maximum value for uint64 fields (amount)
+// Using BigInt for accurate comparison with large values
+export const MAX_UINT64 = 2n ** 64n - 1n
+
+/**
+ * Validates an amount range filter.
+ * Checks both range validity and maximum value constraint (uint64 max).
+ * Returns translation key directly for simpler error handling in components.
+ */
+export function validateAmountRange(
+  start: string | undefined,
+  end: string | undefined
+): ValidationError {
+  // First check for max value overflow using BigInt for precision
+  try {
+    if (start && start.trim() !== '') {
+      const startBigInt = BigInt(start)
+      if (startBigInt > MAX_UINT64) return 'minAmountTooLarge'
+    }
+    if (end && end.trim() !== '') {
+      const endBigInt = BigInt(end)
+      if (endBigInt > MAX_UINT64) return 'maxAmountTooLarge'
+    }
+  } catch {
+    // If BigInt parsing fails, let it through - the server will validate
+  }
+
+  // Check range validity - return final translation key
+  const rangeError = validateNumericRange(start, end)
+  return rangeError ? 'invalidRangeAmount' : null
+}
+
+/**
+ * Validates an inputType range filter.
+ * Checks both range validity and maximum value constraint (uint32 max).
+ * Returns translation key directly for simpler error handling in components.
+ */
+export function validateInputTypeRange(
+  start: string | undefined,
+  end: string | undefined
+): ValidationError {
+  // First check for max value overflow
+  if (start) {
+    const startNum = Number(start)
+    if (startNum > MAX_UINT32) return 'minInputTypeTooLarge'
+  }
+  if (end) {
+    const endNum = Number(end)
+    if (endNum > MAX_UINT32) return 'maxInputTypeTooLarge'
+  }
+
+  // Check range validity - return final translation key
+  const rangeError = validateNumericRange(start, end)
+  return rangeError ? 'invalidRangeInputType' : null
+}
+
+/**
+ * Validates a tick number range filter.
+ * Checks both range validity (strict: start < end) and maximum value constraint (uint32 max).
+ * Returns translation key directly for simpler error handling in components.
+ */
+export function validateTickRange(
+  start: string | undefined,
+  end: string | undefined
+): ValidationError {
+  // First check for max value overflow (tick is uint32, same as inputType)
+  if (start) {
+    const startNum = Number(start)
+    if (startNum > MAX_UINT32) return 'startTickTooLarge'
+  }
+  if (end) {
+    const endNum = Number(end)
+    if (endNum > MAX_UINT32) return 'endTickTooLarge'
+  }
+
+  // Check range validity with strict comparison (start must be < end)
+  const rangeError = validateNumericRange(start, end, true)
+  return rangeError ? 'invalidTickRange' : null
 }
 
 /**

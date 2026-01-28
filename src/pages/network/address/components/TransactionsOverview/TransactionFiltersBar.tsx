@@ -25,8 +25,10 @@ import {
   DATE_PRESETS,
   formatAmountForDisplay,
   formatAmountShort,
+  validateAmountRange,
   validateDateRange,
-  validateNumericRange
+  validateInputTypeRange,
+  validateTickRange
 } from './filterUtils'
 
 type Props = {
@@ -84,30 +86,28 @@ export default function TransactionFiltersBar({
       start: string | undefined,
       end: string | undefined
     ) => {
-      const filterConfig: Record<
-        typeof filterKey,
-        { dropdownKey: string; errorKey: string; strictComparison?: boolean }
-      > = {
-        amountRange: { dropdownKey: 'amount', errorKey: 'invalidRangeAmount' },
-        tickNumberRange: {
-          dropdownKey: 'tick',
-          errorKey: 'invalidTickRange',
-          strictComparison: true
-        },
-        dateRange: { dropdownKey: 'date', errorKey: 'invalidDateRange' },
-        inputTypeRange: { dropdownKey: 'inputType', errorKey: 'invalidRangeInputType' }
+      const dropdownKeyMap: Record<typeof filterKey, string> = {
+        amountRange: 'amount',
+        tickNumberRange: 'tick',
+        dateRange: 'date',
+        inputTypeRange: 'inputType'
+      }
+      const dropdownKey = dropdownKeyMap[filterKey]
+
+      // Validation functions return final translation keys directly
+      let validationError: string | null
+      if (filterKey === 'dateRange') {
+        validationError = validateDateRange(start, end)
+      } else if (filterKey === 'inputTypeRange') {
+        validationError = validateInputTypeRange(start, end)
+      } else if (filterKey === 'amountRange') {
+        validationError = validateAmountRange(start, end)
+      } else {
+        validationError = validateTickRange(start, end)
       }
 
-      const { dropdownKey, errorKey, strictComparison } = filterConfig[filterKey]
-
-      // Use shared validation utilities
-      const validationError =
-        filterKey === 'dateRange'
-          ? validateDateRange(start, end)
-          : validateNumericRange(start, end, strictComparison)
-
       if (validationError) {
-        setValidationErrors((prev) => ({ ...prev, [dropdownKey]: t(errorKey) }))
+        setValidationErrors((prev) => ({ ...prev, [dropdownKey]: t(validationError) }))
         return
       }
 

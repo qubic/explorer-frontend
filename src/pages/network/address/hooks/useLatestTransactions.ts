@@ -4,6 +4,7 @@ import type {
   QueryServiceTransaction
 } from '@app/store/apis/query-service/query-service.types'
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { extractErrorMessage } from '../components/TransactionsOverview/filterUtils'
 
 const PAGE_SIZE = 50
 const MAX_RESULTS = 10_000 // query service limit
@@ -338,7 +339,7 @@ export default function useLatestTransactions(addressId: string): UseLatestTrans
     loadMoreTransactions,
     hasMore,
     isLoading,
-    error: error ? String(error) : null,
+    error: extractErrorMessage(error),
     applyFilters,
     clearFilters,
     activeFilters

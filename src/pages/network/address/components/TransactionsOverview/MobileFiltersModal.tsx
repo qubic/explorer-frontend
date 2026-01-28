@@ -17,8 +17,10 @@ import {
   applyDirectionChange,
   applySourceFilterChange,
   validateAddressFilter,
+  validateAmountRange,
   validateDateRange,
-  validateNumericRange
+  validateInputTypeRange,
+  validateTickRange
 } from './filterUtils'
 import MultiAddressFilterContent from './MultiAddressFilterContent'
 import RangeFilterContent from './RangeFilterContent'
@@ -102,13 +104,13 @@ export default function MobileFiltersModal({
       if (!firstErrorId) firstErrorId = 'mobile-destination-filter'
     }
 
-    // Validate amount range
-    const amountError = validateNumericRange(
+    // Validate amount range - returns final translation key directly
+    const amountError = validateAmountRange(
       localFilters.amountRange?.start,
       localFilters.amountRange?.end
     )
     if (amountError) {
-      errors.amount = t('invalidRangeAmount')
+      errors.amount = t(amountError)
       if (!firstErrorId) firstErrorId = 'mobile-amount-filter'
     }
 
@@ -119,24 +121,23 @@ export default function MobileFiltersModal({
       if (!firstErrorId) firstErrorId = 'mobile-date-filter'
     }
 
-    // Validate inputType range
-    const inputTypeError = validateNumericRange(
+    // Validate inputType range - returns final translation key directly
+    const inputTypeError = validateInputTypeRange(
       localFilters.inputTypeRange?.start,
       localFilters.inputTypeRange?.end
     )
     if (inputTypeError) {
-      errors.inputType = t('invalidRangeInputType')
+      errors.inputType = t(inputTypeError)
       if (!firstErrorId) firstErrorId = 'mobile-inputtype-filter'
     }
 
-    // Validate tick range (start must be less than end, not equal)
-    const tickError = validateNumericRange(
+    // Validate tick range - returns final translation key directly
+    const tickError = validateTickRange(
       localFilters.tickNumberRange?.start,
-      localFilters.tickNumberRange?.end,
-      true // strictComparison
+      localFilters.tickNumberRange?.end
     )
     if (tickError) {
-      errors.tick = t('invalidTickRange')
+      errors.tick = t(tickError)
       if (!firstErrorId) firstErrorId = 'mobile-tick-filter'
     }
 
