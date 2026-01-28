@@ -124,11 +124,11 @@ export default function MobileFiltersModal({
       }
     }
 
-    // Validate tick range (start must be less than end, not equal)
+    // Validate tick range (start must be less than or equal to end)
     if (localFilters.tickNumberRange?.start && localFilters.tickNumberRange?.end) {
       const startNum = Number(localFilters.tickNumberRange.start)
       const endNum = Number(localFilters.tickNumberRange.end)
-      if (startNum >= endNum) {
+      if (startNum > endNum) {
         errors.tick = t('invalidTickRange')
         if (!firstErrorId) firstErrorId = 'mobile-tick-filter'
       }
