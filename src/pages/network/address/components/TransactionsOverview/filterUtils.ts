@@ -1,8 +1,116 @@
+import { isValidAddressFormat } from '@app/utils'
 import type {
   AddressFilter,
   TransactionDirection,
   TransactionFilters
 } from '../../hooks/useLatestTransactions'
+
+// ============================================================================
+// VALIDATION UTILITIES
+// ============================================================================
+
+export type ValidationError = string | null
+
+/**
+ * Validates addresses and returns per-field errors.
+ * Returns an array of error message keys (or null for valid fields).
+ * Also returns whether any validation error exists.
+ */
+export function validateAddresses(addresses: string[]): {
+  errors: (string | null)[]
+  hasError: boolean
+} {
+  const errors: (string | null)[] = []
+  let hasError = false
+
+  // Track seen addresses to detect duplicates (case-insensitive)
+  const seenAddresses = new Map<string, number>()
+
+  addresses.forEach((addr, index) => {
+    const trimmed = addr.trim()
+    if (trimmed === '') {
+      errors[index] = null
+      return
+    }
+
+    // Check format validity
+    if (!isValidAddressFormat(trimmed)) {
+      errors[index] = 'invalidAddressFormat'
+      hasError = true
+      return
+    }
+
+    // Check for duplicates
+    const upperAddr = trimmed.toUpperCase()
+    if (seenAddresses.has(upperAddr)) {
+      errors[index] = 'duplicateAddress'
+      hasError = true
+    } else {
+      seenAddresses.set(upperAddr, index)
+      errors[index] = null
+    }
+  })
+
+  return { errors, hasError }
+}
+
+/**
+ * Validates an address filter for format errors and duplicates.
+ * Returns an error message key or null if valid.
+ */
+export function validateAddressFilter(filter: AddressFilter | undefined): ValidationError {
+  if (!filter?.addresses) return null
+
+  const nonEmptyAddresses = filter.addresses.filter((addr) => addr.trim() !== '')
+  if (nonEmptyAddresses.length === 0) return null
+
+  const { errors, hasError } = validateAddresses(filter.addresses)
+  if (!hasError) return null
+
+  // Return the first error found
+  return errors.find((e) => e !== null) ?? null
+}
+
+/**
+ * Validates a numeric range filter (amount, inputType, tick).
+ * @param start - Start value
+ * @param end - End value
+ * @param strictComparison - If true, start must be < end (not <=)
+ * Returns an error message key or null if valid.
+ */
+export function validateNumericRange(
+  start: string | undefined,
+  end: string | undefined,
+  strictComparison = false
+): ValidationError {
+  if (!start || !end) return null
+
+  const startNum = Number(start)
+  const endNum = Number(end)
+  const isInvalid = strictComparison ? startNum >= endNum : startNum > endNum
+
+  return isInvalid ? 'invalid' : null
+}
+
+/**
+ * Validates a date range filter.
+ * Returns an error message key or null if valid.
+ */
+export function validateDateRange(
+  start: string | undefined,
+  end: string | undefined
+): ValidationError {
+  if (!start || !end) return null
+
+  const startDate = new Date(start)
+  const endDate = new Date(end)
+
+  return startDate > endDate ? 'invalidDateRange' : null
+}
+
+// ============================================================================
+// FORMATTING UTILITIES
+// ============================================================================
 
 // Format a number string with thousand separators for display
 export function formatAmountForDisplay(value: string | undefined): string {

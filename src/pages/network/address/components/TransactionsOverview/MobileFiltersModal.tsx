@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next'
 
 import { XmarkIcon } from '@app/assets/icons'
 import { Modal } from '@app/components/ui'
-import { isValidAddressFormat } from '@app/utils'
 import type {
   AddressFilter,
   TransactionDirection,
@@ -12,14 +11,17 @@ import type {
 import AmountFilterContent from './AmountFilterContent'
 import DateFilterContent from './DateFilterContent'
 import DirectionControl from './DirectionControl'
-import MultiAddressFilterContent from './MultiAddressFilterContent'
-import RangeFilterContent from './RangeFilterContent'
 import {
   applyDatePresetCalculation,
   applyDestinationFilterChange,
   applyDirectionChange,
-  applySourceFilterChange
+  applySourceFilterChange,
+  validateAddressFilter,
+  validateDateRange,
+  validateNumericRange
 } from './filterUtils'
+import MultiAddressFilterContent from './MultiAddressFilterContent'
+import RangeFilterContent from './RangeFilterContent'
 
 type Props = {
   isOpen: boolean
@@ -87,93 +89,55 @@ export default function MobileFiltersModal({
     let firstErrorId: string | null = null
 
     // Validate source addresses (multi-address) - format and duplicates
-    if (localFilters.sourceFilter?.addresses) {
-      const nonEmptyAddresses = localFilters.sourceFilter.addresses.filter(
-        (addr) => addr.trim() !== ''
-      )
-      const invalidAddress = nonEmptyAddresses.find((addr) => !isValidAddressFormat(addr.trim()))
-      if (invalidAddress) {
-        errors.source = t('invalidAddressFormat')
-        if (!firstErrorId) firstErrorId = 'mobile-source-filter'
-      } else {
-        // Check for duplicates
-        const seen = new Set<string>()
-        const hasDuplicate = nonEmptyAddresses.some((addr) => {
-          const upper = addr.trim().toUpperCase()
-          if (seen.has(upper)) return true
-          seen.add(upper)
-          return false
-        })
-        if (hasDuplicate) {
-          errors.source = t('duplicateAddress')
-          if (!firstErrorId) firstErrorId = 'mobile-source-filter'
-        }
-      }
+    const sourceError = validateAddressFilter(localFilters.sourceFilter)
+    if (sourceError) {
+      errors.source = t(sourceError)
+      if (!firstErrorId) firstErrorId = 'mobile-source-filter'
     }
 
     // Validate destination addresses (multi-address) - format and duplicates
-    if (localFilters.destinationFilter?.addresses) {
-      const nonEmptyAddresses = localFilters.destinationFilter.addresses.filter(
-        (addr) => addr.trim() !== ''
-      )
-      const invalidAddress = nonEmptyAddresses.find((addr) => !isValidAddressFormat(addr.trim()))
-      if (invalidAddress) {
-        errors.destination = t('invalidAddressFormat')
-        if (!firstErrorId) firstErrorId = 'mobile-destination-filter'
-      } else {
-        // Check for duplicates
-        const seen = new Set<string>()
-        const hasDuplicate = nonEmptyAddresses.some((addr) => {
-          const upper = addr.trim().toUpperCase()
-          if (seen.has(upper)) return true
-          seen.add(upper)
-          return false
-        })
-        if (hasDuplicate) {
-          errors.destination = t('duplicateAddress')
-          if (!firstErrorId) firstErrorId = 'mobile-destination-filter'
-        }
-      }
+    const destinationError = validateAddressFilter(localFilters.destinationFilter)
+    if (destinationError) {
+      errors.destination = t(destinationError)
+      if (!firstErrorId) firstErrorId = 'mobile-destination-filter'
     }
 
     // Validate amount range
-    if (localFilters.amountRange?.start && localFilters.amountRange?.end) {
-      const startNum = Number(localFilters.amountRange.start)
-      const endNum = Number(localFilters.amountRange.end)
-      if (startNum > endNum) {
-        errors.amount = t('invalidRangeAmount')
-        if (!firstErrorId) firstErrorId = 'mobile-amount-filter'
-      }
+    const amountError = validateNumericRange(
+      localFilters.amountRange?.start,
+      localFilters.amountRange?.end
+    )
+    if (amountError) {
+      errors.amount = t('invalidRangeAmount')
+      if (!firstErrorId) firstErrorId = 'mobile-amount-filter'
     }
 
     // Validate date range
-    if (localFilters.dateRange?.start && localFilters.dateRange?.end) {
-      const startDate = new Date(localFilters.dateRange.start)
-      const endDate = new Date(localFilters.dateRange.end)
-      if (startDate > endDate) {
-        errors.date = t('invalidDateRange')
-        if (!firstErrorId) firstErrorId = 'mobile-date-filter'
-      }
+    const dateError = validateDateRange(localFilters.dateRange?.start, localFilters.dateRange?.end)
+    if (dateError) {
+      errors.date = t(dateError)
+      if (!firstErrorId) firstErrorId = 'mobile-date-filter'
     }
 
     // Validate inputType range
-    if (localFilters.inputTypeRange?.start && localFilters.inputTypeRange?.end) {
-      const startNum = Number(localFilters.inputTypeRange.start)
-      const endNum = Number(localFilters.inputTypeRange.end)
-      if (startNum > endNum) {
-        errors.inputType = t('invalidRangeInputType')
-        if (!firstErrorId) firstErrorId = 'mobile-inputtype-filter'
-      }
+    const inputTypeError = validateNumericRange(
+      localFilters.inputTypeRange?.start,
+      localFilters.inputTypeRange?.end
+    )
+    if (inputTypeError) {
+      errors.inputType = t('invalidRangeInputType')
+      if (!firstErrorId) firstErrorId = 'mobile-inputtype-filter'
     }
 
     // Validate tick range (start must be less than end, not equal)
-    if (localFilters.tickNumberRange?.start && localFilters.tickNumberRange?.end) {
-      const startNum = Number(localFilters.tickNumberRange.start)
-      const endNum = Number(localFilters.tickNumberRange.end)
-      if (startNum >= endNum) {
-        errors.tick = t('invalidTickRange')
-        if (!firstErrorId) firstErrorId = 'mobile-tick-filter'
-      }
+    const tickError = validateNumericRange(
+      localFilters.tickNumberRange?.start,
+      localFilters.tickNumberRange?.end,
+      true // strictComparison
+    )
+    if (tickError) {
+      errors.tick = t('invalidTickRange')
+      if (!firstErrorId) firstErrorId = 'mobile-tick-filter'
     }
 
     // If there are errors, set them and scroll to first error

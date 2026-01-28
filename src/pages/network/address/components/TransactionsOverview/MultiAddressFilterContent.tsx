@@ -2,8 +2,9 @@ import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { PlusIcon, XmarkIcon } from '@app/assets/icons'
-import { clsxTwMerge, isValidAddressFormat } from '@app/utils'
+import { clsxTwMerge } from '@app/utils'
 import type { AddressFilter, AddressFilterMode } from '../../hooks/useLatestTransactions'
+import { validateAddresses } from './filterUtils'
 
 const MAX_ADDRESSES = 5
 
@@ -133,42 +134,15 @@ export default function MultiAddressFilterContent({
   }
 
   const handleApply = () => {
-    // Validate all non-empty addresses
-    const newErrors: (string | null)[] = []
-    let hasValidationError = false
+    // Validate all addresses using shared utility
+    const { errors, hasError } = validateAddresses(localAddresses)
 
-    // Track seen addresses to detect duplicates (case-insensitive)
-    const seenAddresses = new Map<string, number>()
-
-    localAddresses.forEach((addr, index) => {
-      const trimmed = addr.trim()
-      if (trimmed === '') {
-        newErrors[index] = null
-        return
-      }
-
-      // Check format validity
-      if (!isValidAddressFormat(trimmed)) {
-        newErrors[index] = t('invalidAddressFormat')
-        hasValidationError = true
-        return
-      }
-
-      // Check for duplicates (addresses are uppercase, so direct comparison works)
-      const upperAddr = trimmed.toUpperCase()
-      if (seenAddresses.has(upperAddr)) {
-        newErrors[index] = t('duplicateAddress')
-        hasValidationError = true
-      } else {
-        seenAddresses.set(upperAddr, index)
-        newErrors[index] = null
-      }
-    })
-
-    if (hasValidationError) {
-      setInternalErrors(newErrors)
+    if (hasError) {
+      // Translate error keys to messages
+      const translatedErrors = errors.map((e) => (e ? t(e) : null))
+      setInternalErrors(translatedErrors)
       // Focus first error input
-      const firstErrorIndex = newErrors.findIndex((e) => e !== null)
+      const firstErrorIndex = errors.findIndex((e) => e !== null)
       if (firstErrorIndex >= 0) {
         inputRefs.current[firstErrorIndex]?.focus()
       }
@@ -228,7 +202,7 @@ export default function MultiAddressFilterContent({
                 onChange={(e) => handleAddressChange(index, e.target.value)}
                 placeholder={placeholder || t('addressPlaceholder')}
                 className={clsxTwMerge(
-                  'w-full rounded bg-primary-60 px-10 py-6 text-xs text-white placeholder-gray-50 focus:outline-none focus:ring-1 focus:ring-primary-30',
+                  'w-full rounded bg-primary-60 px-10 py-6 text-base text-white placeholder-gray-50 focus:outline-none focus:ring-1 focus:ring-primary-30 md:text-xs',
                   (index > 0 || address.trim() !== '') && 'pr-32',
                   internalErrors[index] && 'ring-1 ring-error-40'
                 )}

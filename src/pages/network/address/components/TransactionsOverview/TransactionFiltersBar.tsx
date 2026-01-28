@@ -24,7 +24,9 @@ import {
   applySourceFilterChange,
   DATE_PRESETS,
   formatAmountForDisplay,
-  formatAmountShort
+  formatAmountShort,
+  validateDateRange,
+  validateNumericRange
 } from './filterUtils'
 
 type Props = {
@@ -98,26 +100,14 @@ export default function TransactionFiltersBar({
 
       const { dropdownKey, errorKey, strictComparison } = filterConfig[filterKey]
 
-      let error: string | null = null
-      if (start && end) {
-        if (filterKey === 'dateRange') {
-          const startDate = new Date(start)
-          const endDate = new Date(end)
-          if (startDate > endDate) {
-            error = t(errorKey)
-          }
-        } else {
-          const startNum = Number(start)
-          const endNum = Number(end)
-          const isInvalid = strictComparison ? startNum >= endNum : startNum > endNum
-          if (isInvalid) {
-            error = t(errorKey)
-          }
-        }
-      }
+      // Use shared validation utilities
+      const validationError =
+        filterKey === 'dateRange'
+          ? validateDateRange(start, end)
+          : validateNumericRange(start, end, strictComparison)
 
-      if (error) {
-        setValidationErrors((prev) => ({ ...prev, [dropdownKey]: error }))
+      if (validationError) {
+        setValidationErrors((prev) => ({ ...prev, [dropdownKey]: t(errorKey) }))
         return
       }
 
