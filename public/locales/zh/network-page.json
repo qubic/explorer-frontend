@@ -62,6 +62,14 @@
   "invalidAddressError": "地址格式无效。请检查地址并重试。",
   "addressNotFoundError": "错误：我们找不到您要查找的地址。请检查地址并重试。",
   "loadingTransactionsError": "错误：加载交易时出现问题。请稍后再试。",
+  "invalidSourceIdentity": "无效的来源地址: {{address}}",
+  "invalidDestinationIdentity": "无效的目标地址: {{address}}",
+  "minInputTypeTooLarge": "最小输入类型值过大。",
+  "maxInputTypeTooLarge": "最大输入类型值过大。",
+  "minAmountTooLarge": "最小金额值过大。",
+  "maxAmountTooLarge": "最大金额值过大。",
+  "startTickTooLarge": "起始Tick值过大。",
+  "endTickTooLarge": "结束Tick值过大。",
   "richList": "富豪榜",
   "rank": "排名",
   "addressID": "地址 ID",
@@ -161,5 +169,11 @@
   "direction": "方向",
   "inputType": "输入类型",
   "minInputType": "最小值",
-  "maxInputType": "最大值"
+  "maxInputType": "最大值",
+  "include": "包含",
+  "exclude": "排除",
+  "addAddress": "添加地址",
+  "removeAddress": "删除地址",
+  "maxAddressesReached": "已达到最多5个地址",
+  "duplicateAddress": "重复地址"
 }

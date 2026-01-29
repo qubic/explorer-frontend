@@ -3,19 +3,27 @@ import { useTranslation } from 'react-i18next'
 
 import { XmarkIcon } from '@app/assets/icons'
 import { Modal } from '@app/components/ui'
-import { isValidAddressFormat } from '@app/utils'
-import type { TransactionDirection, TransactionFilters } from '../../hooks/useLatestTransactions'
-import AddressFilterContent from './AddressFilterContent'
+import type {
+  AddressFilter,
+  TransactionDirection,
+  TransactionFilters
+} from '../../hooks/useLatestTransactions'
 import AmountFilterContent from './AmountFilterContent'
 import DateFilterContent from './DateFilterContent'
 import DirectionControl from './DirectionControl'
-import RangeFilterContent from './RangeFilterContent'
 import {
   applyDatePresetCalculation,
-  applyDestinationChange,
+  applyDestinationFilterChange,
   applyDirectionChange,
-  applySourceChange
+  applySourceFilterChange,
+  validateAddressFilter,
+  validateAmountRange,
+  validateDateRange,
+  validateInputTypeRange,
+  validateTickRange
 } from './filterUtils'
+import MultiAddressFilterContent from './MultiAddressFilterContent'
+import RangeFilterContent from './RangeFilterContent'
 
 type Props = {
   isOpen: boolean
@@ -63,16 +71,16 @@ export default function MobileFiltersModal({
     [addressId]
   )
 
-  const handleSourceChange = useCallback(
-    (value: string | undefined) => {
-      setLocalFilters((prev) => applySourceChange(prev, value, addressId))
+  const handleSourceFilterChange = useCallback(
+    (value: AddressFilter | undefined) => {
+      setLocalFilters((prev) => applySourceFilterChange(prev, value, addressId))
     },
     [addressId]
   )
 
-  const handleDestinationChange = useCallback(
-    (value: string | undefined) => {
-      setLocalFilters((prev) => applyDestinationChange(prev, value, addressId))
+  const handleDestinationFilterChange = useCallback(
+    (value: AddressFilter | undefined) => {
+      setLocalFilters((prev) => applyDestinationFilterChange(prev, value, addressId))
     },
     [addressId]
   )
@@ -82,56 +90,55 @@ export default function MobileFiltersModal({
     const errors: Record<string, string> = {}
     let firstErrorId: string | null = null
 
-    // Validate source address
-    if (localFilters.source && !isValidAddressFormat(localFilters.source)) {
-      errors.source = t('invalidAddressFormat')
+    // Validate source addresses (multi-address) - format and duplicates
+    const sourceError = validateAddressFilter(localFilters.sourceFilter)
+    if (sourceError) {
+      errors.source = t(sourceError)
       if (!firstErrorId) firstErrorId = 'mobile-source-filter'
     }
 
-    // Validate destination address
-    if (localFilters.destination && !isValidAddressFormat(localFilters.destination)) {
-      errors.destination = t('invalidAddressFormat')
+    // Validate destination addresses (multi-address) - format and duplicates
+    const destinationError = validateAddressFilter(localFilters.destinationFilter)
+    if (destinationError) {
+      errors.destination = t(destinationError)
       if (!firstErrorId) firstErrorId = 'mobile-destination-filter'
     }
 
-    // Validate amount range
-    if (localFilters.amountRange?.start && localFilters.amountRange?.end) {
-      const startNum = Number(localFilters.amountRange.start)
-      const endNum = Number(localFilters.amountRange.end)
-      if (startNum > endNum) {
-        errors.amount = t('invalidRangeAmount')
-        if (!firstErrorId) firstErrorId = 'mobile-amount-filter'
-      }
+    // Validate amount range - returns final translation key directly
+    const amountError = validateAmountRange(
+      localFilters.amountRange?.start,
+      localFilters.amountRange?.end
+    )
+    if (amountError) {
+      errors.amount = t(amountError)
+      if (!firstErrorId) firstErrorId = 'mobile-amount-filter'
     }
 
     // Validate date range
-    if (localFilters.dateRange?.start && localFilters.dateRange?.end) {
-      const startDate = new Date(localFilters.dateRange.start)
-      const endDate = new Date(localFilters.dateRange.end)
-      if (startDate > endDate) {
-        errors.date = t('invalidDateRange')
-        if (!firstErrorId) firstErrorId = 'mobile-date-filter'
-      }
+    const dateError = validateDateRange(localFilters.dateRange?.start, localFilters.dateRange?.end)
+    if (dateError) {
+      errors.date = t(dateError)
+      if (!firstErrorId) firstErrorId = 'mobile-date-filter'
     }
 
-    // Validate inputType range
-    if (localFilters.inputTypeRange?.start && localFilters.inputTypeRange?.end) {
-      const startNum = Number(localFilters.inputTypeRange.start)
-      const endNum = Number(localFilters.inputTypeRange.end)
-      if (startNum > endNum) {
-        errors.inputType = t('invalidRangeInputType')
-        if (!firstErrorId) firstErrorId = 'mobile-inputtype-filter'
-      }
+    // Validate inputType range - returns final translation key directly
+    const inputTypeError = validateInputTypeRange(
+      localFilters.inputTypeRange?.start,
+      localFilters.inputTypeRange?.end
+    )
+    if (inputTypeError) {
+      errors.inputType = t(inputTypeError)
+      if (!firstErrorId) firstErrorId = 'mobile-inputtype-filter'
     }
 
-    // Validate tick range (start must be less than or equal to end)
-    if (localFilters.tickNumberRange?.start && localFilters.tickNumberRange?.end) {
-      const startNum = Number(localFilters.tickNumberRange.start)
-      const endNum = Number(localFilters.tickNumberRange.end)
-      if (startNum > endNum) {
-        errors.tick = t('invalidTickRange')
-        if (!firstErrorId) firstErrorId = 'mobile-tick-filter'
-      }
+    // Validate tick range - returns final translation key directly
+    const tickError = validateTickRange(
+      localFilters.tickNumberRange?.start,
+      localFilters.tickNumberRange?.end
+    )
+    if (tickError) {
+      errors.tick = t(tickError)
+      if (!firstErrorId) firstErrorId = 'mobile-tick-filter'
     }
 
     // If there are errors, set them and scroll to first error
@@ -189,13 +196,12 @@ export default function MobileFiltersModal({
             {/* Source */}
             <div id="mobile-source-filter">
               <h3 className="mb-8 text-sm font-medium text-white">{t('source')}</h3>
-              <AddressFilterContent
-                id="filter-source"
-                value={localFilters.source}
-                onChange={handleSourceChange}
+              <MultiAddressFilterContent
+                id="filter-source-mobile"
+                value={localFilters.sourceFilter}
+                onChange={handleSourceFilterChange}
                 onApply={() => {}}
                 showApplyButton={false}
-                showClearButton
                 error={validationErrors.source}
               />
             </div>
@@ -203,13 +209,12 @@ export default function MobileFiltersModal({
             {/* Destination */}
             <div id="mobile-destination-filter">
               <h3 className="mb-8 text-sm font-medium text-white">{t('destination')}*</h3>
-              <AddressFilterContent
-                id="filter-destination"
-                value={localFilters.destination}
-                onChange={handleDestinationChange}
+              <MultiAddressFilterContent
+                id="filter-destination-mobile"
+                value={localFilters.destinationFilter}
+                onChange={handleDestinationFilterChange}
                 onApply={() => {}}
                 showApplyButton={false}
-                showClearButton
                 hint={t('destinationFilterHint')}
                 error={validationErrors.destination}
               />

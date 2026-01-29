@@ -3,24 +3,32 @@ import { useTranslation } from 'react-i18next'
 
 import { FunnelIcon, UndoIcon } from '@app/assets/icons'
 import Tooltip from '@app/components/ui/Tooltip'
-import type { TransactionDirection, TransactionFilters } from '../../hooks/useLatestTransactions'
+import type {
+  AddressFilter,
+  TransactionDirection,
+  TransactionFilters
+} from '../../hooks/useLatestTransactions'
 import ActiveFilterChip from './ActiveFilterChip'
-import AddressFilterContent from './AddressFilterContent'
 import AmountFilterContent from './AmountFilterContent'
 import DateFilterContent from './DateFilterContent'
 import DirectionControl from './DirectionControl'
 import FilterDropdown from './FilterDropdown'
 import MobileFiltersModal from './MobileFiltersModal'
+import MultiAddressFilterContent from './MultiAddressFilterContent'
 import RangeFilterContent from './RangeFilterContent'
 import {
   AMOUNT_PRESETS,
   applyDatePresetCalculation,
-  applyDestinationChange,
+  applyDestinationFilterChange,
   applyDirectionChange,
-  applySourceChange,
+  applySourceFilterChange,
   DATE_PRESETS,
   formatAmountForDisplay,
-  formatAmountShort
+  formatAmountShort,
+  validateAmountRange,
+  validateDateRange,
+  validateInputTypeRange,
+  validateTickRange
 } from './filterUtils'
 
 type Props = {
@@ -78,38 +86,28 @@ export default function TransactionFiltersBar({
       start: string | undefined,
       end: string | undefined
     ) => {
-      const filterConfig: Record<
-        typeof filterKey,
-        { dropdownKey: string; errorKey: string; strictComparison?: boolean }
-      > = {
-        amountRange: { dropdownKey: 'amount', errorKey: 'invalidRangeAmount' },
-        tickNumberRange: { dropdownKey: 'tick', errorKey: 'invalidTickRange' },
-        dateRange: { dropdownKey: 'date', errorKey: 'invalidDateRange' },
-        inputTypeRange: { dropdownKey: 'inputType', errorKey: 'invalidRangeInputType' }
+      const dropdownKeyMap: Record<typeof filterKey, string> = {
+        amountRange: 'amount',
+        tickNumberRange: 'tick',
+        dateRange: 'date',
+        inputTypeRange: 'inputType'
+      }
+      const dropdownKey = dropdownKeyMap[filterKey]
+
+      // Validation functions return final translation keys directly
+      let validationError: string | null
+      if (filterKey === 'dateRange') {
+        validationError = validateDateRange(start, end)
+      } else if (filterKey === 'inputTypeRange') {
+        validationError = validateInputTypeRange(start, end)
+      } else if (filterKey === 'amountRange') {
+        validationError = validateAmountRange(start, end)
+      } else {
+        validationError = validateTickRange(start, end)
       }
 
-      const { dropdownKey, errorKey, strictComparison } = filterConfig[filterKey]
-
-      let error: string | null = null
-      if (start && end) {
-        if (filterKey === 'dateRange') {
-          const startDate = new Date(start)
-          const endDate = new Date(end)
-          if (startDate > endDate) {
-            error = t(errorKey)
-          }
-        } else {
-          const startNum = Number(start)
-          const endNum = Number(end)
-          const isInvalid = strictComparison ? startNum >= endNum : startNum > endNum
-          if (isInvalid) {
-            error = t(errorKey)
-          }
-        }
-      }
-
-      if (error) {
-        setValidationErrors((prev) => ({ ...prev, [dropdownKey]: error }))
+      if (validationError) {
+        setValidationErrors((prev) => ({ ...prev, [dropdownKey]: t(validationError) }))
         return
       }
 
@@ -169,11 +167,20 @@ export default function TransactionFiltersBar({
     if (['tickNumberRange', 'dateRange', 'amountRange', 'inputTypeRange'].includes(key)) {
       return value && (value.start || value.end)
     }
+    if (key === 'sourceFilter' || key === 'destinationFilter') {
+      const filter = value as AddressFilter | undefined
+      return filter?.addresses && filter.addresses.some((addr) => addr.trim() !== '')
+    }
     return key !== 'amount' && typeof value === 'string' && value.trim() !== ''
   })
 
-  const isSourceActive = !!activeFilters.source
-  const isDestinationActive = !!activeFilters.destination
+  // Check for active multi-address filters
+  const sourceAddresses =
+    activeFilters.sourceFilter?.addresses.filter((addr) => addr.trim() !== '') ?? []
+  const destinationAddresses =
+    activeFilters.destinationFilter?.addresses.filter((addr) => addr.trim() !== '') ?? []
+  const isSourceActive = sourceAddresses.length > 0
+  const isDestinationActive = destinationAddresses.length > 0
   const isAmountActive = !!(activeFilters.amountRange?.start || activeFilters.amountRange?.end)
   const isDateActive = !!(activeFilters.dateRange?.start || activeFilters.dateRange?.end)
   const isTickActive = !!(
@@ -188,13 +195,23 @@ export default function TransactionFiltersBar({
 
   // Get display labels for active filters
   const getSourceLabel = () => {
-    if (!isSourceActive || !activeFilters.source) return t('source')
-    return `${t('source')}: ${formatAddressShort(activeFilters.source)}`
+    if (!isSourceActive) return t('source')
+    const mode = activeFilters.sourceFilter?.mode ?? 'include'
+    const modeLabel = t(mode)
+    if (sourceAddresses.length === 1) {
+      return `${t('source')}: ${modeLabel} ${formatAddressShort(sourceAddresses[0])}`
+    }
+    return `${t('source')}: ${modeLabel} ${sourceAddresses.length}`
   }
 
   const getDestinationLabel = () => {
-    if (!isDestinationActive || !activeFilters.destination) return t('destination')
-    return `${t('destination')}: ${formatAddressShort(activeFilters.destination)}`
+    if (!isDestinationActive) return t('destination')
+    const mode = activeFilters.destinationFilter?.mode ?? 'include'
+    const modeLabel = t(mode)
+    if (destinationAddresses.length === 1) {
+      return `${t('destination')}: ${modeLabel} ${formatAddressShort(destinationAddresses[0])}`
+    }
+    return `${t('destination')}: ${modeLabel} ${destinationAddresses.length}`
   }
 
   const getAmountLabel = () => {
@@ -265,13 +282,13 @@ export default function TransactionFiltersBar({
 
   // Clear handlers for individual filters
   const clearSourceFilter = useCallback(() => {
-    const newFilters = applySourceChange(activeFilters, undefined, addressId)
+    const newFilters = applySourceFilterChange(activeFilters, undefined, addressId)
     onApplyFilters(newFilters)
     setLocalFilters(newFilters)
   }, [activeFilters, onApplyFilters, addressId])
 
   const clearDestinationFilter = useCallback(() => {
-    const newFilters = applyDestinationChange(activeFilters, undefined, addressId)
+    const newFilters = applyDestinationFilterChange(activeFilters, undefined, addressId)
     onApplyFilters(newFilters)
     setLocalFilters(newFilters)
   }, [activeFilters, onApplyFilters, addressId])
@@ -375,14 +392,14 @@ export default function TransactionFiltersBar({
           onClear={isSourceActive ? clearSourceFilter : undefined}
           contentClassName="min-w-[300px]"
         >
-          <AddressFilterContent
-            id="filter-source-desktop-standalone"
-            value={localFilters.source}
-            onChange={(value) => setLocalFilters((prev) => ({ ...prev, source: value }))}
+          <MultiAddressFilterContent
+            id="filter-source-desktop"
+            value={localFilters.sourceFilter}
+            onChange={(value) => setLocalFilters((prev) => ({ ...prev, sourceFilter: value }))}
             onApply={() => {
-              const newFilters = applySourceChange(
+              const newFilters = applySourceFilterChange(
                 activeFilters,
-                localFilters.source || undefined,
+                localFilters.sourceFilter,
                 addressId
               )
               onApplyFilters(newFilters)
@@ -401,14 +418,14 @@ export default function TransactionFiltersBar({
           onClear={isDestinationActive ? clearDestinationFilter : undefined}
           contentClassName="min-w-[300px]"
         >
-          <AddressFilterContent
-            id="filter-destination-desktop-standalone"
-            value={localFilters.destination}
-            onChange={(value) => setLocalFilters((prev) => ({ ...prev, destination: value }))}
+          <MultiAddressFilterContent
+            id="filter-destination-desktop"
+            value={localFilters.destinationFilter}
+            onChange={(value) => setLocalFilters((prev) => ({ ...prev, destinationFilter: value }))}
             onApply={() => {
-              const newFilters = applyDestinationChange(
+              const newFilters = applyDestinationFilterChange(
                 activeFilters,
-                localFilters.destination || undefined,
+                localFilters.destinationFilter,
                 addressId
               )
               onApplyFilters(newFilters)
