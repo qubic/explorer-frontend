@@ -30,7 +30,7 @@ function SmartContractsPage() {
     if (error || !smartContracts) {
       return (
         <tr>
-          <td colSpan={3} className="py-40 text-center text-sm text-gray-50">
+          <td colSpan={3} className="py-40 text-center text-sm text-muted-foreground">
             {t('smartContractsLoadFailed')}
           </td>
         </tr>
@@ -65,23 +65,23 @@ function SmartContractsPage() {
         </div>
         <CardItem tag="ul" className="mt-16 flex flex-wrap gap-16 p-12">
           <div className="flex gap-8 py-12 text-sm">
-            <p className="text-gray-50">{t('sharesIssuer')}</p>
+            <p className="text-muted-foreground">{t('sharesIssuer')}</p>
             <AddressLink value={EMPTY_ADDRESS} className="sm:text-sm" copy />
           </div>
         </CardItem>
-        <div className="w-full rounded-12 border-1 border-primary-60 bg-primary-70">
+        <div className="w-full rounded-12 border-1 border-border bg-card">
           <div className="overflow-x-scroll">
             <table className="w-full">
-              <thead className="border-b-1 border-primary-60 text-left font-space text-sm text-gray-50">
+              <thead className="border-b-1 border-border text-left font-space text-sm text-muted-foreground">
                 <tr>
                   <th className="w-[6ch] whitespace-nowrap px-10 py-16 text-right text-xs font-400 sm:p-16 sm:text-sm">
-                    <span className="text-gray-50">{t('contractIndex')}</span>
+                    <span className="text-muted-foreground">{t('contractIndex')}</span>
                   </th>
                   <th className="px-10 py-16 text-left text-xs font-400 sm:w-72 sm:p-16 sm:text-sm">
-                    <span className="text-gray-50">{t('name')}</span>
+                    <span className="text-muted-foreground">{t('name')}</span>
                   </th>
                   <th className="px-10 py-16 text-xs font-400 sm:p-16 sm:text-sm">
-                    <span className="text-gray-50">{t('address')}</span>
+                    <span className="text-muted-foreground">{t('address')}</span>
                   </th>
                 </tr>
               </thead>

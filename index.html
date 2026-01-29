@@ -18,6 +18,31 @@
 
     <title>QUBIC Explorer</title>
     <base href="/" />
+
+    <!-- Prevent a theme "flash" before React mounts -->
+    <script>
+      (function () {
+        try {
+          var theme = localStorage.getItem('theme') || 'system'
+          var isDark =
+            theme === 'dark' ||
+            (theme === 'system' &&
+              window.matchMedia &&
+              window.matchMedia('(prefers-color-scheme: dark)').matches)
+
+          var root = document.documentElement
+          if (isDark) {
+            root.classList.add('dark')
+            root.style.colorScheme = 'dark'
+          } else {
+            root.classList.remove('dark')
+            root.style.colorScheme = 'light'
+          }
+        } catch (e) {
+          // ignore
+        }
+      })()
+    </script>
   </head>
   <body>
     <div id="root"></div>

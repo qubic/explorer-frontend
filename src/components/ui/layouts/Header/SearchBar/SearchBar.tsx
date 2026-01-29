@@ -76,7 +76,7 @@ export default function SearchBar() {
     <ErrorBoundary fallback={<Alert variant="error" className="mx-5 my-2.5" />}>
       <button
         type="button"
-        className="rounded-full p-8 transition-colors duration-500 ease-in-out hover:bg-primary-70"
+        className="rounded-full p-8 transition-colors duration-500 ease-in-out hover:bg-muted"
         onClick={() => setOpen(true)}
         aria-label="search-button"
       >
@@ -89,18 +89,18 @@ export default function SearchBar() {
         closeOnOutsideClick
         onClose={handleCloseCallback}
       >
-        <div className="h-fit w-full bg-primary-70">
+        <div className="h-fit w-full bg-card">
           {isLoading && (
             <div className="absolute w-full">
               <LinearProgress />
             </div>
           )}
 
-          <div className="relative flex w-full items-center justify-center border-y-[1px] border-primary-60">
-            <div className="bg-gray-40 mx-auto flex w-full max-w-[820px] items-center gap-8 pl-12 pr-20">
+          <div className="relative flex w-full items-center justify-center border-y-[1px] border-border">
+            <div className="mx-auto flex w-full max-w-[820px] items-center gap-8 bg-muted pl-12 pr-20">
               <MagnifyIcon className="h-16 w-16" />
               <input
-                className="w-full bg-inherit py-12 pr-20 text-base placeholder:font-space placeholder:text-base placeholder:text-gray-50 focus:outline-none sm:text-sm"
+                className="w-full bg-inherit py-12 pr-20 text-base placeholder:font-space placeholder:text-base placeholder:text-muted-foreground focus:outline-none sm:text-sm"
                 placeholder="Search TX, ticks, IDs..."
                 value={keyword}
                 // eslint-disable-next-line jsx-a11y/no-autofocus
@@ -117,7 +117,7 @@ export default function SearchBar() {
               onClick={handleCloseCallback}
               aria-label="close-button"
             >
-              <XmarkIcon className="h-24 w-24 text-gray-50" />
+              <XmarkIcon className="h-24 w-24 text-muted-foreground" />
             </button>
           </div>
 
@@ -128,7 +128,7 @@ export default function SearchBar() {
           )}
 
           {searchResult && (
-            <div className="mx-auto max-h-[320px] max-w-[800px] overflow-y-scroll pb-20 scrollbar scrollbar-track-transparent scrollbar-thumb-primary-60 scrollbar-thumb-rounded-full scrollbar-w-4">
+            <div className="mx-auto max-h-[320px] max-w-[800px] overflow-y-scroll pb-20 scrollbar scrollbar-track-transparent scrollbar-thumb-muted-foreground scrollbar-thumb-rounded-full scrollbar-w-4">
               {'balance' in searchResult && (
                 <ResultItem
                   icon={<GridAddIcon className="mr-6 h-16 min-h-16 w-16 min-w-16" />}

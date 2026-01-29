@@ -23,7 +23,7 @@ export default function BurgerMenu({ navigationMenus, activePath }: Props) {
 
   return (
     <DropdownMenu show={showMenu} onToggle={handleToggleMenu}>
-      <DropdownMenu.Trigger className="rounded-full p-8 transition-colors duration-500 ease-in-out hover:bg-primary-60/80">
+      <DropdownMenu.Trigger className="rounded-full p-8 transition-colors duration-500 ease-in-out hover:bg-muted">
         <div className="relative size-24">
           <XmarkIcon
             className={clsxTwMerge(

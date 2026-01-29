@@ -13,12 +13,12 @@ export default function SubCardItem({ title, content, variant = 'primary' }: Pro
       className={clsxTwMerge(
         'flex flex-col md:flex-row',
         isSecondaryVariant
-          ? 'mb-12 gap-12 border-t-[1px] border-primary-60 pt-12'
+          ? 'mb-12 gap-12 border-t-[1px] border-border pt-12'
           : 'gap-8 md:justify-between'
       )}
     >
       <div
-        className={clsxTwMerge('font-space text-sm text-gray-50', isSecondaryVariant && 'w-120')}
+        className={clsxTwMerge('font-space text-sm text-muted-foreground', isSecondaryVariant && 'w-120')}
       >
         {title}
       </div>
