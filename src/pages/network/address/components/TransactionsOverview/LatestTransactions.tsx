@@ -1,4 +1,4 @@
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { ChevronDownIcon } from '@app/assets/icons'
@@ -9,6 +9,7 @@ import { useTransactionExpandCollapse } from '@app/hooks'
 import type { QueryServiceTransaction } from '@app/store/apis/query-service'
 import { TxItem } from '../../../components'
 import type { TransactionFilters } from '../../hooks/useLatestTransactions'
+import { parseFilterApiError } from './filterUtils'
 import TransactionFiltersBar from './TransactionFiltersBar'
 
 type Props = {
@@ -60,6 +61,17 @@ export default function LatestTransactions({
     [addressId, expandedTxIds, handleTxToggle]
   )
 
+  // Parse API error to show localized message
+  // The server returns only a partial address in error messages, so we display it as-is
+  const errorMessage = useMemo(() => {
+    if (!error) return null
+    const parsed = parseFilterApiError(error)
+    if (parsed) {
+      return t(parsed.messageKey, { address: parsed.address || '' })
+    }
+    return t('loadingTransactionsError')
+  }, [error, t])
+
   return (
     <div className="flex w-full flex-col gap-10">
       <TransactionFiltersBar
@@ -91,7 +103,7 @@ export default function LatestTransactions({
         hasMore={hasMore}
         isLoading={isLoading}
         loader={<DotsLoader showLoadingText />}
-        error={error && t('loadingTransactionsError')}
+        error={errorMessage}
         endMessage={
           <p className="py-32 text-center text-sm text-gray-50">
             {transactions.length === 0 ? t('noTransactions') : t('allTransactionsLoaded')}
