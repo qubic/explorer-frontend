@@ -1,3 +1,10 @@
+# [1.32.0-rc.2](https://github.com/qubic/explorer-frontend/compare/v1.32.0-rc.1...v1.32.0-rc.2) (2026-01-30)
+
+
+### Bug Fixes
+
+* **filters:** allow same start/end tick value for single tick filtering ([c6ca1de](https://github.com/qubic/explorer-frontend/commit/c6ca1def2a7deb2a7158a3f0810bcdbf60e3f5a0))
+
 # [1.32.0-rc.1](https://github.com/qubic/explorer-frontend/compare/v1.31.2...v1.32.0-rc.1) (2026-01-30)
 
 
