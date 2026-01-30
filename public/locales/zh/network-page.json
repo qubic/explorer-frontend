@@ -136,7 +136,7 @@
   "endDate": "结束日期",
   "invalidRangeAmount": "无效范围 - 起始值必须小于或等于结束值",
   "invalidRangeInputType": "最小值必须小于或等于最大值",
-  "invalidTickRange": "起始Tick必须小于结束Tick",
+  "invalidTickRange": "起始Tick不能大于结束Tick",
   "invalidDateRange": "起始日期必须早于结束日期",
   "invalidAddressFormat": "地址必须由60个大写字母组成",
   "destinationFilterHint": "对于智能合约交易，这是合约地址，而不是最终的代币接收者。",

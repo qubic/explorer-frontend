@@ -206,7 +206,7 @@ export function validateInputTypeRange(
 
 /**
  * Validates a tick number range filter.
- * Checks both range validity (strict: start < end) and maximum value constraint (uint32 max).
+ * Checks both range validity (start <= end) and maximum value constraint (uint32 max).
  * Returns translation key directly for simpler error handling in components.
  */
 export function validateTickRange(
@@ -223,8 +223,8 @@ export function validateTickRange(
     if (endNum > MAX_UINT32) return 'endTickTooLarge'
   }
 
-  // Check range validity with strict comparison (start must be < end)
-  const rangeError = validateNumericRange(start, end, true)
+  // Check range validity (start <= end, allows exact tick match)
+  const rangeError = validateNumericRange(start, end)
   return rangeError ? 'invalidTickRange' : null
 }
 

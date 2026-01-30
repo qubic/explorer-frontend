@@ -1,3 +1,39 @@
+# [1.32.0](https://github.com/qubic/explorer-frontend/compare/v1.31.2...v1.32.0) (2026-01-30)
+
+
+### Bug Fixes
+
+* add missing tickNumber property to TransactionFilters interface ([ca80477](https://github.com/qubic/explorer-frontend/commit/ca804771ae51db446b833e1d3f9f0ee1aa75e19f))
+* **filters:** allow same start/end tick value for single tick filtering ([c6ca1de](https://github.com/qubic/explorer-frontend/commit/c6ca1def2a7deb2a7158a3f0810bcdbf60e3f5a0))
+* prevent re-expansion of manually collapsed transactions ([#394](https://github.com/qubic/explorer-frontend/issues/394)) ([e72507e](https://github.com/qubic/explorer-frontend/commit/e72507e09039f205d7c56e4f9e9b80eb12151f20))
+
+
+### Features
+
+* **address:** add multi-address include/exclude filter for source/de… ([#404](https://github.com/qubic/explorer-frontend/issues/404)) ([0120a5b](https://github.com/qubic/explorer-frontend/commit/0120a5b1f858bc49c16e98dc8a76ad212dca980d))
+* **filters:** support exact tick number filter when start equals end ([613055f](https://github.com/qubic/explorer-frontend/commit/613055f1db2b225b76205260223e3d6ea2b29a57))
+
+# [1.32.0-rc.2](https://github.com/qubic/explorer-frontend/compare/v1.32.0-rc.1...v1.32.0-rc.2) (2026-01-30)
+
+
+### Bug Fixes
+
+* **filters:** allow same start/end tick value for single tick filtering ([c6ca1de](https://github.com/qubic/explorer-frontend/commit/c6ca1def2a7deb2a7158a3f0810bcdbf60e3f5a0))
+
+# [1.32.0-rc.1](https://github.com/qubic/explorer-frontend/compare/v1.31.2...v1.32.0-rc.1) (2026-01-30)
+
+
+### Bug Fixes
+
+* add missing tickNumber property to TransactionFilters interface ([ca80477](https://github.com/qubic/explorer-frontend/commit/ca804771ae51db446b833e1d3f9f0ee1aa75e19f))
+* prevent re-expansion of manually collapsed transactions ([#394](https://github.com/qubic/explorer-frontend/issues/394)) ([e72507e](https://github.com/qubic/explorer-frontend/commit/e72507e09039f205d7c56e4f9e9b80eb12151f20))
+
+
+### Features
+
+* **address:** add multi-address include/exclude filter for source/de… ([#404](https://github.com/qubic/explorer-frontend/issues/404)) ([0120a5b](https://github.com/qubic/explorer-frontend/commit/0120a5b1f858bc49c16e98dc8a76ad212dca980d))
+* **filters:** support exact tick number filter when start equals end ([613055f](https://github.com/qubic/explorer-frontend/commit/613055f1db2b225b76205260223e3d6ea2b29a57))
+
 ## [1.31.2](https://github.com/qubic/explorer-frontend/compare/v1.31.1...v1.31.2) (2026-01-22)
 
 

@@ -136,7 +136,7 @@
   "endDate": "Tot datum",
   "invalidRangeAmount": "Ongeldig bereik - startwaarde moet kleiner of gelijk zijn aan eindwaarde",
   "invalidRangeInputType": "Minimumwaarde moet kleiner of gelijk zijn aan maximumwaarde",
-  "invalidTickRange": "Starttick moet kleiner zijn dan eindtick",
+  "invalidTickRange": "Starttick mag niet groter zijn dan eindtick",
   "invalidDateRange": "Startdatum moet voor einddatum liggen",
   "invalidAddressFormat": "Adres moet 60 hoofdletters bevatten",
   "destinationFilterHint": "Voor smart contract transacties is dit het contractadres, niet de uiteindelijke token ontvanger.",

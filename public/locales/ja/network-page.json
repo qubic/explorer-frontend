@@ -136,7 +136,7 @@
   "endDate": "終了日",
   "invalidRangeAmount": "無効な範囲 - 開始値は終了値以下でなければなりません",
   "invalidRangeInputType": "最小値は最大値以下でなければなりません",
-  "invalidTickRange": "開始ティックは終了ティックより小さくなければなりません",
+  "invalidTickRange": "開始ティックは終了ティックより大きくできません",
   "invalidDateRange": "開始日は終了日より前でなければなりません",
   "invalidAddressFormat": "アドレスは60文字の大文字である必要があります",
   "destinationFilterHint": "スマートコントラクトトランザクションの場合、これはコントラクトアドレスであり、最終的なトークン受取人ではありません。",

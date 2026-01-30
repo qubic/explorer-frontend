@@ -136,7 +136,7 @@
   "endDate": "Bitiş tarihi",
   "invalidRangeAmount": "Geçersiz aralık - başlangıç değeri bitiş değerine eşit veya küçük olmalıdır",
   "invalidRangeInputType": "Minimum değer maksimum değere eşit veya küçük olmalıdır",
-  "invalidTickRange": "Başlangıç tick'i bitiş tick'inden küçük olmalıdır",
+  "invalidTickRange": "Başlangıç tick'i bitiş tick'inden büyük olamaz",
   "invalidDateRange": "Başlangıç tarihi bitiş tarihinden önce olmalıdır",
   "invalidAddressFormat": "Adres 60 büyük harf içermelidir",
   "destinationFilterHint": "Akıllı sözleşme işlemleri için bu sözleşme adresidir, son token alıcısı değil.",
