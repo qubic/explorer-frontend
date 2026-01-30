@@ -136,7 +136,7 @@
   "endDate": "To Date",
   "invalidRangeAmount": "Min amount must be less than or equal to max amount",
   "invalidRangeInputType": "Min value must be less than or equal to max value",
-  "invalidTickRange": "Start tick must be less than end tick",
+  "invalidTickRange": "Start tick cannot be greater than end tick",
   "invalidDateRange": "Start date must be less than end date",
   "invalidAddressFormat": "Address must be 60 uppercase letters",
   "destinationFilterHint": "For smart contract transactions, this is the contract address, not the final token recipient.",

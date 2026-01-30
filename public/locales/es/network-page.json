@@ -136,7 +136,7 @@
   "endDate": "Hasta fecha",
   "invalidRangeAmount": "Rango inválido - el valor inicial debe ser menor o igual al valor final",
   "invalidRangeInputType": "El valor mínimo debe ser menor o igual al valor máximo",
-  "invalidTickRange": "El tick inicial debe ser menor que el tick final",
+  "invalidTickRange": "El tick inicial no puede ser mayor que el tick final",
   "invalidDateRange": "La fecha inicial debe ser anterior a la fecha final",
   "invalidAddressFormat": "La dirección debe contener 60 letras mayúsculas",
   "destinationFilterHint": "Para transacciones de contratos inteligentes, esta es la dirección del contrato, no el destinatario final del token.",
