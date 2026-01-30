@@ -51,3 +51,32 @@ export interface GetTransactionsForIdentityRequest {
     size?: number
   }
 }
+
+// getTickData types
+export interface TickData {
+  tickNumber: number
+  epoch: number
+  computorIndex: number
+  timestamp: string
+  varStruct: string
+  timeLock: string
+  transactionHashes: string[]
+  contractFees: number[]
+  signature: string
+}
+
+export interface GetTickDataResponse {
+  tickData: TickData
+}
+
+// getComputorListsForEpoch types
+export interface ComputorList {
+  epoch: number
+  tickNumber: number
+  identities: string[]
+  signature: string
+}
+
+export interface GetComputorListsForEpochResponse {
+  computorsLists: ComputorList[]
+}
