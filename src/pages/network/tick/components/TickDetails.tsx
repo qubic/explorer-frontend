@@ -5,8 +5,11 @@ import { useNavigate } from 'react-router-dom'
 import { ChevronLeftIcon, ChevronRightIcon } from '@app/assets/icons'
 import { Skeleton } from '@app/components/ui'
 import { Routes } from '@app/router'
-import { useGetEpochComputorsQuery, useGetTickDataQuery } from '@app/store/apis/archiver-v1'
-import { formatBase64, formatDate, formatString } from '@app/utils'
+import {
+  useGetComputorListsForEpochQuery,
+  useGetTickDataQuery
+} from '@app/store/apis/query-service'
+import { formatDate, formatString } from '@app/utils'
 import { AddressLink, SubCardItem, TickStatus } from '../../components'
 
 type Props = Readonly<{
@@ -21,12 +24,11 @@ export default function TickDetails({ tick }: Props) {
     data: tickData,
     isFetching: isTickDataLoading,
     error: tickDataError
-  } = useGetTickDataQuery({ tick }, { skip: !tick })
+  } = useGetTickDataQuery(tick, { skip: !tick })
 
-  const { data: epochComputors } = useGetEpochComputorsQuery(
-    { epoch: tickData?.epoch ?? 0 },
-    { skip: !tick || !tickData?.epoch }
-  )
+  const { data: computorLists } = useGetComputorListsForEpochQuery(tickData?.epoch ?? 0, {
+    skip: !tick || !tickData?.epoch
+  })
 
   const handleTickNavigation = useCallback(
     (direction: 'previous' | 'next') => () => {
@@ -37,9 +39,10 @@ export default function TickDetails({ tick }: Props) {
   )
 
   const tickLeader = useMemo(() => {
-    if (!epochComputors || !tickData) return ''
-    return epochComputors?.identities?.[tickData?.computorIndex] ?? ''
-  }, [epochComputors, tickData])
+    if (!computorLists?.length || !tickData) return ''
+    // Use the first computor list for the epoch (they all have the same identities)
+    return computorLists[0]?.identities?.[tickData?.computorIndex] ?? ''
+  }, [computorLists, tickData])
 
   return (
     <>
@@ -72,8 +75,8 @@ export default function TickDetails({ tick }: Props) {
         <div className="hidden md:block">
           <TickStatus
             dataStatus={!tickDataError}
-            tickStatus={Boolean(tickData?.transactionIds?.length)}
-            transactions={tickData?.transactionIds?.length ?? 0}
+            tickStatus={Boolean(tickData?.transactionHashes?.length)}
+            transactions={tickData?.transactionHashes?.length ?? 0}
           />
         </div>
       </div>
@@ -86,9 +89,7 @@ export default function TickDetails({ tick }: Props) {
               isTickDataLoading ? (
                 <Skeleton className="h-40 rounded-8 sm:h-20" />
               ) : (
-                <p className="break-all font-space text-sm text-gray-50">
-                  {formatBase64(tickData?.signatureHex)}
-                </p>
+                <p className="break-all font-space text-sm text-gray-50">{tickData?.signature}</p>
               )
             }
           />
@@ -109,8 +110,8 @@ export default function TickDetails({ tick }: Props) {
       <div className="mb-24 md:hidden">
         <TickStatus
           dataStatus={!tickDataError}
-          tickStatus={Boolean(tickData?.transactionIds?.length)}
-          transactions={tickData?.transactionIds?.length ?? 0}
+          tickStatus={Boolean(tickData?.transactionHashes?.length)}
+          transactions={tickData?.transactionHashes?.length ?? 0}
         />
       </div>
     </>

@@ -32,10 +32,13 @@ export interface Range {
 export interface GetTransactionsForIdentityRequest {
   identity: string
   filters?: {
-    source?: string
-    destination?: string
+    source?: string // Comma-separated addresses (up to 5) to include
+    'source-exclude'?: string // Comma-separated addresses (up to 5) to exclude
+    destination?: string // Comma-separated addresses (up to 5) to include
+    'destination-exclude'?: string // Comma-separated addresses (up to 5) to exclude
     amount?: string
     inputType?: string
+    tickNumber?: string
   }
   ranges?: {
     amount?: Range
@@ -47,4 +50,33 @@ export interface GetTransactionsForIdentityRequest {
     offset?: number
     size?: number
   }
+}
+
+// getTickData types
+export interface TickData {
+  tickNumber: number
+  epoch: number
+  computorIndex: number
+  timestamp: string
+  varStruct: string
+  timeLock: string
+  transactionHashes: string[]
+  contractFees: number[]
+  signature: string
+}
+
+export interface GetTickDataResponse {
+  tickData: TickData
+}
+
+// getComputorListsForEpoch types
+export interface ComputorList {
+  epoch: number
+  tickNumber: number
+  identities: string[]
+  signature: string
+}
+
+export interface GetComputorListsForEpochResponse {
+  computorsLists: ComputorList[]
 }

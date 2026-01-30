@@ -9,7 +9,7 @@ import { LinearProgress } from '@app/components/ui/loaders'
 import { useAppDispatch, useAppSelector } from '@app/hooks/redux'
 import { Routes } from '@app/router'
 import { getSearch, resetSearch, SearchType, selectSearch } from '@app/store/searchSlice'
-import { formatBase64, formatDate, formatString } from '@app/utils'
+import { formatDate, formatString } from '@app/utils'
 import ResultItem from './ResultItem'
 
 const evaluateSearchType = (keyword: string): SearchType | null => {
@@ -155,12 +155,12 @@ export default function SearchBar() {
                 <ResultItem
                   icon={<CameraIcon className="mr-6 h-16 w-16 min-w-16" />}
                   title={t('tick')}
-                  result={formatBase64(searchResult.tickData.signatureHex)}
+                  result={searchResult.tickData.signature}
                   label={t('from')}
                   info={formatDate(searchResult.tickData.timestamp)}
                   link={Routes.NETWORK.TICK(searchResult.tickData.tickNumber)}
                   onClick={handleCloseCallback}
-                  items={searchResult.tickData.transactionIds}
+                  items={searchResult.tickData.transactionHashes}
                 />
               )}
             </div>

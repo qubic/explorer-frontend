@@ -2,14 +2,12 @@ import type { PayloadAction } from '@reduxjs/toolkit'
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 
 import type { AppDispatch, RootState } from '@app/store'
-import type { GetTickDataResponse } from './apis/archiver-v1'
-import { archiverV1Api } from './apis/archiver-v1'
-import type { QueryServiceTransaction } from './apis/query-service'
+import type { QueryServiceTransaction, TickData } from './apis/query-service'
 import { rpcQueryServiceApi } from './apis/query-service'
 import type { GetAddressBalancesResponse } from './apis/rpc-live'
 import { rpcLiveApi } from './apis/rpc-live'
 
-type HandlerResponse = GetAddressBalancesResponse | GetTickDataResponse | QueryServiceTransaction
+type HandlerResponse = GetAddressBalancesResponse | { tickData: TickData } | QueryServiceTransaction
 
 export interface SearchState {
   result: HandlerResponse | null
@@ -39,7 +37,7 @@ const makeSearchHandlers = (
 ): Record<SearchType, (query: string) => Promise<HandlerResponse>> => ({
   [SearchType.TICK]: async (query) => {
     const tickData = await dispatch(
-      archiverV1Api.endpoints.getTickData.initiate({ tick: parseInt(query, 10) })
+      rpcQueryServiceApi.endpoints.getTickData.initiate(parseInt(query, 10))
     ).unwrap()
     return { tickData }
   },

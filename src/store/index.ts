@@ -1,6 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit'
 
-import { archiverV1Api } from './apis/archiver-v1'
 import { archiverV2Api } from './apis/archiver-v2'
 import { qliApi } from './apis/qli'
 import { rpcQueryServiceApi } from './apis/query-service'
@@ -16,7 +15,6 @@ export const store = configureStore({
     locale: localeReducer,
     search: searchReducer,
     [qliApi.reducerPath]: qliApi.reducer,
-    [archiverV1Api.reducerPath]: archiverV1Api.reducer,
     [archiverV2Api.reducerPath]: archiverV2Api.reducer,
     [rpcQueryServiceApi.reducerPath]: rpcQueryServiceApi.reducer,
     [rpcLiveApi.reducerPath]: rpcLiveApi.reducer,
@@ -28,7 +26,6 @@ export const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware()
       .concat(qliApi.middleware)
-      .concat(archiverV1Api.middleware)
       .concat(archiverV2Api.middleware)
       .concat(rpcQueryServiceApi.middleware)
       .concat(rpcLiveApi.middleware)

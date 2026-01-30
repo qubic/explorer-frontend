@@ -4,6 +4,7 @@ import type {
   QueryServiceTransaction
 } from '@app/store/apis/query-service/query-service.types'
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { extractErrorMessage } from '../components/TransactionsOverview/filterUtils'
 
 const PAGE_SIZE = 50
 const MAX_RESULTS = 10_000 // query service limit
@@ -24,13 +25,20 @@ const getStartDateFromPresetDays = (days: number): string => {
 }
 
 export type TransactionDirection = 'incoming' | 'outgoing'
+export type AddressFilterMode = 'include' | 'exclude'
+
+export interface AddressFilter {
+  mode: AddressFilterMode
+  addresses: string[]
+}
 
 export interface TransactionFilters {
   direction?: TransactionDirection
-  source?: string
-  destination?: string
+  sourceFilter?: AddressFilter // Multi-address filter with include/exclude
+  destinationFilter?: AddressFilter // Multi-address filter with include/exclude
   amount?: string
   inputType?: string // Exact match filter for input type
+  tickNumber?: string // Exact match filter for tick number
   amountRange?: {
     start?: string
     end?: string
@@ -78,28 +86,66 @@ export default function useLatestTransactions(addressId: string): UseLatestTrans
   const fetchPage = useCallback(
     async (currentOffset: number, filters: TransactionFilters = {}) => {
       // Clean up filters - remove empty strings and undefined values
-      // Skip direction, tickNumberRange, amountRange, dateRange, and inputTypeRange as they need special handling
-      const cleanFilters = Object.entries(filters).reduce((acc, [key, value]) => {
-        if (
-          key === 'direction' ||
-          key === 'tickNumberRange' ||
-          key === 'amountRange' ||
-          key === 'dateRange' ||
-          key === 'inputTypeRange'
-        ) {
+      // Skip special handling fields: direction, ranges, and multi-address filters
+      const cleanFilters = Object.entries(filters).reduce(
+        (acc, [key, value]) => {
+          if (
+            key === 'direction' ||
+            key === 'tickNumberRange' ||
+            key === 'amountRange' ||
+            key === 'dateRange' ||
+            key === 'inputTypeRange' ||
+            key === 'sourceFilter' ||
+            key === 'destinationFilter'
+          ) {
+            return acc
+          }
+          if (typeof value === 'string' && value.trim() !== '') {
+            return { ...acc, [key]: value.trim() }
+          }
           return acc
+        },
+        {} as Record<string, string>
+      )
+
+      // Handle multi-address source filter
+      if (filters.sourceFilter?.addresses && filters.sourceFilter.addresses.length > 0) {
+        const validAddresses = filters.sourceFilter.addresses.filter((addr) => addr.trim() !== '')
+        if (validAddresses.length > 0) {
+          const commaSeparated = validAddresses.join(',')
+          if (filters.sourceFilter.mode === 'exclude') {
+            cleanFilters['source-exclude'] = commaSeparated
+          } else {
+            cleanFilters.source = commaSeparated
+          }
         }
-        if (typeof value === 'string' && value.trim() !== '') {
-          return { ...acc, [key]: value.trim() }
+      }
+
+      // Handle multi-address destination filter
+      if (filters.destinationFilter?.addresses && filters.destinationFilter.addresses.length > 0) {
+        const validAddresses = filters.destinationFilter.addresses.filter(
+          (addr) => addr.trim() !== ''
+        )
+        if (validAddresses.length > 0) {
+          const commaSeparated = validAddresses.join(',')
+          if (filters.destinationFilter.mode === 'exclude') {
+            cleanFilters['destination-exclude'] = commaSeparated
+          } else {
+            cleanFilters.destination = commaSeparated
+          }
         }
-        return acc
-      }, {} as TransactionFilters)
+      }
 
       // Handle direction filter - set source or destination based on direction
+      // Only apply if the corresponding multi-address filter is not already set
       if (filters.direction === 'incoming') {
-        cleanFilters.destination = addressId
+        if (!cleanFilters.destination && !cleanFilters['destination-exclude']) {
+          cleanFilters.destination = addressId
+        }
       } else if (filters.direction === 'outgoing') {
-        cleanFilters.source = addressId
+        if (!cleanFilters.source && !cleanFilters['source-exclude']) {
+          cleanFilters.source = addressId
+        }
       }
 
       // Handle amount range - if start equals end, use exact match
@@ -120,6 +166,15 @@ export default function useLatestTransactions(addressId: string): UseLatestTrans
         cleanFilters.inputType = filters.inputTypeRange.start.trim()
       }
 
+      // Handle tickNumber range - if start equals end, use exact match
+      if (
+        filters.tickNumberRange?.start &&
+        filters.tickNumberRange?.end &&
+        filters.tickNumberRange.start.trim() === filters.tickNumberRange.end.trim()
+      ) {
+        cleanFilters.tickNumber = filters.tickNumberRange.start.trim()
+      }
+
       // Check if amount range should be used (has values and is not an exact match)
       const hasAmountRange = filters.amountRange?.start || filters.amountRange?.end
       const isExactAmountMatch =
@@ -135,6 +190,14 @@ export default function useLatestTransactions(addressId: string): UseLatestTrans
         filters.inputTypeRange?.end &&
         filters.inputTypeRange.start.trim() === filters.inputTypeRange.end.trim()
       const shouldUseInputTypeRange = hasInputTypeRange && !isExactInputTypeMatch
+
+      // Check if tickNumber range should be used (has values and is not an exact match)
+      const hasTickNumberRange = filters.tickNumberRange?.start || filters.tickNumberRange?.end
+      const isExactTickNumberMatch =
+        filters.tickNumberRange?.start &&
+        filters.tickNumberRange?.end &&
+        filters.tickNumberRange.start.trim() === filters.tickNumberRange.end.trim()
+      const shouldUseTickNumberRange = hasTickNumberRange && !isExactTickNumberMatch
 
       const ranges = {
         // Handle inputType range (when not exact match)
@@ -159,18 +222,17 @@ export default function useLatestTransactions(addressId: string): UseLatestTrans
               : {})
           }
         }),
-        ...(filters.tickNumberRange?.start || filters.tickNumberRange?.end
-          ? {
-              tickNumber: {
-                ...(filters.tickNumberRange.start && filters.tickNumberRange.start.trim() !== ''
-                  ? { gte: filters.tickNumberRange.start.trim() }
-                  : {}),
-                ...(filters.tickNumberRange.end && filters.tickNumberRange.end.trim() !== ''
-                  ? { lte: filters.tickNumberRange.end.trim() }
-                  : {})
-              }
-            }
-          : {}),
+        // Handle tickNumber range (when not exact match)
+        ...(shouldUseTickNumberRange && {
+          tickNumber: {
+            ...(filters.tickNumberRange?.start && filters.tickNumberRange.start.trim() !== ''
+              ? { gte: filters.tickNumberRange.start.trim() }
+              : {}),
+            ...(filters.tickNumberRange?.end && filters.tickNumberRange.end.trim() !== ''
+              ? { lte: filters.tickNumberRange.end.trim() }
+              : {})
+          }
+        }),
         // Handle date range - recalculate from presetDays if set (so "Last 24 hours" is always fresh)
         ...(() => {
           // If presetDays is set, calculate the start date now (at request time)
@@ -294,7 +356,7 @@ export default function useLatestTransactions(addressId: string): UseLatestTrans
     loadMoreTransactions,
     hasMore,
     isLoading,
-    error: error ? String(error) : null,
+    error: extractErrorMessage(error),
     applyFilters,
     clearFilters,
     activeFilters
