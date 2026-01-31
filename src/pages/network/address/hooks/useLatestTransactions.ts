@@ -4,7 +4,16 @@ import type {
   QueryServiceTransaction
 } from '@app/store/apis/query-service/query-service.types'
 import { useCallback, useEffect, useRef, useState } from 'react'
+import type { TransactionFilters } from '../components/TransactionsOverview/filterUtils'
 import { extractErrorMessage } from '../components/TransactionsOverview/filterUtils'
+
+// Re-export types from filterUtils for backward compatibility
+export type {
+  AddressFilter,
+  AddressFilterMode,
+  TransactionDirection,
+  TransactionFilters
+} from '../components/TransactionsOverview/filterUtils'
 
 const PAGE_SIZE = 50
 const MAX_RESULTS = 10_000 // query service limit
@@ -22,41 +31,6 @@ const getStartDateFromPresetDays = (days: number): string => {
   const minutes = String(start.getMinutes()).padStart(2, '0')
   const seconds = String(start.getSeconds()).padStart(2, '0')
   return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`
-}
-
-export type TransactionDirection = 'incoming' | 'outgoing'
-export type AddressFilterMode = 'include' | 'exclude'
-
-export interface AddressFilter {
-  mode: AddressFilterMode
-  addresses: string[]
-}
-
-export interface TransactionFilters {
-  direction?: TransactionDirection
-  sourceFilter?: AddressFilter // Multi-address filter with include/exclude
-  destinationFilter?: AddressFilter // Multi-address filter with include/exclude
-  amount?: string
-  inputType?: string // Exact match filter for input type
-  tickNumber?: string // Exact match filter for tick number
-  amountRange?: {
-    start?: string
-    end?: string
-    presetKey?: string // Track which preset was selected for display purposes
-  }
-  inputTypeRange?: {
-    start?: string
-    end?: string
-  }
-  tickNumberRange?: {
-    start?: string
-    end?: string
-  }
-  dateRange?: {
-    start?: string
-    end?: string
-    presetDays?: number // Track which preset was selected for display purposes
-  }
 }
 
 export interface UseLatestTransactionsResult {

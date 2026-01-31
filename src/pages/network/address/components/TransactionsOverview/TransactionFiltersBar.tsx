@@ -3,19 +3,21 @@ import { useTranslation } from 'react-i18next'
 
 import { FunnelIcon, UndoIcon } from '@app/assets/icons'
 import Tooltip from '@app/components/ui/Tooltip'
+import {
+  ActiveFilterChip,
+  AmountFilterContent,
+  FilterDropdown,
+  RangeFilterContent
+} from '../../../components/filters'
 import type {
   AddressFilter,
   TransactionDirection,
   TransactionFilters
 } from '../../hooks/useLatestTransactions'
-import ActiveFilterChip from './ActiveFilterChip'
-import AmountFilterContent from './AmountFilterContent'
 import DateFilterContent from './DateFilterContent'
 import DirectionControl from './DirectionControl'
-import FilterDropdown from './FilterDropdown'
 import MobileFiltersModal from './MobileFiltersModal'
 import MultiAddressFilterContent from './MultiAddressFilterContent'
-import RangeFilterContent from './RangeFilterContent'
 import {
   AMOUNT_PRESETS,
   applyDatePresetCalculation,
@@ -23,6 +25,7 @@ import {
   applyDirectionChange,
   applySourceFilterChange,
   DATE_PRESETS,
+  formatAddressShort,
   formatAmountForDisplay,
   formatAmountShort,
   validateAmountRange,
@@ -189,9 +192,6 @@ export default function TransactionFiltersBar({
   const isInputTypeActive = !!(
     activeFilters.inputTypeRange?.start || activeFilters.inputTypeRange?.end
   )
-
-  // Format address with first 4 and last 4 characters
-  const formatAddressShort = (address: string) => `${address.slice(0, 4)}...${address.slice(-4)}`
 
   // Get display labels for active filters
   const getSourceLabel = () => {

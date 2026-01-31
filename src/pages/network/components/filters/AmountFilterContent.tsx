@@ -2,7 +2,11 @@ import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { clsxTwMerge } from '@app/utils'
-import { AMOUNT_PRESETS, formatAmountForDisplay, parseAmountFromDisplay } from './filterUtils'
+import {
+  AMOUNT_PRESETS,
+  formatAmountForDisplay,
+  parseAmountFromDisplay
+} from '../../utils/filterUtils'
 
 type AmountRange = {
   start?: string

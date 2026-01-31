@@ -5,6 +5,7 @@ import type {
   GetComputorListsForEpochResponse,
   GetTickDataResponse,
   GetTransactionsForIdentityRequest,
+  GetTransactionsForTickRequest,
   QueryServiceResponse,
   QueryServiceTransaction,
   TickData
@@ -33,13 +34,15 @@ export const rpcQueryServiceApi = createApi({
         body: { hash }
       })
     }),
-    getTransactionsForTick: builder.query<QueryServiceTransaction[], number>({
-      query: (tickNumber) => ({
-        url: '/getTransactionsForTick',
-        method: 'POST',
-        body: { tickNumber }
-      })
-    }),
+    getTransactionsForTick: builder.query<QueryServiceTransaction[], GetTransactionsForTickRequest>(
+      {
+        query: (request) => ({
+          url: '/getTransactionsForTick',
+          method: 'POST',
+          body: request
+        })
+      }
+    ),
     getTickData: builder.query<TickData, number>({
       query: (tickNumber) => ({
         url: '/getTickData',

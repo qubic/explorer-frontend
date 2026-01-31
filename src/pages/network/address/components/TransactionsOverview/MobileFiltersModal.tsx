@@ -3,12 +3,12 @@ import { useTranslation } from 'react-i18next'
 
 import { XmarkIcon } from '@app/assets/icons'
 import { Modal } from '@app/components/ui'
+import { AmountFilterContent, RangeFilterContent } from '../../../components/filters'
 import type {
   AddressFilter,
   TransactionDirection,
   TransactionFilters
 } from '../../hooks/useLatestTransactions'
-import AmountFilterContent from './AmountFilterContent'
 import DateFilterContent from './DateFilterContent'
 import DirectionControl from './DirectionControl'
 import {
@@ -23,7 +23,6 @@ import {
   validateTickRange
 } from './filterUtils'
 import MultiAddressFilterContent from './MultiAddressFilterContent'
-import RangeFilterContent from './RangeFilterContent'
 
 type Props = {
   isOpen: boolean
