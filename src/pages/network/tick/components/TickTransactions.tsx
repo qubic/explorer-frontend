@@ -1,4 +1,4 @@
-import { memo, useCallback, useEffect, useState } from 'react'
+import { memo, useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { ChevronDownIcon } from '@app/assets/icons'
@@ -7,8 +7,14 @@ import { Button } from '@app/components/ui/buttons'
 import { useTransactionExpandCollapse } from '@app/hooks'
 import type { QueryServiceTransaction } from '@app/store/apis/query-service'
 import { useGetTransactionsForTickQuery } from '@app/store/apis/query-service'
-import { formatRTKError } from '@app/utils/rtk'
 import { TxItem } from '../../components'
+import TickTransactionFiltersBar from './TickTransactionFiltersBar'
+import type { TickTransactionFilters } from './tickFilterUtils'
+import {
+  buildTickTransactionsRequest,
+  extractErrorMessage,
+  parseFilterApiError
+} from './tickFilterUtils'
 
 const PAGE_SIZE = 10
 
@@ -28,19 +34,37 @@ export default function TickTransactions({ tick }: Props) {
   const { t } = useTranslation('network-page')
   const [displayTransactions, setDisplayTransactions] = useState<QueryServiceTransaction[]>([])
   const [hasMore, setHasMore] = useState(true)
+  const [activeFilters, setActiveFilters] = useState<TickTransactionFilters>({})
+
+  // Build the API request with filters
+  const request = useMemo(
+    () => buildTickTransactionsRequest(tick, activeFilters),
+    [tick, activeFilters]
+  )
 
   const {
     data: transactions,
     isFetching: isTickTransactionsLoading,
     error: tickTransactionsError
-  } = useGetTransactionsForTickQuery(tick, { skip: !tick })
+  } = useGetTransactionsForTickQuery(request, { skip: !tick })
+
+  // Extract error message from RTK Query error
+  const errorMessage = useMemo(() => {
+    if (!tickTransactionsError) return null
+    const errorStr = extractErrorMessage(tickTransactionsError)
+    const parsed = parseFilterApiError(errorStr)
+    if (parsed) {
+      return t(parsed.messageKey, { address: parsed.address || '' })
+    }
+    return errorStr
+  }, [tickTransactionsError, t])
 
   // Use shared expand/collapse hook with custom ID extractor
   const { expandAll, expandedTxIds, handleExpandAllChange, handleTxToggle } =
     useTransactionExpandCollapse({
       transactions: displayTransactions,
       getTransactionId: (tx: QueryServiceTransaction) => tx.hash,
-      resetDependency: tick
+      resetDependency: `${tick}-${JSON.stringify(activeFilters)}`
     })
 
   const loadMoreTransactions = useCallback(() => {
@@ -63,9 +87,23 @@ export default function TickTransactions({ tick }: Props) {
     }
   }, [transactions])
 
+  const handleApplyFilters = useCallback((filters: TickTransactionFilters) => {
+    setActiveFilters(filters)
+  }, [])
+
+  const handleClearFilters = useCallback(() => {
+    setActiveFilters({})
+  }, [])
+
   return (
     <div className="flex flex-col gap-16">
       <p className="font-space text-xl font-500">{t('transactions')}</p>
+
+      <TickTransactionFiltersBar
+        activeFilters={activeFilters}
+        onApplyFilters={handleApplyFilters}
+        onClearFilters={handleClearFilters}
+      />
 
       {displayTransactions.length > 0 && (
         <Button
@@ -87,7 +125,7 @@ export default function TickTransactions({ tick }: Props) {
         hasMore={hasMore}
         isLoading={isTickTransactionsLoading}
         loader={<TickTransactionsSkeleton />}
-        error={tickTransactionsError && formatRTKError(tickTransactionsError)}
+        error={errorMessage}
         replaceContentOnLoading
         replaceContentOnError
         endMessage={
