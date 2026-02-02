@@ -1,9 +1,14 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { XmarkIcon } from '@app/assets/icons'
-import { Modal } from '@app/components/ui'
-import { AmountFilterContent, RangeFilterContent } from '../../components/filters'
+import { useBodyScrollLock } from '@app/hooks'
+import {
+  MobileAmountFilterSection,
+  MobileFiltersModalWrapper,
+  MobileFilterSection,
+  MobileInputTypeFilterSection
+} from '../../components/filters'
+import { scrollToValidationError, useLocalFilterSync } from '../../hooks'
 import AddressFilterContent from './AddressFilterContent'
 import type { TickTransactionFilters } from './tickFilterUtils'
 import { validateAddress, validateAmountRange, validateInputTypeRange } from './tickFilterUtils'
@@ -22,28 +27,11 @@ export default function TickMobileFiltersModal({
   onApplyFilters
 }: Props) {
   const { t } = useTranslation('network-page')
-  const [localFilters, setLocalFilters] = useState<TickTransactionFilters>(activeFilters)
-  const [validationErrors, setValidationErrors] = useState<Record<string, string | null>>({})
 
-  // Sync local filters when modal opens
-  useEffect(() => {
-    if (isOpen) {
-      setLocalFilters(activeFilters)
-      setValidationErrors({})
-    }
-  }, [isOpen, activeFilters])
-
-  // Lock body scroll when modal is open
-  useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = 'hidden'
-    } else {
-      document.body.style.overflow = ''
-    }
-    return () => {
-      document.body.style.overflow = ''
-    }
-  }, [isOpen])
+  // Use shared hooks for common patterns
+  useBodyScrollLock(isOpen)
+  const [localFilters, setLocalFilters, validationErrors, setValidationErrors] =
+    useLocalFilterSync<TickTransactionFilters>(isOpen, activeFilters)
 
   const handleApplyAllFilters = useCallback(() => {
     // Validate before applying - track first error for scrolling
@@ -87,120 +75,64 @@ export default function TickMobileFiltersModal({
     // If there are errors, set them and scroll to first error
     if (Object.keys(errors).length > 0) {
       setValidationErrors(errors)
-      if (firstErrorId) {
-        setTimeout(() => {
-          document.getElementById(firstErrorId)?.scrollIntoView({ behavior: 'smooth' })
-        }, 100)
-      }
+      scrollToValidationError(firstErrorId)
       return
     }
 
     onApplyFilters(localFilters)
     onClose()
     setValidationErrors({})
-  }, [localFilters, onApplyFilters, onClose, t])
+  }, [localFilters, onApplyFilters, onClose, setValidationErrors, t])
+
+  const handleClose = useCallback(() => {
+    onClose()
+    setValidationErrors({})
+  }, [onClose, setValidationErrors])
 
   return (
-    <Modal
+    <MobileFiltersModalWrapper
       id="tick-mobile-filters-modal"
       isOpen={isOpen}
-      onClose={() => {
-        onClose()
-        setValidationErrors({})
-      }}
-      closeOnOutsideClick
-      className="top-0 h-full sm:hidden"
+      onClose={handleClose}
+      onApply={handleApplyAllFilters}
     >
-      <div className="flex h-full flex-col bg-primary-70">
-        {/* Header */}
-        <div className="flex shrink-0 items-center justify-between border-b border-primary-60 px-16 py-14">
-          <h2 className="text-base font-medium text-white">{t('filters')}</h2>
-          <button
-            type="button"
-            onClick={onClose}
-            className="flex h-32 w-32 items-center justify-center rounded-full bg-primary-60 hover:bg-primary-50"
-            aria-label="Close filters"
-          >
-            <XmarkIcon className="h-16 w-16 text-white" />
-          </button>
-        </div>
+      <MobileFilterSection id="tick-mobile-source-filter" label={t('source')}>
+        <AddressFilterContent
+          id="tick-filter-source-mobile"
+          value={localFilters.source}
+          onChange={(value) => setLocalFilters((prev) => ({ ...prev, source: value }))}
+          onApply={() => {}}
+          showApplyButton={false}
+          error={validationErrors.source}
+        />
+      </MobileFilterSection>
 
-        {/* Scrollable content */}
-        <div className="flex-1 overflow-y-auto p-16">
-          <div className="space-y-20">
-            {/* Source */}
-            <div id="tick-mobile-source-filter">
-              <h3 className="mb-8 text-sm font-medium text-white">{t('source')}</h3>
-              <AddressFilterContent
-                id="tick-filter-source-mobile"
-                value={localFilters.source}
-                onChange={(value) => setLocalFilters((prev) => ({ ...prev, source: value }))}
-                onApply={() => {}}
-                showApplyButton={false}
-                error={validationErrors.source}
-              />
-            </div>
+      <MobileFilterSection id="tick-mobile-destination-filter" label={t('destination')}>
+        <AddressFilterContent
+          id="tick-filter-destination-mobile"
+          value={localFilters.destination}
+          onChange={(value) => setLocalFilters((prev) => ({ ...prev, destination: value }))}
+          onApply={() => {}}
+          showApplyButton={false}
+          error={validationErrors.destination}
+        />
+      </MobileFilterSection>
 
-            {/* Destination */}
-            <div id="tick-mobile-destination-filter">
-              <h3 className="mb-8 text-sm font-medium text-white">{t('destination')}</h3>
-              <AddressFilterContent
-                id="tick-filter-destination-mobile"
-                value={localFilters.destination}
-                onChange={(value) => setLocalFilters((prev) => ({ ...prev, destination: value }))}
-                onApply={() => {}}
-                showApplyButton={false}
-                error={validationErrors.destination}
-              />
-            </div>
+      <MobileAmountFilterSection
+        sectionId="tick-mobile-amount-filter"
+        idPrefix="tick-filter-amount-mobile"
+        value={localFilters.amountRange}
+        onChange={(value) => setLocalFilters((prev) => ({ ...prev, amountRange: value }))}
+        error={validationErrors.amount}
+      />
 
-            {/* Amount */}
-            <div id="tick-mobile-amount-filter">
-              <h3 className="mb-8 text-sm font-medium text-white">{t('amount')}</h3>
-              <AmountFilterContent
-                idPrefix="tick-filter-amount-mobile"
-                value={localFilters.amountRange}
-                onChange={(value) => setLocalFilters((prev) => ({ ...prev, amountRange: value }))}
-                onApply={() => {}}
-                selectedPresetKey={localFilters.amountRange?.presetKey}
-                error={validationErrors.amount}
-                showApplyButton={false}
-                layout="horizontal"
-              />
-            </div>
-
-            {/* Input Type */}
-            <div id="tick-mobile-inputtype-filter">
-              <h3 className="mb-8 text-sm font-medium text-white">{t('inputType')}</h3>
-              <RangeFilterContent
-                idPrefix="tick-filter-inputtype-mobile"
-                value={localFilters.inputTypeRange}
-                onChange={(value) =>
-                  setLocalFilters((prev) => ({ ...prev, inputTypeRange: value }))
-                }
-                onApply={() => {}}
-                startLabel={t('minInputType')}
-                endLabel={t('maxInputType')}
-                error={validationErrors.inputType}
-                showApplyButton={false}
-                layout="horizontal"
-                formatDisplay={false}
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* Apply button (sticky footer) */}
-        <div className="shrink-0 border-t border-primary-60 px-16 py-12">
-          <button
-            type="button"
-            onClick={handleApplyAllFilters}
-            className="w-full rounded bg-primary-30 px-16 py-10 text-sm font-medium text-primary-80 hover:bg-primary-40"
-          >
-            {t('applyFilters')}
-          </button>
-        </div>
-      </div>
-    </Modal>
+      <MobileInputTypeFilterSection
+        sectionId="tick-mobile-inputtype-filter"
+        idPrefix="tick-filter-inputtype-mobile"
+        value={localFilters.inputTypeRange}
+        onChange={(value) => setLocalFilters((prev) => ({ ...prev, inputTypeRange: value }))}
+        error={validationErrors.inputType}
+      />
+    </MobileFiltersModalWrapper>
   )
 }

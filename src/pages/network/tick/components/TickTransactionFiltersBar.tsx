@@ -1,14 +1,16 @@
 import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { FunnelIcon, UndoIcon } from '@app/assets/icons'
-import Tooltip from '@app/components/ui/Tooltip'
+import { FunnelIcon } from '@app/assets/icons'
 import {
   ActiveFilterChip,
   AmountFilterContent,
   FilterDropdown,
-  RangeFilterContent
+  MobileFiltersButton,
+  RangeFilterContent,
+  ResetFiltersButton
 } from '../../components/filters'
+import { formatRangeLabel, useAmountPresetHandler, useClearFilterHandler } from '../../hooks'
 import AddressFilterContent from './AddressFilterContent'
 import TickMobileFiltersModal from './TickMobileFiltersModal'
 import type { TickTransactionFilters } from './tickFilterUtils'
@@ -126,17 +128,38 @@ export default function TickTransactionFiltersBar({
     [activeFilters, onApplyFilters, t]
   )
 
-  const handleApplyAmountPreset = useCallback(
-    (preset: { labelKey: string; start?: string; end?: string }) => {
-      const newFilters = {
-        ...activeFilters,
-        amountRange: { start: preset.start, end: preset.end, presetKey: preset.labelKey }
-      }
-      onApplyFilters(newFilters)
-      setLocalFilters(newFilters)
-      setOpenDropdown(null)
-    },
-    [activeFilters, onApplyFilters]
+  // Use shared hooks for amount preset and clear handlers
+  const handleApplyAmountPreset = useAmountPresetHandler(
+    activeFilters,
+    onApplyFilters,
+    setLocalFilters,
+    setOpenDropdown
+  )
+
+  // Clear handlers using shared hook
+  const clearSourceFilter = useClearFilterHandler(
+    'source',
+    activeFilters,
+    onApplyFilters,
+    setLocalFilters
+  )
+  const clearDestinationFilter = useClearFilterHandler(
+    'destination',
+    activeFilters,
+    onApplyFilters,
+    setLocalFilters
+  )
+  const clearAmountFilter = useClearFilterHandler(
+    'amountRange',
+    activeFilters,
+    onApplyFilters,
+    setLocalFilters
+  )
+  const clearInputTypeFilter = useClearFilterHandler(
+    'inputTypeRange',
+    activeFilters,
+    onApplyFilters,
+    setLocalFilters
   )
 
   // Check for active filters
@@ -179,53 +202,14 @@ export default function TickTransactionFiltersBar({
     return t('amount')
   }
 
-  const getInputTypeLabel = () => {
-    if (!isInputTypeActive) return t('inputType')
-    const { start, end } = activeFilters.inputTypeRange || {}
-    if (start && end) return `${t('inputType')}: ${start} - ${end}`
-    if (start) return `${t('inputType')}: >= ${start}`
-    if (end) return `${t('inputType')}: <= ${end}`
-    return t('inputType')
-  }
-
-  // Clear handlers for individual filters
-  const clearSourceFilter = useCallback(() => {
-    const newFilters = { ...activeFilters, source: undefined }
-    onApplyFilters(newFilters)
-    setLocalFilters(newFilters)
-  }, [activeFilters, onApplyFilters])
-
-  const clearDestinationFilter = useCallback(() => {
-    const newFilters = { ...activeFilters, destination: undefined }
-    onApplyFilters(newFilters)
-    setLocalFilters(newFilters)
-  }, [activeFilters, onApplyFilters])
-
-  const clearAmountFilter = useCallback(() => {
-    const newFilters = { ...activeFilters, amountRange: undefined }
-    onApplyFilters(newFilters)
-    setLocalFilters(newFilters)
-  }, [activeFilters, onApplyFilters])
-
-  const clearInputTypeFilter = useCallback(() => {
-    const newFilters = { ...activeFilters, inputTypeRange: undefined }
-    onApplyFilters(newFilters)
-    setLocalFilters(newFilters)
-  }, [activeFilters, onApplyFilters])
+  const getInputTypeLabel = () => formatRangeLabel(t('inputType'), activeFilters.inputTypeRange)
 
   return (
     <>
       {/* Mobile: Filters button on top, active filter chips below */}
       <div className="mb-16 flex flex-col gap-10 sm:hidden">
         <div className="flex items-center justify-end">
-          <button
-            type="button"
-            onClick={() => setIsMobileModalOpen(true)}
-            className="flex shrink-0 items-center gap-6 rounded border border-primary-60 px-10 py-5 font-space text-xs font-medium text-gray-100 transition duration-300 hover:bg-primary-60/60"
-          >
-            <FunnelIcon className="h-14 w-14" />
-            <span>{t('filters')}</span>
-          </button>
+          <MobileFiltersButton onClick={() => setIsMobileModalOpen(true)} />
         </div>
 
         {filtersActive && (
@@ -243,17 +227,12 @@ export default function TickTransactionFiltersBar({
               <ActiveFilterChip label={getInputTypeLabel()} onClear={clearInputTypeFilter} />
             )}
 
-            <button
-              type="button"
+            <ResetFiltersButton
               onClick={() => {
                 onClearFilters()
                 setLocalFilters({})
               }}
-              className="ml-auto flex shrink-0 items-center gap-4 text-xs text-gray-50 transition-colors hover:text-white"
-            >
-              <UndoIcon className="h-14 w-14" />
-              <span>{t('resetFilters')}</span>
-            </button>
+            />
           </div>
         )}
       </div>
@@ -363,19 +342,13 @@ export default function TickTransactionFiltersBar({
         {filtersActive && <div className="grow" />}
 
         {filtersActive && (
-          <Tooltip tooltipId="clear-all-filters" content={t('clearAllFiltersTooltip')}>
-            <button
-              type="button"
-              onClick={() => {
-                onClearFilters()
-                setLocalFilters({})
-              }}
-              className="flex shrink-0 items-center gap-4 whitespace-nowrap text-xs text-gray-50 transition-colors hover:text-white"
-            >
-              <UndoIcon className="h-14 w-14" />
-              <span>{t('resetFilters')}</span>
-            </button>
-          </Tooltip>
+          <ResetFiltersButton
+            onClick={() => {
+              onClearFilters()
+              setLocalFilters({})
+            }}
+            showTooltip
+          />
         )}
       </div>
     </>
