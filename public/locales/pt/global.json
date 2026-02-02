@@ -2,10 +2,7 @@
   "address": "Endereço",
   "balance": "Saldo",
   "noResult": "Sem resultados",
-  "search": "Pesquisar",
   "tick": "Tick",
-  "from": "de",
-  "to": "para",
   "transaction": "Transação",
   "transactions": "Transações"
 }

@@ -2,10 +2,7 @@
   "address": "عنوان",
   "balance": "الرصيد",
   "noResult": "لا توجد نتائج",
-  "search": "بحث",
   "tick": "تيك",
-  "from": "من",
-  "to": "إلى",
   "transaction": "معاملة",
   "transactions": "معاملات"
 }

@@ -175,5 +175,6 @@
   "addAddress": "アドレスを追加",
   "removeAddress": "アドレスを削除",
   "maxAddressesReached": "最大5アドレスに達しました",
-  "duplicateAddress": "重複アドレス"
+  "duplicateAddress": "重複アドレス",
+  "matchingEntities": "一致する結果"
 }
