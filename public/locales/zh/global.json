@@ -2,10 +2,7 @@
   "address": "地址",
   "balance": "余额",
   "noResult": "没有结果",
-  "search": "搜索",
   "tick": "刻度",
-  "from": "从",
-  "to": "到",
   "transaction": "交易",
   "transactions": "交易"
 }

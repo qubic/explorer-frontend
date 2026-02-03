@@ -175,5 +175,6 @@
   "addAddress": "إضافة عنوان",
   "removeAddress": "إزالة العنوان",
   "maxAddressesReached": "تم الوصول للحد الأقصى 5 عناوين",
-  "duplicateAddress": "عنوان مكرر"
+  "duplicateAddress": "عنوان مكرر",
+  "matchingEntities": "النتائج المطابقة"
 }

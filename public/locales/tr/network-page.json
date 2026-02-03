@@ -175,5 +175,6 @@
   "addAddress": "Adres ekle",
   "removeAddress": "Adresi kaldır",
   "maxAddressesReached": "Maksimum 5 adrese ulaşıldı",
-  "duplicateAddress": "Yinelenen adres"
+  "duplicateAddress": "Yinelenen adres",
+  "matchingEntities": "Eşleşen Sonuçlar"
 }

@@ -175,5 +175,6 @@
   "addAddress": "Добавить адрес",
   "removeAddress": "Удалить адрес",
   "maxAddressesReached": "Достигнуто максимум 5 адресов",
-  "duplicateAddress": "Повторяющийся адрес"
+  "duplicateAddress": "Повторяющийся адрес",
+  "matchingEntities": "Совпадающие результаты"
 }

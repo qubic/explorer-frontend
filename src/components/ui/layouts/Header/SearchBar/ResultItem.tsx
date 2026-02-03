@@ -1,61 +1,60 @@
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 
-import { CameraIcon } from '@app/assets/icons'
-import { Routes } from '@app/router'
+import { clsxTwMerge } from '@app/utils'
+
+type ResultType = 'tick' | 'address' | 'transaction'
 
 type Props = {
-  icon: React.ReactNode
-  title: string
+  type: ResultType
   result: string
-  label: string
-  info: string
+  subInfo?: string
   link: string
-  items?: string[]
   onClick?: () => void
 }
 
-function ResultItem({ icon, title, link, items, result, label, info, onClick }: Props) {
+const BADGE_STYLE = 'border-gray-50 bg-primary-60 text-gray-50'
+
+function ResultItem({ type, link, result, subInfo, onClick }: Props) {
   const { t } = useTranslation('global')
+
+  const getTypeLabel = (): string => {
+    switch (type) {
+      case 'tick':
+        return t('tick')
+      case 'address':
+        return t('address')
+      case 'transaction':
+        return t('transaction')
+      default:
+        return type
+    }
+  }
+
   return (
-    <>
-      <div className="mt-20 space-y-2 px-12">
-        <p className="font-space text-12 text-gray-50">{title}</p>
-        <Link
-          className="flex items-center gap-5 break-all rounded-12 p-10 hover:bg-primary-60"
-          to={link}
-          role="button"
-          onClick={onClick}
+    <Link
+      className="flex flex-col gap-2 break-all rounded-12 px-12 py-6 hover:bg-primary-60"
+      to={link}
+      role="button"
+      onClick={onClick}
+    >
+      <div className="flex items-center gap-8">
+        <span className="font-sans text-xs">{result}</span>
+        <span
+          className={clsxTwMerge(
+            'rounded-full border px-6 py-2 text-[10px] font-medium',
+            BADGE_STYLE
+          )}
         >
-          {icon}
-          <p className="font-sans text-xs">
-            {result}
-            <br />
-            <span className="text-gray-50">{label}</span> <span className="font-light">{info}</span>
-          </p>
-        </Link>
+          {getTypeLabel()}
+        </span>
       </div>
-      {items && (
-        <div className="mt-16 space-y-2 px-12">
-          <p className="font-space text-xs text-gray-50">{t('transactions')}</p>
-          <ul className="grid gap-4">
-            {items.map((item) => (
-              <li key={item}>
-                <Link
-                  role="button"
-                  className="flex items-center gap-5 break-all rounded-12 px-10 py-8 text-xs hover:bg-primary-60"
-                  to={Routes.NETWORK.TX(item)}
-                  onClick={onClick}
-                >
-                  <CameraIcon className="mr-6 h-16 w-16" />
-                  {item}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
+      {subInfo && (
+        <span className="font-sans text-xs">
+          <span className="text-gray-50">{subInfo}</span>
+        </span>
       )}
-    </>
+    </Link>
   )
 }
 

@@ -175,5 +175,6 @@
   "addAddress": "Adres toevoegen",
   "removeAddress": "Adres verwijderen",
   "maxAddressesReached": "Maximum 5 adressen bereikt",
-  "duplicateAddress": "Dubbel adres"
+  "duplicateAddress": "Dubbel adres",
+  "matchingEntities": "Overeenkomende resultaten"
 }

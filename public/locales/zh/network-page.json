@@ -175,5 +175,6 @@
   "addAddress": "添加地址",
   "removeAddress": "删除地址",
   "maxAddressesReached": "已达到最多5个地址",
-  "duplicateAddress": "重复地址"
+  "duplicateAddress": "重复地址",
+  "matchingEntities": "匹配结果"
 }

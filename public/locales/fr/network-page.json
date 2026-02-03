@@ -175,5 +175,6 @@
   "addAddress": "Ajouter une adresse",
   "removeAddress": "Supprimer l'adresse",
   "maxAddressesReached": "Maximum 5 adresses atteint",
-  "duplicateAddress": "Adresse en double"
+  "duplicateAddress": "Adresse en double",
+  "matchingEntities": "Résultats correspondants"
 }

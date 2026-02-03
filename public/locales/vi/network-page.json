@@ -175,5 +175,6 @@
   "addAddress": "Thêm địa chỉ",
   "removeAddress": "Xóa địa chỉ",
   "maxAddressesReached": "Đã đạt tối đa 5 địa chỉ",
-  "duplicateAddress": "Địa chỉ trùng lặp"
+  "duplicateAddress": "Địa chỉ trùng lặp",
+  "matchingEntities": "Kết quả phù hợp"
 }
