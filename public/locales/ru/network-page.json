@@ -176,5 +176,8 @@
   "removeAddress": "Удалить адрес",
   "maxAddressesReached": "Достигнуто максимум 5 адресов",
   "duplicateAddress": "Повторяющийся адрес",
-  "matchingEntities": "Совпадающие результаты"
+  "matchingEntities": "Совпадающие результаты",
+  "transactionsFound": "{{count}} транзакций",
+  "showingMaxTransactions": "Показаны последние {{count}} транзакций",
+  "maxResultsHint": "Результаты ограничены {{count}}. Используйте фильтры для уточнения списка."
 }

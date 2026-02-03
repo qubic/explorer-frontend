@@ -176,5 +176,8 @@
   "removeAddress": "إزالة العنوان",
   "maxAddressesReached": "تم الوصول للحد الأقصى 5 عناوين",
   "duplicateAddress": "عنوان مكرر",
-  "matchingEntities": "النتائج المطابقة"
+  "matchingEntities": "النتائج المطابقة",
+  "transactionsFound": "{{count}} معاملة",
+  "showingMaxTransactions": "عرض آخر {{count}} معاملة",
+  "maxResultsHint": "النتائج محدودة بـ {{count}}. استخدم الفلاتر لتضييق نطاق القائمة."
 }

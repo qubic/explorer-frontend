@@ -176,5 +176,8 @@
   "removeAddress": "Xóa địa chỉ",
   "maxAddressesReached": "Đã đạt tối đa 5 địa chỉ",
   "duplicateAddress": "Địa chỉ trùng lặp",
-  "matchingEntities": "Kết quả phù hợp"
+  "matchingEntities": "Kết quả phù hợp",
+  "transactionsFound": "{{count}} giao dịch",
+  "showingMaxTransactions": "Hiển thị {{count}} giao dịch gần nhất",
+  "maxResultsHint": "Kết quả bị giới hạn ở {{count}}. Sử dụng bộ lọc để thu hẹp danh sách."
 }

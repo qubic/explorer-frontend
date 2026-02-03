@@ -176,5 +176,8 @@
   "removeAddress": "アドレスを削除",
   "maxAddressesReached": "最大5アドレスに達しました",
   "duplicateAddress": "重複アドレス",
-  "matchingEntities": "一致する結果"
+  "matchingEntities": "一致する結果",
+  "transactionsFound": "{{count}}件のトランザクション",
+  "showingMaxTransactions": "最新{{count}}件のトランザクションを表示",
+  "maxResultsHint": "結果は{{count}}件に制限されています。フィルターを使用してリストを絞り込んでください。"
 }

@@ -176,5 +176,8 @@
   "removeAddress": "Supprimer l'adresse",
   "maxAddressesReached": "Maximum 5 adresses atteint",
   "duplicateAddress": "Adresse en double",
-  "matchingEntities": "Résultats correspondants"
+  "matchingEntities": "Résultats correspondants",
+  "transactionsFound": "{{count}} transactions",
+  "showingMaxTransactions": "Affichage des {{count}} dernières transactions",
+  "maxResultsHint": "Les résultats sont limités à {{count}}. Utilisez des filtres pour affiner la liste."
 }

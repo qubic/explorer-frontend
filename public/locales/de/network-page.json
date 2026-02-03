@@ -176,5 +176,8 @@
   "removeAddress": "Adresse entfernen",
   "maxAddressesReached": "Maximal 5 Adressen erreicht",
   "duplicateAddress": "Doppelte Adresse",
-  "matchingEntities": "Übereinstimmende Ergebnisse"
+  "matchingEntities": "Übereinstimmende Ergebnisse",
+  "transactionsFound": "{{count}} Transaktionen",
+  "showingMaxTransactions": "Zeige die letzten {{count}} Transaktionen",
+  "maxResultsHint": "Ergebnisse sind auf {{count}} begrenzt. Verwenden Sie Filter, um die Liste einzugrenzen."
 }
