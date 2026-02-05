@@ -175,5 +175,9 @@
   "addAddress": "Adres ekle",
   "removeAddress": "Adresi kaldır",
   "maxAddressesReached": "Maksimum 5 adrese ulaşıldı",
-  "duplicateAddress": "Yinelenen adres"
+  "duplicateAddress": "Yinelenen adres",
+  "matchingEntities": "Eşleşen Sonuçlar",
+  "transactionsFound": "{{count}} işlem",
+  "showingMaxTransactions": "Son {{count}} işlem gösteriliyor",
+  "maxResultsHint": "Sonuçlar {{count}} ile sınırlıdır. Listeyi daraltmak için filtreler kullanın."
 }

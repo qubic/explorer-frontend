@@ -1,4 +1,5 @@
 export * from './redux'
+export { default as useBodyScrollLock } from './useBodyScrollLock'
 export { default as useTailwindBreakpoint } from './useTailwindBreakpoint'
 export { useTransactionExpandCollapse } from './useTransactionExpandCollapse'
 export { useGetAddressName } from './useGetAddressName'

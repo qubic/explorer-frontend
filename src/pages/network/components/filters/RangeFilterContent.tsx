@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { formatAmountForDisplay, parseAmountFromDisplay } from './filterUtils'
+import { formatAmountForDisplay, parseAmountFromDisplay } from '../../utils/filterUtils'
 
 type RangeValue = {
   start?: string

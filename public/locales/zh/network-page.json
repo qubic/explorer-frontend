@@ -175,5 +175,9 @@
   "addAddress": "添加地址",
   "removeAddress": "删除地址",
   "maxAddressesReached": "已达到最多5个地址",
-  "duplicateAddress": "重复地址"
+  "duplicateAddress": "重复地址",
+  "matchingEntities": "匹配结果",
+  "transactionsFound": "{{count}} 笔交易",
+  "showingMaxTransactions": "显示最近 {{count}} 笔交易",
+  "maxResultsHint": "结果限制为 {{count}} 条。请使用筛选器缩小列表范围。"
 }

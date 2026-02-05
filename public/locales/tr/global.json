@@ -2,10 +2,7 @@
   "address": "Adres",
   "balance": "Bakiye",
   "noResult": "Sonuç yok",
-  "search": "Ara",
   "tick": "Tik",
-  "from": "itibaren",
-  "to": "kadar",
   "transaction": "İşlem",
   "transactions": "İşlemler"
 }
