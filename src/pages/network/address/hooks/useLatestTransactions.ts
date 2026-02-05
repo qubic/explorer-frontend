@@ -16,7 +16,7 @@ export type {
 } from '../components/TransactionsOverview/filterUtils'
 
 const PAGE_SIZE = 50
-const MAX_RESULTS = 10_000 // query service limit
+export const MAX_TRANSACTION_RESULTS = 10_000 // query service limit
 
 // Helper function to calculate start date from preset days
 // This is called at request time so the date is always fresh
@@ -35,6 +35,7 @@ const getStartDateFromPresetDays = (days: number): string => {
 
 export interface UseLatestTransactionsResult {
   transactions: QueryServiceTransaction[]
+  totalCount: number | null
   loadMoreTransactions: () => Promise<void>
   hasMore: boolean
   isLoading: boolean
@@ -46,6 +47,7 @@ export interface UseLatestTransactionsResult {
 
 export default function useLatestTransactions(addressId: string): UseLatestTransactionsResult {
   const [transactions, setTransactions] = useState<QueryServiceTransaction[]>([])
+  const [totalCount, setTotalCount] = useState<number | null>(null)
   const [offset, setOffset] = useState(0)
   const [isLoading, setIsLoading] = useState(false)
   const [activeFilters, setActiveFilters] = useState<TransactionFilters>({})
@@ -55,7 +57,7 @@ export default function useLatestTransactions(addressId: string): UseLatestTrans
 
   const [getTransactionsForIdentity, { error }] = useGetTransactionsForIdentityMutation()
 
-  const hasMore = !reachedEnd && !hasError && offset < MAX_RESULTS
+  const hasMore = !reachedEnd && !hasError && offset < MAX_TRANSACTION_RESULTS
 
   const fetchPage = useCallback(
     async (currentOffset: number, filters: TransactionFilters = {}) => {
@@ -294,6 +296,7 @@ export default function useLatestTransactions(addressId: string): UseLatestTrans
   useEffect(() => {
     cancellationRef.current = false
     setTransactions([])
+    setTotalCount(null)
     setOffset(0)
     setReachedEnd(false)
     setHasError(false)
@@ -301,9 +304,10 @@ export default function useLatestTransactions(addressId: string): UseLatestTrans
     const initialFetch = async () => {
       setIsLoading(true)
       try {
-        const { transactions: firstPage } = await fetchPage(0, activeFilters)
+        const { transactions: firstPage, total } = await fetchPage(0, activeFilters)
         if (!cancellationRef.current) {
           setTransactions(firstPage)
+          setTotalCount(total)
           setOffset(PAGE_SIZE)
           if (firstPage.length < PAGE_SIZE) {
             setReachedEnd(true)
@@ -327,6 +331,7 @@ export default function useLatestTransactions(addressId: string): UseLatestTrans
 
   return {
     transactions,
+    totalCount,
     loadMoreTransactions,
     hasMore,
     isLoading,

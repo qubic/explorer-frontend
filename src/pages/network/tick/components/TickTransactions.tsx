@@ -95,6 +95,8 @@ export default function TickTransactions({ tick }: Props) {
     setActiveFilters({})
   }, [])
 
+  const totalCount = transactions?.length ?? null
+
   return (
     <div className="flex flex-col gap-16">
       <p className="font-space text-xl font-500">{t('transactions')}</p>
@@ -105,18 +107,30 @@ export default function TickTransactions({ tick }: Props) {
         onClearFilters={handleClearFilters}
       />
 
-      {displayTransactions.length > 0 && (
-        <Button
-          variant="link"
-          size="sm"
-          onClick={() => handleExpandAllChange(!expandAll)}
-          className="ml-auto w-fit gap-6 pb-8"
-        >
-          <ChevronDownIcon
-            className={`h-16 w-16 transition-transform duration-300 ${expandAll ? 'rotate-180' : 'rotate-0'}`}
-          />
-          {expandAll ? t('collapseAll') : t('expandAll')}
-        </Button>
+      {(totalCount !== null || displayTransactions.length > 0) && (
+        <div className="flex flex-wrap items-center justify-between gap-8">
+          {totalCount !== null && totalCount > 0 ? (
+            <span className="text-sm text-gray-50">
+              {t('transactionsFound', {
+                count: totalCount.toLocaleString()
+              } as Record<string, string>)}
+            </span>
+          ) : null}
+
+          {displayTransactions.length > 0 && (
+            <Button
+              variant="link"
+              size="sm"
+              onClick={() => handleExpandAllChange(!expandAll)}
+              className="w-fit gap-6"
+            >
+              <ChevronDownIcon
+                className={`h-16 w-16 transition-transform duration-300 ${expandAll ? 'rotate-180' : 'rotate-0'}`}
+              />
+              {expandAll ? t('collapseAll') : t('expandAll')}
+            </Button>
+          )}
+        </div>
       )}
 
       <InfiniteScroll
