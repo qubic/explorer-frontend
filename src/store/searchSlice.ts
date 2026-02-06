@@ -1,4 +1,3 @@
-import type { PayloadAction } from '@reduxjs/toolkit'
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 
 import type { AppDispatch, RootState } from '@app/store'
@@ -90,7 +89,7 @@ const searchSlice = createSlice({
         state.error = null
         state.activeQuery = action.meta.arg.query
       })
-      .addCase(getSearch.fulfilled, (state, action: PayloadAction<SearchState['result']>) => {
+      .addCase(getSearch.fulfilled, (state, action) => {
         if (state.activeQuery !== action.meta.arg.query) return
         state.isLoading = false
         state.result = action.payload
