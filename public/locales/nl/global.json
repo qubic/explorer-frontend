@@ -1,7 +1,9 @@
 {
   "address": "Adres",
   "balance": "Balans",
-  "noResult": "Geen resultaten",
+  "noResultsFound": "Geen Resultaten Gevonden",
+  "noResultsFoundFor": "Geen resultaten gevonden voor \"{{keyword}}\"",
+  "searchPlaceholder": "Zoek TXs, ticks, IDs, tokens, contracten, exchanges...",
   "tick": "Tick",
   "transaction": "Transactie",
   "transactions": "Transacties"

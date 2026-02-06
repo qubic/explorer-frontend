@@ -1,7 +1,9 @@
 {
   "address": "Adres",
   "balance": "Bakiye",
-  "noResult": "Sonuç yok",
+  "noResultsFound": "Sonuç Bulunamadı",
+  "noResultsFoundFor": "\"{{keyword}}\" için sonuç bulunamadı",
+  "searchPlaceholder": "TX, tick, ID, token, sözleşme, borsa ara...",
   "tick": "Tik",
   "transaction": "İşlem",
   "transactions": "İşlemler"

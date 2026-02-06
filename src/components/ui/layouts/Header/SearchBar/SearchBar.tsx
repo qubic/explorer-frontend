@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
@@ -9,7 +9,7 @@ import { LinearProgress } from '@app/components/ui/loaders'
 import { useAppDispatch, useAppSelector } from '@app/hooks/redux'
 import { Routes } from '@app/router'
 import { getSearch, resetSearch, SearchType, selectSearch } from '@app/store/searchSlice'
-import { formatDate, formatString } from '@app/utils'
+import { formatDate, formatString, isValidQubicAddress } from '@app/utils'
 import EntityResultItem from './EntityResultItem'
 import ResultItem from './ResultItem'
 import { useEntitySearch } from './useEntitySearch'
@@ -41,6 +41,10 @@ export default function SearchBar() {
   const [open, setOpen] = useState(false)
   const [keyword, setKeyword] = useState('')
   const [debouncedKeyword, setDebouncedKeyword] = useState('')
+  const [isAddressValid, setIsAddressValid] = useState<boolean | null>(null)
+  // Track pending Enter navigation for entity searches (stores the keyword to match)
+  const [pendingEntityNavigation, setPendingEntityNavigation] = useState<string | null>(null)
+  const addressValidationRequestId = useRef(0)
 
   // Unified debounce for all search types
   useEffect(() => {
@@ -56,6 +60,11 @@ export default function SearchBar() {
     [debouncedKeyword]
   )
 
+  const isDebounceSynced = useMemo(
+    () => keyword.trim() === debouncedKeyword.trim(),
+    [keyword, debouncedKeyword]
+  )
+
   // Entity search for exchanges, smart contracts, and tokens
   const {
     exactMatch: entityExactMatch,
@@ -63,12 +72,45 @@ export default function SearchBar() {
     isLoading: entitySearchLoading
   } = useEntitySearch(debouncedKeyword)
 
+  // Calculate total entity results for navigation logic
+  const entityResultCount = useMemo(
+    () => (entityExactMatch ? 1 : 0) + entityPartialMatches.length,
+    [entityExactMatch, entityPartialMatches]
+  )
+
+  const searchResultMatchesQuery = useMemo(() => {
+    if (!searchResult) return false
+    const query = debouncedKeyword.trim()
+    if (!query) return false
+    if ('balance' in searchResult) return searchResult.balance.id === query
+    if ('hash' in searchResult) return searchResult.hash === query
+    if ('tickData' in searchResult) {
+      const queryNumber = parseInt(query.replace(/,/g, ''), 10)
+      return searchResult.tickData.tickNumber === queryNumber
+    }
+    return false
+  }, [searchResult, debouncedKeyword])
+
+  const shouldShowSearchResult =
+    searchResultMatchesQuery &&
+    isDebounceSynced &&
+    (!searchResult || !('balance' in searchResult) || isAddressValid === true)
+
   const handleCloseCallback = useCallback(() => {
     setOpen(false)
     dispatch(resetSearch())
     setKeyword('')
     setDebouncedKeyword('')
+    setIsAddressValid(null)
+    setPendingEntityNavigation(null)
   }, [dispatch])
+
+  // Clear stale search results when the input changes before debounce completes
+  useEffect(() => {
+    if (!searchResult) return
+    if (keyword.trim() === debouncedKeyword.trim()) return
+    dispatch(resetSearch())
+  }, [keyword, debouncedKeyword, searchResult, dispatch])
 
   const handleKeyPressCallback = useCallback(
     (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -85,6 +127,11 @@ export default function SearchBar() {
 
         // Handle tick/address/tx searches
         if (type === 'address') {
+          const isSearchReady =
+            debouncedKeyword === trimmedKeyword && isAddressValid !== null && !entitySearchLoading
+          if (!isSearchReady || isAddressValid !== true) {
+            return
+          }
           navigate(Routes.NETWORK.ADDRESS(trimmedKeyword))
           handleCloseCallback()
         } else if (type === 'tx') {
@@ -95,24 +142,64 @@ export default function SearchBar() {
           handleCloseCallback()
         } else {
           // Handle entity searches - navigate only if exactly one result
-          const totalResults = (entityExactMatch ? 1 : 0) + entityPartialMatches.length
-          if (totalResults === 1) {
+          // Wait for debounce to catch up and search to complete before deciding
+          const isSearchReady = debouncedKeyword === trimmedKeyword && !entitySearchLoading
+          if (!isSearchReady) {
+            // Search not ready yet, set pending navigation to auto-navigate when ready
+            setPendingEntityNavigation(trimmedKeyword)
+            return
+          }
+
+          if (entityResultCount === 1) {
             const entity = entityExactMatch || entityPartialMatches[0]
             navigate(Routes.NETWORK.ADDRESS(entity.address))
             handleCloseCallback()
-          } else if (totalResults === 0) {
-            navigate(Routes.NOT_FOUND)
-            handleCloseCallback()
           }
-          // Multiple results: keep modal open for user to select
+          // Zero or multiple results: keep modal open (shows "no results" or list)
         }
       }
     },
-    [handleCloseCallback, keyword, navigate, entityExactMatch, entityPartialMatches]
+    [
+      handleCloseCallback,
+      keyword,
+      navigate,
+      entityResultCount,
+      entityExactMatch,
+      entityPartialMatches,
+      debouncedKeyword,
+      entitySearchLoading,
+      isAddressValid
+    ]
   )
 
   // Track previous search type to reset only when type changes
   const [prevSearchType, setPrevSearchType] = useState<SearchType | null>(null)
+
+  // Validate address input (crypto) before searching/navigating
+  useEffect(() => {
+    if (!debouncedKeyword.trim()) {
+      setIsAddressValid(null)
+      return
+    }
+
+    if (debouncedSearchType !== SearchType.ADDRESS) {
+      setIsAddressValid(null)
+      return
+    }
+
+    addressValidationRequestId.current += 1
+    const requestId = addressValidationRequestId.current
+    const validate = async () => {
+      const isValid = await isValidQubicAddress(debouncedKeyword.trim())
+      if (addressValidationRequestId.current !== requestId) return
+      setIsAddressValid(isValid)
+      if (!isValid) {
+        dispatch(resetSearch())
+      }
+    }
+
+    validate()
+  }, [debouncedKeyword, debouncedSearchType, dispatch])
 
   useEffect(() => {
     // Reset search result when type changes (e.g., from tick to entity search)
@@ -123,6 +210,11 @@ export default function SearchBar() {
 
     // Only search when type is valid (address/tx requires 60 chars, tick is any number)
     if (debouncedKeyword && debouncedSearchType) {
+      if (debouncedSearchType === SearchType.ADDRESS) {
+        if (isAddressValid === false || isAddressValid === null) {
+          return
+        }
+      }
       // Remove commas for tick searches (e.g., "43,329,624" -> "43329624")
       const query =
         debouncedSearchType === SearchType.TICK
@@ -130,7 +222,35 @@ export default function SearchBar() {
           : debouncedKeyword.trim()
       dispatch(getSearch({ query, type: debouncedSearchType }))
     }
-  }, [debouncedKeyword, debouncedSearchType, dispatch, prevSearchType])
+  }, [debouncedKeyword, debouncedSearchType, dispatch, prevSearchType, isAddressValid])
+
+  // Handle pending entity navigation when search completes
+  useEffect(() => {
+    if (
+      pendingEntityNavigation &&
+      debouncedKeyword === pendingEntityNavigation &&
+      !entitySearchLoading &&
+      !debouncedSearchType // Entity search (not tick/address/tx)
+    ) {
+      if (entityResultCount === 1) {
+        const entity = entityExactMatch || entityPartialMatches[0]
+        navigate(Routes.NETWORK.ADDRESS(entity.address))
+        handleCloseCallback()
+      }
+      // Clear pending navigation regardless of result count
+      setPendingEntityNavigation(null)
+    }
+  }, [
+    pendingEntityNavigation,
+    debouncedKeyword,
+    entitySearchLoading,
+    debouncedSearchType,
+    entityResultCount,
+    entityExactMatch,
+    entityPartialMatches,
+    navigate,
+    handleCloseCallback
+  ])
 
   return (
     <ErrorBoundary fallback={<Alert variant="error" className="mx-5 my-2.5" />}>
@@ -161,7 +281,7 @@ export default function SearchBar() {
               <MagnifyIcon className="h-16 w-16 shrink-0" />
               <input
                 className="w-full bg-inherit py-12 text-base placeholder:font-space placeholder:text-base placeholder:text-gray-50 focus:outline-none sm:text-sm"
-                placeholder="Search TX, ticks, IDs..."
+                placeholder={t('searchPlaceholder')}
                 value={keyword}
                 // eslint-disable-next-line jsx-a11y/no-autofocus
                 autoFocus
@@ -181,20 +301,33 @@ export default function SearchBar() {
             </div>
           </div>
 
-          {error && !entityExactMatch && entityPartialMatches.length === 0 && (
-            <div className="mx-auto mt-12 max-w-[800px] pb-10">
-              <p className="text-center font-space">{t('noResult')}</p>
+          {/* Show "no results" for Redux search errors or entity search with no matches */}
+          {((error && !entityExactMatch && entityPartialMatches.length === 0) ||
+            (debouncedKeyword &&
+              debouncedSearchType === SearchType.ADDRESS &&
+              isAddressValid === false) ||
+            (debouncedKeyword &&
+              !debouncedSearchType &&
+              !entitySearchLoading &&
+              !entityExactMatch &&
+              entityPartialMatches.length === 0)) && (
+            <div className="mx-auto flex max-w-[800px] flex-col items-center gap-8 py-32">
+              <MagnifyIcon className="h-32 w-32 text-gray-50" />
+              <p className="font-space text-base font-500">{t('noResultsFound')}</p>
+              <p className="text-sm text-gray-50">
+                {t('noResultsFoundFor', { keyword: debouncedKeyword })}
+              </p>
             </div>
           )}
 
-          {(searchResult ||
+          {(shouldShowSearchResult ||
             entityExactMatch ||
             (entityPartialMatches.length > 0 && !debouncedSearchType)) && (
             <div className="mx-auto max-h-[320px] max-w-[800px] overflow-y-scroll pb-20 scrollbar scrollbar-track-transparent scrollbar-thumb-primary-60 scrollbar-thumb-rounded-full scrollbar-w-4">
               <p className="px-12 pb-8 pt-12 font-space text-12 text-gray-50">
                 {tNetwork('matchingEntities')}
               </p>
-              {searchResult && 'balance' in searchResult && (
+              {shouldShowSearchResult && searchResult && 'balance' in searchResult && (
                 <ResultItem
                   type="address"
                   result={formatString(searchResult.balance.id)}
@@ -203,7 +336,7 @@ export default function SearchBar() {
                   onClick={handleCloseCallback}
                 />
               )}
-              {searchResult && 'hash' in searchResult && (
+              {shouldShowSearchResult && searchResult && 'hash' in searchResult && (
                 <ResultItem
                   type="transaction"
                   result={formatString(searchResult.hash)}
@@ -212,7 +345,7 @@ export default function SearchBar() {
                   onClick={handleCloseCallback}
                 />
               )}
-              {searchResult && 'tickData' in searchResult && (
+              {shouldShowSearchResult && searchResult && 'tickData' in searchResult && (
                 <ResultItem
                   type="tick"
                   result={formatString(searchResult.tickData.tickNumber)}

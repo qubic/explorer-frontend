@@ -1,7 +1,9 @@
 {
   "address": "Адрес",
   "balance": "Баланс",
-  "noResult": "Результатов нет",
+  "noResultsFound": "Результаты Не Найдены",
+  "noResultsFoundFor": "Результаты не найдены для \"{{keyword}}\"",
+  "searchPlaceholder": "Поиск TX, тиков, ID, токенов, контрактов, бирж...",
   "tick": "Тик",
   "transaction": "Транзакция",
   "transactions": "Транзакции"

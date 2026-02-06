@@ -1,4 +1,3 @@
-import type { PayloadAction } from '@reduxjs/toolkit'
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 
 import type { AppDispatch, RootState } from '@app/store'
@@ -13,12 +12,14 @@ export interface SearchState {
   result: HandlerResponse | null
   isLoading: boolean
   error: string | null
+  activeQuery: string | null
 }
 
 const initialState: SearchState = {
   result: null,
   isLoading: false,
-  error: null
+  error: null,
+  activeQuery: null
 }
 
 export enum SearchType {
@@ -77,20 +78,26 @@ const searchSlice = createSlice({
       state.result = null
       state.isLoading = false
       state.error = null
+      state.activeQuery = null
     }
   },
   extraReducers: (builder) => {
     builder
-      .addCase(getSearch.pending, (state) => {
+      .addCase(getSearch.pending, (state, action) => {
         state.isLoading = true
+        state.result = null
         state.error = null
+        state.activeQuery = action.meta.arg.query
       })
-      .addCase(getSearch.fulfilled, (state, action: PayloadAction<SearchState['result']>) => {
+      .addCase(getSearch.fulfilled, (state, action) => {
+        if (state.activeQuery !== action.meta.arg.query) return
         state.isLoading = false
         state.result = action.payload
       })
       .addCase(getSearch.rejected, (state, action) => {
+        if (state.activeQuery !== action.meta.arg.query) return
         state.isLoading = false
+        state.result = null
         state.error = action.payload || action.error.message || 'Something went wrong'
       })
   }
