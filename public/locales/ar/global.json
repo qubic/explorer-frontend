@@ -1,7 +1,9 @@
 {
   "address": "عنوان",
   "balance": "الرصيد",
-  "noResult": "لا توجد نتائج",
+  "noResultsFound": "لم يتم العثور على نتائج",
+  "noResultsFoundFor": "لم يتم العثور على نتائج لـ \"{{keyword}}\"",
+  "searchPlaceholder": "البحث عن TXs، ticks، IDs، tokens، contracts، exchanges...",
   "tick": "تيك",
   "transaction": "معاملة",
   "transactions": "معاملات"

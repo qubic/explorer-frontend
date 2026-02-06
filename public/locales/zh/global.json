@@ -1,7 +1,9 @@
 {
   "address": "地址",
   "balance": "余额",
-  "noResult": "没有结果",
+  "noResultsFound": "未找到结果",
+  "noResultsFoundFor": "未找到 \"{{keyword}}\" 的结果",
+  "searchPlaceholder": "搜索 TX、刻度、ID、代币、合约、交易所...",
   "tick": "刻度",
   "transaction": "交易",
   "transactions": "交易"

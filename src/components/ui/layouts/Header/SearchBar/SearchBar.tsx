@@ -41,6 +41,8 @@ export default function SearchBar() {
   const [open, setOpen] = useState(false)
   const [keyword, setKeyword] = useState('')
   const [debouncedKeyword, setDebouncedKeyword] = useState('')
+  // Track pending Enter navigation for entity searches (stores the keyword to match)
+  const [pendingEntityNavigation, setPendingEntityNavigation] = useState<string | null>(null)
 
   // Unified debounce for all search types
   useEffect(() => {
@@ -63,11 +65,18 @@ export default function SearchBar() {
     isLoading: entitySearchLoading
   } = useEntitySearch(debouncedKeyword)
 
+  // Calculate total entity results for navigation logic
+  const entityResultCount = useMemo(
+    () => (entityExactMatch ? 1 : 0) + entityPartialMatches.length,
+    [entityExactMatch, entityPartialMatches]
+  )
+
   const handleCloseCallback = useCallback(() => {
     setOpen(false)
     dispatch(resetSearch())
     setKeyword('')
     setDebouncedKeyword('')
+    setPendingEntityNavigation(null)
   }, [dispatch])
 
   const handleKeyPressCallback = useCallback(
@@ -95,20 +104,33 @@ export default function SearchBar() {
           handleCloseCallback()
         } else {
           // Handle entity searches - navigate only if exactly one result
-          const totalResults = (entityExactMatch ? 1 : 0) + entityPartialMatches.length
-          if (totalResults === 1) {
+          // Wait for debounce to catch up and search to complete before deciding
+          const isSearchReady = debouncedKeyword === trimmedKeyword && !entitySearchLoading
+          if (!isSearchReady) {
+            // Search not ready yet, set pending navigation to auto-navigate when ready
+            setPendingEntityNavigation(trimmedKeyword)
+            return
+          }
+
+          if (entityResultCount === 1) {
             const entity = entityExactMatch || entityPartialMatches[0]
             navigate(Routes.NETWORK.ADDRESS(entity.address))
             handleCloseCallback()
-          } else if (totalResults === 0) {
-            navigate(Routes.NOT_FOUND)
-            handleCloseCallback()
           }
-          // Multiple results: keep modal open for user to select
+          // Zero or multiple results: keep modal open (shows "no results" or list)
         }
       }
     },
-    [handleCloseCallback, keyword, navigate, entityExactMatch, entityPartialMatches]
+    [
+      handleCloseCallback,
+      keyword,
+      navigate,
+      entityResultCount,
+      entityExactMatch,
+      entityPartialMatches,
+      debouncedKeyword,
+      entitySearchLoading
+    ]
   )
 
   // Track previous search type to reset only when type changes
@@ -131,6 +153,34 @@ export default function SearchBar() {
       dispatch(getSearch({ query, type: debouncedSearchType }))
     }
   }, [debouncedKeyword, debouncedSearchType, dispatch, prevSearchType])
+
+  // Handle pending entity navigation when search completes
+  useEffect(() => {
+    if (
+      pendingEntityNavigation &&
+      debouncedKeyword === pendingEntityNavigation &&
+      !entitySearchLoading &&
+      !debouncedSearchType // Entity search (not tick/address/tx)
+    ) {
+      if (entityResultCount === 1) {
+        const entity = entityExactMatch || entityPartialMatches[0]
+        navigate(Routes.NETWORK.ADDRESS(entity.address))
+        handleCloseCallback()
+      }
+      // Clear pending navigation regardless of result count
+      setPendingEntityNavigation(null)
+    }
+  }, [
+    pendingEntityNavigation,
+    debouncedKeyword,
+    entitySearchLoading,
+    debouncedSearchType,
+    entityResultCount,
+    entityExactMatch,
+    entityPartialMatches,
+    navigate,
+    handleCloseCallback
+  ])
 
   return (
     <ErrorBoundary fallback={<Alert variant="error" className="mx-5 my-2.5" />}>
@@ -161,7 +211,7 @@ export default function SearchBar() {
               <MagnifyIcon className="h-16 w-16 shrink-0" />
               <input
                 className="w-full bg-inherit py-12 text-base placeholder:font-space placeholder:text-base placeholder:text-gray-50 focus:outline-none sm:text-sm"
-                placeholder="Search TX, ticks, IDs..."
+                placeholder={t('searchPlaceholder')}
                 value={keyword}
                 // eslint-disable-next-line jsx-a11y/no-autofocus
                 autoFocus
@@ -181,9 +231,19 @@ export default function SearchBar() {
             </div>
           </div>
 
-          {error && !entityExactMatch && entityPartialMatches.length === 0 && (
-            <div className="mx-auto mt-12 max-w-[800px] pb-10">
-              <p className="text-center font-space">{t('noResult')}</p>
+          {/* Show "no results" for Redux search errors or entity search with no matches */}
+          {((error && !entityExactMatch && entityPartialMatches.length === 0) ||
+            (debouncedKeyword &&
+              !debouncedSearchType &&
+              !entitySearchLoading &&
+              !entityExactMatch &&
+              entityPartialMatches.length === 0)) && (
+            <div className="mx-auto flex max-w-[800px] flex-col items-center gap-8 py-32">
+              <MagnifyIcon className="h-32 w-32 text-gray-50" />
+              <p className="font-space text-base font-500">{t('noResultsFound')}</p>
+              <p className="text-sm text-gray-50">
+                {t('noResultsFoundFor', { keyword: debouncedKeyword })}
+              </p>
             </div>
           )}
 
