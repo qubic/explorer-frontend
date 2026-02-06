@@ -1,3 +1,11 @@
+# [1.33.0-rc.2](https://github.com/qubic/explorer-frontend/compare/v1.33.0-rc.1...v1.33.0-rc.2) (2026-02-06)
+
+
+### Bug Fixes
+
+* **search:** improve entity search UX and fix race condition ([#419](https://github.com/qubic/explorer-frontend/issues/419)) ([b7ae9dd](https://github.com/qubic/explorer-frontend/commit/b7ae9dd00439c0fe4b182a1830a5742310765eef))
+* **search:** remove incorrect PayloadAction type annotation ([14d8444](https://github.com/qubic/explorer-frontend/commit/14d84443c79aa53c3652502c1896b0bb856ffe10))
+
 # [1.33.0-rc.1](https://github.com/qubic/explorer-frontend/compare/v1.32.0...v1.33.0-rc.1) (2026-02-05)
 
 
