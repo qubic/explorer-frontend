@@ -1,7 +1,9 @@
 {
   "address": "Adresse",
   "balance": "Solde",
-  "noResult": "Aucun résultat",
+  "noResultsFound": "Aucun Résultat Trouvé",
+  "noResultsFoundFor": "Aucun résultat trouvé pour \"{{keyword}}\"",
+  "searchPlaceholder": "Rechercher TXs, ticks, IDs, tokens, contrats, exchanges...",
   "tick": "Tick",
   "transaction": "Transaction",
   "transactions": "Transactions"
