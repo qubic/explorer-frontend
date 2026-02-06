@@ -175,5 +175,9 @@
   "addAddress": "Adres toevoegen",
   "removeAddress": "Adres verwijderen",
   "maxAddressesReached": "Maximum 5 adressen bereikt",
-  "duplicateAddress": "Dubbel adres"
+  "duplicateAddress": "Dubbel adres",
+  "matchingEntities": "Overeenkomende resultaten",
+  "transactionsFound": "{{count}} transacties",
+  "showingMaxTransactions": "Toont de laatste {{count}} transacties",
+  "maxResultsHint": "Resultaten zijn beperkt tot {{count}}. Gebruik filters om de lijst te verfijnen."
 }

@@ -175,5 +175,9 @@
   "addAddress": "Add Address",
   "removeAddress": "Remove address",
   "maxAddressesReached": "Maximum 5 addresses reached",
-  "duplicateAddress": "Duplicate address"
+  "duplicateAddress": "Duplicate address",
+  "matchingEntities": "Matching Results",
+  "transactionsFound": "{{count}} transactions",
+  "showingMaxTransactions": "Showing the last {{count}} transactions",
+  "maxResultsHint": "Results are limited to {{count}}. Use filters to narrow down the list."
 }

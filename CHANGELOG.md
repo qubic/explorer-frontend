@@ -1,3 +1,26 @@
+# [1.33.0-rc.2](https://github.com/qubic/explorer-frontend/compare/v1.33.0-rc.1...v1.33.0-rc.2) (2026-02-06)
+
+
+### Bug Fixes
+
+* **search:** improve entity search UX and fix race condition ([#419](https://github.com/qubic/explorer-frontend/issues/419)) ([b7ae9dd](https://github.com/qubic/explorer-frontend/commit/b7ae9dd00439c0fe4b182a1830a5742310765eef))
+* **search:** remove incorrect PayloadAction type annotation ([14d8444](https://github.com/qubic/explorer-frontend/commit/14d84443c79aa53c3652502c1896b0bb856ffe10))
+
+# [1.33.0-rc.1](https://github.com/qubic/explorer-frontend/compare/v1.32.0...v1.33.0-rc.1) (2026-02-05)
+
+
+### Bug Fixes
+
+* **address:** hide smart contract icon in asset balances ([225bbe2](https://github.com/qubic/explorer-frontend/commit/225bbe2aed972030d0d6d646818d59add9feafe0))
+
+
+### Features
+
+* **address:** display transaction count with limit indicator ([731254d](https://github.com/qubic/explorer-frontend/commit/731254d3a7f6c6382f9b1998b9204a1e7af5dc20))
+* **search:** support searching by exchange, smart contract, and token names ([73175c8](https://github.com/qubic/explorer-frontend/commit/73175c8b81f523ac0f159f96eef089de0a2872d9))
+* **tick:** add transaction count label for consistency ([f1de426](https://github.com/qubic/explorer-frontend/commit/f1de426b440d28791e3d53cb57c07c6dbae87c98))
+* **tick:** add transaction filters to tick page ([#414](https://github.com/qubic/explorer-frontend/issues/414)) ([d813096](https://github.com/qubic/explorer-frontend/commit/d8130968b50c7195069991bf554c6c1979d18fd0))
+
 # [1.32.0](https://github.com/qubic/explorer-frontend/compare/v1.31.2...v1.32.0) (2026-01-30)
 
 

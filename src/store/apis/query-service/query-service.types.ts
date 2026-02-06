@@ -80,3 +80,19 @@ export interface ComputorList {
 export interface GetComputorListsForEpochResponse {
   computorsLists: ComputorList[]
 }
+
+// getTransactionsForTick request with filters
+// Note: Unlike getTransactionsForIdentity, this endpoint only supports single address (no multi, no exclude)
+export interface GetTransactionsForTickRequest {
+  tickNumber: number
+  filters?: {
+    source?: string // Single address only
+    destination?: string // Single address only
+    amount?: string
+    inputType?: string
+  }
+  ranges?: {
+    amount?: Range
+    inputType?: Range
+  }
+}
