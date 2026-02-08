@@ -18,6 +18,8 @@
   "txStatusExecuted": "Transactie uitgevoerd",
   "txStatusFailed": "Overdracht mislukt",
   "id": "ID",
+  "txID": "TX ID",
+  "status": "Status",
   "incomingTransfers": "Binnenkomende overboekingen",
   "incomingAmount": "Binnenkomend bedrag",
   "incomplete": "Onvolledig",

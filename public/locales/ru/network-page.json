@@ -18,6 +18,8 @@
   "txStatusExecuted": "Транзакция выполнена",
   "txStatusFailed": "Перевод не удался",
   "id": "ID",
+  "txID": "TX ID",
+  "status": "Status",
   "incomingTransfers": "Входящие переводы",
   "incomingAmount": "Входящая сумма",
   "incomplete": "Незавершённый",

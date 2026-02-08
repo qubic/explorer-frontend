@@ -18,6 +18,8 @@
   "txStatusExecuted": "Transaction exécutée",
   "txStatusFailed": "Transfert échoué",
   "id": "ID",
+  "txID": "TX ID",
+  "status": "Status",
   "incomingTransfers": "Transferts entrants",
   "incomingAmount": "Montant entrant",
   "incomplete": "Incomplet",

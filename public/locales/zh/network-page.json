@@ -18,6 +18,8 @@
   "txStatusExecuted": "交易已执行",
   "txStatusFailed": "转账失败",
   "id": "ID",
+  "txID": "TX ID",
+  "status": "Status",
   "incomingTransfers": "收入转账",
   "incomingAmount": "收入金额",
   "incomplete": "未完成",

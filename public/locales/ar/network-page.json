@@ -18,6 +18,8 @@
   "txStatusExecuted": "تم تنفيذ المعاملة",
   "txStatusFailed": "فشل التحويل",
   "id": "معرّف",
+  "txID": "TX ID",
+  "status": "Status",
   "incomingTransfers": "التحويلات الواردة",
   "incomingAmount": "المبلغ الوارد",
   "incomplete": "غير مكتمل",

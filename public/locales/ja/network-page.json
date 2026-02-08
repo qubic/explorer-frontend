@@ -18,6 +18,8 @@
   "txStatusExecuted": "トランザクション実行済み",
   "txStatusFailed": "送金失敗",
   "id": "ID",
+  "txID": "TX ID",
+  "status": "Status",
   "incomingTransfers": "受信転送",
   "incomingAmount": "受信金額",
   "incomplete": "未完了",
