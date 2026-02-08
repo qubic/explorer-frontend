@@ -18,6 +18,8 @@
   "txStatusExecuted": "Giao dịch đã thực thi",
   "txStatusFailed": "Chuyển tiền thất bại",
   "id": "ID",
+  "txID": "TX ID",
+  "status": "Status",
   "incomingTransfers": "Chuyển đến",
   "incomingAmount": "Số lượng nhận",
   "incomplete": "Chưa hoàn tất",
