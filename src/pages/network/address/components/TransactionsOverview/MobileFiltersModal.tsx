@@ -29,6 +29,7 @@ import {
   validateTickRange
 } from './filterUtils'
 import MultiAddressFilterContent from './MultiAddressFilterContent'
+import TxTypeFilterContent from './TxTypeFilterContent'
 
 type Props = {
   isOpen: boolean
@@ -136,8 +137,19 @@ export default function MobileFiltersModal({
       return
     }
 
+    // Enforce mutual exclusion: if txType is set, set destination to SC address (if SC) and clear inputType
+    const mutuallyExclusiveFilters = localFilters.txType
+      ? {
+          ...localFilters,
+          destinationFilter: localFilters.txType.scAddress
+            ? { mode: 'include' as const, addresses: [localFilters.txType.scAddress] }
+            : undefined,
+          inputTypeRange: undefined
+        }
+      : localFilters
+
     // Calculate date from presetDays at apply time (shared utility with desktop)
-    const filtersToApply = applyDatePresetCalculation(localFilters)
+    const filtersToApply = applyDatePresetCalculation(mutuallyExclusiveFilters)
     onApplyFilters(filtersToApply)
     onClose()
     setValidationErrors({})
@@ -159,6 +171,15 @@ export default function MobileFiltersModal({
         <DirectionControl value={localFilters.direction} onChange={handleDirectionChange} />
       </MobileFilterSection>
 
+      <MobileFilterSection id="mobile-txtype-filter" label={t('txType')}>
+        <TxTypeFilterContent
+          value={localFilters.txType}
+          onChange={(value) => setLocalFilters((prev) => ({ ...prev, txType: value }))}
+          onApply={() => {}}
+          showApplyButton={false}
+        />
+      </MobileFilterSection>
+
       <MobileFilterSection id="mobile-source-filter" label={t('source')}>
         <MultiAddressFilterContent
           id="filter-source-mobile"
@@ -170,17 +191,19 @@ export default function MobileFiltersModal({
         />
       </MobileFilterSection>
 
-      <MobileFilterSection id="mobile-destination-filter" label={`${t('destination')}*`}>
-        <MultiAddressFilterContent
-          id="filter-destination-mobile"
-          value={localFilters.destinationFilter}
-          onChange={handleDestinationFilterChange}
-          onApply={() => {}}
-          showApplyButton={false}
-          hint={t('destinationFilterHint')}
-          error={validationErrors.destination}
-        />
-      </MobileFilterSection>
+      <div className={localFilters.txType?.scAddress ? 'pointer-events-none opacity-50' : ''}>
+        <MobileFilterSection id="mobile-destination-filter" label={`${t('destination')}*`}>
+          <MultiAddressFilterContent
+            id="filter-destination-mobile"
+            value={localFilters.destinationFilter}
+            onChange={handleDestinationFilterChange}
+            onApply={() => {}}
+            showApplyButton={false}
+            hint={t('destinationFilterHint')}
+            error={validationErrors.destination}
+          />
+        </MobileFilterSection>
+      </div>
 
       <MobileAmountFilterSection
         sectionId="mobile-amount-filter"
@@ -202,13 +225,15 @@ export default function MobileFiltersModal({
         />
       </MobileFilterSection>
 
-      <MobileInputTypeFilterSection
-        sectionId="mobile-inputtype-filter"
-        idPrefix="filter-inputtype-mobile"
-        value={localFilters.inputTypeRange}
-        onChange={(value) => setLocalFilters((prev) => ({ ...prev, inputTypeRange: value }))}
-        error={validationErrors.inputType}
-      />
+      <div className={localFilters.txType ? 'pointer-events-none opacity-50' : ''}>
+        <MobileInputTypeFilterSection
+          sectionId="mobile-inputtype-filter"
+          idPrefix="filter-inputtype-mobile"
+          value={localFilters.inputTypeRange}
+          onChange={(value) => setLocalFilters((prev) => ({ ...prev, inputTypeRange: value }))}
+          error={validationErrors.inputType}
+        />
+      </div>
 
       <MobileFilterSection id="mobile-tick-filter" label={t('tick')}>
         <RangeFilterContent

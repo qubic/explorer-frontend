@@ -50,7 +50,7 @@ function TransactionRow({ tx }: Props) {
         <TxLink value={hash} className="text-primary-30" ellipsis showTooltip copy />
       </td>
       <td className="whitespace-nowrap px-8 py-12 font-space text-xs xs:text-sm sm:px-16">
-        <Tooltip tooltipId="tx-type" content={typeDisplay}>
+        <Tooltip tooltipId="tx-type" content={`${typeDisplay} (${inputType})`}>
           <span className="block max-w-[120px] truncate">{typeDisplay}</span>
         </Tooltip>
       </td>

@@ -54,7 +54,7 @@
   "exportJson": "JSONをエクスポート",
   "showMore": "もっと見る",
   "showLess": "折りたたむ",
-  "type": "タイプ",
+  "type": "TX タイプ",
   "unexecuted": "未実行",
   "value": "値",
   "loadMore": "もっと読み込む",
@@ -192,5 +192,8 @@
   "waitingForTickDesc": "このトランザクションはティック{{targetTick}}に予定されています。ネットワークがそのティックに到達すると利用可能になります。",
   "targetTick": "目標ティック",
   "estimatedWait": "推定待ち時間",
-  "tickCheckFailed": "ティックの状態を確認できませんでした。後でもう一度お試しください。"
+  "tickCheckFailed": "ティックの状態を確認できませんでした。後でもう一度お試しください。",
+  "txType": "TX Type",
+  "selectContract": "Select contract",
+  "allProcedures": "All procedures"
 }

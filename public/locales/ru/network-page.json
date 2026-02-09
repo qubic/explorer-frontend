@@ -54,7 +54,7 @@
   "exportJson": "Экспортировать JSON",
   "showMore": "Показать больше",
   "showLess": "Показать меньше",
-  "type": "Тип",
+  "type": "Тип TX",
   "unexecuted": "Не выполнено",
   "value": "Значение",
   "loadMore": "Загрузить еще",
@@ -192,5 +192,8 @@
   "waitingForTickDesc": "Эта транзакция запланирована на тик {{targetTick}}. Она станет доступна, когда сеть достигнет этого тика.",
   "targetTick": "Целевой тик",
   "estimatedWait": "Ожидаемое время ожидания",
-  "tickCheckFailed": "Не удалось проверить статус тика. Пожалуйста, попробуйте позже."
+  "tickCheckFailed": "Не удалось проверить статус тика. Пожалуйста, попробуйте позже.",
+  "txType": "TX Type",
+  "selectContract": "Select contract",
+  "allProcedures": "All procedures"
 }

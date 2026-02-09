@@ -54,7 +54,7 @@
   "exportJson": "Xuất JSON",
   "showMore": "Xem thêm",
   "showLess": "Thu gọn",
-  "type": "Loại",
+  "type": "Loại TX",
   "unexecuted": "Chưa thực hiện",
   "value": "Giá trị",
   "loadMore": "Tải thêm",
@@ -192,5 +192,8 @@
   "waitingForTickDesc": "Giao dịch này được lên lịch cho tick {{targetTick}}. Nó sẽ khả dụng khi mạng đạt đến tick đó.",
   "targetTick": "Tick mục tiêu",
   "estimatedWait": "Thời gian chờ ước tính",
-  "tickCheckFailed": "Không thể kiểm tra trạng thái tick. Vui lòng thử lại sau."
+  "tickCheckFailed": "Không thể kiểm tra trạng thái tick. Vui lòng thử lại sau.",
+  "txType": "TX Type",
+  "selectContract": "Select contract",
+  "allProcedures": "All procedures"
 }

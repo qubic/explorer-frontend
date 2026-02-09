@@ -54,7 +54,7 @@
   "exportJson": "Exporter JSON",
   "showMore": "Afficher plus",
   "showLess": "Afficher moins",
-  "type": "Type",
+  "type": "Type TX",
   "unexecuted": "Non exécuté",
   "value": "Valeur",
   "loadMore": "Charger plus",
@@ -192,5 +192,8 @@
   "waitingForTickDesc": "Cette transaction est prévue pour le tick {{targetTick}}. Elle sera disponible une fois que le réseau aura atteint ce tick.",
   "targetTick": "Tick cible",
   "estimatedWait": "Temps d'attente estimé",
-  "tickCheckFailed": "Impossible de vérifier le statut du tick. Veuillez réessayer plus tard."
+  "tickCheckFailed": "Impossible de vérifier le statut du tick. Veuillez réessayer plus tard.",
+  "txType": "TX Type",
+  "selectContract": "Select contract",
+  "allProcedures": "All procedures"
 }
