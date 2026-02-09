@@ -47,7 +47,7 @@
   "transactionPreview": "İşlem önizlemesi",
   "transactions": "İşlemler",
   "data": "Veri",
-  "type": "Tür",
+  "type": "TX Türü",
   "unexecuted": "Gerçekleştirilmemiş",
   "value": "Değer",
   "loadMore": "Daha fazla yükle",
@@ -183,5 +183,8 @@
   "waitingForTickDesc": "Bu işlem {{targetTick}} tick'i için planlanmıştır. Ağ o tick'e ulaştığında kullanılabilir olacaktır.",
   "targetTick": "Hedef Tick",
   "estimatedWait": "Tahmini bekleme süresi",
-  "tickCheckFailed": "Tick durumu kontrol edilemedi. Lütfen daha sonra tekrar deneyin."
+  "tickCheckFailed": "Tick durumu kontrol edilemedi. Lütfen daha sonra tekrar deneyin.",
+  "txType": "TX Type",
+  "selectContract": "Select contract",
+  "allProcedures": "All procedures"
 }

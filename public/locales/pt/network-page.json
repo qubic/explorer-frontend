@@ -49,7 +49,7 @@
   "transactionPreview": "Visualização da transação",
   "transactions": "Transações",
   "data": "Dados",
-  "type": "Tipo",
+  "type": "Tipo TX",
   "unexecuted": "Não executado",
   "value": "Valor",
   "loadMore": "Carregar mais",
@@ -185,5 +185,8 @@
   "waitingForTickDesc": "Esta transação está agendada para o tick {{targetTick}}. Ficará disponível assim que a rede atingir esse tick.",
   "targetTick": "Tick alvo",
   "estimatedWait": "Tempo estimado de espera",
-  "tickCheckFailed": "Não foi possível verificar o estado do tick. Por favor, tente novamente mais tarde."
+  "tickCheckFailed": "Não foi possível verificar o estado do tick. Por favor, tente novamente mais tarde.",
+  "txType": "TX Type",
+  "selectContract": "Select contract",
+  "allProcedures": "All procedures"
 }

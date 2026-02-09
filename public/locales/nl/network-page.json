@@ -49,7 +49,7 @@
   "transactionPreview": "Transactievoorvertoning",
   "transactions": "Transacties",
   "data": "Data",
-  "type": "Type",
+  "type": "TX-type",
   "unexecuted": "Niet uitgevoerd",
   "value": "Waarde",
   "loadMore": "Meer laden",
@@ -185,5 +185,8 @@
   "waitingForTickDesc": "Deze transactie is gepland voor tick {{targetTick}}. Deze wordt beschikbaar zodra het netwerk die tick bereikt.",
   "targetTick": "Doeltick",
   "estimatedWait": "Geschatte wachttijd",
-  "tickCheckFailed": "Kan tickstatus niet controleren. Probeer het later opnieuw."
+  "tickCheckFailed": "Kan tickstatus niet controleren. Probeer het later opnieuw.",
+  "txType": "TX Type",
+  "selectContract": "Select contract",
+  "allProcedures": "All procedures"
 }

@@ -49,7 +49,7 @@
   "transactionPreview": "معاينة المعاملات",
   "transactions": "معاملات",
   "data": "البيانات",
-  "type": "النوع",
+  "type": "نوع TX",
   "unexecuted": "غير منفذ",
   "value": "القيمة",
   "loadMore": "تحميل المزيد",
@@ -185,5 +185,8 @@
   "waitingForTickDesc": "هذه المعاملة مجدولة للتيك {{targetTick}}. ستكون متاحة بمجرد وصول الشبكة إلى ذلك التيك.",
   "targetTick": "التيك المستهدف",
   "estimatedWait": "الوقت المقدر للانتظار",
-  "tickCheckFailed": "تعذر التحقق من حالة التك. يرجى المحاولة مرة أخرى لاحقًا."
+  "tickCheckFailed": "تعذر التحقق من حالة التك. يرجى المحاولة مرة أخرى لاحقًا.",
+  "txType": "TX Type",
+  "selectContract": "Select contract",
+  "allProcedures": "All procedures"
 }

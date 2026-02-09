@@ -1,7 +1,12 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { FunnelIcon } from '@app/assets/icons'
+import {
+  useGetAddressLabelsQuery,
+  useGetExchangesQuery,
+  useGetSmartContractsQuery
+} from '@app/store/apis/qubic-static'
 import {
   ActiveFilterChip,
   AmountFilterContent,
@@ -14,12 +19,14 @@ import { formatRangeLabel, useAmountPresetHandler, useClearFilterHandler } from 
 import type {
   AddressFilter,
   TransactionDirection,
-  TransactionFilters
+  TransactionFilters,
+  TxTypeFilter
 } from '../../hooks/useLatestTransactions'
 import DateFilterContent from './DateFilterContent'
 import DirectionControl from './DirectionControl'
 import MobileFiltersModal from './MobileFiltersModal'
 import MultiAddressFilterContent from './MultiAddressFilterContent'
+import TxTypeFilterContent from './TxTypeFilterContent'
 import {
   AMOUNT_PRESETS,
   applyDatePresetCalculation,
@@ -50,6 +57,20 @@ export default function TransactionFiltersBar({
   onClearFilters
 }: Props) {
   const { t } = useTranslation('network-page')
+
+  // Build address → name lookup map from static data (for filter labels)
+  const { data: smartContracts } = useGetSmartContractsQuery()
+  const { data: exchanges } = useGetExchangesQuery()
+  const { data: addressLabels } = useGetAddressLabelsQuery()
+  const addressNameMap = useMemo(() => {
+    const map = new Map<string, string>()
+    // Build in reverse priority order (last wins): labels → exchanges → SCs
+    addressLabels?.forEach((label) => map.set(label.address, label.label))
+    exchanges?.forEach((ex) => map.set(ex.address, ex.name))
+    smartContracts?.forEach((sc) => map.set(sc.address, sc.label || sc.name))
+    return map
+  }, [smartContracts, exchanges, addressLabels])
+
   const [openDropdown, setOpenDropdown] = useState<string | null>(null)
   const [isMobileModalOpen, setIsMobileModalOpen] = useState(false)
 
@@ -118,9 +139,11 @@ export default function TransactionFiltersBar({
 
       setValidationErrors((prev) => ({ ...prev, [dropdownKey]: null }))
 
-      const newFilters = {
+      const newFilters: TransactionFilters = {
         ...activeFilters,
-        [filterKey]: start || end ? { start, end } : undefined
+        [filterKey]: start || end ? { start, end } : undefined,
+        // Mutual exclusion: clear txType when inputType is applied
+        ...(filterKey === 'inputTypeRange' ? { txType: undefined } : {})
       }
       onApplyFilters(newFilters)
       setLocalFilters(newFilters)
@@ -178,6 +201,35 @@ export default function TransactionFiltersBar({
     setLocalFilters
   )
 
+  // TX Type filter handlers
+  const clearTxTypeFilter = useCallback(() => {
+    // Clearing TX Type also clears the auto-set destination and inputType
+    const newFilters = {
+      ...activeFilters,
+      txType: undefined,
+      destinationFilter: undefined,
+      inputTypeRange: undefined
+    }
+    onApplyFilters(newFilters)
+    setLocalFilters(newFilters)
+  }, [activeFilters, onApplyFilters])
+
+  const handleApplyTxType = useCallback(() => {
+    if (!localFilters.txType) return
+    // When TX Type is applied, set destination to SC address (if SC) and clear inputType range
+    const newFilters: TransactionFilters = {
+      ...activeFilters,
+      txType: localFilters.txType,
+      destinationFilter: localFilters.txType.scAddress
+        ? { mode: 'include' as const, addresses: [localFilters.txType.scAddress] }
+        : undefined,
+      inputTypeRange: undefined
+    }
+    onApplyFilters(newFilters)
+    setLocalFilters(newFilters)
+    setOpenDropdown(null)
+  }, [activeFilters, localFilters.txType, onApplyFilters])
+
   // Source/destination clear handlers need special logic for direction sync
   const clearSourceFilter = useCallback(() => {
     const newFilters = applySourceFilterChange(activeFilters, undefined, addressId)
@@ -186,7 +238,10 @@ export default function TransactionFiltersBar({
   }, [activeFilters, onApplyFilters, addressId])
 
   const clearDestinationFilter = useCallback(() => {
-    const newFilters = applyDestinationFilterChange(activeFilters, undefined, addressId)
+    const newFilters = {
+      ...applyDestinationFilterChange(activeFilters, undefined, addressId),
+      txType: undefined // Clearing destination also clears TX Type (it depends on destination)
+    }
     onApplyFilters(newFilters)
     setLocalFilters(newFilters)
   }, [activeFilters, onApplyFilters, addressId])
@@ -203,6 +258,7 @@ export default function TransactionFiltersBar({
   // Check for active filters (excluding direction)
   const hasActiveFilters = Object.entries(activeFilters).some(([key, value]) => {
     if (key === 'direction') return false
+    if (key === 'txType') return !!value
     if (['tickNumberRange', 'dateRange', 'amountRange', 'inputTypeRange'].includes(key)) {
       return value && (value.start || value.end)
     }
@@ -228,26 +284,31 @@ export default function TransactionFiltersBar({
   const isInputTypeActive = !!(
     activeFilters.inputTypeRange?.start || activeFilters.inputTypeRange?.end
   )
+  const isTxTypeActive = !!activeFilters.txType
+  const isDestinationLockedByTxType = !!activeFilters.txType?.scAddress
 
   // Get display labels for active filters
+  const formatAddress = (address: string) =>
+    addressNameMap.get(address) || formatAddressShort(address)
+
   const getSourceLabel = () => {
     if (!isSourceActive) return t('source')
-    const mode = activeFilters.sourceFilter?.mode ?? 'include'
-    const modeLabel = t(mode)
+    const isExclude = activeFilters.sourceFilter?.mode === 'exclude'
+    const prefix = isExclude ? `${t('exclude')} ` : ''
     if (sourceAddresses.length === 1) {
-      return `${t('source')}: ${modeLabel} ${formatAddressShort(sourceAddresses[0])}`
+      return `${t('source')}: ${prefix}${formatAddress(sourceAddresses[0])}`
     }
-    return `${t('source')}: ${modeLabel} ${sourceAddresses.length}`
+    return `${t('source')}: ${prefix}${sourceAddresses.length}`
   }
 
   const getDestinationLabel = () => {
     if (!isDestinationActive) return t('destination')
-    const mode = activeFilters.destinationFilter?.mode ?? 'include'
-    const modeLabel = t(mode)
+    const isExclude = activeFilters.destinationFilter?.mode === 'exclude'
+    const prefix = isExclude ? `${t('exclude')} ` : ''
     if (destinationAddresses.length === 1) {
-      return `${t('destination')}: ${modeLabel} ${formatAddressShort(destinationAddresses[0])}`
+      return `${t('destination')}: ${prefix}${formatAddress(destinationAddresses[0])}`
     }
-    return `${t('destination')}: ${modeLabel} ${destinationAddresses.length}`
+    return `${t('destination')}: ${prefix}${destinationAddresses.length}`
   }
 
   const getAmountLabel = () => {
@@ -302,6 +363,14 @@ export default function TransactionFiltersBar({
 
   const getInputTypeLabel = () => formatRangeLabel(t('inputType'), activeFilters.inputTypeRange)
 
+  const getTxTypeLabel = () => {
+    if (!isTxTypeActive) return t('txType')
+    const { scLabel, procedureName } = activeFilters.txType as TxTypeFilter
+    return procedureName
+      ? `${t('txType')}: ${scLabel} > ${procedureName}`
+      : `${t('txType')}: ${scLabel}`
+  }
+
   return (
     <>
       {/* Mobile: Filters button on top, active filter chips below */}
@@ -325,6 +394,9 @@ export default function TransactionFiltersBar({
             {isTickActive && <ActiveFilterChip label={getTickLabel()} onClear={clearTickFilter} />}
             {isInputTypeActive && (
               <ActiveFilterChip label={getInputTypeLabel()} onClear={clearInputTypeFilter} />
+            )}
+            {isTxTypeActive && (
+              <ActiveFilterChip label={getTxTypeLabel()} onClear={clearTxTypeFilter} />
             )}
 
             <ResetFiltersButton
@@ -356,6 +428,22 @@ export default function TransactionFiltersBar({
           showTooltips
         />
 
+        {/* TX Type Filter */}
+        <FilterDropdown
+          label={getTxTypeLabel()}
+          isActive={isTxTypeActive}
+          show={openDropdown === 'txType'}
+          onToggle={() => handleToggle('txType')}
+          onClear={isTxTypeActive ? clearTxTypeFilter : undefined}
+          contentClassName="min-w-[220px]"
+        >
+          <TxTypeFilterContent
+            value={localFilters.txType}
+            onChange={(value) => setLocalFilters((prev) => ({ ...prev, txType: value }))}
+            onApply={handleApplyTxType}
+          />
+        </FilterDropdown>
+
         {/* Source Filter */}
         <FilterDropdown
           label={getSourceLabel()}
@@ -386,21 +474,25 @@ export default function TransactionFiltersBar({
         <FilterDropdown
           label={getDestinationLabel()}
           isActive={isDestinationActive}
-          show={openDropdown === 'destination'}
+          show={!isDestinationLockedByTxType && openDropdown === 'destination'}
           onToggle={() => handleToggle('destination')}
           onClear={isDestinationActive ? clearDestinationFilter : undefined}
           contentClassName="min-w-[300px]"
+          disabled={isDestinationLockedByTxType}
         >
           <MultiAddressFilterContent
             id="filter-destination-desktop"
             value={localFilters.destinationFilter}
             onChange={(value) => setLocalFilters((prev) => ({ ...prev, destinationFilter: value }))}
             onApply={() => {
-              const newFilters = applyDestinationFilterChange(
-                activeFilters,
-                localFilters.destinationFilter,
-                addressId
-              )
+              const newFilters = {
+                ...applyDestinationFilterChange(
+                  activeFilters,
+                  localFilters.destinationFilter,
+                  addressId
+                ),
+                txType: undefined // Mutual exclusion: clear txType when destination is applied
+              }
               onApplyFilters(newFilters)
               setLocalFilters(newFilters)
               setOpenDropdown(null)
@@ -470,6 +562,7 @@ export default function TransactionFiltersBar({
           onToggle={() => handleToggle('inputType')}
           onClear={isInputTypeActive ? clearInputTypeFilter : undefined}
           contentClassName="min-w-[200px]"
+          disabled={isTxTypeActive}
         >
           <RangeFilterContent
             idPrefix="filter-inputtype-desktop"

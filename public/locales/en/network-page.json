@@ -49,7 +49,7 @@
   "transactionPreview": "Transaction Preview",
   "transactions": "Transactions",
   "data": "Data",
-  "type": "Type",
+  "type": "TX Type",
   "unexecuted": "Unexecuted",
   "value": "Value",
   "loadMore": "Load More",
@@ -185,5 +185,8 @@
   "waitingForTickDesc": "This transaction is scheduled for tick {{targetTick}}. It will be available once the network reaches that tick.",
   "targetTick": "Target Tick",
   "estimatedWait": "Estimated wait",
-  "tickCheckFailed": "Unable to check tick status. Please try again later."
+  "tickCheckFailed": "Unable to check tick status. Please try again later.",
+  "txType": "TX Type",
+  "selectContract": "Select contract",
+  "allProcedures": "All procedures"
 }

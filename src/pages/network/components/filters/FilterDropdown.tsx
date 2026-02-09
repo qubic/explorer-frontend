@@ -15,6 +15,7 @@ type Props = {
   onClear?: () => void
   contentClassName?: string
   allowFullWidth?: boolean
+  disabled?: boolean
 }
 
 export default function FilterDropdown({
@@ -25,7 +26,8 @@ export default function FilterDropdown({
   onToggle,
   onClear,
   contentClassName,
-  allowFullWidth = false
+  allowFullWidth = false,
+  disabled = false
 }: Props) {
   const wrapperRef = useRef<HTMLDivElement>(null)
   const triggerRef = useRef<HTMLButtonElement>(null)
@@ -97,18 +99,25 @@ export default function FilterDropdown({
     }
   }
 
+  const handleToggle = disabled ? () => {} : onToggle
+
   return (
     <div ref={wrapperRef} className="relative">
-      <DropdownMenu show={show} onToggle={onToggle}>
+      <DropdownMenu show={show} onToggle={handleToggle}>
         <DropdownMenu.Trigger className="flex items-center gap-4">
           <button
             ref={triggerRef}
             type="button"
             className={clsxTwMerge(
               'flex shrink-0 items-center gap-4 rounded border px-8 py-6 text-xs transition-colors sm:gap-6 sm:px-10',
-              isActive
-                ? 'border-primary-30 bg-primary-60 text-primary-30'
-                : 'border-primary-60 text-gray-50 hover:border-primary-50 hover:text-white'
+              disabled &&
+                (isActive
+                  ? 'cursor-not-allowed border-primary-30 bg-primary-60 text-primary-30 opacity-60'
+                  : 'cursor-not-allowed opacity-40'),
+              !disabled &&
+                (isActive
+                  ? 'border-primary-30 bg-primary-60 text-primary-30'
+                  : 'border-primary-60 text-gray-50 hover:border-primary-50 hover:text-white')
             )}
           >
             <span

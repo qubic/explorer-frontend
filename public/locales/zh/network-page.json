@@ -49,7 +49,7 @@
   "transactionPreview": "交易预览",
   "transactions": "交易",
   "data": "数据",
-  "type": "类型",
+  "type": "TX 类型",
   "unexecuted": "未执行",
   "value": "值",
   "loadMore": "加载更多",
@@ -185,5 +185,8 @@
   "waitingForTickDesc": "此交易已安排在刻度 {{targetTick}}。当网络到达该刻度时将可用。",
   "targetTick": "目标刻度",
   "estimatedWait": "预计等待时间",
-  "tickCheckFailed": "无法检查tick状态，请稍后再试。"
+  "tickCheckFailed": "无法检查tick状态，请稍后再试。",
+  "txType": "TX Type",
+  "selectContract": "Select contract",
+  "allProcedures": "All procedures"
 }

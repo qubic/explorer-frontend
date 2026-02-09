@@ -12,7 +12,8 @@ export type {
   AddressFilter,
   AddressFilterMode,
   TransactionDirection,
-  TransactionFilters
+  TransactionFilters,
+  TxTypeFilter
 } from '../components/TransactionsOverview/filterUtils'
 
 export const MAX_TRANSACTION_RESULTS = 10_000 // query service limit
@@ -68,7 +69,8 @@ export default function useLatestTransactions(
             key === 'dateRange' ||
             key === 'inputTypeRange' ||
             key === 'sourceFilter' ||
-            key === 'destinationFilter'
+            key === 'destinationFilter' ||
+            key === 'txType'
           ) {
             return acc
           }
@@ -117,6 +119,18 @@ export default function useLatestTransactions(
       } else if (filters.direction === 'outgoing') {
         if (!cleanFilters.source && !cleanFilters['source-exclude']) {
           cleanFilters.source = addressId
+        }
+      }
+
+      // Handle TX Type filter - maps to destination + inputType
+      if (filters.txType?.isStandard) {
+        // Standard transactions: inputType = 0
+        cleanFilters.inputType = '0'
+      } else if (filters.txType?.scAddress) {
+        cleanFilters.destination = filters.txType.scAddress
+        delete cleanFilters['destination-exclude']
+        if (filters.txType.procedureId !== undefined) {
+          cleanFilters.inputType = String(filters.txType.procedureId)
         }
       }
 
