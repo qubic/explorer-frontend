@@ -179,5 +179,11 @@
   "matchingEntities": "Résultats correspondants",
   "transactionsFound": "{{count}} transactions",
   "showingMaxTransactions": "Affichage des {{count}} dernières transactions",
-  "maxResultsHint": "Les résultats sont limités à {{count}}. Utilisez des filtres pour affiner la liste."
+  "maxResultsHint": "Les résultats sont limités à {{count}}. Utilisez des filtres pour affiner la liste.",
+  "waitingForTickTitle": "En attente du traitement du tick",
+  "waitingForTickDesc": "Cette transaction est prévue pour le tick {{targetTick}}. Elle sera disponible une fois que le réseau aura atteint ce tick.",
+  "waitingForTickOutOfRangeTitle": "Transaction pas encore disponible",
+  "waitingForTickOutOfRangeDesc": "Cette transaction est prévue pour le tick {{targetTick}}, qui est trop éloigné pour être suivi en direct. Veuillez revenir plus tard.",
+  "targetTick": "Tick cible",
+  "ticksRemaining": "Ticks restants"
 }

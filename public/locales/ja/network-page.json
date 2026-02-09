@@ -179,5 +179,11 @@
   "matchingEntities": "一致する結果",
   "transactionsFound": "{{count}}件のトランザクション",
   "showingMaxTransactions": "最新{{count}}件のトランザクションを表示",
-  "maxResultsHint": "結果は{{count}}件に制限されています。フィルターを使用してリストを絞り込んでください。"
+  "maxResultsHint": "結果は{{count}}件に制限されています。フィルターを使用してリストを絞り込んでください。",
+  "waitingForTickTitle": "ティックの処理を待っています",
+  "waitingForTickDesc": "このトランザクションはティック{{targetTick}}に予定されています。ネットワークがそのティックに到達すると利用可能になります。",
+  "waitingForTickOutOfRangeTitle": "トランザクションはまだ利用できません",
+  "waitingForTickOutOfRangeDesc": "このトランザクションはティック{{targetTick}}に予定されていますが、リアルタイムで追跡するには先すぎます。後ほどご確認ください。",
+  "targetTick": "目標ティック",
+  "ticksRemaining": "残りのティック数"
 }

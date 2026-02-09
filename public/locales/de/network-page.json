@@ -179,5 +179,11 @@
   "matchingEntities": "Übereinstimmende Ergebnisse",
   "transactionsFound": "{{count}} Transaktionen",
   "showingMaxTransactions": "Zeige die letzten {{count}} Transaktionen",
-  "maxResultsHint": "Ergebnisse sind auf {{count}} begrenzt. Verwenden Sie Filter, um die Liste einzugrenzen."
+  "maxResultsHint": "Ergebnisse sind auf {{count}} begrenzt. Verwenden Sie Filter, um die Liste einzugrenzen.",
+  "waitingForTickTitle": "Warten auf Tick-Verarbeitung",
+  "waitingForTickDesc": "Diese Transaktion ist für Tick {{targetTick}} geplant. Sie wird verfügbar sein, sobald das Netzwerk diesen Tick erreicht.",
+  "waitingForTickOutOfRangeTitle": "Transaktion noch nicht verfügbar",
+  "waitingForTickOutOfRangeDesc": "Diese Transaktion ist für Tick {{targetTick}} geplant, der zu weit voraus liegt, um live verfolgt zu werden. Bitte schauen Sie später noch einmal vorbei.",
+  "targetTick": "Ziel-Tick",
+  "ticksRemaining": "Verbleibende Ticks"
 }

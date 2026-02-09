@@ -179,5 +179,11 @@
   "matchingEntities": "Совпадающие результаты",
   "transactionsFound": "{{count}} транзакций",
   "showingMaxTransactions": "Показаны последние {{count}} транзакций",
-  "maxResultsHint": "Результаты ограничены {{count}}. Используйте фильтры для уточнения списка."
+  "maxResultsHint": "Результаты ограничены {{count}}. Используйте фильтры для уточнения списка.",
+  "waitingForTickTitle": "Ожидание обработки тика",
+  "waitingForTickDesc": "Эта транзакция запланирована на тик {{targetTick}}. Она станет доступна, когда сеть достигнет этого тика.",
+  "waitingForTickOutOfRangeTitle": "Транзакция ещё недоступна",
+  "waitingForTickOutOfRangeDesc": "Эта транзакция запланирована на тик {{targetTick}}, который слишком далеко для отслеживания в реальном времени. Пожалуйста, проверьте позже.",
+  "targetTick": "Целевой тик",
+  "ticksRemaining": "Осталось тиков"
 }

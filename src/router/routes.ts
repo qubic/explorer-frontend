@@ -19,6 +19,7 @@ function buildUrlWithQueryParams<T extends Record<string, string | undefined>>(
 
 export type NetworkTxQueryParams = {
   type?: TxEra
+  tick?: string
 }
 
 export const Routes = {

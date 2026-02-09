@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 
@@ -7,12 +7,12 @@ import { Alert, Breadcrumbs } from '@app/components/ui'
 import { ErrorFallback } from '@app/components/ui/error-boundaries'
 import { PageLayout } from '@app/components/ui/layouts'
 import { LinearProgress } from '@app/components/ui/loaders'
+import { useGetQliTransactionQuery } from '@app/store/apis/qli'
 import { useGetTransactionByHashQuery } from '@app/store/apis/query-service'
 import { convertToQueryServiceTx } from '@app/store/apis/query-service/query-service.adapters'
-import { useGetQliTransactionQuery } from '@app/store/apis/qli'
 import { formatEllipsis } from '@app/utils'
-import { HomeLink, TickLink, TxItem } from './components'
-import { useValidatedTxEra } from './hooks'
+import { HomeLink, TickLink, TxItem, WaitingForTick } from './components'
+import { useTickWatcher, useValidatedTxEra } from './hooks'
 
 function TxPage() {
   const { t } = useTranslation('network-page')
@@ -36,8 +36,40 @@ function TxPage() {
     return undefined
   }, [queryServiceTx.data, qliTx.data])
 
-  if (queryServiceTx.isFetching || qliTx.isFetching) {
+  const isLoading = queryServiceTx.isFetching || qliTx.isFetching
+  const isTxNotFound = !isLoading && !tx
+
+  const refetchTx = useCallback(() => {
+    if (txEra !== 'historical') queryServiceTx.refetch()
+    if (txEra !== 'latest') qliTx.refetch()
+  }, [txEra, queryServiceTx, qliTx])
+
+  const {
+    isWaitingForTick,
+    isOutOfRange,
+    targetTick,
+    currentTick,
+    remaining,
+    isLoading: isTickWatcherLoading
+  } = useTickWatcher({
+    isTxNotFound,
+    refetch: refetchTx
+  })
+
+  if (isLoading || isTickWatcherLoading) {
     return <LinearProgress />
+  }
+
+  if ((isWaitingForTick || isOutOfRange) && targetTick) {
+    return (
+      <WaitingForTick
+        txId={txId}
+        targetTick={targetTick}
+        currentTick={currentTick}
+        remaining={remaining}
+        isOutOfRange={isOutOfRange}
+      />
+    )
   }
 
   if (!tx) {

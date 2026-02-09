@@ -179,5 +179,11 @@
   "matchingEntities": "Eşleşen Sonuçlar",
   "transactionsFound": "{{count}} işlem",
   "showingMaxTransactions": "Son {{count}} işlem gösteriliyor",
-  "maxResultsHint": "Sonuçlar {{count}} ile sınırlıdır. Listeyi daraltmak için filtreler kullanın."
+  "maxResultsHint": "Sonuçlar {{count}} ile sınırlıdır. Listeyi daraltmak için filtreler kullanın.",
+  "waitingForTickTitle": "Tick'in işlenmesi bekleniyor",
+  "waitingForTickDesc": "Bu işlem {{targetTick}} tick'i için planlanmıştır. Ağ o tick'e ulaştığında kullanılabilir olacaktır.",
+  "waitingForTickOutOfRangeTitle": "İşlem henüz mevcut değil",
+  "waitingForTickOutOfRangeDesc": "Bu işlem {{targetTick}} tick'i için planlanmıştır ancak canlı takip için çok ileride. Lütfen daha sonra tekrar kontrol edin.",
+  "targetTick": "Hedef Tick",
+  "ticksRemaining": "Kalan Tick Sayısı"
 }

@@ -179,5 +179,11 @@
   "matchingEntities": "Overeenkomende resultaten",
   "transactionsFound": "{{count}} transacties",
   "showingMaxTransactions": "Toont de laatste {{count}} transacties",
-  "maxResultsHint": "Resultaten zijn beperkt tot {{count}}. Gebruik filters om de lijst te verfijnen."
+  "maxResultsHint": "Resultaten zijn beperkt tot {{count}}. Gebruik filters om de lijst te verfijnen.",
+  "waitingForTickTitle": "Wachten op verwerking van tick",
+  "waitingForTickDesc": "Deze transactie is gepland voor tick {{targetTick}}. Deze wordt beschikbaar zodra het netwerk die tick bereikt.",
+  "waitingForTickOutOfRangeTitle": "Transactie nog niet beschikbaar",
+  "waitingForTickOutOfRangeDesc": "Deze transactie is gepland voor tick {{targetTick}}, die te ver vooruit is om live te volgen. Kom later terug.",
+  "targetTick": "Doeltick",
+  "ticksRemaining": "Resterende ticks"
 }

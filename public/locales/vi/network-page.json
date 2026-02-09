@@ -179,5 +179,11 @@
   "matchingEntities": "Kết quả phù hợp",
   "transactionsFound": "{{count}} giao dịch",
   "showingMaxTransactions": "Hiển thị {{count}} giao dịch gần nhất",
-  "maxResultsHint": "Kết quả bị giới hạn ở {{count}}. Sử dụng bộ lọc để thu hẹp danh sách."
+  "maxResultsHint": "Kết quả bị giới hạn ở {{count}}. Sử dụng bộ lọc để thu hẹp danh sách.",
+  "waitingForTickTitle": "Đang chờ tick được xử lý",
+  "waitingForTickDesc": "Giao dịch này được lên lịch cho tick {{targetTick}}. Nó sẽ khả dụng khi mạng đạt đến tick đó.",
+  "waitingForTickOutOfRangeTitle": "Giao dịch chưa khả dụng",
+  "waitingForTickOutOfRangeDesc": "Giao dịch này được lên lịch cho tick {{targetTick}}, quá xa để theo dõi trực tiếp. Vui lòng quay lại sau.",
+  "targetTick": "Tick mục tiêu",
+  "ticksRemaining": "Số tick còn lại"
 }

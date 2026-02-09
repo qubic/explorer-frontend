@@ -179,5 +179,11 @@
   "matchingEntities": "النتائج المطابقة",
   "transactionsFound": "{{count}} معاملة",
   "showingMaxTransactions": "عرض آخر {{count}} معاملة",
-  "maxResultsHint": "النتائج محدودة بـ {{count}}. استخدم الفلاتر لتضييق نطاق القائمة."
+  "maxResultsHint": "النتائج محدودة بـ {{count}}. استخدم الفلاتر لتضييق نطاق القائمة.",
+  "waitingForTickTitle": "في انتظار معالجة التيك",
+  "waitingForTickDesc": "هذه المعاملة مجدولة للتيك {{targetTick}}. ستكون متاحة بمجرد وصول الشبكة إلى ذلك التيك.",
+  "waitingForTickOutOfRangeTitle": "المعاملة غير متاحة بعد",
+  "waitingForTickOutOfRangeDesc": "هذه المعاملة مجدولة للتيك {{targetTick}}، وهو بعيد جداً لتتبعه مباشرة. يرجى المراجعة لاحقاً.",
+  "targetTick": "التيك المستهدف",
+  "ticksRemaining": "التيكات المتبقية"
 }

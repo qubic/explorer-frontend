@@ -179,5 +179,11 @@
   "matchingEntities": "匹配结果",
   "transactionsFound": "{{count}} 笔交易",
   "showingMaxTransactions": "显示最近 {{count}} 笔交易",
-  "maxResultsHint": "结果限制为 {{count}} 条。请使用筛选器缩小列表范围。"
+  "maxResultsHint": "结果限制为 {{count}} 条。请使用筛选器缩小列表范围。",
+  "waitingForTickTitle": "等待刻度处理中",
+  "waitingForTickDesc": "此交易已安排在刻度 {{targetTick}}。当网络到达该刻度时将可用。",
+  "waitingForTickOutOfRangeTitle": "交易尚不可用",
+  "waitingForTickOutOfRangeDesc": "此交易已安排在刻度 {{targetTick}}，该刻度距离当前太远，无法实时追踪。请稍后再查看。",
+  "targetTick": "目标刻度",
+  "ticksRemaining": "剩余刻度数"
 }
