@@ -1,5 +1,6 @@
-import { memo, useCallback, useMemo, useState } from 'react'
+import { memo, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useSearchParams } from 'react-router-dom'
 
 import { withHelmet } from '@app/components/hocs'
 import { Breadcrumbs } from '@app/components/ui'
@@ -9,7 +10,6 @@ import { useGetAssetsIssuancesQuery } from '@app/store/apis/rpc-live'
 import { useGetTokenCategoriesQuery } from '@app/store/apis/qubic-static'
 import {
   TOKEN_CATEGORY_ALL,
-  TOKEN_CATEGORY_STANDARD,
   isAssetsIssuerAddress,
   type CategoryFilter,
   filterTokensByCategory
@@ -24,7 +24,25 @@ const TokensLoadingRows = memo(() =>
 function TokensPage() {
   const { t } = useTranslation('network-page')
   const { isMobile } = useTailwindBreakpoint()
-  const [selectedCategory, setSelectedCategory] = useState<CategoryFilter>(TOKEN_CATEGORY_STANDARD)
+  const [searchParams, setSearchParams] = useSearchParams()
+  const selectedCategory: CategoryFilter = searchParams.get('category') || TOKEN_CATEGORY_ALL
+
+  const handleCategoryChange = useCallback(
+    (category: CategoryFilter) => {
+      setSearchParams(
+        (prev) => {
+          if (category === TOKEN_CATEGORY_ALL) {
+            prev.delete('category')
+          } else {
+            prev.set('category', category)
+          }
+          return prev
+        },
+        { replace: true }
+      )
+    },
+    [setSearchParams]
+  )
 
   const { data, isLoading, error } = useGetAssetsIssuancesQuery()
   const { data: categoriesData } = useGetTokenCategoriesQuery()
@@ -91,7 +109,7 @@ function TokensPage() {
           <CategoryChips
             categoriesData={categoriesData}
             selectedCategory={selectedCategory}
-            onCategoryChange={setSelectedCategory}
+            onCategoryChange={handleCategoryChange}
             showAll
           />
         )}
