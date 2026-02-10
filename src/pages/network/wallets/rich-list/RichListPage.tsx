@@ -1,4 +1,3 @@
-import type { TFunction } from 'i18next'
 import { memo, useCallback, useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router-dom'
@@ -7,25 +6,11 @@ import { withHelmet } from '@app/components/hocs'
 import { Breadcrumbs, PaginationBar, Select } from '@app/components/ui'
 import { PageLayout } from '@app/components/ui/layouts'
 import type { Option } from '@app/components/ui/Select'
+import { DEFAULT_PAGE_SIZE, getPageSizeSelectOptions } from '@app/constants'
 import { useTailwindBreakpoint } from '@app/hooks'
 import { useGetRichListQuery } from '@app/store/apis/rpc-stats'
 import { HomeLink } from '../../components'
 import { RichListErrorRow, RichListRow, RichListSkeletonRow } from './components'
-
-const DEFAULT_PAGE_SIZE = 15
-
-const PAGE_SIZE_OPTIONS = [
-  { i18nKey: 'showItemsPerPage', value: '15' },
-  { i18nKey: 'showItemsPerPage', value: '30' },
-  { i18nKey: 'showItemsPerPage', value: '50' },
-  { i18nKey: 'showItemsPerPage', value: '100' }
-]
-
-const getSelectOptions = (t: TFunction) =>
-  PAGE_SIZE_OPTIONS.map((option) => ({
-    label: t(option.i18nKey, { count: parseInt(option.value, 10) }),
-    value: option.value
-  }))
 
 const RichListLoadingRows = memo(({ pageSize }: { pageSize: number }) =>
   Array.from({ length: pageSize }).map((_, index) => (
@@ -41,7 +26,7 @@ function RichListPage() {
   const page = parseInt(searchParams.get('page') || '1', 10)
   const pageSize = parseInt(searchParams.get('pageSize') ?? String(DEFAULT_PAGE_SIZE), 10)
 
-  const pageSizeOptions = useMemo(() => getSelectOptions(t), [t])
+  const pageSizeOptions = useMemo(() => getPageSizeSelectOptions(t), [t])
   const defaultPageSizeOption = useMemo(
     () => pageSizeOptions.find((option) => option.value === String(pageSize)),
     [pageSizeOptions, pageSize]

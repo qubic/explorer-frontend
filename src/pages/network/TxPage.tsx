@@ -10,11 +10,14 @@ import { LinearProgress } from '@app/components/ui/loaders'
 import { useGetTransactionByHashQuery } from '@app/store/apis/query-service'
 import { formatEllipsis } from '@app/utils'
 import { HomeLink, TickLink, TxItem, WaitingForTick } from './components'
-import { useTickWatcher } from './hooks'
+import TransactionEvents from './components/TxItem/TransactionEvents'
+import { useTickWatcher, useTransactionEvents, useValidatedTxEra } from './hooks'
 
 function TxPage() {
   const { t } = useTranslation('network-page')
   const { txId = '' } = useParams()
+  const txEra = useValidatedTxEra()
+  const { events } = useTransactionEvents(txId)
 
   const {
     data: tx,
@@ -94,6 +97,13 @@ function TxPage() {
         variant="secondary"
         timestamp={tx.timestamp}
       />
+      <div className="mt-24">
+        <TransactionEvents
+          events={events}
+          showTxId={false}
+          header={`${t('events')} (${events.length})`}
+        />
+      </div>
     </PageLayout>
   )
 }
