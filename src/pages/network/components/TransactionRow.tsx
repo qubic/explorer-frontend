@@ -15,9 +15,10 @@ import { getTxStatus } from './TxStatus.utils'
 
 type Props = {
   tx: QueryServiceTransaction
+  highlightTick?: number
 }
 
-function TransactionRow({ tx }: Props) {
+function TransactionRow({ tx, highlightTick }: Props) {
   const { hash, source, destination, amount, inputType, tickNumber, timestamp, moneyFlew } = tx
 
   const { data: smartContracts } = useGetSmartContractsQuery()
@@ -55,7 +56,11 @@ function TransactionRow({ tx }: Props) {
         </Tooltip>
       </td>
       <td className="whitespace-nowrap px-8 py-12 sm:px-16">
-        <TickLink value={Number(tickNumber)} className="text-xs text-primary-30 xs:text-sm" />
+        {highlightTick === Number(tickNumber) ? (
+          <span className="font-space text-xs xs:text-sm">{formatString(tickNumber)}</span>
+        ) : (
+          <TickLink value={Number(tickNumber)} className="text-xs text-primary-30 xs:text-sm" />
+        )}
       </td>
       <td className="whitespace-nowrap px-8 py-12 font-space text-xs text-gray-50 xs:text-sm sm:px-16">
         {formatDate(timestamp, { shortDate: true }) || '-'}
