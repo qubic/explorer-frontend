@@ -1,13 +1,19 @@
 import { useMemo } from 'react'
 
 import type { TransactionEvent } from '@app/mocks/generateMockEvents'
-import mockEvents from '@app/mocks/transaction-events.json'
+import { generateMockEvents } from '@app/mocks/generateMockEvents'
+import { useGetTransactionByHashQuery } from '@app/store/apis/query-service'
 
-// TODO: Replace static mock data with real events API endpoint
+// TODO: Replace mock generation with real events API endpoint
 export default function useTransactionEvents(txId: string): {
   events: TransactionEvent[]
   isLoading: boolean
 } {
-  const events = useMemo(() => (txId ? mockEvents : []), [txId])
-  return { events, isLoading: false }
+  const { data: tx, isFetching } = useGetTransactionByHashQuery(txId, {
+    skip: !txId
+  })
+
+  const events = useMemo(() => (tx ? generateMockEvents([tx]) : []), [tx])
+
+  return { events, isLoading: isFetching }
 }

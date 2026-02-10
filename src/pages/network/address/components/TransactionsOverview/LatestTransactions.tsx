@@ -112,8 +112,10 @@ export default function LatestTransactions({ addressId }: Props) {
       )
     }
 
-    return transactions.map((tx) => <TransactionRow key={tx.hash} tx={tx} />)
-  }, [isLoading, errorMessage, transactions, pageSize, t])
+    return transactions.map((tx) => (
+      <TransactionRow key={tx.hash} tx={tx} highlightAddress={addressId} />
+    ))
+  }, [isLoading, errorMessage, transactions, pageSize, t, addressId])
 
   return (
     <div className="flex w-full flex-col gap-10">

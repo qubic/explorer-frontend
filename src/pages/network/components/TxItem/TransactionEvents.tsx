@@ -2,7 +2,7 @@ import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router-dom'
 
-import { Badge, PaginationBar, Select, Skeleton } from '@app/components/ui'
+import { Badge, PaginationBar, Select, Skeleton, Tooltip } from '@app/components/ui'
 import type { Option } from '@app/components/ui/Select'
 import { DEFAULT_PAGE_SIZE, getPageSizeSelectOptions } from '@app/constants'
 import type { TransactionEvent } from '@app/mocks/generateMockEvents'
@@ -84,9 +84,7 @@ export default function TransactionEvents({
     [setSearchParams]
   )
 
-  if (!isLoading && events.length === 0) {
-    return <p className="py-32 text-center text-sm text-gray-50">{t('noEvents')}</p>
-  }
+  const columnCount = 6 + (showTickAndTimestamp ? 2 : 0) + (showTxId ? 1 : 0)
 
   const skeletonCells = [
     SKELETON_CELLS[0],
@@ -155,71 +153,86 @@ export default function TransactionEvents({
               </tr>
             </thead>
             <tbody>
-              {isLoading
-                ? Array.from({ length: 5 }).map((_, i) => (
-                    <tr
-                      key={String(`skeleton-${i}`)}
-                      className="border-b-1 border-primary-60 last:border-b-0"
-                    >
-                      {skeletonCells.map(({ id, className }) => (
-                        <td key={id} className="px-16 py-14">
-                          <Skeleton className={className} />
-                        </td>
-                      ))}
-                    </tr>
-                  ))
-                : displayEvents.map((event) => (
-                    <tr key={event.id} className="border-b-1 border-primary-60 last:border-b-0">
-                      <td className="px-16 py-14 font-space text-sm">{event.id}</td>
-                      {showTickAndTimestamp && (
-                        <>
-                          <td className="px-16 py-14">
-                            {event.tick && (
-                              <TickLink className="text-sm text-primary-30" value={event.tick} />
-                            )}
-                          </td>
-                          <td className="whitespace-nowrap px-16 py-14 font-space text-sm text-gray-50">
-                            {formatDate(event.timestamp, { shortDate: true })}
-                          </td>
-                        </>
-                      )}
-                      {showTxId && (
+              {isLoading &&
+                Array.from({ length: 5 }).map((_, i) => (
+                  <tr
+                    key={String(`skeleton-${i}`)}
+                    className="border-b-1 border-primary-60 last:border-b-0"
+                  >
+                    {skeletonCells.map(({ id, className }) => (
+                      <td key={id} className="px-16 py-14">
+                        <Skeleton className={className} />
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              {!isLoading && events.length === 0 && (
+                <tr>
+                  <td
+                    colSpan={columnCount}
+                    className="px-16 py-32 text-center text-sm text-gray-50"
+                  >
+                    {t('noEvents')}
+                  </td>
+                </tr>
+              )}
+              {!isLoading &&
+                displayEvents.map((event) => (
+                  <tr key={event.id} className="border-b-1 border-primary-60 last:border-b-0">
+                    <td className="px-16 py-14 font-space text-sm">{event.id}</td>
+                    {showTickAndTimestamp && (
+                      <>
                         <td className="px-16 py-14">
-                          <TxLink
-                            value={event.txId}
-                            className="text-primary-30"
-                            ellipsis
-                            showTooltip
-                          />
+                          {event.tick && (
+                            <TickLink className="text-sm text-primary-30" value={event.tick} />
+                          )}
                         </td>
-                      )}
+                        <td className="whitespace-nowrap px-16 py-14 font-space text-sm text-gray-50">
+                          {formatDate(event.timestamp, { shortDate: true })}
+                        </td>
+                      </>
+                    )}
+                    {showTxId && (
                       <td className="px-16 py-14">
-                        <Badge color="primary" size="xs" className="text-gray-50">
-                          {event.type}
-                        </Badge>
+                        <TxLink
+                          value={event.txId}
+                          className="text-primary-30"
+                          ellipsis
+                          showTooltip
+                        />
                       </td>
-                      <td className="px-16 py-14">
-                        {highlightAddress === event.source ? (
+                    )}
+                    <td className="px-16 py-14">
+                      <Badge color="primary" size="xs" className="text-gray-50">
+                        {event.type}
+                      </Badge>
+                    </td>
+                    <td className="px-16 py-14">
+                      {highlightAddress === event.source ? (
+                        <Tooltip tooltipId="source-address" content={event.source}>
                           <span className="font-space text-sm">{formatEllipsis(event.source)}</span>
-                        ) : (
-                          <AddressLink value={event.source} ellipsis showTooltip />
-                        )}
-                      </td>
-                      <td className="px-16 py-14">
-                        {highlightAddress === event.destination ? (
+                        </Tooltip>
+                      ) : (
+                        <AddressLink value={event.source} ellipsis showTooltip />
+                      )}
+                    </td>
+                    <td className="px-16 py-14">
+                      {highlightAddress === event.destination ? (
+                        <Tooltip tooltipId="destination-address" content={event.destination}>
                           <span className="font-space text-sm">
                             {formatEllipsis(event.destination)}
                           </span>
-                        ) : (
-                          <AddressLink value={event.destination} ellipsis showTooltip />
-                        )}
-                      </td>
-                      <td className="px-16 py-14 text-right font-space text-sm font-500">
-                        {formatString(event.amount)}
-                      </td>
-                      <td className="px-16 py-14 text-right font-space text-sm">{event.token}</td>
-                    </tr>
-                  ))}
+                        </Tooltip>
+                      ) : (
+                        <AddressLink value={event.destination} ellipsis showTooltip />
+                      )}
+                    </td>
+                    <td className="px-16 py-14 text-right font-space text-sm font-500">
+                      {formatString(event.amount)}
+                    </td>
+                    <td className="px-16 py-14 text-right font-space text-sm">{event.token}</td>
+                  </tr>
+                ))}
             </tbody>
           </table>
         </div>
