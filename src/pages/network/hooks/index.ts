@@ -6,3 +6,5 @@ export {
   useLocalFilterSync
 } from './useFilterHelpers'
 export { default as useTickWatcher } from './useTickWatcher'
+export { default as useTransactionEvents } from './useTransactionEvents'
+export { default as useValidatedTxEra } from './useValidatedTxEra'

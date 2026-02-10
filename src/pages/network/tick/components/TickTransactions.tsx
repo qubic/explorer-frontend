@@ -135,8 +135,6 @@ export default function TickTransactions({ tick }: Props) {
 
   return (
     <div className="flex flex-col gap-16">
-      <p className="font-space text-xl font-500">{t('transactions')}</p>
-
       <TickTransactionFiltersBar
         activeFilters={activeFilters}
         onApplyFilters={handleApplyFilters}
