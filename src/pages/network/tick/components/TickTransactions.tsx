@@ -130,8 +130,10 @@ export default function TickTransactions({ tick }: Props) {
       )
     }
 
-    return paginatedTransactions.map((tx) => <TransactionRow key={tx.hash} tx={tx} />)
-  }, [isTickTransactionsLoading, errorMessage, paginatedTransactions, pageSize, t])
+    return paginatedTransactions.map((tx) => (
+      <TransactionRow key={tx.hash} tx={tx} highlightTick={tick} />
+    ))
+  }, [isTickTransactionsLoading, errorMessage, paginatedTransactions, pageSize, t, tick])
 
   return (
     <div className="flex flex-col gap-16">
