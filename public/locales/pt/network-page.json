@@ -29,6 +29,7 @@
   "latestTransfers": "Transferências mais recentes",
   "eventsFound": "{{count}} eventos",
   "events": "Events",
+  "eventsBetaDisclaimer": "This feature is in development. Only recent data is included and may be purged until a production-ready version is available. The API endpoints used are subject to change in upcoming releases.",
   "marketCap": "Capitalização de mercado",
   "nonEmpty": "Não vazio",
   "numberOfTransactions": "Número de transações",

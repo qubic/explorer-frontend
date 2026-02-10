@@ -29,6 +29,7 @@
   "latestTransfers": "أحدث التحويلات",
   "eventsFound": "{{count}} أحداث",
   "events": "Events",
+  "eventsBetaDisclaimer": "This feature is in development. Only recent data is included and may be purged until a production-ready version is available. The API endpoints used are subject to change in upcoming releases.",
   "marketCap": "القيمة السوقية",
   "nonEmpty": "غير فارغ",
   "numberOfTransactions": "عدد المعاملات",
