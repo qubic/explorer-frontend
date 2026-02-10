@@ -29,6 +29,7 @@
   "latestTransfers": "Chuyển mới nhất",
   "eventsFound": "{{count}} sư kiện",
   "events": "Events",
+  "eventsBetaDisclaimer": "This feature is in development. Only recent data is included and may be purged until a production-ready version is available. The API endpoints used are subject to change in upcoming releases.",
   "marketCap": "Vốn hóa thị trường",
   "nonEmpty": "Không trống",
   "numberOfTransactions": "Số lượng giao dịch",
