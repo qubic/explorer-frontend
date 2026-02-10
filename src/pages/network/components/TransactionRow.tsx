@@ -4,7 +4,7 @@ import { Tooltip } from '@app/components/ui'
 import type { QueryServiceTransaction } from '@app/store/apis/query-service'
 import { useGetAddressName } from '@app/hooks'
 import { useGetSmartContractsQuery } from '@app/store/apis/qubic-static'
-import { formatDate, formatString } from '@app/utils'
+import { formatDate, formatEllipsis, formatString } from '@app/utils'
 import { getProcedureName } from '@app/utils/qubic'
 import { isSmartContractTx } from '@app/utils/qubic-ts'
 import AddressLink from './AddressLink'
@@ -16,9 +16,10 @@ import { getTxStatus } from './TxStatus.utils'
 type Props = {
   tx: QueryServiceTransaction
   highlightTick?: number
+  highlightAddress?: string
 }
 
-function TransactionRow({ tx, highlightTick }: Props) {
+function TransactionRow({ tx, highlightTick, highlightAddress }: Props) {
   const { hash, source, destination, amount, inputType, tickNumber, timestamp, moneyFlew } = tx
 
   const { data: smartContracts } = useGetSmartContractsQuery()
@@ -66,16 +67,28 @@ function TransactionRow({ tx, highlightTick }: Props) {
         {formatDate(timestamp, { shortDate: true }) || '-'}
       </td>
       <td className="whitespace-nowrap px-8 py-12 sm:px-16">
-        <AddressLink value={source} label={sourceNameData?.name} ellipsis showTooltip copy />
+        {highlightAddress === source ? (
+          <Tooltip tooltipId="source-address" content={source}>
+            <span className="font-space text-xs xs:text-sm">{formatEllipsis(source)}</span>
+          </Tooltip>
+        ) : (
+          <AddressLink value={source} label={sourceNameData?.name} ellipsis showTooltip copy />
+        )}
       </td>
       <td className="whitespace-nowrap px-8 py-12 sm:px-16">
-        <AddressLink
-          value={destination}
-          label={destinationNameData?.name}
-          ellipsis
-          showTooltip
-          copy
-        />
+        {highlightAddress === destination ? (
+          <Tooltip tooltipId="destination-address" content={destination}>
+            <span className="font-space text-xs xs:text-sm">{formatEllipsis(destination)}</span>
+          </Tooltip>
+        ) : (
+          <AddressLink
+            value={destination}
+            label={destinationNameData?.name}
+            ellipsis
+            showTooltip
+            copy
+          />
+        )}
       </td>
       <td className="whitespace-nowrap px-8 py-12 text-right font-space text-xs xs:text-sm sm:px-16">
         {formatString(amount)} <span className="text-gray-50">QUBIC</span>
