@@ -80,6 +80,19 @@ function AddressPage() {
   const tabParam = searchParams.get('tab')
   const selectedTabIndex = tabParam === 'contract' && isSmartContract ? 1 : 0
 
+  // Normalize invalid tab params so URL always reflects the visible tab
+  useEffect(() => {
+    if (tabParam && !(tabParam === 'contract' && isSmartContract)) {
+      setSearchParams(
+        (prev) => {
+          prev.delete('tab')
+          return prev
+        },
+        { replace: true }
+      )
+    }
+  }, [tabParam, isSmartContract, setSearchParams])
+
   const handleTabChange = useCallback(
     (index: number) => {
       setSearchParams(
