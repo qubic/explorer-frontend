@@ -1,17 +1,22 @@
 import { useEffect, useRef, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 
-import { useGetTickInfoQuery } from '@app/store/apis/rpc-live'
+import { useGetLastProcessedTickQuery } from '@app/store/apis/query-service'
 
-// To cover smart contract interactions while preventing abuse.
-const MAX_TICK_RANGE = 100
+const MAX_TICK_RANGE = 800
 
-function getPollingInterval(remaining: number | undefined, duration = 2): number {
+const DEFAULT_TICK_DURATION = 2 // seconds
+
+function getPollingInterval(remaining: number | undefined): number {
   if (remaining === undefined) return 5000
 
-  const estimatedSecondsLeft = remaining * duration
+  const estimatedSecondsLeft = remaining * DEFAULT_TICK_DURATION
 
-  // Far away (>30s): poll lazily
+  // Very far (>10min): poll very lazily
+  if (estimatedSecondsLeft > 600) return 30_000
+  // Far (>2min): poll lazily
+  if (estimatedSecondsLeft > 120) return 15_000
+  // Moderate (>30s): standard polling
   if (estimatedSecondsLeft > 30) return 10_000
   // Getting close (>10s): moderate polling
   if (estimatedSecondsLeft > 10) return 5000
@@ -41,13 +46,12 @@ export default function useTickWatcher(opts: {
 
   const shouldFetchTick = isValidTargetTick && opts.isTxNotFound
 
-  const tickInfo = useGetTickInfoQuery(undefined, {
+  const lastProcessedTick = useGetLastProcessedTickQuery(undefined, {
     pollingInterval: shouldFetchTick ? pollingInterval : 0,
     skip: !shouldFetchTick
   })
 
-  const currentTick = tickInfo.data?.tick
-  const tickDuration = tickInfo.data?.duration
+  const currentTick = lastProcessedTick.data?.tickNumber
   const remaining =
     shouldFetchTick && currentTick !== undefined ? targetTick - currentTick : undefined
   const isInRange = remaining !== undefined && remaining > 0 && remaining <= MAX_TICK_RANGE
@@ -57,14 +61,16 @@ export default function useTickWatcher(opts: {
   const isTickInfoLoading = shouldFetchTick && currentTick === undefined
   const isWaitingForTick = shouldFetchTick && !tickReached && !isTickInfoLoading && isInRange
 
-  // Adjust polling interval dynamically. Stop polling if out of range.
+  // Adjust polling interval dynamically. Poll lazily if out of range so the page recovers.
   useEffect(() => {
-    if (!shouldFetchTick || isOutOfRange) {
+    if (!shouldFetchTick) {
       setPollingInterval(0)
+    } else if (isOutOfRange) {
+      setPollingInterval(60_000)
     } else {
-      setPollingInterval(getPollingInterval(remaining, tickDuration))
+      setPollingInterval(getPollingInterval(remaining))
     }
-  }, [shouldFetchTick, isOutOfRange, remaining, tickDuration])
+  }, [shouldFetchTick, isOutOfRange, remaining])
 
   // When tick is reached, refetch the transaction once
   useEffect(() => {
