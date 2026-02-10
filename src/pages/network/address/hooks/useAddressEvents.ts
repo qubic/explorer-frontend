@@ -2,14 +2,14 @@ import { useMemo } from 'react'
 
 import type { TransactionEvent } from '@app/mocks/generateMockEvents'
 import { generateMockEvents } from '@app/mocks/generateMockEvents'
-import useLatestTransactions from './useLatestTransactions'
+import useLatestTransactions, { MAX_TRANSACTION_RESULTS } from './useLatestTransactions'
 
 // TODO: Replace mock generation with real events API endpoint
 export default function useAddressEvents(addressId: string): {
   events: TransactionEvent[]
   isLoading: boolean
 } {
-  const { transactions, isLoading } = useLatestTransactions(addressId)
+  const { transactions, isLoading } = useLatestTransactions(addressId, 1, MAX_TRANSACTION_RESULTS)
 
   const events = useMemo(() => generateMockEvents(transactions), [transactions])
 
