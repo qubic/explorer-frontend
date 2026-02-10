@@ -1,4 +1,4 @@
-import { memo, useCallback, useMemo } from 'react'
+import { memo, useCallback, useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router-dom'
 
@@ -10,6 +10,7 @@ import { useGetAssetsIssuancesQuery } from '@app/store/apis/rpc-live'
 import { useGetTokenCategoriesQuery } from '@app/store/apis/qubic-static'
 import {
   TOKEN_CATEGORY_ALL,
+  TOKEN_CATEGORY_STANDARD,
   isAssetsIssuerAddress,
   type CategoryFilter,
   filterTokensByCategory
@@ -46,6 +47,27 @@ function TokensPage() {
 
   const { data, isLoading, error } = useGetAssetsIssuancesQuery()
   const { data: categoriesData } = useGetTokenCategoriesQuery()
+
+  // Normalize invalid category param
+  useEffect(() => {
+    const categoryParam = searchParams.get('category')
+    if (!categoryParam || !categoriesData) return
+
+    const validCategories = new Set([
+      TOKEN_CATEGORY_STANDARD,
+      ...categoriesData.categories.map((cat) => cat.id)
+    ])
+
+    if (!validCategories.has(categoryParam)) {
+      setSearchParams(
+        (prev) => {
+          prev.delete('category')
+          return prev
+        },
+        { replace: true }
+      )
+    }
+  }, [searchParams, categoriesData, setSearchParams])
 
   const allTokens = useMemo(
     () =>
