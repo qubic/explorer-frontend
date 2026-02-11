@@ -53,7 +53,7 @@ function EventRow({ event, showTickAndTimestamp, showTxId, highlightAddress }: E
         </>
       )}
       {showTxId && (
-        <td className="px-16 py-14">
+        <td className="whitespace-nowrap px-16 py-14">
           <TxLink value={event.txId} className="text-primary-30" ellipsis showTooltip />
         </td>
       )}
@@ -187,41 +187,23 @@ export default function TransactionEvents({
       <div className="rounded-12 border-1 border-primary-60 bg-primary-70">
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead className="border-b-1 border-primary-60 bg-primary-80/50">
+            <thead className="border-b-1 border-primary-60 text-left font-space text-sm text-gray-50">
               <tr>
-                <th className="px-16 py-12 text-left font-space text-xs font-400 text-gray-50">
-                  {t('id')}
-                </th>
+                <th className="whitespace-nowrap px-16 py-12 font-400">{t('id')}</th>
                 {showTickAndTimestamp && (
                   <>
-                    <th className="px-16 py-12 text-left font-space text-xs font-400 text-gray-50">
-                      {t('tick')}
-                    </th>
-                    <th className="px-16 py-12 text-left font-space text-xs font-400 text-gray-50">
-                      {t('timestamp')}
-                    </th>
+                    <th className="whitespace-nowrap px-16 py-12 font-400">{t('tick')}</th>
+                    <th className="whitespace-nowrap px-16 py-12 font-400">{t('timestamp')}</th>
                   </>
                 )}
                 {showTxId && (
-                  <th className="px-16 py-12 text-left font-space text-xs font-400 text-gray-50">
-                    {t('txId')}
-                  </th>
+                  <th className="whitespace-nowrap px-16 py-12 font-400">{t('txId')}</th>
                 )}
-                <th className="px-16 py-12 text-left font-space text-xs font-400 text-gray-50">
-                  {t('type')}
-                </th>
-                <th className="px-16 py-12 text-left font-space text-xs font-400 text-gray-50">
-                  {t('source')}
-                </th>
-                <th className="px-16 py-12 text-left font-space text-xs font-400 text-gray-50">
-                  {t('destination')}
-                </th>
-                <th className="px-16 py-12 text-right font-space text-xs font-400 text-gray-50">
-                  {t('amount')}
-                </th>
-                <th className="px-16 py-12 text-right font-space text-xs font-400 text-gray-50">
-                  {t('token')}
-                </th>
+                <th className="whitespace-nowrap px-16 py-12 font-400">{t('eventType')}</th>
+                <th className="whitespace-nowrap px-16 py-12 font-400">{t('source')}</th>
+                <th className="whitespace-nowrap px-16 py-12 font-400">{t('destination')}</th>
+                <th className="whitespace-nowrap px-16 py-12 text-right font-400">{t('amount')}</th>
+                <th className="whitespace-nowrap px-16 py-12 text-right font-400">{t('token')}</th>
               </tr>
             </thead>
             <tbody>

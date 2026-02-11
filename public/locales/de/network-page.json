@@ -30,6 +30,7 @@
   "eventsFound": "{{count}} Ereignisse",
   "events": "Events",
   "eventsBetaDisclaimer": "This feature is in development. Only recent data is included and may be purged until a production-ready version is available. The API endpoints used are subject to change in upcoming releases.",
+  "eventType": "Event Type",
   "marketCap": "Marktkapitalisierung",
   "nonEmpty": "Nicht leer",
   "numberOfTransactions": "Anzahl der Transaktionen",
