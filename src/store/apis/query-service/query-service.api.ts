@@ -1,9 +1,14 @@
 import { envConfig } from '@app/configs'
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import type {
+  ComputorList,
+  GetComputorListsForEpochResponse,
+  GetTickDataResponse,
   GetTransactionsForIdentityRequest,
+  GetTransactionsForTickRequest,
   QueryServiceResponse,
-  QueryServiceTransaction
+  QueryServiceTransaction,
+  TickData
 } from './query-service.types'
 
 const BASE_URL = `${envConfig.QUBIC_RPC_URL}/query/v1`
@@ -29,12 +34,30 @@ export const rpcQueryServiceApi = createApi({
         body: { hash }
       })
     }),
-    getTransactionsForTick: builder.query<QueryServiceTransaction[], number>({
+    getTransactionsForTick: builder.query<QueryServiceTransaction[], GetTransactionsForTickRequest>(
+      {
+        query: (request) => ({
+          url: '/getTransactionsForTick',
+          method: 'POST',
+          body: request
+        })
+      }
+    ),
+    getTickData: builder.query<TickData, number>({
       query: (tickNumber) => ({
-        url: '/getTransactionsForTick',
+        url: '/getTickData',
         method: 'POST',
         body: { tickNumber }
-      })
+      }),
+      transformResponse: (response: GetTickDataResponse) => response.tickData
+    }),
+    getComputorListsForEpoch: builder.query<ComputorList[], number>({
+      query: (epoch) => ({
+        url: '/getComputorListsForEpoch',
+        method: 'POST',
+        body: { epoch }
+      }),
+      transformResponse: (response: GetComputorListsForEpochResponse) => response.computorsLists
     })
   })
 })
@@ -42,5 +65,7 @@ export const rpcQueryServiceApi = createApi({
 export const {
   useGetTransactionsForIdentityMutation,
   useGetTransactionByHashQuery,
-  useGetTransactionsForTickQuery
+  useGetTransactionsForTickQuery,
+  useGetTickDataQuery,
+  useGetComputorListsForEpochQuery
 } = rpcQueryServiceApi

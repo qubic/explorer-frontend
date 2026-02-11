@@ -200,6 +200,7 @@ export default function OwnedAssets({ addressId }: Props) {
                     label={asset.assetName}
                     value={asset.issuerIdentity}
                     className="text-base"
+                    showContractIcon={false}
                   />
                 )}
               </animated.li>
@@ -245,6 +246,7 @@ export default function OwnedAssets({ addressId }: Props) {
                           label={asset.assetName}
                           value={asset.issuerIdentity}
                           className="text-base"
+                          showContractIcon={false}
                         />
                       )}
                     </li>

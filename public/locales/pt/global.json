@@ -1,11 +1,10 @@
 {
   "address": "Endereço",
   "balance": "Saldo",
-  "noResult": "Sem resultados",
-  "search": "Pesquisar",
+  "noResultsFound": "Nenhum Resultado Encontrado",
+  "noResultsFoundFor": "Nenhum resultado encontrado para \"{{keyword}}\"",
+  "searchPlaceholder": "Pesquisar TXs, ticks, IDs, tokens, contratos, exchanges...",
   "tick": "Tick",
-  "from": "de",
-  "to": "para",
   "transaction": "Transação",
   "transactions": "Transações"
 }

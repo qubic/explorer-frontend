@@ -17,6 +17,7 @@ function TransactionsOverview({ addressId }: Props) {
   const { t } = useTranslation('network-page')
   const {
     transactions,
+    totalCount,
     loadMoreTransactions,
     hasMore,
     isLoading,
@@ -45,6 +46,7 @@ function TransactionsOverview({ addressId }: Props) {
           <LatestTransactions
             addressId={addressId}
             transactions={transactions}
+            totalCount={totalCount}
             loadMore={loadMoreTransactions}
             hasMore={hasMore}
             isLoading={isLoading}

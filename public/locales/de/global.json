@@ -1,11 +1,10 @@
 {
   "address": "Adresse",
   "balance": "Kontostand",
-  "noResult": "Keine Ergebnisse",
-  "search": "Suche",
+  "noResultsFound": "Keine Ergebnisse Gefunden",
+  "noResultsFoundFor": "Keine Ergebnisse gefunden für \"{{keyword}}\"",
+  "searchPlaceholder": "TXs, Ticks, IDs, Tokens, Verträge, Börsen suchen...",
   "tick": "Tick",
-  "from": "von",
-  "to": "zu",
   "transaction": "Transaktion",
   "transactions": "Transaktionen"
 }

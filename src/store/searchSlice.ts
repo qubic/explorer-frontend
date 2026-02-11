@@ -1,26 +1,25 @@
-import type { PayloadAction } from '@reduxjs/toolkit'
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 
 import type { AppDispatch, RootState } from '@app/store'
-import type { GetTickDataResponse } from './apis/archiver-v1'
-import { archiverV1Api } from './apis/archiver-v1'
-import type { QueryServiceTransaction } from './apis/query-service'
+import type { QueryServiceTransaction, TickData } from './apis/query-service'
 import { rpcQueryServiceApi } from './apis/query-service'
 import type { GetAddressBalancesResponse } from './apis/rpc-live'
 import { rpcLiveApi } from './apis/rpc-live'
 
-type HandlerResponse = GetAddressBalancesResponse | GetTickDataResponse | QueryServiceTransaction
+type HandlerResponse = GetAddressBalancesResponse | { tickData: TickData } | QueryServiceTransaction
 
 export interface SearchState {
   result: HandlerResponse | null
   isLoading: boolean
   error: string | null
+  activeQuery: string | null
 }
 
 const initialState: SearchState = {
   result: null,
   isLoading: false,
-  error: null
+  error: null,
+  activeQuery: null
 }
 
 export enum SearchType {
@@ -39,7 +38,7 @@ const makeSearchHandlers = (
 ): Record<SearchType, (query: string) => Promise<HandlerResponse>> => ({
   [SearchType.TICK]: async (query) => {
     const tickData = await dispatch(
-      archiverV1Api.endpoints.getTickData.initiate({ tick: parseInt(query, 10) })
+      rpcQueryServiceApi.endpoints.getTickData.initiate(parseInt(query, 10))
     ).unwrap()
     return { tickData }
   },
@@ -79,20 +78,26 @@ const searchSlice = createSlice({
       state.result = null
       state.isLoading = false
       state.error = null
+      state.activeQuery = null
     }
   },
   extraReducers: (builder) => {
     builder
-      .addCase(getSearch.pending, (state) => {
+      .addCase(getSearch.pending, (state, action) => {
         state.isLoading = true
+        state.result = null
         state.error = null
+        state.activeQuery = action.meta.arg.query
       })
-      .addCase(getSearch.fulfilled, (state, action: PayloadAction<SearchState['result']>) => {
+      .addCase(getSearch.fulfilled, (state, action) => {
+        if (state.activeQuery !== action.meta.arg.query) return
         state.isLoading = false
         state.result = action.payload
       })
       .addCase(getSearch.rejected, (state, action) => {
+        if (state.activeQuery !== action.meta.arg.query) return
         state.isLoading = false
+        state.result = null
         state.error = action.payload || action.error.message || 'Something went wrong'
       })
   }

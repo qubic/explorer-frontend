@@ -1,11 +1,10 @@
 {
   "address": "Địa chỉ",
   "balance": "Số dư",
-  "noResult": "Không có kết quả",
-  "search": "Tìm kiếm",
+  "noResultsFound": "Không Tìm Thấy Kết Quả",
+  "noResultsFoundFor": "Không tìm thấy kết quả cho \"{{keyword}}\"",
+  "searchPlaceholder": "Tìm TX, tick, ID, token, hợp đồng, sàn giao dịch...",
   "tick": "Tick",
-  "from": "từ",
-  "to": "đến",
   "transaction": "Giao dịch",
   "transactions": "Các giao dịch"
 }

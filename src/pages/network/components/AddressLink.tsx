@@ -35,6 +35,7 @@ function LinkElement({ value, label, ellipsis, className }: LinkElementProps) {
 type AddressLinkProps = LinkElementProps & {
   copy?: boolean
   showTooltip?: boolean
+  showContractIcon?: boolean
 }
 
 export default function AddressLink({
@@ -43,11 +44,13 @@ export default function AddressLink({
   className,
   copy = false,
   ellipsis = false,
-  showTooltip = false
+  showTooltip = false,
+  showContractIcon = true
 }: AddressLinkProps) {
   const { t } = useTranslation('network-page')
   const addressName = useGetAddressName(value)
-  const showSmartContractIcon = addressName?.i18nKey === 'smartContract' && Boolean(label)
+  const showSmartContractIcon =
+    showContractIcon && addressName?.i18nKey === 'smartContract' && Boolean(label)
 
   const linkElement = (
     <LinkElement value={value} label={label} ellipsis={ellipsis} className={className} />
