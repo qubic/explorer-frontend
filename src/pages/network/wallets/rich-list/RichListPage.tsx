@@ -6,7 +6,7 @@ import { withHelmet } from '@app/components/hocs'
 import { Breadcrumbs, PaginationBar, Select } from '@app/components/ui'
 import { PageLayout } from '@app/components/ui/layouts'
 import type { Option } from '@app/components/ui/Select'
-import { DEFAULT_PAGE_SIZE, getPageSizeSelectOptions } from '@app/constants'
+import { RICH_LIST_DEFAULT_PAGE_SIZE, getPageSizeSelectOptions } from '@app/constants'
 import { useTailwindBreakpoint } from '@app/hooks'
 import { useGetRichListQuery } from '@app/store/apis/rpc-stats'
 import { HomeLink } from '../../components'
@@ -24,7 +24,7 @@ function RichListPage() {
   const [searchParams, setSearchParams] = useSearchParams()
 
   const page = parseInt(searchParams.get('page') || '1', 10)
-  const pageSize = parseInt(searchParams.get('pageSize') ?? String(DEFAULT_PAGE_SIZE), 10)
+  const pageSize = parseInt(searchParams.get('pageSize') ?? String(RICH_LIST_DEFAULT_PAGE_SIZE), 10)
 
   const pageSizeOptions = useMemo(() => getPageSizeSelectOptions(t), [t])
   const defaultPageSizeOption = useMemo(
@@ -76,7 +76,7 @@ function RichListPage() {
         (prev) => ({
           ...Object.fromEntries(prev.entries()),
           ...(!prev.has('page') && { page: '1' }),
-          ...(!prev.has('pageSize') && { pageSize: String(DEFAULT_PAGE_SIZE) })
+          ...(!prev.has('pageSize') && { pageSize: String(RICH_LIST_DEFAULT_PAGE_SIZE) })
         }),
         { replace: true }
       )

@@ -6,7 +6,11 @@ import { withHelmet } from '@app/components/hocs'
 import { Breadcrumbs, PaginationBar, Select } from '@app/components/ui'
 import { PageLayout } from '@app/components/ui/layouts'
 import type { Option } from '@app/components/ui/Select'
-import { DEFAULT_PAGE_SIZE, getPageSizeSelectOptions, VALID_PAGE_SIZES } from '@app/constants'
+import {
+  RICH_LIST_DEFAULT_PAGE_SIZE,
+  VALID_PAGE_SIZES,
+  getPageSizeSelectOptions
+} from '@app/constants'
 import { useTailwindBreakpoint } from '@app/hooks'
 import { useGetAssetsIssuancesQuery } from '@app/store/apis/rpc-live'
 import { useGetAssetsRichListQuery } from '@app/store/apis/rpc-stats'
@@ -34,10 +38,13 @@ function AssetsRichListPage() {
   const issuerParam = searchParams.get('issuer') || ''
   const assetParam = searchParams.get('asset') || ''
   const page = parseInt(searchParams.get('page') || '1', 10)
-  const pageSizeParam = parseInt(searchParams.get('pageSize') ?? String(DEFAULT_PAGE_SIZE), 10)
-  const pageSize = VALID_PAGE_SIZES.includes(pageSizeParam as (typeof VALID_PAGE_SIZES)[number])
+  const pageSizeParam = parseInt(
+    searchParams.get('pageSize') ?? String(RICH_LIST_DEFAULT_PAGE_SIZE),
+    10
+  )
+  const pageSize = VALID_PAGE_SIZES.includes(pageSizeParam)
     ? pageSizeParam
-    : DEFAULT_PAGE_SIZE
+    : RICH_LIST_DEFAULT_PAGE_SIZE
 
   const pageSizeOptions = useMemo(() => getPageSizeSelectOptions(t), [t])
   const defaultPageSizeOption = useMemo(
@@ -103,8 +110,7 @@ function AssetsRichListPage() {
     const hasAsset = searchParams.has('asset') && searchParams.has('issuer')
     const hasPage = searchParams.has('page')
     const hasValidPageSize =
-      searchParams.has('pageSize') &&
-      VALID_PAGE_SIZES.includes(pageSizeParam as (typeof VALID_PAGE_SIZES)[number])
+      searchParams.has('pageSize') && VALID_PAGE_SIZES.includes(pageSizeParam)
 
     // Only set page/pageSize defaults if asset/issuer already exist
     if (hasAsset && (!hasPage || !hasValidPageSize)) {
@@ -112,7 +118,7 @@ function AssetsRichListPage() {
         (prev) => ({
           ...Object.fromEntries(prev.entries()),
           ...(!prev.has('page') && { page: '1' }),
-          ...(!prev.has('pageSize') && { pageSize: String(DEFAULT_PAGE_SIZE) })
+          ...(!prev.has('pageSize') && { pageSize: String(RICH_LIST_DEFAULT_PAGE_SIZE) })
         }),
         { replace: true }
       )

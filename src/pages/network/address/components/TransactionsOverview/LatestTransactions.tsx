@@ -175,7 +175,7 @@ export default function LatestTransactions({ addressId }: Props) {
                   {t('status')}
                 </th>
                 <th className="whitespace-nowrap px-8 py-12 font-400 sm:px-16">{t('txID')}</th>
-                <th className="whitespace-nowrap px-8 py-12 font-400 sm:px-16">{t('type')}</th>
+                <th className="whitespace-nowrap px-8 py-12 font-400 sm:px-16">{t('txType')}</th>
                 <th className="whitespace-nowrap px-8 py-12 font-400 sm:px-16">{t('tick')}</th>
                 <th className="whitespace-nowrap px-8 py-12 font-400 sm:px-16">{t('timestamp')}</th>
                 <th className="whitespace-nowrap px-8 py-12 font-400 sm:px-16">{t('source')}</th>

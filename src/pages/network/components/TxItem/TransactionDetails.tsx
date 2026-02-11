@@ -107,7 +107,7 @@ export default function TransactionDetails({
 
       {variant === 'secondary' && (
         <SubCardItem
-          title={t('type')}
+          title={t('txType')}
           variant={variant}
           content={<p className="font-space text-sm">{transactionTypeDisplay}</p>}
         />
@@ -144,7 +144,7 @@ export default function TransactionDetails({
       />
       {variant === 'primary' && (
         <SubCardItem
-          title={t('type')}
+          title={t('txType')}
           variant={variant}
           content={<p className="font-space text-sm">{transactionTypeDisplay}</p>}
         />
