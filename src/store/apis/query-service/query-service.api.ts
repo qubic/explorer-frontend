@@ -6,6 +6,7 @@ import type {
   GetTickDataResponse,
   GetTransactionsForIdentityRequest,
   GetTransactionsForTickRequest,
+  ProcessedTickInterval,
   QueryServiceResponse,
   QueryServiceTransaction,
   TickData
@@ -58,6 +59,9 @@ export const rpcQueryServiceApi = createApi({
         body: { epoch }
       }),
       transformResponse: (response: GetComputorListsForEpochResponse) => response.computorsLists
+    }),
+    getProcessedTickIntervals: builder.query<ProcessedTickInterval[], void>({
+      query: () => '/getProcessedTickIntervals'
     })
   })
 })
@@ -67,5 +71,6 @@ export const {
   useGetTransactionByHashQuery,
   useGetTransactionsForTickQuery,
   useGetTickDataQuery,
-  useGetComputorListsForEpochQuery
+  useGetComputorListsForEpochQuery,
+  useGetProcessedTickIntervalsQuery
 } = rpcQueryServiceApi
