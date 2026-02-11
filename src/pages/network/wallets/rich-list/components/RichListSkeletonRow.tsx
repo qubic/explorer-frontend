@@ -25,7 +25,7 @@ const SKELETON_ROW_CELLS = [
 
 export default function RichListSkeletonRow() {
   return (
-    <tr className="border-b border-primary-60">
+    <tr className="border-b border-border">
       {SKELETON_ROW_CELLS.map(({ id, className }) => (
         <td key={id} className="px-8 py-16 sm:p-16">
           <Skeleton className={className} />

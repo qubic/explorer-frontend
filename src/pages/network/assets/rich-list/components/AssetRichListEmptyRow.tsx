@@ -6,7 +6,7 @@ function AssetRichListErrorRow() {
   return (
     <tr>
       <td colSpan={4} className="p-32">
-        <p className="text-center text-sm text-gray-50">{t('noEntries')}</p>
+        <p className="text-center text-sm text-muted-foreground">{t('noEntries')}</p>
       </td>
     </tr>
   )

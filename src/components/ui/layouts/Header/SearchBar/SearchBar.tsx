@@ -256,7 +256,7 @@ export default function SearchBar() {
     <ErrorBoundary fallback={<Alert variant="error" className="mx-5 my-2.5" />}>
       <button
         type="button"
-        className="rounded-full p-8 transition-colors duration-500 ease-in-out hover:bg-primary-70"
+        className="rounded-full p-8 transition-colors duration-500 ease-in-out hover:bg-muted"
         onClick={() => setOpen(true)}
         aria-label="search-button"
       >
@@ -269,18 +269,18 @@ export default function SearchBar() {
         closeOnOutsideClick
         onClose={handleCloseCallback}
       >
-        <div className="h-fit w-full bg-primary-70">
+        <div className="h-fit w-full bg-card">
           {(isLoading || entitySearchLoading) && (
             <div className="absolute w-full">
               <LinearProgress />
             </div>
           )}
 
-          <div className="flex w-full items-center justify-center border-y-[1px] border-primary-60">
+          <div className="flex w-full items-center justify-center border-y-[1px] border-border">
             <div className="relative mx-auto flex w-full max-w-[820px] items-center gap-8 pl-12 pr-12">
               <MagnifyIcon className="h-16 w-16 shrink-0" />
               <input
-                className="w-full bg-inherit py-12 text-base placeholder:font-space placeholder:text-base placeholder:text-gray-50 focus:outline-none sm:text-sm"
+                className="w-full bg-inherit py-12 text-base placeholder:font-space placeholder:text-base placeholder:text-muted-foreground focus:outline-none sm:text-sm"
                 placeholder={t('searchPlaceholder')}
                 value={keyword}
                 // eslint-disable-next-line jsx-a11y/no-autofocus
@@ -323,7 +323,7 @@ export default function SearchBar() {
           {(shouldShowSearchResult ||
             entityExactMatch ||
             (entityPartialMatches.length > 0 && !debouncedSearchType)) && (
-            <div className="mx-auto max-h-[320px] max-w-[800px] overflow-y-scroll pb-20 scrollbar scrollbar-track-transparent scrollbar-thumb-primary-60 scrollbar-thumb-rounded-full scrollbar-w-4">
+            <div className="mx-auto max-h-[320px] max-w-[800px] overflow-y-scroll pb-20 scrollbar scrollbar-track-transparent scrollbar-thumb-muted-foreground scrollbar-thumb-rounded-full scrollbar-w-4">
               <p className="px-12 pb-8 pt-12 font-space text-12 text-gray-50">
                 {tNetwork('matchingEntities')}
               </p>

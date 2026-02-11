@@ -190,11 +190,11 @@ export default function OwnedAssets({ addressId }: Props) {
                 style={styles}
                 className="flex items-center gap-4"
               >
-                <p className="font-space text-base text-white">
+                <p className="font-space text-base text-foreground">
                   {formatString(asset.numberOfUnits)}
                 </p>
                 {isAssetsIssuerAddress(asset.issuerIdentity) ? (
-                  <p className="font-space text-base text-gray-50">{asset.assetName}</p>
+                  <p className="font-space text-base text-muted-foreground">{asset.assetName}</p>
                 ) : (
                   <AddressLink
                     label={asset.assetName}
@@ -218,14 +218,14 @@ export default function OwnedAssets({ addressId }: Props) {
         </div>
 
         {/* Divider line when expanded */}
-        {isExpanded && <div className="border-t border-primary-60" />}
+        {isExpanded && <div className="border-t border-border" />}
 
         {/* Expanded view: Show grouped by managing contract */}
         {isExpanded && (
           <ul className="flex flex-col gap-8">
             {expandedTransitions((styles, contractGroup) => (
               <animated.li key={contractGroup.contractIndex} style={styles}>
-                <p className="mb-4 font-space text-sm text-gray-50">
+                <p className="mb-4 font-space text-sm text-muted-foreground">
                   {t('managedBy', { contract: contractGroup.contractName })}
                 </p>
                 <ul className="ml-12 flex flex-col gap-4">
@@ -234,11 +234,13 @@ export default function OwnedAssets({ addressId }: Props) {
                       key={`${asset.assetName}-${asset.issuerIdentity}`}
                       className="flex items-center gap-6"
                     >
-                      <p className="font-space text-base text-white">
+                      <p className="font-space text-base text-foreground">
                         {formatString(asset.numberOfUnits)}
                       </p>
                       {isAssetsIssuerAddress(asset.issuerIdentity) ? (
-                        <p className="font-space text-base text-gray-50">{asset.assetName}</p>
+                        <p className="font-space text-base text-muted-foreground">
+                          {asset.assetName}
+                        </p>
                       ) : (
                         <AddressLink
                           label={asset.assetName}

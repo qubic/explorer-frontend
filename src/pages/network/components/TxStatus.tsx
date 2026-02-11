@@ -1,6 +1,6 @@
-import { useTranslation } from 'react-i18next'
 import { CheckCircleFilledIcon, CheckCircleIcon, XCircleFilledIcon } from '@app/assets/icons'
 import Tooltip from '@app/components/ui/Tooltip'
+import { useTranslation } from 'react-i18next'
 import type { TxStatusType } from './TxStatus.utils'
 
 type Props = {

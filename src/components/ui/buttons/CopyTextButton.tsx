@@ -43,8 +43,8 @@ export default function CopyTextButton({
       <button
         type="button"
         className={clsxTwMerge(
-          'flex items-center justify-center rounded-8 text-gray-50',
-          isCopied ? 'hover:cursor-default' : 'hover:text-white',
+          'flex items-center justify-center rounded-8 text-muted-foreground',
+          isCopied ? 'hover:cursor-default' : 'hover:text-foreground',
           className
         )}
         onClick={handleCopy}

@@ -52,7 +52,7 @@ export default function TickDetails({ tick }: Props) {
             <button
               type="button"
               aria-label="Previous Tick"
-              className="flex size-fit rounded-full py-6 pl-11 pr-1 text-gray-50 hover:bg-slate-50 hover:text-white hover:transition hover:duration-300"
+              className="flex size-fit rounded-full py-6 pl-11 pr-1 text-muted-foreground hover:bg-muted hover:text-foreground hover:transition hover:duration-300"
               onClick={handleTickNavigation('previous')}
             >
               <ChevronLeftIcon className="size-24 rtl:rotate-180 rtl:transform" />
@@ -61,14 +61,16 @@ export default function TickDetails({ tick }: Props) {
             <button
               type="button"
               aria-label="Next Tick"
-              className="flex size-fit rounded-full py-6 pl-1 pr-11 text-gray-50 hover:bg-slate-50 hover:text-white hover:transition hover:duration-300"
+              className="flex size-fit rounded-full py-6 pl-1 pr-11 text-muted-foreground hover:bg-muted hover:text-foreground hover:transition hover:duration-300"
               onClick={handleTickNavigation('next')}
             >
               <ChevronRightIcon className="size-24 rtl:rotate-180 rtl:transform" />
             </button>
           </div>
           {!tickDataError && (
-            <p className="font-space text-sm text-gray-50">{formatDate(tickData?.timestamp)}</p>
+            <p className="font-space text-sm text-muted-foreground">
+              {formatDate(tickData?.timestamp)}
+            </p>
           )}
         </div>
         {/* Desktop TickStatus */}
@@ -89,7 +91,7 @@ export default function TickDetails({ tick }: Props) {
               isTickDataLoading ? (
                 <Skeleton className="h-40 rounded-8 sm:h-20" />
               ) : (
-                <p className="break-all font-space text-sm text-gray-50">{tickData?.signature}</p>
+                <p className="break-all font-space text-sm text-muted-foreground">{tickData?.signature}</p>
               )
             }
           />

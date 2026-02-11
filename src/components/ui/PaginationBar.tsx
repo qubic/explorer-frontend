@@ -91,11 +91,11 @@ export default function PaginationBar({ pageCount, page, onPageChange, className
             type="button"
             key={pageNumber}
             className={clsxTwMerge(
-              'h-32 min-w-32 rounded-4 px-6 text-center font-sans text-sm text-gray-50',
+              'h-32 min-w-32 rounded-4 px-6 text-center font-sans text-sm text-muted-foreground',
               transitionClasses,
               pageNumber === page || zeroOrNegativePage
                 ? 'bg-primary-30 text-primary-80 hover:bg-primary-50'
-                : 'hover:bg-gray-60/40'
+                : 'hover:bg-muted hover:text-foreground'
             )}
             onClick={() => onPageChange(pageNumber)}
           >
@@ -104,7 +104,7 @@ export default function PaginationBar({ pageCount, page, onPageChange, className
         ) : (
           <span
             key={`ellipsis-${String(index)}`}
-            className="inline-flex items-center border-t-2 border-transparent px-4 pt-4 text-sm text-gray-50"
+            className="inline-flex items-center border-t-2 border-transparent px-4 pt-4 text-sm text-muted-foreground"
           >
             ...
           </span>
@@ -120,7 +120,7 @@ export default function PaginationBar({ pageCount, page, onPageChange, className
         className={clsxTwMerge(
           arrowButtonClasses,
           transitionClasses,
-          page <= 1 ? 'cursor-not-allowed opacity-40' : 'hover:bg-primary-60'
+          page <= 1 ? 'cursor-not-allowed opacity-40' : 'hover:bg-muted'
         )}
         aria-label="Previous Page"
         onClick={() => onPageChange(page - 1)}
@@ -136,7 +136,7 @@ export default function PaginationBar({ pageCount, page, onPageChange, className
         className={clsxTwMerge(
           arrowButtonClasses,
           transitionClasses,
-          page >= pageCount ? 'cursor-not-allowed opacity-40' : 'hover:bg-primary-60'
+          page >= pageCount ? 'cursor-not-allowed opacity-40' : 'hover:bg-muted'
         )}
         aria-label="Next Page"
         onClick={() => onPageChange(page + 1)}

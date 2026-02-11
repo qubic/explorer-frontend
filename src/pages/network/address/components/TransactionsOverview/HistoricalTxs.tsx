@@ -64,8 +64,8 @@ export default function HistoricalTxs({
     <div className="flex w-full flex-col gap-10">
       {(!isLoading || transactions.length > 0) && (
         <div className="flex items-start gap-4 pb-14 md:items-center">
-          <Infocon className="h-16 w-16 shrink-0 text-gray-50" />
-          <p className="text-left text-14 text-gray-50">{t('historicalDataWarning')}</p>
+          <Infocon className="h-16 w-16 shrink-0 text-muted-foreground" />
+          <p className="text-left text-14 text-muted-foreground">{t('historicalDataWarning')}</p>
         </div>
       )}
 
@@ -91,7 +91,7 @@ export default function HistoricalTxs({
         loader={<DotsLoader showLoadingText />}
         error={error && t('loadingTransactionsError')}
         endMessage={
-          <p className="py-32 text-center text-14 text-gray-50">
+          <p className="py-32 text-center text-14 text-muted-foreground">
             {convertedTransactions.length === 0 ? t('noTransactions') : t('allTransactionsLoaded')}
           </p>
         }

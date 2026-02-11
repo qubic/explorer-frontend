@@ -6,7 +6,7 @@ export const getTransferItemClassName = (
   variant: TxItemVariant
 ) => {
   if (variant === 'secondary') {
-    return index !== totalEntries - 1 ? 'border-b-1 border-primary-60 py-12' : 'pt-12'
+    return index !== totalEntries - 1 ? 'border-b-1 border-border py-12' : 'pt-12'
   }
   return 'py-8'
 }

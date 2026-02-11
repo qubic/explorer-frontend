@@ -36,7 +36,7 @@ const colorVariantClasses = {
   secondary: {
     filled: 'text-gray-100 bg-primary-60/80 hover:bg-primary-60/60 disabled:hover:bg-primary-60',
     outlined:
-      'text-gray-100 border border-primary-60 hover:bg-primary-60/60 disabled:hover:bg-transparent',
+      'text-gray-100 border border-border hover:bg-primary-60/60 disabled:hover:bg-transparent',
     text: 'text-gray-100 hover:bg-primary-60/60 disabled:hover:bg-transparent',
     link: 'text-gray-100 p-0 hover:underline disabled:hover:text-primary-30'
   },

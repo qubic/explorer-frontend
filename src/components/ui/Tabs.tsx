@@ -76,9 +76,7 @@ Tabs.List = function TabsList({
   variant = 'default'
 }: TabsListProps) {
   return (
-    <div
-      className={clsxTwMerge(variant === 'default' && 'border-b-1 border-primary-60', className)}
-    >
+    <div className={clsxTwMerge(variant === 'default' && 'border-b-1 border-border', className)}>
       <nav
         aria-label="Tabs"
         className={clsxTwMerge('flex space-x-2', variant === 'buttons' && 'gap-6')}
@@ -110,11 +108,11 @@ Tabs.Tab = function TabsTab({
     'border-b-2 px-16 py-12',
     isSelected
       ? 'border-primary-30 text-primary-30'
-      : 'hover:text-primary-600 border-transparent text-gray-500 hover:border-gray-60'
+      : 'border-transparent text-muted-foreground hover:border-border hover:text-foreground'
   )
 
   const buttonsVariantClasses = clsxTwMerge(
-    'rounded-md px-12 py-6 text-white',
+    'rounded-md px-12 py-6',
     isSelected
       ? 'bg-primary-30 text-primary-80'
       : 'bg-primary-60/80 text-gray-100 hover:bg-primary-60/60'

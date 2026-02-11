@@ -1,7 +1,8 @@
+import { useEffect, useState } from 'react'
+import { Label, Listbox, ListboxButton, ListboxOption, ListboxOptions } from '@headlessui/react'
+
 import { ChevronDownIcon } from '@app/assets/icons'
 import { clsxTwMerge } from '@app/utils'
-import { Label, Listbox, ListboxButton, ListboxOption, ListboxOptions } from '@headlessui/react'
-import { useEffect, useState } from 'react'
 
 export type Option<ValueType = string> = Readonly<{
   label: string
@@ -73,36 +74,41 @@ export default function Select<ValueType = string>({
       <Listbox value={selected} onChange={handleSelect} name={name}>
         <Label
           className={clsxTwMerge(
-            'mb-6 block font-normal leading-6 text-gray-400',
+            'mb-6 block font-normal leading-6 text-muted-foreground',
             sizeClasses[size].label,
             !showLabel && 'sr-only'
           )}
         >
           {label}
         </Label>
+
         <div className={clsxTwMerge('relative w-full font-space', className)}>
           <ListboxButton
             className={clsxTwMerge(
-              'text-primary-800 relative w-full cursor-default rounded-md border border-primary-60 bg-primary-70 text-left shadow-sm hover:cursor-pointer hover:border-primary-50 focus:border-primary-50 focus:outline-none focus:ring-1 focus:ring-primary-50 active:ring-primary-50',
+              'relative w-full cursor-default rounded-md border border-border bg-card text-left text-foreground shadow-sm hover:cursor-pointer hover:border-primary-50 focus:border-primary-50 focus:outline-none focus:ring-1 focus:ring-ring active:ring-ring',
               sizeClasses[size].button
             )}
           >
             <span
-              className={clsxTwMerge('block truncate leading-tight', !selected && 'text-gray-50')}
+              className={clsxTwMerge(
+                'block truncate leading-tight',
+                !selected && 'text-muted-foreground'
+              )}
             >
               {selected ? selected.label : label}
             </span>
+
             <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-6">
               <ChevronDownIcon
                 aria-hidden="true"
-                className={clsxTwMerge(sizeClasses[size].icon, 'text-gray-50')}
+                className={clsxTwMerge(sizeClasses[size].icon, 'text-muted-foreground')}
               />
             </span>
           </ListboxButton>
 
           <ListboxOptions
             transition
-            className="absolute z-10 mt-1 w-full overflow-auto rounded-md bg-primary-70 shadow-2xl ring-1 ring-black ring-opacity-5 drop-shadow-2xl scrollbar-thin scrollbar-thumb-rounded-full focus:outline-none"
+            className="absolute z-10 mt-1 w-full overflow-auto rounded-md bg-popover shadow-2xl ring-1 ring-border/40 drop-shadow-2xl scrollbar-thin scrollbar-thumb-muted-foreground scrollbar-thumb-rounded-full focus:outline-none"
           >
             {options.map((option, index) => (
               <ListboxOption
@@ -110,7 +116,7 @@ export default function Select<ValueType = string>({
                 value={option}
                 className={clsxTwMerge(
                   index === 0 && 'rounded-t-md',
-                  'text-primary-800 group relative cursor-default select-none font-space data-[focus]:bg-primary-60 data-[selected]:bg-primary-60/50 data-[focus]:text-white hover:cursor-pointer',
+                  'group relative cursor-default select-none font-space text-foreground data-[focus]:bg-muted data-[selected]:bg-muted/70 data-[focus]:text-foreground hover:cursor-pointer',
                   sizeClasses[size].options
                 )}
               >

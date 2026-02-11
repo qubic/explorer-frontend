@@ -36,7 +36,7 @@ function TransactionsOverview({ addressId }: Props) {
   } = useHistoricalTransactions(addressId, { skip: isTestnet })
 
   return (
-    <Tabs className="rounded-lg border border-primary-60">
+    <Tabs className="rounded-lg border border-border">
       <Tabs.List>
         <Tabs.Tab>{t('latest')}</Tabs.Tab>
         {!isTestnet && <Tabs.Tab>{t('historical')}</Tabs.Tab>}

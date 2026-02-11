@@ -143,7 +143,7 @@ export default function TickTransactions({ tick }: Props) {
         replaceContentOnLoading
         replaceContentOnError
         endMessage={
-          <p className="py-32 text-center text-sm text-gray-50">
+          <p className="py-32 text-center text-sm text-muted-foreground">
             {displayTransactions.length === 0 ? t('noTransactions') : t('allTransactionsLoaded')}
           </p>
         }

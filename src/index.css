@@ -4,7 +4,7 @@
 
 @layer utilities {
   .custom-scrollbar {
-    @apply scrollbar scrollbar-track-transparent scrollbar-thumb-primary-60 scrollbar-thumb-rounded-full scrollbar-w-4 scrollbar-h-4;
+    @apply scrollbar scrollbar-track-transparent scrollbar-thumb-muted-foreground scrollbar-thumb-rounded-full scrollbar-w-4 scrollbar-h-4;
   }
 }
 
@@ -14,12 +14,55 @@
     --header-height: 47px;
     --footer-height: 120px;
     --container-height: calc(100vh - var(--header-height) - var(--footer-height));
+
     /* Desktop Layout */
     --desktop-header-height: 47px;
     --desktop-footer-height: 104px;
     --desktop-container-height: calc(
       100vh - var(--desktop-header-height) - var(--desktop-footer-height)
     );
+
+    /* Theme (Light) */
+    --background: 245 245 245; /* gray-100 */
+    --foreground: 33 33 33; /* gray-900 */
+
+    --card: 255 255 255; /* white */
+    --card-foreground: 33 33 33;
+
+    --popover: 255 255 255;
+    --popover-foreground: 33 33 33;
+
+    --muted: 238 238 238; /* gray-200 */
+    --muted-foreground: 75 85 101; /* gray-60 */
+
+    --accent: 204 252 255; /* primary-20 */
+    --accent-foreground: 16 24 32; /* primary-80 */
+
+    --border: 224 224 224; /* gray-300 */
+    --input: 224 224 224;
+    --ring: 97 240 254; /* primary-30 */
+  }
+
+  html.dark {
+    /* Theme (Dark) */
+    --background: 16 24 32; /* primary-80 */
+    --foreground: 255 255 255;
+
+    --card: 21 30 39; /* primary-70 */
+    --card-foreground: 255 255 255;
+
+    --popover: 21 30 39;
+    --popover-foreground: 255 255 255;
+
+    --muted: 17 44 53; /* primary-75 */
+    --muted-foreground: 128 139 155; /* gray-50 */
+
+    --accent: 97 240 254; /* primary-30 */
+    --accent-foreground: 16 24 32;
+
+    --border: 32 46 60; /* primary-60 */
+    --input: 32 46 60;
+    --ring: 97 240 254;
   }
 
   * {
@@ -28,8 +71,17 @@
 
   html {
     font-family: 'Noto Sans', system-ui, sans-serif;
-    @apply bg-primary-80;
-    @apply text-white;
+    @apply bg-background;
+    @apply text-foreground;
+  }
+
+  /* Ensure native form controls pick the right theme */
+  html {
+    color-scheme: light;
+  }
+
+  html.dark {
+    color-scheme: dark;
   }
 
   body::-webkit-scrollbar {
@@ -37,7 +89,7 @@
   }
 
   body::-webkit-scrollbar-thumb {
-    @apply rounded-full border-2 border-solid border-primary-80;
+    @apply rounded-full border-2 border-solid border-background;
   }
 
   /* Disable focus-visible styles for buttons globally */

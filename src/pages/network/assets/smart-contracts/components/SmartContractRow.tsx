@@ -10,7 +10,7 @@ type Props = Readonly<{
 
 function SmartContractRow({ address, details, isMobile }: Props) {
   return (
-    <tr className="border-b border-primary-60 last:border-b-0">
+    <tr className="border-b border-border last:border-b-0">
       <td className="px-8 py-16 text-center font-space text-xs xs:text-sm sm:p-16">
         {details.contractIndex}
       </td>

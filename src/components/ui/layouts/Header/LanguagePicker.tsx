@@ -27,7 +27,7 @@ export default function LanguagePicker() {
   return (
     <ErrorBoundary fallback={<Alert variant="error" className="mx-5 my-2.5" />}>
       <DropdownMenu show={showDropdown} onToggle={handleDropdownToggle}>
-        <DropdownMenu.Trigger className="rounded-full p-8 transition-colors duration-500 ease-in-out hover:bg-primary-70">
+        <DropdownMenu.Trigger className="rounded-full p-8 transition-colors duration-500 ease-in-out hover:bg-card">
           <GlobeGrayIcon className="h-18 w-18" />
         </DropdownMenu.Trigger>
         <DropdownMenu.Content>
@@ -38,8 +38,8 @@ export default function LanguagePicker() {
                   type="button"
                   onClick={() => handleLanguageChange(lng)}
                   className={clsxTwMerge(
-                    'w-full min-w-[164px] px-16 py-10 text-left font-space leading-tight hover:bg-gray-60/40',
-                    language === lng.id && 'bg-gray-60/60',
+                    'w-full min-w-[164px] px-16 py-10 text-left font-space leading-tight hover:bg-muted',
+                    language === lng.id && 'bg-muted',
                     index === 0 && 'rounded-t-md',
                     index === LANGUAGES.length - 1 && 'rounded-b-md'
                   )}
