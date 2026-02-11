@@ -5,6 +5,7 @@ import { useSearchParams } from 'react-router-dom'
 import { Badge, PaginationBar, Select, Skeleton, Tooltip } from '@app/components/ui'
 import type { Option } from '@app/components/ui/Select'
 import { DEFAULT_PAGE_SIZE, getPageSizeSelectOptions } from '@app/constants'
+import { useGetAddressName } from '@app/hooks'
 import type { TransactionEvent } from '@app/mocks/generateMockEvents'
 import { formatDate, formatEllipsis, formatString } from '@app/utils'
 import AddressLink from '../AddressLink'
@@ -26,6 +27,71 @@ const SKELETON_TICK_TIMESTAMP_CELLS = [
 ]
 
 const SKELETON_TX_ID_CELL = { id: 'txId', className: 'h-16 w-80' }
+
+type EventRowProps = {
+  event: TransactionEvent
+  showTickAndTimestamp: boolean
+  showTxId: boolean
+  highlightAddress?: string
+}
+
+function EventRow({ event, showTickAndTimestamp, showTxId, highlightAddress }: EventRowProps) {
+  const sourceAddressName = useGetAddressName(event.source)
+  const destinationAddressName = useGetAddressName(event.destination)
+
+  return (
+    <tr className="border-b-1 border-primary-60 last:border-b-0">
+      <td className="px-16 py-14 font-space text-sm">{event.id}</td>
+      {showTickAndTimestamp && (
+        <>
+          <td className="px-16 py-14">
+            {event.tick && <TickLink className="text-sm text-primary-30" value={event.tick} />}
+          </td>
+          <td className="whitespace-nowrap px-16 py-14 font-space text-sm text-gray-50">
+            {formatDate(event.timestamp, { shortDate: true })}
+          </td>
+        </>
+      )}
+      {showTxId && (
+        <td className="px-16 py-14">
+          <TxLink value={event.txId} className="text-primary-30" ellipsis showTooltip />
+        </td>
+      )}
+      <td className="px-16 py-14">
+        <Badge color="primary" size="xs" className="text-gray-50">
+          {event.type}
+        </Badge>
+      </td>
+      <td className="px-16 py-14">
+        {highlightAddress === event.source ? (
+          <Tooltip tooltipId="source-address" content={event.source}>
+            <span className="font-space text-sm">{formatEllipsis(event.source)}</span>
+          </Tooltip>
+        ) : (
+          <AddressLink value={event.source} label={sourceAddressName?.name} showTooltip ellipsis />
+        )}
+      </td>
+      <td className="px-16 py-14">
+        {highlightAddress === event.destination ? (
+          <Tooltip tooltipId="destination-address" content={event.destination}>
+            <span className="font-space text-sm">{formatEllipsis(event.destination)}</span>
+          </Tooltip>
+        ) : (
+          <AddressLink
+            value={event.destination}
+            label={destinationAddressName?.name}
+            showTooltip
+            ellipsis
+          />
+        )}
+      </td>
+      <td className="px-16 py-14 text-right font-space text-sm font-500">
+        {formatString(event.amount)}
+      </td>
+      <td className="px-16 py-14 text-right font-space text-sm">{event.token}</td>
+    </tr>
+  )
+}
 
 type Props = {
   events: TransactionEvent[]
@@ -184,60 +250,13 @@ export default function TransactionEvents({
               )}
               {!isLoading &&
                 displayEvents.map((event) => (
-                  <tr key={event.id} className="border-b-1 border-primary-60 last:border-b-0">
-                    <td className="px-16 py-14 font-space text-sm">{event.id}</td>
-                    {showTickAndTimestamp && (
-                      <>
-                        <td className="px-16 py-14">
-                          {event.tick && (
-                            <TickLink className="text-sm text-primary-30" value={event.tick} />
-                          )}
-                        </td>
-                        <td className="whitespace-nowrap px-16 py-14 font-space text-sm text-gray-50">
-                          {formatDate(event.timestamp, { shortDate: true })}
-                        </td>
-                      </>
-                    )}
-                    {showTxId && (
-                      <td className="px-16 py-14">
-                        <TxLink
-                          value={event.txId}
-                          className="text-primary-30"
-                          ellipsis
-                          showTooltip
-                        />
-                      </td>
-                    )}
-                    <td className="px-16 py-14">
-                      <Badge color="primary" size="xs" className="text-gray-50">
-                        {event.type}
-                      </Badge>
-                    </td>
-                    <td className="px-16 py-14">
-                      {highlightAddress === event.source ? (
-                        <Tooltip tooltipId="source-address" content={event.source}>
-                          <span className="font-space text-sm">{formatEllipsis(event.source)}</span>
-                        </Tooltip>
-                      ) : (
-                        <AddressLink value={event.source} ellipsis showTooltip />
-                      )}
-                    </td>
-                    <td className="px-16 py-14">
-                      {highlightAddress === event.destination ? (
-                        <Tooltip tooltipId="destination-address" content={event.destination}>
-                          <span className="font-space text-sm">
-                            {formatEllipsis(event.destination)}
-                          </span>
-                        </Tooltip>
-                      ) : (
-                        <AddressLink value={event.destination} ellipsis showTooltip />
-                      )}
-                    </td>
-                    <td className="px-16 py-14 text-right font-space text-sm font-500">
-                      {formatString(event.amount)}
-                    </td>
-                    <td className="px-16 py-14 text-right font-space text-sm">{event.token}</td>
-                  </tr>
+                  <EventRow
+                    key={event.id}
+                    event={event}
+                    showTickAndTimestamp={showTickAndTimestamp}
+                    showTxId={showTxId}
+                    highlightAddress={highlightAddress}
+                  />
                 ))}
             </tbody>
           </table>
