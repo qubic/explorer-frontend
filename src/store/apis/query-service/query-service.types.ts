@@ -88,6 +88,13 @@ export interface GetLastProcessedTickResponse {
   intervalInitialTick: number
 }
 
+// getProcessedTickIntervals types
+export interface ProcessedTickInterval {
+  epoch: number
+  firstTick: number
+  lastTick: number
+}
+
 // getTransactionsForTick request with filters
 // Note: Unlike getTransactionsForIdentity, this endpoint only supports single address (no multi, no exclude)
 export interface GetTransactionsForTickRequest {

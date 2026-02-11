@@ -9,6 +9,7 @@ import type {
   GetTickDataResponse,
   GetTransactionsForIdentityRequest,
   GetTransactionsForTickRequest,
+  ProcessedTickInterval,
   QueryServiceResponse,
   QueryServiceTransaction,
   TickData
@@ -65,6 +66,9 @@ export const rpcQueryServiceApi = createApi({
     }),
     getLastProcessedTick: builder.query<GetLastProcessedTickResponse, void>({
       query: () => '/getLastProcessedTick'
+    }),
+    getProcessedTickIntervals: builder.query<ProcessedTickInterval[], void>({
+      query: () => '/getProcessedTickIntervals'
     })
   })
 })
@@ -75,5 +79,6 @@ export const {
   useGetTransactionsForTickQuery,
   useGetTickDataQuery,
   useGetComputorListsForEpochQuery,
-  useGetLastProcessedTickQuery
+  useGetLastProcessedTickQuery,
+  useGetProcessedTickIntervalsQuery
 } = rpcQueryServiceApi

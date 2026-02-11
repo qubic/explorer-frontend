@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import { Alert } from '@app/components/ui'
 import { COPY_BUTTON_TYPES, CopyTextButton } from '@app/components/ui/buttons'
-import { useGetAddressName } from '@app/hooks'
+import { useGetAddressName, useGetEpochForTick } from '@app/hooks'
 import { useGetProtocolQuery, useGetSmartContractsQuery } from '@app/store/apis/qubic-static'
 import type { QueryServiceTransaction } from '@app/store/apis/query-service'
 import { clsxTwMerge, formatDate, formatString } from '@app/utils'
@@ -57,6 +57,8 @@ export default function TransactionDetails({
 
   const isSecondaryVariant = variant === 'secondary'
   const { date, time } = useMemo(() => formatDate(timestamp, { split: true }), [timestamp])
+
+  const { epoch } = useGetEpochForTick(tickNumber)
 
   const destAddress = assetDetails?.newOwnerAndPossessor ?? destination
   const sourceAddressNameData = useGetAddressName(source)
@@ -142,6 +144,13 @@ export default function TransactionDetails({
         variant={variant}
         content={<TickLink className="text-sm text-primary-30" value={tickNumber} />}
       />
+      {showExtendedDetails && epoch != null && (
+        <SubCardItem
+          title={t('epoch')}
+          variant={variant}
+          content={<p className="font-space text-sm">{epoch}</p>}
+        />
+      )}
       {variant === 'primary' && (
         <SubCardItem
           title={t('txType')}
