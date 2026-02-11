@@ -6,7 +6,7 @@ import { Badge, PaginationBar, Select, Skeleton, Tooltip } from '@app/components
 import type { Option } from '@app/components/ui/Select'
 import { DEFAULT_PAGE_SIZE, getPageSizeSelectOptions } from '@app/constants'
 import { useGetAddressName } from '@app/hooks'
-import type { TransactionEvent } from '@app/mocks/generateMockEvents'
+import { getEventTypeLabel, type TransactionEvent } from '@app/mocks/generateMockEvents'
 import { formatDate, formatEllipsis, formatString } from '@app/utils'
 import AddressLink from '../AddressLink'
 import TickLink from '../TickLink'
@@ -41,25 +41,27 @@ function EventRow({ event, showTickAndTimestamp, showTxId, highlightAddress }: E
 
   return (
     <tr className="border-b-1 border-primary-60 last:border-b-0">
-      <td className="px-16 py-14 font-space text-sm">{event.id}</td>
+      <td className="px-16 py-14 font-space text-sm">{event.logId}</td>
       {showTickAndTimestamp && (
         <>
           <td className="px-16 py-14">
-            {event.tick && <TickLink className="text-sm text-primary-30" value={event.tick} />}
+            {event.tickNumber && (
+              <TickLink className="text-sm text-primary-30" value={event.tickNumber} />
+            )}
           </td>
           <td className="whitespace-nowrap px-16 py-14 font-space text-sm text-gray-50">
-            {formatDate(event.timestamp, { shortDate: true })}
+            {formatDate(String(event.timestamp), { shortDate: true })}
           </td>
         </>
       )}
       {showTxId && (
         <td className="whitespace-nowrap px-16 py-14">
-          <TxLink value={event.txId} className="text-primary-30" ellipsis showTooltip />
+          <TxLink value={event.transactionHash} className="text-primary-30" ellipsis showTooltip />
         </td>
       )}
       <td className="px-16 py-14">
         <Badge color="primary" size="xs" className="text-gray-50">
-          {event.type}
+          {getEventTypeLabel(event.type)}
         </Badge>
       </td>
       <td className="px-16 py-14">
@@ -88,7 +90,7 @@ function EventRow({ event, showTickAndTimestamp, showTxId, highlightAddress }: E
       <td className="px-16 py-14 text-right font-space text-sm font-500">
         {formatString(event.amount)}
       </td>
-      <td className="px-16 py-14 text-right font-space text-sm">{event.token}</td>
+      <td className="px-16 py-14 text-right font-space text-sm">{event.assetName ?? 'QUBIC'}</td>
     </tr>
   )
 }
@@ -233,7 +235,7 @@ export default function TransactionEvents({
               {!isLoading &&
                 displayEvents.map((event) => (
                   <EventRow
-                    key={event.id}
+                    key={event.logId}
                     event={event}
                     showTickAndTimestamp={showTickAndTimestamp}
                     showTxId={showTxId}
