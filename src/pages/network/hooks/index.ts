@@ -5,4 +5,3 @@ export {
   useClearFilterHandler,
   useLocalFilterSync
 } from './useFilterHelpers'
-export { default as useValidatedTxEra } from './useValidatedTxEra'
