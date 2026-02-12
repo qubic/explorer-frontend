@@ -1,42 +1,24 @@
-import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 
 import { withHelmet } from '@app/components/hocs'
-import { Alert, Breadcrumbs } from '@app/components/ui'
+import { Breadcrumbs } from '@app/components/ui'
 import { ErrorFallback } from '@app/components/ui/error-boundaries'
 import { PageLayout } from '@app/components/ui/layouts'
 import { LinearProgress } from '@app/components/ui/loaders'
 import { useGetTransactionByHashQuery } from '@app/store/apis/query-service'
-import { convertToQueryServiceTx } from '@app/store/apis/query-service/query-service.adapters'
-import { useGetQliTransactionQuery } from '@app/store/apis/qli'
 import { formatEllipsis } from '@app/utils'
 import { HomeLink, TickLink, TxItem } from './components'
-import { useValidatedTxEra } from './hooks'
 
 function TxPage() {
   const { t } = useTranslation('network-page')
   const { txId = '' } = useParams()
-  const txEra = useValidatedTxEra()
 
-  const queryServiceTx = useGetTransactionByHashQuery(txId, {
-    skip: !txId || txEra === 'historical'
-  })
-  const qliTx = useGetQliTransactionQuery(txId, {
-    skip: !txId || txEra === 'latest'
+  const { data: tx, isFetching } = useGetTransactionByHashQuery(txId, {
+    skip: !txId
   })
 
-  const tx = useMemo(() => {
-    if (queryServiceTx.data) {
-      return queryServiceTx.data
-    }
-    if (qliTx.data) {
-      return convertToQueryServiceTx(qliTx.data)
-    }
-    return undefined
-  }, [queryServiceTx.data, qliTx.data])
-
-  if (queryServiceTx.isFetching || qliTx.isFetching) {
+  if (isFetching) {
     return <LinearProgress />
   }
 
@@ -46,11 +28,6 @@ function TxPage() {
 
   return (
     <PageLayout>
-      {txEra === 'historical' && (
-        <Alert variant="info" className="mb-24" size="sm">
-          {t('historicalDataWarning')}
-        </Alert>
-      )}
       <Breadcrumbs aria-label="breadcrumb">
         <HomeLink />
         <p className="font-space text-xs text-gray-50">
