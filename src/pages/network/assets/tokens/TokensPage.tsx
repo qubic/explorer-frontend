@@ -1,5 +1,6 @@
-import { memo, useCallback, useMemo, useState } from 'react'
+import { memo, useCallback, useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useSearchParams } from 'react-router-dom'
 
 import { withHelmet } from '@app/components/hocs'
 import { Breadcrumbs } from '@app/components/ui'
@@ -24,10 +25,49 @@ const TokensLoadingRows = memo(() =>
 function TokensPage() {
   const { t } = useTranslation('network-page')
   const { isMobile } = useTailwindBreakpoint()
-  const [selectedCategory, setSelectedCategory] = useState<CategoryFilter>(TOKEN_CATEGORY_STANDARD)
+  const [searchParams, setSearchParams] = useSearchParams()
+  const selectedCategory: CategoryFilter = searchParams.get('category') || TOKEN_CATEGORY_ALL
+
+  const handleCategoryChange = useCallback(
+    (category: CategoryFilter) => {
+      setSearchParams(
+        (prev) => {
+          if (category === TOKEN_CATEGORY_ALL) {
+            prev.delete('category')
+          } else {
+            prev.set('category', category)
+          }
+          return prev
+        },
+        { replace: true }
+      )
+    },
+    [setSearchParams]
+  )
 
   const { data, isLoading, error } = useGetAssetsIssuancesQuery()
   const { data: categoriesData } = useGetTokenCategoriesQuery()
+
+  // Normalize invalid category param
+  useEffect(() => {
+    const categoryParam = searchParams.get('category')
+    if (!categoryParam || !categoriesData) return
+
+    const validCategories = new Set([
+      TOKEN_CATEGORY_STANDARD,
+      ...categoriesData.categories.map((cat) => cat.id)
+    ])
+
+    if (!validCategories.has(categoryParam)) {
+      setSearchParams(
+        (prev) => {
+          prev.delete('category')
+          return prev
+        },
+        { replace: true }
+      )
+    }
+  }, [searchParams, categoriesData, setSearchParams])
 
   const allTokens = useMemo(
     () =>
@@ -91,7 +131,7 @@ function TokensPage() {
           <CategoryChips
             categoriesData={categoriesData}
             selectedCategory={selectedCategory}
-            onCategoryChange={setSelectedCategory}
+            onCategoryChange={handleCategoryChange}
             showAll
           />
         )}
