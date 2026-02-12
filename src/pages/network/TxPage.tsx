@@ -11,12 +11,11 @@ import { useGetTransactionByHashQuery } from '@app/store/apis/query-service'
 import { formatEllipsis } from '@app/utils'
 import { HomeLink, TickLink, TxItem, WaitingForTick } from './components'
 import TransactionEvents from './components/TxItem/TransactionEvents'
-import { useTickWatcher, useTransactionEvents, useValidatedTxEra } from './hooks'
+import { useTickWatcher, useTransactionEvents } from './hooks'
 
 function TxPage() {
   const { t } = useTranslation('network-page')
   const { txId = '' } = useParams()
-  const txEra = useValidatedTxEra()
   const { events } = useTransactionEvents(txId)
 
   const {
