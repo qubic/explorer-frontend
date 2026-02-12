@@ -83,6 +83,17 @@ export default function TickDetails({ tick }: Props) {
       {!tickDataError && (
         <div className="mb-24">
           <SubCardItem
+            title={t('epoch')}
+            variant="secondary"
+            content={
+              isTickDataLoading ? (
+                <Skeleton className="h-16 w-64 rounded-8" />
+              ) : (
+                <p className="font-space text-sm text-gray-50">{tickData?.epoch}</p>
+              )
+            }
+          />
+          <SubCardItem
             title={t('signature')}
             variant="secondary"
             content={
