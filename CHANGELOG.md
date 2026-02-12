@@ -1,3 +1,18 @@
+# [1.34.0-rc.1](https://github.com/qubic/explorer-frontend/compare/v1.33.0...v1.34.0-rc.1) (2026-02-12)
+
+
+### Bug Fixes
+
+* normalize invalid tab query params on address page ([637ca37](https://github.com/qubic/explorer-frontend/commit/637ca3777facd2760a695953dd35d6a9e67129aa))
+
+
+### Features
+
+* display epoch in tick page details ([2f83091](https://github.com/qubic/explorer-frontend/commit/2f83091413d0e8a8801c3126ddddddff55c78cc5))
+* remove historical tab and all related code from address/tx pages ([ab18c18](https://github.com/qubic/explorer-frontend/commit/ab18c18beab337f819ae55a20aa4e9b9fb523bd2))
+* sync address page tabs with URL search params ([acc90d6](https://github.com/qubic/explorer-frontend/commit/acc90d6a0f41a818c4edc2cd60abee1a4e5dd52c))
+* sync token category filter with URL search params ([#426](https://github.com/qubic/explorer-frontend/issues/426)) ([a44d655](https://github.com/qubic/explorer-frontend/commit/a44d6550772040457d9cdd9fa62b1e6c575c7fad))
+
 # [1.33.0](https://github.com/qubic/explorer-frontend/compare/v1.32.0...v1.33.0) (2026-02-06)
 
 
