@@ -93,8 +93,7 @@ function AddressPage() {
 
   // Normalize invalid tab params so URL always reflects the visible tab
   useEffect(() => {
-    const isValidTab =
-      tabParam === 'events' || (tabParam === 'contract' && isSmartContract)
+    const isValidTab = tabParam === 'events' || (tabParam === 'contract' && isSmartContract)
     if (tabParam && !isValidTab) {
       setSearchParams(
         (prev) => {

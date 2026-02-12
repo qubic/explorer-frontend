@@ -63,7 +63,9 @@ export function generateMockEvents(transactions: QueryServiceTransaction[]): Tra
   return transactions.flatMap((tx) => {
     const amount = Number(tx.amount)
     const events: TransactionEvent[] = []
-    const tickTimestamp = tx.timestamp ? new Date(tx.timestamp).getTime() : Date.now()
+    const tickTimestamp = tx.timestamp
+      ? new Date(tx.timestamp.includes('T') ? tx.timestamp : parseInt(tx.timestamp, 10)).getTime()
+      : Date.now()
 
     // Generate a QU_TRANSFER event for every transaction
     idCounter += 1
