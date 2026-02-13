@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useLocation, useParams } from 'react-router-dom'
+import { useLocation, useParams, useSearchParams } from 'react-router-dom'
 
 import { ArrowTopRightOnSquareIcon } from '@app/assets/icons'
 import { withHelmet } from '@app/components/hocs'
@@ -75,6 +75,40 @@ function AddressPage() {
   }, [smartContracts, addressId])
 
   const isSmartContract = !!smartContractDetails
+
+  const [searchParams, setSearchParams] = useSearchParams()
+  const tabParam = searchParams.get('tab')
+  const selectedTabIndex = tabParam === 'contract' && isSmartContract ? 1 : 0
+
+  // Normalize invalid tab params so URL always reflects the visible tab
+  useEffect(() => {
+    if (tabParam && !(tabParam === 'contract' && isSmartContract)) {
+      setSearchParams(
+        (prev) => {
+          prev.delete('tab')
+          return prev
+        },
+        { replace: true }
+      )
+    }
+  }, [tabParam, isSmartContract, setSearchParams])
+
+  const handleTabChange = useCallback(
+    (index: number) => {
+      setSearchParams(
+        (prev) => {
+          if (index === 1) {
+            prev.set('tab', 'contract')
+          } else {
+            prev.delete('tab')
+          }
+          return prev
+        },
+        { replace: true }
+      )
+    },
+    [setSearchParams]
+  )
 
   // Show loading while validating address
   if (isValidatingAddress) {
@@ -172,7 +206,12 @@ function AddressPage() {
         <OwnedAssets addressId={addressId} />
       </div>
 
-      <Tabs variant="buttons" className="mt-40">
+      <Tabs
+        variant="buttons"
+        className="mt-40"
+        selectedIndex={selectedTabIndex}
+        onChange={handleTabChange}
+      >
         <Tabs.List>
           <Tabs.Tab>{t('transactions')}</Tabs.Tab>
           {isSmartContract && <Tabs.Tab>{t('contract')}</Tabs.Tab>}

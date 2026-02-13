@@ -19,7 +19,6 @@ import type { TxItemVariant } from './TxItem.types'
 type Props = {
   readonly txDetails: Omit<QueryServiceTransaction, 'inputSize' | 'moneyFlew' | 'timestamp'>
   readonly entries: Transfer[]
-  readonly isHistoricalTx?: boolean
   readonly variant?: TxItemVariant
   readonly assetDetails?: AssetTransfer
   readonly timestamp?: string
@@ -46,7 +45,6 @@ export default function TransactionDetails({
   txDetails: { hash, source, tickNumber, destination, inputType, amount, inputData, signature },
   assetDetails,
   entries,
-  isHistoricalTx = false,
   timestamp,
   variant = 'primary',
   showExtendedDetails = false
@@ -103,14 +101,7 @@ export default function TransactionDetails({
         <SubCardItem
           title={`TX ${t('id')}`}
           variant={variant}
-          content={
-            <TxLink
-              isHistoricalTx={isHistoricalTx}
-              className="text-sm text-primary-30"
-              value={hash}
-              copy
-            />
-          }
+          content={<TxLink className="text-sm text-primary-30" value={hash} copy />}
         />
       )}
 

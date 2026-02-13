@@ -1,48 +1,35 @@
-import { useCallback, useMemo } from 'react'
+import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 
 import { withHelmet } from '@app/components/hocs'
-import { Alert, Breadcrumbs } from '@app/components/ui'
+import { Breadcrumbs } from '@app/components/ui'
 import { ErrorFallback } from '@app/components/ui/error-boundaries'
 import { PageLayout } from '@app/components/ui/layouts'
 import { LinearProgress } from '@app/components/ui/loaders'
-import { useGetQliTransactionQuery } from '@app/store/apis/qli'
 import { useGetTransactionByHashQuery } from '@app/store/apis/query-service'
-import { convertToQueryServiceTx } from '@app/store/apis/query-service/query-service.adapters'
 import { formatEllipsis } from '@app/utils'
 import { HomeLink, TickLink, TxItem, WaitingForTick } from './components'
-import { useTickWatcher, useValidatedTxEra } from './hooks'
+import { useTickWatcher } from './hooks'
 
 function TxPage() {
   const { t } = useTranslation('network-page')
   const { txId = '' } = useParams()
-  const txEra = useValidatedTxEra()
 
-  const queryServiceTx = useGetTransactionByHashQuery(txId, {
-    skip: !txId || txEra === 'historical'
+  const {
+    data: tx,
+    isFetching,
+    refetch
+  } = useGetTransactionByHashQuery(txId, {
+    skip: !txId
   })
-  const qliTx = useGetQliTransactionQuery(txId, {
-    skip: !txId || txEra === 'latest'
-  })
 
-  const tx = useMemo(() => {
-    if (queryServiceTx.data) {
-      return queryServiceTx.data
-    }
-    if (qliTx.data) {
-      return convertToQueryServiceTx(qliTx.data)
-    }
-    return undefined
-  }, [queryServiceTx.data, qliTx.data])
-
-  const isLoading = queryServiceTx.isFetching || qliTx.isFetching
+  const isLoading = isFetching
   const isTxNotFound = !isLoading && !tx
 
   const refetchTx = useCallback(() => {
-    if (txEra !== 'historical') queryServiceTx.refetch()
-    if (txEra !== 'latest') qliTx.refetch()
-  }, [txEra, queryServiceTx, qliTx])
+    refetch()
+  }, [refetch])
 
   const {
     isWaitingForTick,
@@ -78,11 +65,6 @@ function TxPage() {
 
   return (
     <PageLayout>
-      {txEra === 'historical' && (
-        <Alert variant="info" className="mb-24" size="sm">
-          {t('historicalDataWarning')}
-        </Alert>
-      )}
       <Breadcrumbs aria-label="breadcrumb">
         <HomeLink />
         <p className="font-space text-xs text-gray-50">

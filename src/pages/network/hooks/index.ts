@@ -6,4 +6,3 @@ export {
   useLocalFilterSync
 } from './useFilterHelpers'
 export { default as useTickWatcher } from './useTickWatcher'
-export { default as useValidatedTxEra } from './useValidatedTxEra'
