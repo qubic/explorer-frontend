@@ -7,20 +7,33 @@ import { LinearProgress } from '@app/components/ui/loaders'
 import { formatString } from '@app/utils'
 import CardItem from './CardItem'
 
+// Time units (s, min, h) are intentionally not localized — they are SI standard
+// abbreviations recognized across all supported languages.
+function formatEstimatedWait(totalSeconds: number): string {
+  if (totalSeconds < 60) return `~${totalSeconds}s`
+
+  const hours = Math.floor(totalSeconds / 3600)
+  const minutes = Math.ceil((totalSeconds % 3600) / 60)
+
+  if (hours > 0) {
+    return minutes > 0 ? `~${hours} h ${minutes} min` : `~${hours} h`
+  }
+
+  return `~${minutes} min`
+}
+
 interface Props {
   txId: string
   targetTick: number
   currentTick: number | undefined
-  remaining: number | undefined
-  isOutOfRange?: boolean
+  estimatedWaitSeconds: number | undefined
 }
 
 export default function WaitingForTick({
   txId,
   targetTick,
   currentTick,
-  remaining,
-  isOutOfRange
+  estimatedWaitSeconds
 }: Props) {
   const { t } = useTranslation('network-page')
 
@@ -30,14 +43,18 @@ export default function WaitingForTick({
         <CardItem className="w-full max-w-[520px] px-32 py-32">
           <div className="flex flex-col items-center gap-24">
             <SandClockIcon className="h-48 w-48 text-gray-50" />
-            <p className="text-center font-space text-24 font-500">
-              {t(isOutOfRange ? 'waitingForTickOutOfRangeTitle' : 'waitingForTickTitle')}
-            </p>
+            <p className="text-center font-space text-24 font-500">{t('waitingForTickTitle')}</p>
             <p className="text-center font-space text-14 text-gray-50">
-              {t(isOutOfRange ? 'waitingForTickOutOfRangeDesc' : 'waitingForTickDesc', {
-                targetTick: formatString(targetTick)
-              })}
+              {t('waitingForTickDesc', { targetTick: formatString(targetTick) })}
             </p>
+            {estimatedWaitSeconds !== undefined && (
+              <p className="font-space text-12 text-gray-50">
+                {t('estimatedWait')}:{' '}
+                <span className="font-500 text-white">
+                  {formatEstimatedWait(estimatedWaitSeconds)}
+                </span>
+              </p>
+            )}
             <div className="flex w-full items-center gap-8 rounded-8 bg-primary-60 px-12 py-8">
               <p className="min-w-0 break-all font-space text-12 text-gray-50">{txId}</p>
               <CopyTextButton
@@ -46,31 +63,17 @@ export default function WaitingForTick({
                 className="shrink-0"
               />
             </div>
-            {!isOutOfRange && (
-              <div className="w-full">
-                <LinearProgress />
-              </div>
-            )}
-            <div className="grid w-full gap-16 sm:grid-cols-2">
-              <div className="flex flex-col items-center gap-4 rounded-12 bg-primary-60 px-16 py-12">
-                <p className="font-space text-12 text-gray-50">{t('currentTick')}</p>
-                <p className="font-space text-20 font-500">
-                  {currentTick ? formatString(currentTick) : '...'}
-                </p>
-              </div>
-              <div className="flex flex-col items-center gap-4 rounded-12 bg-primary-60 px-16 py-12">
-                <p className="font-space text-12 text-gray-50">{t('targetTick')}</p>
-                <p className="font-space text-20 font-500">{formatString(targetTick)}</p>
+            <div className="w-full">
+              <LinearProgress />
+              <div className="mt-4 flex justify-between">
+                <span className="font-space text-10 text-primary-40">
+                  {t('tick')} {currentTick ? formatString(currentTick) : '...'}
+                </span>
+                <span className="font-space text-10 text-gray-50">
+                  {t('targetTick')} {formatString(targetTick)}
+                </span>
               </div>
             </div>
-            {!isOutOfRange && (
-              <div className="flex flex-col items-center gap-4">
-                <p className="font-space text-14 text-gray-50">{t('ticksRemaining')}</p>
-                <p className="font-space text-32 font-500 text-primary-30">
-                  {remaining === undefined ? '...' : formatString(remaining)}
-                </p>
-              </div>
-            )}
           </div>
         </CardItem>
       </div>

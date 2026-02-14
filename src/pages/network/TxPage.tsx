@@ -19,13 +19,17 @@ function TxPage() {
   const {
     data: tx,
     isFetching,
+    isError,
+    error,
     refetch
   } = useGetTransactionByHashQuery(txId, {
     skip: !txId
   })
 
   const isLoading = isFetching
-  const isTxNotFound = !isLoading && !tx
+  const isInvalidFormat =
+    isError && error && 'data' in error && (error.data as { code?: number })?.code === 3
+  const isTxNotFound = !isLoading && !isInvalidFormat && !tx
 
   const refetchTx = useCallback(() => {
     refetch()
@@ -33,28 +37,34 @@ function TxPage() {
 
   const {
     isWaitingForTick,
-    isOutOfRange,
     targetTick,
     currentTick,
-    remaining,
+    estimatedWaitSeconds,
     isLoading: isTickWatcherLoading
   } = useTickWatcher({
     isTxNotFound,
     refetch: refetchTx
   })
 
-  if (isLoading || isTickWatcherLoading) {
+  if (isLoading) {
     return <LinearProgress />
   }
 
-  if ((isWaitingForTick || isOutOfRange) && targetTick) {
+  if (isInvalidFormat) {
+    return <ErrorFallback message={t('invalidTransactionId')} hideErrorHeader />
+  }
+
+  if (isTickWatcherLoading) {
+    return <LinearProgress />
+  }
+
+  if (isWaitingForTick && targetTick) {
     return (
       <WaitingForTick
         txId={txId}
         targetTick={targetTick}
         currentTick={currentTick}
-        remaining={remaining}
-        isOutOfRange={isOutOfRange}
+        estimatedWaitSeconds={estimatedWaitSeconds}
       />
     )
   }

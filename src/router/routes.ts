@@ -15,10 +15,6 @@ function buildUrlWithQueryParams<T extends Record<string, string | undefined>>(
   return queryString ? `${path}?${queryString}` : path
 }
 
-export type NetworkTxQueryParams = {
-  tick?: string
-}
-
 export const Routes = {
   NETWORK: {
     ROOT: '/network',

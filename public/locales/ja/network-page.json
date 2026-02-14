@@ -57,6 +57,7 @@
   "hide": "隠す",
   "show": "表示する",
   "transactionNotFound": "トランザクションが見つかりません",
+  "invalidTransactionId": "トランザクションIDが無効です。IDを確認して、再度お試しください。",
   "invalidAddressError": "アドレス形式が無効です。アドレスを確認して、再度お試しください。",
   "addressNotFoundError": "エラー：探しているアドレスが見つかりませんでした。アドレスを確認して、再度お試しください。",
   "loadingTransactionsError": "エラー：トランザクションの読み込み中に問題が発生しました。後でもう一度試してください。",
@@ -178,10 +179,8 @@
   "transactionsFound": "{{count}}件のトランザクション",
   "showingMaxTransactions": "最新{{count}}件のトランザクションを表示",
   "maxResultsHint": "結果は{{count}}件に制限されています。フィルターを使用してリストを絞り込んでください。",
-  "waitingForTickTitle": "ティックの処理を待っています",
+  "waitingForTickTitle": "ティックの処理を待機中",
   "waitingForTickDesc": "このトランザクションはティック{{targetTick}}に予定されています。ネットワークがそのティックに到達すると利用可能になります。",
-  "waitingForTickOutOfRangeTitle": "トランザクションはまだ利用できません",
-  "waitingForTickOutOfRangeDesc": "このトランザクションはティック{{targetTick}}に予定されていますが、リアルタイムで追跡するには先すぎます。後ほどご確認ください。",
   "targetTick": "目標ティック",
-  "ticksRemaining": "残りのティック数"
+  "estimatedWait": "推定待ち時間"
 }

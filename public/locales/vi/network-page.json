@@ -57,6 +57,7 @@
   "hide": "Ẩn",
   "show": "Hiện",
   "transactionNotFound": "Không tìm thấy giao dịch",
+  "invalidTransactionId": "ID giao dịch không hợp lệ. Vui lòng kiểm tra ID và thử lại.",
   "invalidAddressError": "Định dạng địa chỉ không hợp lệ. Vui lòng kiểm tra và thử lại.",
   "addressNotFoundError": "Lỗi: Không tìm thấy địa chỉ bạn đang tìm. Vui lòng kiểm tra và thử lại.",
   "loadingTransactionsError": "Lỗi: Đã xảy ra sự cố khi tải giao dịch. Vui lòng thử lại sau.",
@@ -180,8 +181,6 @@
   "maxResultsHint": "Kết quả bị giới hạn ở {{count}}. Sử dụng bộ lọc để thu hẹp danh sách.",
   "waitingForTickTitle": "Đang chờ tick được xử lý",
   "waitingForTickDesc": "Giao dịch này được lên lịch cho tick {{targetTick}}. Nó sẽ khả dụng khi mạng đạt đến tick đó.",
-  "waitingForTickOutOfRangeTitle": "Giao dịch chưa khả dụng",
-  "waitingForTickOutOfRangeDesc": "Giao dịch này được lên lịch cho tick {{targetTick}}, quá xa để theo dõi trực tiếp. Vui lòng quay lại sau.",
   "targetTick": "Tick mục tiêu",
-  "ticksRemaining": "Số tick còn lại"
+  "estimatedWait": "Thời gian chờ ước tính"
 }

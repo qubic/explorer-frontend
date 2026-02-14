@@ -4,22 +4,21 @@ import { useSearchParams } from 'react-router-dom'
 import { useGetLastProcessedTickQuery } from '@app/store/apis/query-service'
 
 const MAX_TICK_RANGE = 800
+// Rough estimate. The real duration from tickInfo can be 0 when the network
+// ticks fast (sub-second) because the API returns an integer with no decimals.
+const DEFAULT_TICK_DURATION = 2 // seconds per tick
 
-const DEFAULT_TICK_DURATION = 2 // seconds
-
-function getPollingInterval(remaining: number | undefined): number {
-  if (remaining === undefined) return 5000
-
-  const estimatedSecondsLeft = remaining * DEFAULT_TICK_DURATION
+function getPollingInterval(estimatedSeconds: number | undefined): number {
+  if (estimatedSeconds === undefined) return 5000
 
   // Very far (>10min): poll very lazily
-  if (estimatedSecondsLeft > 600) return 30_000
+  if (estimatedSeconds > 600) return 30_000
   // Far (>2min): poll lazily
-  if (estimatedSecondsLeft > 120) return 15_000
+  if (estimatedSeconds > 120) return 15_000
   // Moderate (>30s): standard polling
-  if (estimatedSecondsLeft > 30) return 10_000
+  if (estimatedSeconds > 30) return 10_000
   // Getting close (>10s): moderate polling
-  if (estimatedSecondsLeft > 10) return 5000
+  if (estimatedSeconds > 10) return 5000
   // Almost there: aggressive polling
   return 2000
 }
@@ -27,10 +26,9 @@ function getPollingInterval(remaining: number | undefined): number {
 interface TickWatcherResult {
   isLoading: boolean
   isWaitingForTick: boolean
-  isOutOfRange: boolean
   targetTick: number | undefined
   currentTick: number | undefined
-  remaining: number | undefined
+  estimatedWaitSeconds: number | undefined
 }
 
 export default function useTickWatcher(opts: {
@@ -58,19 +56,24 @@ export default function useTickWatcher(opts: {
   const isOutOfRange = remaining !== undefined && remaining > MAX_TICK_RANGE
   const tickReached = shouldFetchTick && currentTick !== undefined && currentTick >= targetTick
 
+  const estimatedWaitSeconds =
+    remaining !== undefined && remaining > 0 ? remaining * DEFAULT_TICK_DURATION : undefined
+
   const isTickInfoLoading = shouldFetchTick && currentTick === undefined
-  const isWaitingForTick = shouldFetchTick && !tickReached && !isTickInfoLoading && isInRange
+  const isWaitingForTick =
+    shouldFetchTick && !tickReached && !isTickInfoLoading && (isInRange || isOutOfRange)
 
   // Adjust polling interval dynamically. Poll lazily if out of range so the page recovers.
+  // Stop polling entirely once the target tick has been reached.
   useEffect(() => {
-    if (!shouldFetchTick) {
+    if (!shouldFetchTick || tickReached) {
       setPollingInterval(0)
     } else if (isOutOfRange) {
       setPollingInterval(60_000)
     } else {
-      setPollingInterval(getPollingInterval(remaining))
+      setPollingInterval(getPollingInterval(estimatedWaitSeconds))
     }
-  }, [shouldFetchTick, isOutOfRange, remaining])
+  }, [shouldFetchTick, isOutOfRange, estimatedWaitSeconds, tickReached])
 
   // When tick is reached, refetch the transaction once
   useEffect(() => {
@@ -83,9 +86,8 @@ export default function useTickWatcher(opts: {
   return {
     isLoading: isTickInfoLoading,
     isWaitingForTick,
-    isOutOfRange: shouldFetchTick && isOutOfRange,
     targetTick: shouldFetchTick ? targetTick : undefined,
     currentTick: shouldFetchTick ? currentTick : undefined,
-    remaining: isWaitingForTick && remaining !== undefined && remaining > 0 ? remaining : undefined
+    estimatedWaitSeconds: isWaitingForTick ? estimatedWaitSeconds : undefined
   }
 }

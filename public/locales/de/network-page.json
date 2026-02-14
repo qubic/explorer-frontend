@@ -57,6 +57,7 @@
   "hide": "Ausblenden",
   "show": "Anzeigen",
   "transactionNotFound": "Transaktion nicht gefunden",
+  "invalidTransactionId": "Ungültige Transaktions-ID. Bitte überprüfen Sie die ID und versuchen Sie es erneut.",
   "invalidAddressError": "Das Adressformat ist ungültig. Bitte überprüfen Sie die Adresse und versuchen Sie es erneut.",
   "addressNotFoundError": "Fehler: Wir konnten die gesuchte Adresse nicht finden. Bitte überprüfen Sie die Adresse und versuchen Sie es erneut.",
   "loadingTransactionsError": "Fehler: Beim Laden der Transaktionen ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.",
@@ -178,10 +179,8 @@
   "transactionsFound": "{{count}} Transaktionen",
   "showingMaxTransactions": "Zeige die letzten {{count}} Transaktionen",
   "maxResultsHint": "Ergebnisse sind auf {{count}} begrenzt. Verwenden Sie Filter, um die Liste einzugrenzen.",
-  "waitingForTickTitle": "Warten auf Tick-Verarbeitung",
+  "waitingForTickTitle": "Warten auf Verarbeitung des Ticks",
   "waitingForTickDesc": "Diese Transaktion ist für Tick {{targetTick}} geplant. Sie wird verfügbar sein, sobald das Netzwerk diesen Tick erreicht.",
-  "waitingForTickOutOfRangeTitle": "Transaktion noch nicht verfügbar",
-  "waitingForTickOutOfRangeDesc": "Diese Transaktion ist für Tick {{targetTick}} geplant, der zu weit voraus liegt, um live verfolgt zu werden. Bitte schauen Sie später noch einmal vorbei.",
   "targetTick": "Ziel-Tick",
-  "ticksRemaining": "Verbleibende Ticks"
+  "estimatedWait": "Geschätzte Wartezeit"
 }

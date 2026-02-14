@@ -57,6 +57,7 @@
   "hide": "Masquer",
   "show": "Afficher",
   "transactionNotFound": "Transaction non trouvée",
+  "invalidTransactionId": "ID de transaction invalide. Veuillez vérifier l'ID et réessayer.",
   "invalidAddressError": "Le format de l'adresse n'est pas valide. Veuillez vérifier l'adresse et réessayer.",
   "addressNotFoundError": "Erreur : Nous n'avons pas pu trouver l'adresse que vous recherchez. Veuillez vérifier l'adresse et réessayer.",
   "loadingTransactionsError": "Erreur : Quelque chose a mal tourné lors du chargement des transactions. Veuillez réessayer plus tard.",
@@ -180,8 +181,6 @@
   "maxResultsHint": "Les résultats sont limités à {{count}}. Utilisez des filtres pour affiner la liste.",
   "waitingForTickTitle": "En attente du traitement du tick",
   "waitingForTickDesc": "Cette transaction est prévue pour le tick {{targetTick}}. Elle sera disponible une fois que le réseau aura atteint ce tick.",
-  "waitingForTickOutOfRangeTitle": "Transaction pas encore disponible",
-  "waitingForTickOutOfRangeDesc": "Cette transaction est prévue pour le tick {{targetTick}}, qui est trop éloigné pour être suivi en direct. Veuillez revenir plus tard.",
   "targetTick": "Tick cible",
-  "ticksRemaining": "Ticks restants"
+  "estimatedWait": "Temps d'attente estimé"
 }

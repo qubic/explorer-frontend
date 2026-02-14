@@ -57,6 +57,7 @@
   "hide": "Hide",
   "show": "Show",
   "transactionNotFound": "Transaction not found",
+  "invalidTransactionId": "Invalid ID format. Please check the transaction ID and try again.",
   "invalidAddressError": "The address format is invalid. Please check the address and try again.",
   "addressNotFoundError": "Error: We could not find the address you are looking for. Please check the address and try again.",
   "loadingTransactionsError": "Error: Something went wrong while loading transactions. Please try again later.",
@@ -180,8 +181,6 @@
   "maxResultsHint": "Results are limited to {{count}}. Use filters to narrow down the list.",
   "waitingForTickTitle": "Waiting for tick to be processed",
   "waitingForTickDesc": "This transaction is scheduled for tick {{targetTick}}. It will be available once the network reaches that tick.",
-  "waitingForTickOutOfRangeTitle": "Transaction not yet available",
-  "waitingForTickOutOfRangeDesc": "This transaction is scheduled for tick {{targetTick}}, which is too far ahead to track live. Please check back later.",
   "targetTick": "Target Tick",
-  "ticksRemaining": "Ticks Remaining"
+  "estimatedWait": "Estimated wait"
 }
