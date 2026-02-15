@@ -182,5 +182,6 @@
   "waitingForTickTitle": "Đang chờ tick được xử lý",
   "waitingForTickDesc": "Giao dịch này được lên lịch cho tick {{targetTick}}. Nó sẽ khả dụng khi mạng đạt đến tick đó.",
   "targetTick": "Tick mục tiêu",
-  "estimatedWait": "Thời gian chờ ước tính"
+  "estimatedWait": "Thời gian chờ ước tính",
+  "tickCheckFailed": "Không thể kiểm tra trạng thái tick. Vui lòng thử lại sau."
 }

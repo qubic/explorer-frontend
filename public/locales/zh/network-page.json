@@ -182,5 +182,6 @@
   "waitingForTickTitle": "等待刻度处理完成",
   "waitingForTickDesc": "此交易已安排在刻度 {{targetTick}}。当网络到达该刻度时将可用。",
   "targetTick": "目标刻度",
-  "estimatedWait": "预计等待时间"
+  "estimatedWait": "预计等待时间",
+  "tickCheckFailed": "无法检查tick状态，请稍后再试。"
 }

@@ -182,5 +182,6 @@
   "waitingForTickTitle": "Waiting for tick to be processed",
   "waitingForTickDesc": "This transaction is scheduled for tick {{targetTick}}. It will be available once the network reaches that tick.",
   "targetTick": "Target Tick",
-  "estimatedWait": "Estimated wait"
+  "estimatedWait": "Estimated wait",
+  "tickCheckFailed": "Unable to check tick status. Please try again later."
 }

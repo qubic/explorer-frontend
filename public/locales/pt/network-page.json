@@ -182,5 +182,6 @@
   "waitingForTickTitle": "Aguardando o processamento do tick",
   "waitingForTickDesc": "Esta transação está agendada para o tick {{targetTick}}. Ficará disponível assim que a rede atingir esse tick.",
   "targetTick": "Tick alvo",
-  "estimatedWait": "Tempo estimado de espera"
+  "estimatedWait": "Tempo estimado de espera",
+  "tickCheckFailed": "Não foi possível verificar o estado do tick. Por favor, tente novamente mais tarde."
 }

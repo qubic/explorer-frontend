@@ -182,5 +182,6 @@
   "waitingForTickTitle": "ティックの処理を待機中",
   "waitingForTickDesc": "このトランザクションはティック{{targetTick}}に予定されています。ネットワークがそのティックに到達すると利用可能になります。",
   "targetTick": "目標ティック",
-  "estimatedWait": "推定待ち時間"
+  "estimatedWait": "推定待ち時間",
+  "tickCheckFailed": "ティックの状態を確認できませんでした。後でもう一度お試しください。"
 }

@@ -182,5 +182,6 @@
   "waitingForTickTitle": "Warten auf Verarbeitung des Ticks",
   "waitingForTickDesc": "Diese Transaktion ist für Tick {{targetTick}} geplant. Sie wird verfügbar sein, sobald das Netzwerk diesen Tick erreicht.",
   "targetTick": "Ziel-Tick",
-  "estimatedWait": "Geschätzte Wartezeit"
+  "estimatedWait": "Geschätzte Wartezeit",
+  "tickCheckFailed": "Tick-Status konnte nicht überprüft werden. Bitte versuchen Sie es später erneut."
 }

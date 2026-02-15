@@ -37,6 +37,7 @@ function TxPage() {
 
   const {
     isWaitingForTick,
+    isTickCheckFailed,
     targetTick,
     currentTick,
     estimatedWaitSeconds,
@@ -56,6 +57,10 @@ function TxPage() {
 
   if (isTickWatcherLoading) {
     return <LinearProgress />
+  }
+
+  if (isTickCheckFailed) {
+    return <ErrorFallback message={t('tickCheckFailed')} hideErrorHeader />
   }
 
   if (isWaitingForTick && targetTick) {
