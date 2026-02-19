@@ -5,7 +5,6 @@ import {
   type ContractEntryKind
 } from '@qubic-labs/contracts'
 import { identityFromPublicKey, writeU64LE } from '@qubic-labs/core'
-import type { SmartContract } from '@app/store/apis/qubic-static'
 
 type RegistryEntryRef = Readonly<{
   contractName: string
@@ -16,19 +15,6 @@ type RegistryEntryRef = Readonly<{
   inputType: number
   inputSize?: number
 }>
-
-export type ContractAddressHint = Readonly<{
-  address: string
-  contractName: string
-}>
-
-export const buildContractAddressHints = (
-  contracts: readonly SmartContract[] | undefined
-): ContractAddressHint[] =>
-  (contracts ?? []).map((contract) => ({
-    address: contract.address,
-    contractName: contract.name
-  }))
 
 export type DecodedContractInput =
   | Readonly<{
@@ -72,6 +58,10 @@ registryEntries.forEach((entry) => {
   } else {
     entriesByInputType.set(entry.inputType, [entry])
   }
+})
+const registryContractNameByAddress = new Map<string, string>()
+coreContractsRegistry.contracts.forEach((contract) => {
+  registryContractNameByAddress.set(contract.address.trim().toUpperCase(), contract.name.trim())
 })
 
 const HEX_32_BYTES = /^0x[0-9a-fA-F]{64}$/
@@ -171,30 +161,24 @@ const resolveCandidates = (params: {
   inputSize: number
   contractIndex?: number
   destinationHint?: string
-  kindHint?: ContractEntryKind
-  contractHints?: readonly ContractAddressHint[]
 }): readonly RegistryEntryRef[] => {
   const byInputType = entriesByInputType.get(params.inputType) ?? []
-  const byKind =
-    params.kindHint === undefined
-      ? byInputType
-      : byInputType.filter((entry) => entry.kind === params.kindHint)
   const byContractIndex =
     params.contractIndex === undefined
-      ? byKind
-      : byKind.filter((entry) => entry.contractIndex === params.contractIndex)
+      ? byInputType
+      : byInputType.filter((entry) => entry.contractIndex === params.contractIndex)
 
   const destination = params.destinationHint?.trim()
-  const destinationName =
-    destination && params.contractHints
-      ? params.contractHints.find((hint) => hint.address === destination)?.contractName
-      : undefined
+  const destinationName = destination
+    ? registryContractNameByAddress.get(destination.toUpperCase())
+    : undefined
   const normalizedDestination = destinationName?.trim().toUpperCase()
   const byDestination =
     normalizedDestination === undefined
       ? byContractIndex
       : byContractIndex.filter(
-          (entry) => entry.contractName.toUpperCase() === normalizedDestination
+          (entry) =>
+            entry.contractName.toUpperCase() === normalizedDestination && entry.kind === 'procedure'
         )
 
   if (byDestination.length === 1) return byDestination
@@ -217,8 +201,6 @@ export const decodeContractInputData = (params: {
   inputData: string | Uint8Array | number[] | null | undefined
   destinationHint?: string
   contractIndex?: number
-  kindHint?: ContractEntryKind
-  contractHints?: readonly ContractAddressHint[]
 }): DecodedContractInput => {
   const { bytes, invalid } = toBytes(params.inputData)
   if (!bytes) {
@@ -229,9 +211,7 @@ export const decodeContractInputData = (params: {
     inputType: params.inputType,
     inputSize: bytes.length,
     destinationHint: params.destinationHint,
-    contractIndex: params.contractIndex,
-    kindHint: params.kindHint,
-    contractHints: params.contractHints
+    contractIndex: params.contractIndex
   })
 
   if (candidates.length === 0) {

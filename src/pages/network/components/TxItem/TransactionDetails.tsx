@@ -7,10 +7,7 @@ import { useGetAddressName } from '@app/hooks'
 import { useGetSmartContractsQuery } from '@app/store/apis/qubic-static'
 import type { QueryServiceTransaction } from '@app/store/apis/query-service'
 import { clsxTwMerge, formatDate, formatHex, formatString } from '@app/utils'
-import {
-  buildContractAddressHints,
-  decodeContractInputData
-} from '@app/utils/contract-input-decoder'
+import { decodeContractInputData } from '@app/utils/contract-input-decoder'
 import { getProcedureName } from '@app/utils/qubic'
 import { type AssetTransfer, type Transfer, isSmartContractTx } from '@app/utils/qubic-ts'
 import AddressLink from '../AddressLink'
@@ -70,17 +67,14 @@ export default function TransactionDetails({
     () => getProcedureName(destination, inputType, smartContracts),
     [destination, inputType, smartContracts]
   )
-  const contractHints = useMemo(() => buildContractAddressHints(smartContracts), [smartContracts])
   const decodedInput = useMemo(
     () =>
       decodeContractInputData({
         inputType,
         inputData,
-        destinationHint: destination,
-        kindHint: 'procedure',
-        contractHints
+        destinationHint: destination
       }),
-    [inputData, inputType, destination, contractHints]
+    [inputData, inputType, destination]
   )
 
   const transactionTypeDisplay = useMemo(() => {
