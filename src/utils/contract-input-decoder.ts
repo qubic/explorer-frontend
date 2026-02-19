@@ -8,9 +8,9 @@ import { identityFromPublicKey, writeU64LE } from '@qubic-labs/core'
 
 type RegistryEntryRef = Readonly<{
   contractName: string
-  contractAddress: string
   contractIndex: number
   entryName: string
+  inputTypeName: string
   kind: ContractEntryKind
   inputType: number
   inputSize?: number
@@ -41,9 +41,9 @@ const registryEntries: readonly RegistryEntryRef[] = coreContractsRegistry.contr
   (contract) =>
     contract.entries.map((entry) => ({
       contractName: contract.name,
-      contractAddress: contract.address,
       contractIndex: contract.contractIndex,
       entryName: entry.name,
+      inputTypeName: `${entry.name}_input`,
       kind: entry.kind,
       inputType: entry.inputType,
       inputSize: 'inputSize' in entry ? entry.inputSize : undefined
@@ -66,7 +66,6 @@ coreContractsRegistry.contracts.forEach((contract) => {
 
 const HEX_32_BYTES = /^0x[0-9a-fA-F]{64}$/
 const DECIMAL_STRING = /^\d+$/
-const ASSET_NAME_KEY = /^assetname$/i
 
 const hex32ToBytes = (hex: string): Uint8Array => {
   const raw = hex.slice(2)
@@ -105,15 +104,6 @@ const asIdentityString = (value: unknown): string | null => {
   return null
 }
 
-const decodeAssetNameFromU64 = (value: bigint): string => {
-  const bytes = new Uint8Array(8)
-  writeU64LE(value, bytes, 0)
-  const zeroIndex = bytes.indexOf(0)
-  const endIndex = zeroIndex === -1 ? bytes.length : zeroIndex
-  const chars = Array.from(bytes.subarray(0, endIndex)).map((code) => String.fromCharCode(code))
-  return chars.join('')
-}
-
 const toBigIntLike = (value: unknown): bigint | null => {
   if (typeof value === 'bigint') return value
   if (typeof value === 'number' && Number.isFinite(value)) return BigInt(Math.trunc(value))
@@ -121,33 +111,207 @@ const toBigIntLike = (value: unknown): bigint | null => {
   return null
 }
 
-const normalizeDecodedValue = (value: unknown, keyHint?: string): unknown => {
-  const identity = asIdentityString(value)
-  if (identity) return identity
+const decodeU64AsciiIfLikely = (value: unknown): string | null => {
+  const numeric = toBigIntLike(value)
+  if (numeric === null) return null
+
+  const bytes = new Uint8Array(8)
+  writeU64LE(numeric, bytes, 0)
+
+  const zeroIndex = bytes.indexOf(0)
+  const endIndex = zeroIndex === -1 ? bytes.length : zeroIndex
+  if (endIndex === 0) return null
+
+  if (zeroIndex !== -1 && !bytes.subarray(zeroIndex).every((byte) => byte === 0)) {
+    return null
+  }
+
+  const printable = bytes.subarray(0, endIndex)
+  const allPrintable = printable.every((byte) => byte >= 32 && byte <= 126)
+  if (!allPrintable) return null
+
+  return String.fromCharCode(...printable)
+}
+
+type IoTypeLike = Readonly<{
+  kind: string
+  name: string
+  target?: string
+  fields?: readonly Readonly<{ name: string; type: string }>[]
+}>
+
+const normalizeTypeExpression = (typeExpression: string): string =>
+  typeExpression.replace(/\s+/g, '').trim()
+
+const parseArrayType = (
+  typeExpression: string
+): { readonly elementType: string; readonly length: number } | null => {
+  const normalized = normalizeTypeExpression(typeExpression)
+  const match = normalized.match(/^\[(\d+)](.+)$/)
+  if (!match) return null
+  return {
+    length: Number(match[1]),
+    elementType: match[2]
+  }
+}
+
+const isIdentityTypeExpression = (typeExpression: string): boolean => {
+  const normalized = normalizeTypeExpression(typeExpression)
+  if (normalized === 'id') return true
+  const arraySpec = parseArrayType(normalized)
+  return arraySpec ? isIdentityTypeExpression(arraySpec.elementType) : false
+}
+
+const collectIdentityPathsForInput = (candidate: RegistryEntryRef): ReadonlySet<string> => {
+  const contract = coreContractsRegistry.contracts.find(
+    (item) => item.name === candidate.contractName
+  )
+  if (!contract) return new Set<string>()
+
+  const ioTypeMap = new Map<string, IoTypeLike>()
+  ;(contract.ioTypes ?? []).forEach((ioType) => {
+    ioTypeMap.set(ioType.name, ioType)
+  })
+
+  const identityPaths = new Set<string>()
+  const visitedTypeNames = new Set<string>()
+  let visitByTypeExpression: (typeExpression: string, path: string) => void
+
+  const visitByTypeName = (typeName: string, path: string): void => {
+    const ioType = ioTypeMap.get(typeName)
+    if (!ioType) return
+
+    if (ioType.kind === 'alias') {
+      if (!ioType.target) return
+      if (visitedTypeNames.has(ioType.name)) return
+      visitedTypeNames.add(ioType.name)
+      visitByTypeExpression(ioType.target, path)
+      visitedTypeNames.delete(ioType.name)
+      return
+    }
+
+    if (ioType.kind !== 'struct' || !ioType.fields) return
+    if (visitedTypeNames.has(ioType.name)) return
+    visitedTypeNames.add(ioType.name)
+    ioType.fields.forEach((field) => {
+      const fieldPath = path ? `${path}.${field.name}` : field.name
+      visitByTypeExpression(field.type, fieldPath)
+    })
+    visitedTypeNames.delete(ioType.name)
+  }
+
+  visitByTypeExpression = (typeExpression: string, path: string): void => {
+    if (isIdentityTypeExpression(typeExpression)) {
+      identityPaths.add(path)
+      return
+    }
+
+    const normalized = normalizeTypeExpression(typeExpression)
+    const arraySpec = parseArrayType(normalized)
+    if (arraySpec) {
+      visitByTypeExpression(arraySpec.elementType, path)
+      return
+    }
+
+    const ioType = ioTypeMap.get(normalized)
+    if (!ioType) return
+    visitByTypeName(ioType.name, path)
+  }
+
+  visitByTypeName(candidate.inputTypeName, '')
+  return identityPaths
+}
+
+const collectUint64PathsForInput = (candidate: RegistryEntryRef): ReadonlySet<string> => {
+  const contract = coreContractsRegistry.contracts.find(
+    (item) => item.name === candidate.contractName
+  )
+  if (!contract) return new Set<string>()
+
+  const ioTypeMap = new Map<string, IoTypeLike>()
+  ;(contract.ioTypes ?? []).forEach((ioType) => {
+    ioTypeMap.set(ioType.name, ioType)
+  })
+
+  const uint64Paths = new Set<string>()
+  const visitedTypeNames = new Set<string>()
+  let visitByTypeExpression: (typeExpression: string, path: string) => void
+
+  const visitByTypeName = (typeName: string, path: string): void => {
+    const ioType = ioTypeMap.get(typeName)
+    if (!ioType) return
+
+    if (ioType.kind === 'alias') {
+      if (!ioType.target) return
+      if (visitedTypeNames.has(ioType.name)) return
+      visitedTypeNames.add(ioType.name)
+      visitByTypeExpression(ioType.target, path)
+      visitedTypeNames.delete(ioType.name)
+      return
+    }
+
+    if (ioType.kind !== 'struct' || !ioType.fields) return
+    if (visitedTypeNames.has(ioType.name)) return
+    visitedTypeNames.add(ioType.name)
+    ioType.fields.forEach((field) => {
+      const fieldPath = path ? `${path}.${field.name}` : field.name
+      visitByTypeExpression(field.type, fieldPath)
+    })
+    visitedTypeNames.delete(ioType.name)
+  }
+
+  visitByTypeExpression = (typeExpression: string, path: string): void => {
+    if (normalizeTypeExpression(typeExpression) === 'uint64') {
+      uint64Paths.add(path)
+    }
+
+    const normalized = normalizeTypeExpression(typeExpression)
+    const arraySpec = parseArrayType(normalized)
+    if (arraySpec) {
+      visitByTypeExpression(arraySpec.elementType, path)
+      return
+    }
+
+    const ioType = ioTypeMap.get(normalized)
+    if (!ioType) return
+    visitByTypeName(ioType.name, path)
+  }
+
+  visitByTypeName(candidate.inputTypeName, '')
+  return uint64Paths
+}
+
+const normalizeDecodedValue = (
+  value: unknown,
+  _keyHint?: string,
+  path = '',
+  identityPaths?: ReadonlySet<string>,
+  uint64Paths?: ReadonlySet<string>
+): unknown => {
+  if (path && identityPaths?.has(path)) {
+    const identity = asIdentityString(value)
+    if (identity) return identity
+  }
+
+  if (path && uint64Paths?.has(path)) {
+    const asAscii = decodeU64AsciiIfLikely(value)
+    if (asAscii) return asAscii
+  }
 
   if (Array.isArray(value)) {
-    return value.map((item) => normalizeDecodedValue(item))
+    return value.map((item) =>
+      normalizeDecodedValue(item, undefined, path, identityPaths, uint64Paths)
+    )
   }
 
   if (value && typeof value === 'object') {
     const record = value as Record<string, unknown>
     return Object.fromEntries(
-      Object.entries(record).map(([key, nested]) => [key, normalizeDecodedValue(nested, key)])
+      Object.entries(record).map(([key, nested]) => {
+        const nestedPath = path ? `${path}.${key}` : key
+        return [key, normalizeDecodedValue(nested, key, nestedPath, identityPaths, uint64Paths)]
+      })
     )
-  }
-
-  if (!keyHint) return value
-  const key = keyHint.trim()
-
-  if (ASSET_NAME_KEY.test(key)) {
-    const numeric = toBigIntLike(value)
-    if (numeric !== null) {
-      try {
-        return decodeAssetNameFromU64(numeric)
-      } catch {
-        return value
-      }
-    }
   }
 
   return value
@@ -174,16 +338,11 @@ const toBytes = (
 const resolveCandidates = (params: {
   inputType: number
   inputSize: number
-  contractIndex?: number
   destinationHint?: string
 }): readonly RegistryEntryRef[] => {
   const byInputType = (entriesByInputType.get(params.inputType) ?? []).filter(
     (entry) => entry.kind === 'procedure'
   )
-  const byContractIndex =
-    params.contractIndex === undefined
-      ? byInputType
-      : byInputType.filter((entry) => entry.contractIndex === params.contractIndex)
 
   const destination = params.destinationHint?.trim()
   const destinationName = destination
@@ -192,10 +351,8 @@ const resolveCandidates = (params: {
   const normalizedDestination = destinationName?.trim().toUpperCase()
   const byDestination =
     normalizedDestination === undefined
-      ? byContractIndex
-      : byContractIndex.filter(
-          (entry) => entry.contractName.toUpperCase() === normalizedDestination
-        )
+      ? byInputType
+      : byInputType.filter((entry) => entry.contractName.toUpperCase() === normalizedDestination)
 
   if (byDestination.length === 1) return byDestination
   if (byDestination.length > 1) {
@@ -204,19 +361,18 @@ const resolveCandidates = (params: {
     return byDestination
   }
 
-  if (byContractIndex.length <= 1) return byContractIndex
+  if (byInputType.length <= 1) return byInputType
 
-  const bySize = byContractIndex.filter((entry) => entry.inputSize === params.inputSize)
+  const bySize = byInputType.filter((entry) => entry.inputSize === params.inputSize)
   if (bySize.length > 0) return bySize
 
-  return byContractIndex
+  return byInputType
 }
 
 export const decodeContractInputData = (params: {
   inputType: number
   inputData: string | Uint8Array | number[] | null | undefined
   destinationHint?: string
-  contractIndex?: number
 }): DecodedContractInput => {
   const { bytes, invalid } = toBytes(params.inputData)
   if (!bytes) {
@@ -226,8 +382,7 @@ export const decodeContractInputData = (params: {
   const candidates = resolveCandidates({
     inputType: params.inputType,
     inputSize: bytes.length,
-    destinationHint: params.destinationHint,
-    contractIndex: params.contractIndex
+    destinationHint: params.destinationHint
   })
 
   if (candidates.length === 0) {
@@ -255,6 +410,8 @@ export const decodeContractInputData = (params: {
       kind: candidate.kind,
       bytes
     })
+    const identityPaths = collectIdentityPathsForInput(candidate)
+    const uint64Paths = collectUint64PathsForInput(candidate)
     return {
       status: 'decoded',
       contractName: candidate.contractName,
@@ -262,7 +419,7 @@ export const decodeContractInputData = (params: {
       entryName: candidate.entryName,
       kind: candidate.kind,
       inputType: candidate.inputType,
-      value: normalizeDecodedValue(decoded.value)
+      value: normalizeDecodedValue(decoded.value, undefined, '', identityPaths, uint64Paths)
     }
   } catch (error) {
     return {
