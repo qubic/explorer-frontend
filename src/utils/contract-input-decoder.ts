@@ -66,7 +66,6 @@ coreContractsRegistry.contracts.forEach((contract) => {
 
 const HEX_32_BYTES = /^0x[0-9a-fA-F]{64}$/
 const DECIMAL_STRING = /^\d+$/
-const IDENTITY_LIKE_KEY = /^(issuer|owner|source|destination|identity|publickey|address)(\d+)?$/i
 const ASSET_NAME_KEY = /^assetname$/i
 
 const hex32ToBytes = (hex: string): Uint8Array => {
@@ -78,9 +77,27 @@ const hex32ToBytes = (hex: string): Uint8Array => {
   return bytes
 }
 
-const asIdentityString = (value: unknown): string | null => {
+const asPublicKeyBytes = (value: unknown): Uint8Array | null => {
   if (value instanceof Uint8Array && value.length === 32) {
-    return identityFromPublicKey(value)
+    return value
+  }
+
+  if (Array.isArray(value) && value.length === 32) {
+    const allBytes = value.every(
+      (item) => typeof item === 'number' && Number.isInteger(item) && item >= 0 && item <= 255
+    )
+    if (allBytes) {
+      return Uint8Array.from(value)
+    }
+  }
+
+  return null
+}
+
+const asIdentityString = (value: unknown): string | null => {
+  const bytes = asPublicKeyBytes(value)
+  if (bytes) {
+    return identityFromPublicKey(bytes)
   }
   if (typeof value === 'string' && HEX_32_BYTES.test(value)) {
     return identityFromPublicKey(hex32ToBytes(value))
@@ -105,6 +122,9 @@ const toBigIntLike = (value: unknown): bigint | null => {
 }
 
 const normalizeDecodedValue = (value: unknown, keyHint?: string): unknown => {
+  const identity = asIdentityString(value)
+  if (identity) return identity
+
   if (Array.isArray(value)) {
     return value.map((item) => normalizeDecodedValue(item))
   }
@@ -118,11 +138,6 @@ const normalizeDecodedValue = (value: unknown, keyHint?: string): unknown => {
 
   if (!keyHint) return value
   const key = keyHint.trim()
-
-  if (IDENTITY_LIKE_KEY.test(key)) {
-    const identity = asIdentityString(value)
-    if (identity) return identity
-  }
 
   if (ASSET_NAME_KEY.test(key)) {
     const numeric = toBigIntLike(value)
@@ -162,7 +177,9 @@ const resolveCandidates = (params: {
   contractIndex?: number
   destinationHint?: string
 }): readonly RegistryEntryRef[] => {
-  const byInputType = entriesByInputType.get(params.inputType) ?? []
+  const byInputType = (entriesByInputType.get(params.inputType) ?? []).filter(
+    (entry) => entry.kind === 'procedure'
+  )
   const byContractIndex =
     params.contractIndex === undefined
       ? byInputType
@@ -177,8 +194,7 @@ const resolveCandidates = (params: {
     normalizedDestination === undefined
       ? byContractIndex
       : byContractIndex.filter(
-          (entry) =>
-            entry.contractName.toUpperCase() === normalizedDestination && entry.kind === 'procedure'
+          (entry) => entry.contractName.toUpperCase() === normalizedDestination
         )
 
   if (byDestination.length === 1) return byDestination
