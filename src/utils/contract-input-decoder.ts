@@ -5,6 +5,7 @@ import {
   type ContractEntryKind
 } from '@qubic-labs/contracts'
 import { identityFromPublicKey, writeU64LE } from '@qubic-labs/core'
+import type { SmartContract } from '@app/store/apis/qubic-static'
 
 type RegistryEntryRef = Readonly<{
   contractName: string
@@ -20,6 +21,14 @@ export type ContractAddressHint = Readonly<{
   address: string
   contractName: string
 }>
+
+export const buildContractAddressHints = (
+  contracts: readonly SmartContract[] | undefined
+): ContractAddressHint[] =>
+  (contracts ?? []).map((contract) => ({
+    address: contract.address,
+    contractName: contract.name
+  }))
 
 export type DecodedContractInput =
   | Readonly<{
