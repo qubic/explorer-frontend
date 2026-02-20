@@ -57,6 +57,7 @@
   "hide": "隐藏",
   "show": "显示",
   "transactionNotFound": "未找到交易",
+  "invalidTransactionId": "交易ID无效。请检查ID并重试。",
   "invalidAddressError": "地址格式无效。请检查地址并重试。",
   "addressNotFoundError": "错误：我们找不到您要查找的地址。请检查地址并重试。",
   "loadingTransactionsError": "错误：加载交易时出现问题。请稍后再试。",
@@ -177,5 +178,10 @@
   "matchingEntities": "匹配结果",
   "transactionsFound": "{{count}} 笔交易",
   "showingMaxTransactions": "显示最近 {{count}} 笔交易",
-  "maxResultsHint": "结果限制为 {{count}} 条。请使用筛选器缩小列表范围。"
+  "maxResultsHint": "结果限制为 {{count}} 条。请使用筛选器缩小列表范围。",
+  "waitingForTickTitle": "等待刻度处理完成",
+  "waitingForTickDesc": "此交易已安排在刻度 {{targetTick}}。当网络到达该刻度时将可用。",
+  "targetTick": "目标刻度",
+  "estimatedWait": "预计等待时间",
+  "tickCheckFailed": "无法检查tick状态，请稍后再试。"
 }

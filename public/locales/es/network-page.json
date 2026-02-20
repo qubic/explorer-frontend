@@ -57,6 +57,7 @@
   "hide": "Ocultar",
   "show": "Mostrar",
   "transactionNotFound": "Transacción no encontrada",
+  "invalidTransactionId": "ID de transacción inválido. Verifica la ID y vuelve a intentarlo.",
   "invalidAddressError": "El formato de la dirección no es válido. Verifica la dirección y vuelve a intentarlo.",
   "addressNotFoundError": "Error: No pudimos encontrar la dirección que estás buscando. Verifica la dirección y vuelve a intentarlo.",
   "loadingTransactionsError": "Error: Algo ha ido mal al cargar las transacciones. Por favor, inténtalo de nuevo más tarde.",
@@ -177,5 +178,10 @@
   "matchingEntities": "Resultados coincidentes",
   "transactionsFound": "{{count}} transacciones",
   "showingMaxTransactions": "Mostrando las últimas {{count}} transacciones",
-  "maxResultsHint": "Los resultados están limitados a {{count}}. Use filtros para refinar la lista."
+  "maxResultsHint": "Los resultados están limitados a {{count}}. Use filtros para refinar la lista.",
+  "waitingForTickTitle": "Esperando a que el tick sea procesado",
+  "waitingForTickDesc": "Esta transacción está programada para el tick {{targetTick}}. Estará disponible una vez que la red alcance ese tick.",
+  "targetTick": "Tick objetivo",
+  "estimatedWait": "Tiempo estimado de espera",
+  "tickCheckFailed": "No se pudo verificar el estado del tick. Por favor, inténtelo de nuevo más tarde."
 }

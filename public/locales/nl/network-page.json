@@ -57,6 +57,7 @@
   "hide": "Verbergen",
   "show": "Tonen",
   "transactionNotFound": "Transactie niet gevonden",
+  "invalidTransactionId": "Ongeldig transactie-ID. Controleer de ID en probeer het opnieuw.",
   "invalidAddressError": "Het adresformaat is ongeldig. Controleer het adres en probeer het opnieuw.",
   "addressNotFoundError": "Fout: We konden het adres dat je zoekt niet vinden. Controleer het adres en probeer het opnieuw.",
   "loadingTransactionsError": "Fout: Er is iets misgegaan bij het laden van de transacties. Probeer het later opnieuw.",
@@ -177,5 +178,10 @@
   "matchingEntities": "Overeenkomende resultaten",
   "transactionsFound": "{{count}} transacties",
   "showingMaxTransactions": "Toont de laatste {{count}} transacties",
-  "maxResultsHint": "Resultaten zijn beperkt tot {{count}}. Gebruik filters om de lijst te verfijnen."
+  "maxResultsHint": "Resultaten zijn beperkt tot {{count}}. Gebruik filters om de lijst te verfijnen.",
+  "waitingForTickTitle": "Wachten op verwerking van de tick",
+  "waitingForTickDesc": "Deze transactie is gepland voor tick {{targetTick}}. Deze wordt beschikbaar zodra het netwerk die tick bereikt.",
+  "targetTick": "Doeltick",
+  "estimatedWait": "Geschatte wachttijd",
+  "tickCheckFailed": "Kan tickstatus niet controleren. Probeer het later opnieuw."
 }

@@ -57,6 +57,7 @@
   "hide": "Gizle",
   "show": "Göster",
   "transactionNotFound": "İşlem bulunamadı",
+  "invalidTransactionId": "İşlem ID'si geçersiz. Lütfen ID'yi kontrol edin ve tekrar deneyin.",
   "invalidAddressError": "Adres biçimi geçersiz. Lütfen adresi kontrol edin ve tekrar deneyin.",
   "addressNotFoundError": "Hata: Aradığınız adresi bulamadık. Lütfen adresi kontrol edin ve tekrar deneyin.",
   "loadingTransactionsError": "Hata: İşlemleri yüklerken bir sorun oluştu. Lütfen daha sonra tekrar deneyin.",
@@ -177,5 +178,10 @@
   "matchingEntities": "Eşleşen Sonuçlar",
   "transactionsFound": "{{count}} işlem",
   "showingMaxTransactions": "Son {{count}} işlem gösteriliyor",
-  "maxResultsHint": "Sonuçlar {{count}} ile sınırlıdır. Listeyi daraltmak için filtreler kullanın."
+  "maxResultsHint": "Sonuçlar {{count}} ile sınırlıdır. Listeyi daraltmak için filtreler kullanın.",
+  "waitingForTickTitle": "Tick'in işlenmesi bekleniyor",
+  "waitingForTickDesc": "Bu işlem {{targetTick}} tick'i için planlanmıştır. Ağ o tick'e ulaştığında kullanılabilir olacaktır.",
+  "targetTick": "Hedef Tick",
+  "estimatedWait": "Tahmini bekleme süresi",
+  "tickCheckFailed": "Tick durumu kontrol edilemedi. Lütfen daha sonra tekrar deneyin."
 }
