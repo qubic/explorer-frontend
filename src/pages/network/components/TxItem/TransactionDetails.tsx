@@ -7,12 +7,14 @@ import { useGetAddressName } from '@app/hooks'
 import { useGetSmartContractsQuery } from '@app/store/apis/qubic-static'
 import type { QueryServiceTransaction } from '@app/store/apis/query-service'
 import { clsxTwMerge, formatDate, formatHex, formatString } from '@app/utils'
+import { decodeContractInputData } from '@app/utils/contract-input-decoder'
 import { getProcedureName } from '@app/utils/qubic'
 import { type AssetTransfer, type Transfer, isSmartContractTx } from '@app/utils/qubic-ts'
 import AddressLink from '../AddressLink'
 import SubCardItem from '../SubCardItem'
 import TickLink from '../TickLink'
 import TxLink from '../TxLink'
+import DecodedInputData from './DecodedInputData'
 import TransferList from './TransferList/TransferList'
 import type { TxItemVariant } from './TxItem.types'
 
@@ -64,6 +66,15 @@ export default function TransactionDetails({
   const procedureName = useMemo(
     () => getProcedureName(destination, inputType, smartContracts),
     [destination, inputType, smartContracts]
+  )
+  const decodedInput = useMemo(
+    () =>
+      decodeContractInputData({
+        inputType,
+        inputData,
+        destinationHint: destination
+      }),
+    [inputData, inputType, destination]
   )
 
   const transactionTypeDisplay = useMemo(() => {
@@ -213,6 +224,13 @@ export default function TransactionDetails({
               </p>
             </div>
           }
+        />
+      )}
+      {showExtendedDetails && inputData && inputData.length > 0 && inputType > 0 && (
+        <SubCardItem
+          title={t('decodedData')}
+          variant={variant}
+          content={<DecodedInputData decoded={decodedInput} t={t} />}
         />
       )}
 
