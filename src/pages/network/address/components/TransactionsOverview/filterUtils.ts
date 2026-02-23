@@ -28,16 +28,7 @@ export interface AddressFilter {
 
 export type TransactionDirection = 'incoming' | 'outgoing'
 
-export interface TxTypeFilter {
-  scAddress?: string
-  scLabel: string
-  procedureId?: number
-  procedureName?: string
-  isStandard?: boolean
-}
-
 export interface TransactionFilters {
-  txType?: TxTypeFilter
   direction?: TransactionDirection
   sourceFilter?: AddressFilter
   destinationFilter?: AddressFilter

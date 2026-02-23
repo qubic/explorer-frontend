@@ -20,13 +20,7 @@ import { useGetSmartContractsQuery } from '@app/store/apis/qubic-static'
 import { clsxTwMerge, formatEllipsis, formatString, isValidQubicAddress } from '@app/utils'
 import { useGetAddressName } from '@app/hooks'
 import { HomeLink } from '../components'
-import {
-  AddressDetails,
-  AddressEvents,
-  ContractOverview,
-  OwnedAssets,
-  TransactionsOverview
-} from './components'
+import { AddressDetails, ContractOverview, OwnedAssets, TransactionsOverview } from './components'
 
 function AddressPage() {
   const { t } = useTranslation('network-page')
@@ -86,14 +80,13 @@ function AddressPage() {
   const tabParam = searchParams.get('tab')
 
   const selectedTabIndex = useMemo(() => {
-    if (tabParam === 'events') return 1
-    if (tabParam === 'contract' && isSmartContract) return 2
+    if (tabParam === 'contract' && isSmartContract) return 1
     return 0
   }, [tabParam, isSmartContract])
 
   // Normalize invalid tab params so URL always reflects the visible tab
   useEffect(() => {
-    const isValidTab = tabParam === 'events' || (tabParam === 'contract' && isSmartContract)
+    const isValidTab = tabParam === 'contract' && isSmartContract
     if (tabParam && !isValidTab) {
       setSearchParams(
         (prev) => {
@@ -110,8 +103,6 @@ function AddressPage() {
       setSearchParams(
         (prev) => {
           if (index === 1) {
-            prev.set('tab', 'events')
-          } else if (index === 2) {
             prev.set('tab', 'contract')
           } else {
             prev.delete('tab')
@@ -228,15 +219,11 @@ function AddressPage() {
       >
         <Tabs.List>
           <Tabs.Tab>{t('transactions')}</Tabs.Tab>
-          <Tabs.Tab>{t('events')}</Tabs.Tab>
           {isSmartContract && <Tabs.Tab>{t('contract')}</Tabs.Tab>}
         </Tabs.List>
         <Tabs.Panels>
           <Tabs.Panel>
             <TransactionsOverview addressId={addressId} />
-          </Tabs.Panel>
-          <Tabs.Panel>
-            <AddressEvents addressId={addressId} />
           </Tabs.Panel>
           {isSmartContract && smartContractDetails && (
             <Tabs.Panel>
