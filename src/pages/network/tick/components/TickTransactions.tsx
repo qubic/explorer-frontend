@@ -144,7 +144,7 @@ export default function TickTransactions({ tick }: Props) {
       />
 
       <div className="flex flex-wrap items-end justify-between gap-8">
-        {totalCount > 0 ? (
+        {!isTickTransactionsLoading && totalCount > 0 ? (
           <span className="text-sm text-gray-50">
             {t('transactionsFound', {
               count: totalCount.toLocaleString()

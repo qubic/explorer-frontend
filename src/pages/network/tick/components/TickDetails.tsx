@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 
 import { ChevronLeftIcon, ChevronRightIcon } from '@app/assets/icons'
 import { Skeleton } from '@app/components/ui'
@@ -19,6 +19,7 @@ type Props = Readonly<{
 export default function TickDetails({ tick }: Props) {
   const { t } = useTranslation('network-page')
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
 
   const {
     data: tickData,
@@ -33,9 +34,10 @@ export default function TickDetails({ tick }: Props) {
   const handleTickNavigation = useCallback(
     (direction: 'previous' | 'next') => () => {
       const newTick = Number(tick) + (direction === 'previous' ? -1 : 1)
-      navigate(Routes.NETWORK.TICK(newTick))
+      const tab = searchParams.get('tab')
+      navigate(`${Routes.NETWORK.TICK(newTick)}${tab ? `?tab=${tab}` : ''}`)
     },
-    [navigate, tick]
+    [navigate, tick, searchParams]
   )
 
   const tickLeader = useMemo(() => {
