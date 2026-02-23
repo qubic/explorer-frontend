@@ -1,23 +1,33 @@
-import { useMemo } from 'react'
+import { useSearchParams } from 'react-router-dom'
 
-import type { TransactionEvent } from '@app/mocks/generateMockEvents'
-import { generateMockEvents } from '@app/mocks/generateMockEvents'
-import { useGetTransactionsForTickQuery } from '@app/store/apis/query-service'
+import { DEFAULT_PAGE_SIZE } from '@app/constants'
+import { useGetEventsByTickQuery, type TransactionEvent } from '@app/store/apis/events'
 
-// TODO: Replace mock generation with real events API endpoint
 export default function useTickEvents(tick: number): {
   events: TransactionEvent[]
+  total: number
+  eventType: number | undefined
   isLoading: boolean
 } {
-  const { data: transactions, isFetching } = useGetTransactionsForTickQuery(
-    { tickNumber: tick },
+  const [searchParams] = useSearchParams()
+
+  const page = parseInt(searchParams.get('page') || '1', 10) || 1
+  const pageSize =
+    parseInt(searchParams.get('pageSize') ?? String(DEFAULT_PAGE_SIZE), 10) || DEFAULT_PAGE_SIZE
+  const offset = (page - 1) * pageSize
+
+  const rawEventType = searchParams.get('eventType')
+  const eventType = rawEventType !== null ? Number(rawEventType) : undefined
+
+  const { data, isFetching } = useGetEventsByTickQuery(
+    { tickNumber: tick, offset, size: pageSize, eventType },
     { skip: !tick }
   )
 
-  const events = useMemo(
-    () => (transactions ? generateMockEvents(transactions) : []),
-    [transactions]
-  )
-
-  return { events, isLoading: isFetching }
+  return {
+    events: data?.events ?? [],
+    total: data?.total ?? 0,
+    eventType,
+    isLoading: isFetching
+  }
 }

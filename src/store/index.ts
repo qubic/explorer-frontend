@@ -1,5 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit'
 
+import { eventsApi } from './apis/events'
 import { archiverV2Api } from './apis/archiver-v2'
 import { qliApi } from './apis/qli'
 import { rpcQueryServiceApi } from './apis/query-service'
@@ -18,7 +19,8 @@ export const store = configureStore({
     [rpcQueryServiceApi.reducerPath]: rpcQueryServiceApi.reducer,
     [rpcLiveApi.reducerPath]: rpcLiveApi.reducer,
     [rpcStatsApi.reducerPath]: rpcStatsApi.reducer,
-    [qubicStaticApi.reducerPath]: qubicStaticApi.reducer
+    [qubicStaticApi.reducerPath]: qubicStaticApi.reducer,
+    [eventsApi.reducerPath]: eventsApi.reducer
   },
 
   middleware: (getDefaultMiddleware) =>
@@ -29,6 +31,7 @@ export const store = configureStore({
       .concat(rpcLiveApi.middleware)
       .concat(rpcStatsApi.middleware)
       .concat(qubicStaticApi.middleware)
+      .concat(eventsApi.middleware)
 })
 
 export type RootState = ReturnType<typeof store.getState>
