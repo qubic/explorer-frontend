@@ -57,6 +57,7 @@ jobs:
               github.ref == 'refs/heads/staging' && secrets.STATIC_API_URL_STAGING ||
               secrets.STATIC_API_URL_DEV
             }}
+          VITE_EVENTS_API_URL: ${{ secrets.EVENTS_API_URL }}
         run: pnpm run build
 
       - name: 📤 Deploy to the corresponding environment
