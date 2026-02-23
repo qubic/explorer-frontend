@@ -62,3 +62,9 @@ export const staticApiProxy = createProxyConfig(
   '/dev-proxy-static-api',
   'STATIC-API-DEV-PROXY'
 )
+
+export const eventsApiProxy = createProxyConfig(
+  'https://dev02.qubic.org',
+  '/dev-proxy-events-api',
+  'EVENTS-API-DEV-PROXY'
+)
