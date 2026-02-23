@@ -6,9 +6,10 @@ import { Badge, PaginationBar, Select, Skeleton, Tooltip } from '@app/components
 import type { Option } from '@app/components/ui/Select'
 import { DEFAULT_PAGE_SIZE, getPageSizeSelectOptions } from '@app/constants'
 import { useGetAddressName } from '@app/hooks'
-import { getEventTypeLabel, type TransactionEvent } from '@app/mocks/generateMockEvents'
+import { getEventTypeLabel, type TransactionEvent } from '@app/store/apis/events'
 import { formatDate, formatEllipsis, formatString } from '@app/utils'
 import AddressLink from '../AddressLink'
+import BetaBanner from '../BetaBanner'
 import TickLink from '../TickLink'
 import TxLink from '../TxLink'
 
@@ -97,20 +98,24 @@ function EventRow({ event, showTickAndTimestamp, showTxId, highlightAddress }: E
 
 type Props = {
   events: TransactionEvent[]
+  total?: number
   isLoading?: boolean
   paginated?: boolean
   showTxId?: boolean
   showTickAndTimestamp?: boolean
+  showBetaBanner?: boolean
   header?: string
   highlightAddress?: string
 }
 
 export default function TransactionEvents({
   events,
+  total,
   isLoading = false,
   paginated = false,
   showTxId = true,
   showTickAndTimestamp = false,
+  showBetaBanner = true,
   header,
   highlightAddress
 }: Props) {
@@ -128,8 +133,11 @@ export default function TransactionEvents({
     [pageSizeOptions, pageSize]
   )
 
-  const pageCount = Math.ceil(events.length / pageSize)
-  const displayEvents = paginated ? events.slice((page - 1) * pageSize, page * pageSize) : events
+  // When total is provided, pagination is server-side (events already paginated)
+  const totalCount = total ?? events.length
+  const pageCount = Math.ceil(totalCount / pageSize)
+  const displayEvents =
+    paginated && total === undefined ? events.slice((page - 1) * pageSize, page * pageSize) : events
 
   const handlePageChange = useCallback(
     (value: number) => {
@@ -164,18 +172,15 @@ export default function TransactionEvents({
   return (
     <div className="flex flex-col gap-16">
       {header && <p className="font-space text-base font-500">{header}</p>}
-      <div className="flex items-center gap-12 rounded-8 border-1 border-info-40/30 bg-info-90 px-16 py-14">
-        <span className="shrink-0 rounded-4 border-1 border-info-40 px-8 py-2 font-space text-xs font-500 text-info-40">
-          BETA
-        </span>
-        <p className="text-sm text-gray-50">{t('eventsBetaDisclaimer')}</p>
-      </div>
+      {showBetaBanner && <BetaBanner />}
       {paginated && (
         <div className="flex items-end justify-between">
           <span className="text-sm text-gray-50">
-            {t('eventsFound', {
-              count: events.length.toLocaleString()
-            } as Record<string, string>)}
+            {!isLoading && totalCount > 0
+              ? t('eventsFound', {
+                  count: totalCount.toLocaleString()
+                } as Record<string, string>)
+              : '\u00A0'}
           </span>
           <Select
             className="w-[170px]"
@@ -235,7 +240,7 @@ export default function TransactionEvents({
               {!isLoading &&
                 displayEvents.map((event) => (
                   <EventRow
-                    key={event.logId}
+                    key={`${event.transactionHash}-${event.logId}`}
                     event={event}
                     showTickAndTimestamp={showTickAndTimestamp}
                     showTxId={showTxId}
