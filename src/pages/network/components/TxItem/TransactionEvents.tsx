@@ -1,12 +1,17 @@
-import { useCallback, useMemo } from 'react'
+import { memo, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router-dom'
 
 import { Badge, PaginationBar, Select, Skeleton, Tooltip } from '@app/components/ui'
 import type { Option } from '@app/components/ui/Select'
-import { DEFAULT_PAGE_SIZE, getPageSizeSelectOptions } from '@app/constants'
-import { useGetAddressName } from '@app/hooks'
-import { getEventTypeLabel, type TransactionEvent } from '@app/store/apis/events'
+import { getPageSizeSelectOptions } from '@app/constants'
+import {
+  useGetAddressName,
+  useGetSmartContractByIndex,
+  useValidatedPage,
+  useValidatedPageSize
+} from '@app/hooks'
+import { EVENT_TYPES, getEventTypeLabel, type TransactionEvent } from '@app/store/apis/events'
 import { formatDate, formatEllipsis, formatString } from '@app/utils'
 import AddressLink from '../AddressLink'
 import BetaBanner from '../BetaBanner'
@@ -18,8 +23,7 @@ const SKELETON_CELLS = [
   { id: 'type', className: 'h-16 w-64' },
   { id: 'source', className: 'h-16 w-80' },
   { id: 'destination', className: 'h-16 w-80' },
-  { id: 'amount', className: 'ml-auto h-16 w-64' },
-  { id: 'token', className: 'ml-auto h-16 w-48' }
+  { id: 'amount', className: 'ml-auto h-16 w-80' }
 ]
 
 const SKELETON_TICK_TIMESTAMP_CELLS = [
@@ -36,8 +40,21 @@ type EventRowProps = {
   highlightAddress?: string
 }
 
-function EventRow({ event, showTickAndTimestamp, showTxId, highlightAddress }: EventRowProps) {
-  const sourceAddressName = useGetAddressName(event.source)
+const EventRow = memo(function EventRow({
+  event,
+  showTickAndTimestamp,
+  showTxId,
+  highlightAddress
+}: EventRowProps) {
+  const contract = useGetSmartContractByIndex(
+    event.type === EVENT_TYPES.CONTRACT_RESERVE_DEDUCTION && !event.source
+      ? event.contractIndex
+      : undefined
+  )
+
+  const source = contract?.address ?? event.source
+
+  const sourceAddressName = useGetAddressName(source)
   const destinationAddressName = useGetAddressName(event.destination)
 
   return (
@@ -66,20 +83,24 @@ function EventRow({ event, showTickAndTimestamp, showTxId, highlightAddress }: E
         </Badge>
       </td>
       <td className="px-16 py-14">
-        {highlightAddress === event.source ? (
-          <Tooltip tooltipId="source-address" content={event.source}>
-            <span className="font-space text-sm">{formatEllipsis(event.source)}</span>
+        {!source && <span className="font-space text-sm text-gray-50">-</span>}
+        {source && highlightAddress === source && (
+          <Tooltip tooltipId="source-address" content={source}>
+            <span className="font-space text-sm">{formatEllipsis(source)}</span>
           </Tooltip>
-        ) : (
-          <AddressLink value={event.source} label={sourceAddressName?.name} showTooltip ellipsis />
+        )}
+        {source && highlightAddress !== source && (
+          <AddressLink value={source} label={sourceAddressName?.name} showTooltip ellipsis />
         )}
       </td>
       <td className="px-16 py-14">
-        {highlightAddress === event.destination ? (
+        {!event.destination && <span className="font-space text-sm text-gray-50">-</span>}
+        {event.destination && highlightAddress === event.destination && (
           <Tooltip tooltipId="destination-address" content={event.destination}>
             <span className="font-space text-sm">{formatEllipsis(event.destination)}</span>
           </Tooltip>
-        ) : (
+        )}
+        {event.destination && highlightAddress !== event.destination && (
           <AddressLink
             value={event.destination}
             label={destinationAddressName?.name}
@@ -88,13 +109,13 @@ function EventRow({ event, showTickAndTimestamp, showTxId, highlightAddress }: E
           />
         )}
       </td>
-      <td className="px-16 py-14 text-right font-space text-sm font-500">
-        {formatString(event.amount)}
+      <td className="whitespace-nowrap px-16 py-14 text-right font-space text-sm">
+        <span className="font-500">{formatString(event.amount)}</span>{' '}
+        <span className="text-gray-50">{event.assetName ?? 'QUBIC'}</span>
       </td>
-      <td className="px-16 py-14 text-right font-space text-sm">{event.assetName ?? 'QUBIC'}</td>
     </tr>
   )
-}
+})
 
 type Props = {
   events: TransactionEvent[]
@@ -120,12 +141,10 @@ export default function TransactionEvents({
   highlightAddress
 }: Props) {
   const { t } = useTranslation('network-page')
-  const [searchParams, setSearchParams] = useSearchParams()
+  const [, setSearchParams] = useSearchParams()
 
-  const page = paginated ? parseInt(searchParams.get('page') || '1', 10) : 1
-  const pageSize = paginated
-    ? parseInt(searchParams.get('pageSize') ?? String(DEFAULT_PAGE_SIZE), 10)
-    : DEFAULT_PAGE_SIZE
+  const page = useValidatedPage(paginated)
+  const pageSize = useValidatedPageSize(paginated)
 
   const pageSizeOptions = useMemo(() => getPageSizeSelectOptions(t), [t])
   const defaultPageSizeOption = useMemo(
@@ -160,7 +179,7 @@ export default function TransactionEvents({
     [setSearchParams]
   )
 
-  const columnCount = 6 + (showTickAndTimestamp ? 2 : 0) + (showTxId ? 1 : 0)
+  const columnCount = 5 + (showTickAndTimestamp ? 2 : 0) + (showTxId ? 1 : 0)
 
   const skeletonCells = [
     SKELETON_CELLS[0],
@@ -204,13 +223,12 @@ export default function TransactionEvents({
                   </>
                 )}
                 {showTxId && (
-                  <th className="whitespace-nowrap px-16 py-12 font-400">{t('txId')}</th>
+                  <th className="whitespace-nowrap px-16 py-12 font-400">{t('txID')}</th>
                 )}
                 <th className="whitespace-nowrap px-16 py-12 font-400">{t('eventType')}</th>
                 <th className="whitespace-nowrap px-16 py-12 font-400">{t('source')}</th>
                 <th className="whitespace-nowrap px-16 py-12 font-400">{t('destination')}</th>
                 <th className="whitespace-nowrap px-16 py-12 text-right font-400">{t('amount')}</th>
-                <th className="whitespace-nowrap px-16 py-12 text-right font-400">{t('token')}</th>
               </tr>
             </thead>
             <tbody>
@@ -227,7 +245,7 @@ export default function TransactionEvents({
                     ))}
                   </tr>
                 ))}
-              {!isLoading && events.length === 0 && (
+              {!isLoading && displayEvents.length === 0 && (
                 <tr>
                   <td
                     colSpan={columnCount}

@@ -99,7 +99,7 @@ export default function TransactionDetails({
         />
       ) : (
         <SubCardItem
-          title={t('txId')}
+          title={t('txID')}
           variant={variant}
           content={<TxLink className="text-sm text-primary-30" value={hash} copy />}
         />

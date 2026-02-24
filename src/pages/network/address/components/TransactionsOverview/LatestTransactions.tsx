@@ -4,19 +4,13 @@ import { useTranslation } from 'react-i18next'
 import { Infocon } from '@app/assets/icons'
 import { PaginationBar, Select, Tooltip } from '@app/components/ui'
 import type { Option } from '@app/components/ui/Select'
+import { DEFAULT_PAGE_SIZE, getPageSizeSelectOptions } from '@app/constants'
 import useLatestTransactions, { MAX_TRANSACTION_RESULTS } from '../../hooks/useLatestTransactions'
 import { TransactionRow, TransactionSkeletonRow } from '../../../components'
 import { parseFilterApiError } from './filterUtils'
 import TransactionFiltersBar from './TransactionFiltersBar'
 
-const DEFAULT_PAGE_SIZE = 20
 const COLUMN_COUNT = 8
-
-const PAGE_SIZE_OPTIONS = [
-  { i18nKey: 'showItemsPerPage', value: '10' },
-  { i18nKey: 'showItemsPerPage', value: '20' },
-  { i18nKey: 'showItemsPerPage', value: '50' }
-]
 
 const SkeletonRows = memo(({ count }: { count: number }) => (
   <>
@@ -39,14 +33,7 @@ export default function LatestTransactions({ addressId }: Props) {
   const { transactions, totalCount, isLoading, error, applyFilters, clearFilters, activeFilters } =
     useLatestTransactions(addressId, page, pageSize)
 
-  const pageSizeOptions = useMemo(
-    () =>
-      PAGE_SIZE_OPTIONS.map((option) => ({
-        label: t(option.i18nKey, { count: parseInt(option.value, 10) }),
-        value: option.value
-      })),
-    [t]
-  )
+  const pageSizeOptions = useMemo(() => getPageSizeSelectOptions(t), [t])
 
   const defaultPageSizeOption = useMemo(
     () => pageSizeOptions.find((option) => option.value === String(pageSize)),

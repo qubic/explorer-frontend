@@ -21,6 +21,9 @@ export const Routes = {
     ADDRESS: (address: string) => `${Routes.NETWORK.ROOT}/address/${address}`,
     TX: (txId: string) => `${Routes.NETWORK.ROOT}/tx/${txId}`,
     TICK: (tick: string | number) => `${Routes.NETWORK.ROOT}/tick/${tick}`,
+    BLOCKCHAIN: {
+      EVENTS: '/network/blockchain/events'
+    },
     WALLETS: {
       RICH_LIST: '/network/wallets/rich-list',
       EXCHANGES: '/network/wallets/exchanges'

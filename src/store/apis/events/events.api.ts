@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
+import { DEFAULT_PAGE_SIZE, QUERY_CACHE_TIME } from '@app/constants'
 import { envConfig } from '@app/configs'
 import type { RawGetEventsResponse, TransactionEvent } from './events.types'
 import { adaptApiEvent } from './events.types'
@@ -11,16 +12,34 @@ export interface PaginatedEvents {
   total: number
 }
 
-export interface GetEventsByTickRequest {
-  tickNumber: number
+export interface GetEventsRequest {
+  tickNumber?: number
   offset?: number
   size?: number
   eventType?: number
 }
 
+function adaptEventsList(response: RawGetEventsResponse): TransactionEvent[] {
+  return (response?.events ?? []).flatMap((raw) => {
+    try {
+      return [adaptApiEvent(raw)]
+    } catch {
+      return []
+    }
+  })
+}
+
+function adaptPaginatedEvents(response: RawGetEventsResponse): PaginatedEvents {
+  return {
+    events: adaptEventsList(response),
+    total: response?.hits?.total ?? 0
+  }
+}
+
 export const eventsApi = createApi({
   reducerPath: 'eventsApi',
   baseQuery: fetchBaseQuery({ baseUrl: BASE_URL }),
+  keepUnusedDataFor: QUERY_CACHE_TIME,
   endpoints: (builder) => ({
     getEventsByTxHash: builder.query<TransactionEvent[], string>({
       query: (txHash) => ({
@@ -28,39 +47,23 @@ export const eventsApi = createApi({
         method: 'POST',
         body: { filters: { transactionHash: txHash }, pagination: { size: 1000 } }
       }),
-      transformResponse: (response: RawGetEventsResponse) =>
-        (response?.events ?? []).flatMap((raw) => {
-          try {
-            return [adaptApiEvent(raw)]
-          } catch {
-            return []
-          }
-        })
+      transformResponse: adaptEventsList
     }),
-    getEventsByTick: builder.query<PaginatedEvents, GetEventsByTickRequest>({
-      query: ({ tickNumber, offset = 0, size = 25, eventType }) => ({
+    getEvents: builder.query<PaginatedEvents, GetEventsRequest>({
+      query: ({ tickNumber, offset = 0, size = DEFAULT_PAGE_SIZE, eventType }) => ({
         url: '/getEvents',
         method: 'POST',
         body: {
           filters: {
-            tickNumber: String(tickNumber),
+            ...(tickNumber !== undefined && { tickNumber: String(tickNumber) }),
             ...(eventType !== undefined && { eventType: String(eventType) })
           },
           pagination: { offset, size }
         }
       }),
-      transformResponse: (response: RawGetEventsResponse) => ({
-        events: (response?.events ?? []).flatMap((raw) => {
-          try {
-            return [adaptApiEvent(raw)]
-          } catch {
-            return []
-          }
-        }),
-        total: response?.hits?.total ?? 0
-      })
+      transformResponse: adaptPaginatedEvents
     })
   })
 })
 
-export const { useGetEventsByTxHashQuery, useGetEventsByTickQuery } = eventsApi
+export const { useGetEventsByTxHashQuery, useGetEventsQuery } = eventsApi
