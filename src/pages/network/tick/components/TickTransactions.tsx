@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import { PaginationBar, Select } from '@app/components/ui'
 import type { Option } from '@app/components/ui/Select'
+import { DEFAULT_PAGE_SIZE, getPageSizeSelectOptions } from '@app/constants'
 import { useGetTransactionsForTickQuery } from '@app/store/apis/query-service'
 import TickTransactionFiltersBar from './TickTransactionFiltersBar'
 import { TransactionRow, TransactionSkeletonRow } from '../../components'
@@ -12,14 +13,6 @@ import {
   extractErrorMessage,
   parseFilterApiError
 } from './tickFilterUtils'
-
-const DEFAULT_PAGE_SIZE = 20
-
-const PAGE_SIZE_OPTIONS = [
-  { i18nKey: 'showItemsPerPage', value: '10' },
-  { i18nKey: 'showItemsPerPage', value: '20' },
-  { i18nKey: 'showItemsPerPage', value: '50' }
-]
 
 const TickTransactionsSkeletonRows = memo(({ count }: { count: number }) => (
   <>
@@ -40,14 +33,7 @@ export default function TickTransactions({ tick }: Props) {
   const [page, setPage] = useState(1)
   const [pageSize, setPageSize] = useState(DEFAULT_PAGE_SIZE)
 
-  const pageSizeOptions = useMemo(
-    () =>
-      PAGE_SIZE_OPTIONS.map((option) => ({
-        label: t(option.i18nKey, { count: parseInt(option.value, 10) }),
-        value: option.value
-      })),
-    [t]
-  )
+  const pageSizeOptions = useMemo(() => getPageSizeSelectOptions(t), [t])
 
   const defaultPageSizeOption = useMemo(
     () => pageSizeOptions.find((option) => option.value === String(pageSize)),

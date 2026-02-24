@@ -8,7 +8,7 @@ export {
   formatAddressShort,
   formatAmountForDisplay,
   formatAmountShort,
-  parseAmountFromDisplay,
+  parseNumericInput,
   parseFilterApiError,
   validateAmountRange,
   validateInputTypeRange

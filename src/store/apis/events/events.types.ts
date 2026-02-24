@@ -47,6 +47,16 @@ export const EVENT_TYPES = {
   CUSTOM_MESSAGE: 255
 } as const
 
+// Subset of event types supported by the events API for filtering
+export const EVENT_TYPE_FILTER_OPTIONS = [
+  EVENT_TYPES.QU_TRANSFER,
+  EVENT_TYPES.ASSET_ISSUANCE,
+  EVENT_TYPES.ASSET_OWNERSHIP_CHANGE,
+  EVENT_TYPES.ASSET_POSSESSION_CHANGE,
+  EVENT_TYPES.BURNING,
+  EVENT_TYPES.CONTRACT_RESERVE_DEDUCTION
+] as const
+
 export const EVENT_TYPE_LABELS: Record<number, string> = {
   [EVENT_TYPES.QU_TRANSFER]: 'QU_TRANSFER',
   [EVENT_TYPES.ASSET_ISSUANCE]: 'ASSET_ISSUANCE',
@@ -70,6 +80,12 @@ export const EVENT_TYPE_LABELS: Record<number, string> = {
 
 export function getEventTypeLabel(type: number): string {
   return EVENT_TYPE_LABELS[type] ?? `UNKNOWN(${type})`
+}
+
+export function parseEventTypeParam(raw: string | null): number | undefined {
+  if (raw === null || raw === '') return undefined
+  const parsed = Number(raw)
+  return (EVENT_TYPE_FILTER_OPTIONS as readonly number[]).includes(parsed) ? parsed : undefined
 }
 
 // ============================================================================
@@ -171,18 +187,21 @@ export function adaptApiEvent(raw: RawApiEvent): TransactionEvent {
     base.managingContractIndex = Number(raw.assetIssuance.managingContractIndex)
     base.unitOfMeasurement = raw.assetIssuance.unitOfMeasurement
     base.numberOfDecimalPlaces = raw.assetIssuance.numberOfDecimalPlaces
+    base.amount = Number(raw.assetIssuance.numberOfShares)
   } else if (raw.assetOwnershipChange) {
     base.source = raw.assetOwnershipChange.source
     base.destination = raw.assetOwnershipChange.destination
     base.assetName = raw.assetOwnershipChange.assetName
     base.assetIssuer = raw.assetOwnershipChange.assetIssuer
     base.numberOfShares = Number(raw.assetOwnershipChange.numberOfShares)
+    base.amount = Number(raw.assetOwnershipChange.numberOfShares)
   } else if (raw.assetPossessionChange) {
     base.source = raw.assetPossessionChange.source
     base.destination = raw.assetPossessionChange.destination
     base.assetName = raw.assetPossessionChange.assetName
     base.assetIssuer = raw.assetPossessionChange.assetIssuer
     base.numberOfShares = Number(raw.assetPossessionChange.numberOfShares)
+    base.amount = Number(raw.assetPossessionChange.numberOfShares)
   } else if (raw.burning) {
     base.source = raw.burning.source
     base.amount = Number(raw.burning.amount)
@@ -195,6 +214,7 @@ export function adaptApiEvent(raw: RawApiEvent): TransactionEvent {
     base.contractIndex = Number(raw.contractReserveDeduction.contractIndex)
     base.deductedAmount = Number(raw.contractReserveDeduction.deductedAmount)
     base.remainingAmount = Number(raw.contractReserveDeduction.remainingAmount)
+    base.amount = Number(raw.contractReserveDeduction.deductedAmount)
   }
 
   return base

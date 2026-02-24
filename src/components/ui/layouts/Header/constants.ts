@@ -3,6 +3,15 @@ import type { NavigationMenuItem } from './types'
 
 export const NAVIGATION_MENU_ITEMS: NavigationMenuItem[] = [
   {
+    i18nKey: 'blockchain',
+    items: [
+      {
+        i18nKey: 'events',
+        href: Routes.NETWORK.BLOCKCHAIN.EVENTS
+      }
+    ]
+  },
+  {
     i18nKey: 'wallets',
     items: [
       {

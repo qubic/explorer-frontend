@@ -1,24 +1,19 @@
-import { useCallback, useState } from 'react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useSearchParams } from 'react-router-dom'
 
 import { FunnelIcon } from '@app/assets/icons'
-import { EVENT_TYPES, getEventTypeLabel } from '@app/store/apis/events'
+import { getEventTypeLabel } from '@app/store/apis/events'
 import BetaBanner from '../../components/BetaBanner'
-import FilterDropdown from '../../components/filters/FilterDropdown'
-import { ResetFiltersButton } from '../../components/filters'
+import {
+  ActiveFilterChip,
+  EventTypeDropdownList,
+  FilterDropdown,
+  MobileFiltersButton,
+  ResetFiltersButton
+} from '../../components/filters'
 import TransactionEvents from '../../components/TxItem/TransactionEvents'
-import { useTickEvents } from '../hooks'
-
-// Subset supported by the events API
-const EVENT_TYPE_OPTIONS = [
-  EVENT_TYPES.QU_TRANSFER,
-  EVENT_TYPES.ASSET_ISSUANCE,
-  EVENT_TYPES.ASSET_OWNERSHIP_CHANGE,
-  EVENT_TYPES.ASSET_POSSESSION_CHANGE,
-  EVENT_TYPES.BURNING,
-  EVENT_TYPES.CONTRACT_RESERVE_DEDUCTION
-]
+import { useTickEvents, useTickEventsFilters } from '../hooks'
+import TickEventsMobileFiltersModal from './TickEventsMobileFiltersModal'
 
 type Props = Readonly<{
   tick: number
@@ -27,39 +22,44 @@ type Props = Readonly<{
 export default function TickEvents({ tick }: Props) {
   const { t } = useTranslation('network-page')
   const { events, total, eventType, isLoading } = useTickEvents(tick)
-  const [, setSearchParams] = useSearchParams()
+  const { isActive, handleSelect, handleClear, handleMobileApply } = useTickEventsFilters(eventType)
+
   const [showDropdown, setShowDropdown] = useState(false)
+  const [isMobileModalOpen, setIsMobileModalOpen] = useState(false)
 
-  const isActive = eventType !== undefined
-
-  const handleSelect = useCallback(
-    (type: number) => {
-      setSearchParams((prev) => {
-        const next = Object.fromEntries(prev.entries())
-        next.eventType = String(type)
-        next.page = '1'
-        return next
-      })
-      setShowDropdown(false)
-    },
-    [setSearchParams]
-  )
-
-  const handleClear = useCallback(() => {
-    setSearchParams((prev) => {
-      const next = Object.fromEntries(prev.entries())
-      delete next.eventType
-      next.page = '1'
-      return next
-    })
-  }, [setSearchParams])
-
-  const label = isActive ? getEventTypeLabel(eventType) : t('eventType')
+  const label = eventType !== undefined ? getEventTypeLabel(eventType) : t('eventType')
 
   return (
     <div className="flex flex-col gap-16">
       <BetaBanner />
-      <div className="flex items-center gap-8">
+
+      {/* Mobile: Filters button + active filter chips */}
+      <div className="flex flex-col gap-10 sm:hidden">
+        <div className="flex items-center justify-end">
+          <MobileFiltersButton onClick={() => setIsMobileModalOpen(true)} />
+        </div>
+
+        {eventType !== undefined && (
+          <div className="flex flex-wrap items-center gap-6">
+            <ActiveFilterChip
+              label={`${t('eventType')}: ${getEventTypeLabel(eventType)}`}
+              onClear={handleClear}
+            />
+            <ResetFiltersButton onClick={handleClear} />
+          </div>
+        )}
+      </div>
+
+      {/* Mobile Modal */}
+      <TickEventsMobileFiltersModal
+        isOpen={isMobileModalOpen}
+        onClose={() => setIsMobileModalOpen(false)}
+        activeEventType={eventType}
+        onApply={handleMobileApply}
+      />
+
+      {/* Desktop: Dropdown filter */}
+      <div className="hidden items-center gap-8 sm:flex">
         <FunnelIcon className="h-16 w-16 text-gray-50" />
         <FilterDropdown
           label={label}
@@ -68,19 +68,7 @@ export default function TickEvents({ tick }: Props) {
           onToggle={() => setShowDropdown((prev) => !prev)}
           onClear={isActive ? handleClear : undefined}
         >
-          <ul className="flex flex-col">
-            {EVENT_TYPE_OPTIONS.map((type) => (
-              <li key={type}>
-                <button
-                  type="button"
-                  className="w-full rounded px-8 py-6 text-left font-space text-xs text-gray-50 hover:bg-primary-60 hover:text-white"
-                  onClick={() => handleSelect(type)}
-                >
-                  {getEventTypeLabel(type)}
-                </button>
-              </li>
-            ))}
-          </ul>
+          <EventTypeDropdownList onSelect={handleSelect} />
         </FilterDropdown>
         {isActive && (
           <>
@@ -89,6 +77,7 @@ export default function TickEvents({ tick }: Props) {
           </>
         )}
       </div>
+
       <TransactionEvents
         events={events}
         total={total}

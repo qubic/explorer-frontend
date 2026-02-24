@@ -1,5 +1,7 @@
-import { envConfig } from '@app/configs'
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+
+import { QUERY_CACHE_TIME } from '@app/constants'
+import { envConfig } from '@app/configs'
 import type {
   ComputorList,
   GetComputorListsForEpochResponse,
@@ -17,6 +19,7 @@ const BASE_URL = `${envConfig.QUBIC_RPC_URL}/query/v1`
 export const rpcQueryServiceApi = createApi({
   reducerPath: 'rpcQueryServiceApi',
   baseQuery: fetchBaseQuery({ baseUrl: BASE_URL }),
+  keepUnusedDataFor: QUERY_CACHE_TIME,
   endpoints: (builder) => ({
     getTransactionsForIdentity: builder.mutation<
       QueryServiceResponse,

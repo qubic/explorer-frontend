@@ -5,6 +5,7 @@ import { Error404Page } from '@app/pages'
 import {
   AddressPageLazy,
   AssetsRichListPageLazy,
+  EventsPageLazy,
   ExchangesPageLazy,
   OverviewPage,
   RichListPageLazy,
@@ -43,6 +44,10 @@ const router: ReturnType<typeof createBrowserRouter> = createBrowserRouter([
           {
             path: Routes.NETWORK.ADDRESS(':addressId'),
             element: <AddressPageLazy />
+          },
+          {
+            path: Routes.NETWORK.BLOCKCHAIN.EVENTS,
+            element: <EventsPageLazy />
           },
           {
             path: Routes.NETWORK.WALLETS.RICH_LIST,
