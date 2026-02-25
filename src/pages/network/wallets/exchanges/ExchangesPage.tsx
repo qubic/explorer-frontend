@@ -2,11 +2,11 @@ import { memo, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { withHelmet } from '@app/components/hocs'
-import { Breadcrumbs } from '@app/components/ui'
+import { Breadcrumbs, TableErrorRow } from '@app/components/ui'
 import { PageLayout } from '@app/components/ui/layouts'
 import { useTailwindBreakpoint } from '@app/hooks'
 import { HomeLink } from '../../components'
-import { ExchangeRow, ExchangesErrorRow, ExchangeSkeletonRow } from './components'
+import { ExchangeRow, ExchangeSkeletonRow } from './components'
 import { EXCHANGES_SKELETON_ROWS } from './constants'
 import { useGetExchangesBalances } from './hooks'
 
@@ -26,13 +26,13 @@ function ExchangesPage() {
     if (isLoading) return <ExchangesLoadingRows />
 
     if (error || exchangeWallets.length === 0) {
-      return <ExchangesErrorRow />
+      return <TableErrorRow colSpan={3} message={t('exchangesLoadFailed')} />
     }
 
     return exchangeWallets.map((entity) => (
       <ExchangeRow key={entity.address} entity={entity} isMobile={isMobile} />
     ))
-  }, [isLoading, error, exchangeWallets, isMobile])
+  }, [isLoading, error, exchangeWallets, isMobile, t])
 
   return (
     <PageLayout className="space-y-20">

@@ -3,18 +3,35 @@ import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router-dom'
 
 import { withHelmet } from '@app/components/hocs'
-import { Breadcrumbs, PaginationBar, Select } from '@app/components/ui'
+import {
+  Breadcrumbs,
+  PaginationBar,
+  Select,
+  TableErrorRow,
+  TableSkeletonRow
+} from '@app/components/ui'
 import { PageLayout } from '@app/components/ui/layouts'
 import type { Option } from '@app/components/ui/Select'
 import { RICH_LIST_DEFAULT_PAGE_SIZE, getPageSizeSelectOptions } from '@app/constants'
 import { useTailwindBreakpoint } from '@app/hooks'
 import { useGetRichListQuery } from '@app/store/apis/rpc-stats'
 import { HomeLink } from '../../components'
-import { RichListErrorRow, RichListRow, RichListSkeletonRow } from './components'
+import { RichListRow } from './components'
+
+const RICH_LIST_SKELETON_CELLS = [
+  { id: 'rank-skeleton-cell', className: 'mx-auto size-16 xs:size-20' },
+  {
+    id: 'address-skeleton-cell',
+    className:
+      'h-16 w-96 xs:h-20 sm:h-40 sm:w-full sm:min-w-[248px] sm:max-w-[532px] md:w-[546px] 827px:h-20'
+  },
+  { id: 'name-skeleton-cell', className: 'size-16 xs:size-20 sm:w-84 w-72' },
+  { id: 'amount-skeleton-cell', className: 'ml-auto h-16 w-136 xs:h-20' }
+]
 
 const RichListLoadingRows = memo(({ pageSize }: { pageSize: number }) =>
   Array.from({ length: pageSize }).map((_, index) => (
-    <RichListSkeletonRow key={String(`${index}`)} />
+    <TableSkeletonRow key={String(`${index}`)} cells={RICH_LIST_SKELETON_CELLS} />
   ))
 )
 
@@ -87,13 +104,13 @@ function RichListPage() {
     if (isFetching) return <RichListLoadingRows pageSize={pageSize} />
 
     if (error || entitiesWithRank?.length === 0) {
-      return <RichListErrorRow />
+      return <TableErrorRow colSpan={3} message={t('richListLoadFailed')} />
     }
 
     return entitiesWithRank?.map((entity) => (
       <RichListRow key={entity.identity} entity={entity} isMobile={isMobile} />
     ))
-  }, [entitiesWithRank, isFetching, error, isMobile, pageSize])
+  }, [entitiesWithRank, isFetching, error, isMobile, pageSize, t])
 
   return (
     <PageLayout className="space-y-20">
