@@ -16,7 +16,7 @@ import { useTickWatcher, useTransactionEvents } from './hooks'
 function TxPage() {
   const { t } = useTranslation('network-page')
   const { txId = '' } = useParams()
-  const { events } = useTransactionEvents(txId)
+  const { events, total, isLoading: isEventsLoading } = useTransactionEvents(txId)
 
   const {
     data: tx,
@@ -97,7 +97,14 @@ function TxPage() {
         timestamp={tx.timestamp}
       />
       <div className="mt-24">
-        <TransactionEvents events={events} paginated showTxId={false} header={t('events')} />
+        <TransactionEvents
+          events={events}
+          total={total}
+          isLoading={isEventsLoading}
+          paginated
+          showTxId={false}
+          header={t('events')}
+        />
       </div>
     </PageLayout>
   )

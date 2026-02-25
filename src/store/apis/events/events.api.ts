@@ -14,6 +14,7 @@ export interface PaginatedEvents {
 
 export interface GetEventsRequest {
   tickNumber?: number
+  transactionHash?: string
   offset?: number
   size?: number
   eventType?: number
@@ -41,21 +42,20 @@ export const eventsApi = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: BASE_URL }),
   keepUnusedDataFor: QUERY_CACHE_TIME,
   endpoints: (builder) => ({
-    getEventsByTxHash: builder.query<TransactionEvent[], string>({
-      query: (txHash) => ({
-        url: '/getEvents',
-        method: 'POST',
-        body: { filters: { transactionHash: txHash }, pagination: { size: 1000 } }
-      }),
-      transformResponse: adaptEventsList
-    }),
     getEvents: builder.query<PaginatedEvents, GetEventsRequest>({
-      query: ({ tickNumber, offset = 0, size = DEFAULT_PAGE_SIZE, eventType }) => ({
+      query: ({
+        tickNumber,
+        transactionHash,
+        offset = 0,
+        size = DEFAULT_PAGE_SIZE,
+        eventType
+      }) => ({
         url: '/getEvents',
         method: 'POST',
         body: {
           filters: {
             ...(tickNumber !== undefined && { tickNumber: String(tickNumber) }),
+            ...(transactionHash && { transactionHash }),
             ...(eventType !== undefined && { eventType: String(eventType) })
           },
           pagination: { offset, size }
@@ -66,4 +66,4 @@ export const eventsApi = createApi({
   })
 })
 
-export const { useGetEventsByTxHashQuery, useGetEventsQuery } = eventsApi
+export const { useGetEventsQuery } = eventsApi
