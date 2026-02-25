@@ -11,9 +11,8 @@ import {
   TableSkeletonRow
 } from '@app/components/ui'
 import { PageLayout } from '@app/components/ui/layouts'
-import type { Option } from '@app/components/ui/Select'
 import { RICH_LIST_DEFAULT_PAGE_SIZE, getPageSizeSelectOptions } from '@app/constants'
-import { useTailwindBreakpoint } from '@app/hooks'
+import { usePaginationSearchParams, useTailwindBreakpoint } from '@app/hooks'
 import { useGetRichListQuery } from '@app/store/apis/rpc-stats'
 import { HomeLink } from '../../components'
 import { RichListRow } from './components'
@@ -49,31 +48,12 @@ function RichListPage() {
     [pageSizeOptions, pageSize]
   )
 
+  const { handlePageChange, handlePageSizeChange } = usePaginationSearchParams()
+
   const { data, isFetching, error } = useGetRichListQuery({
     page,
     pageSize
   })
-
-  const handlePageChange = useCallback(
-    (value: number) => {
-      setSearchParams((prev) => ({
-        ...Object.fromEntries(prev.entries()),
-        page: value.toString()
-      }))
-    },
-    [setSearchParams]
-  )
-
-  const handlePageSizeChange = useCallback(
-    (option: Option) => {
-      setSearchParams((prev) => ({
-        ...Object.fromEntries(prev.entries()),
-        pageSize: option.value,
-        page: '1'
-      }))
-    },
-    [setSearchParams]
-  )
 
   const entitiesWithRank = useMemo(
     () =>

@@ -1,11 +1,9 @@
 import { memo, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useSearchParams } from 'react-router-dom'
 
 import { PaginationBar, Select } from '@app/components/ui'
-import type { Option } from '@app/components/ui/Select'
 import { getPageSizeSelectOptions } from '@app/constants'
-import { useValidatedPage, useValidatedPageSize } from '@app/hooks'
+import { usePaginationSearchParams, useValidatedPage, useValidatedPageSize } from '@app/hooks'
 import { useGetTransactionsForTickQuery } from '@app/store/apis/query-service'
 import TickTransactionFiltersBar from './TickTransactionFiltersBar'
 import { TransactionRow, TransactionSkeletonRow } from '../../components'
@@ -31,8 +29,8 @@ type Props = Readonly<{
 
 export default function TickTransactions({ tick }: Props) {
   const { t } = useTranslation('network-page')
-  const [, setSearchParams] = useSearchParams()
   const [activeFilters, setActiveFilters] = useState<TickTransactionFilters>({})
+  const { handlePageChange, handlePageSizeChange, resetPage } = usePaginationSearchParams()
   const page = useValidatedPage()
   const pageSize = useValidatedPageSize()
 
@@ -75,45 +73,18 @@ export default function TickTransactions({ tick }: Props) {
     return transactions.slice(start, start + pageSize)
   }, [transactions, page, pageSize])
 
-  const handlePageChange = useCallback(
-    (value: number) => {
-      setSearchParams((prev) => ({
-        ...Object.fromEntries(prev.entries()),
-        page: value.toString()
-      }))
-    },
-    [setSearchParams]
-  )
-
-  const handlePageSizeChange = useCallback(
-    (option: Option) => {
-      setSearchParams((prev) => ({
-        ...Object.fromEntries(prev.entries()),
-        pageSize: option.value,
-        page: '1'
-      }))
-    },
-    [setSearchParams]
-  )
-
   const handleApplyFilters = useCallback(
     (filters: TickTransactionFilters) => {
       setActiveFilters(filters)
-      setSearchParams((prev) => ({
-        ...Object.fromEntries(prev.entries()),
-        page: '1'
-      }))
+      resetPage()
     },
-    [setSearchParams]
+    [resetPage]
   )
 
   const handleClearFilters = useCallback(() => {
     setActiveFilters({})
-    setSearchParams((prev) => ({
-      ...Object.fromEntries(prev.entries()),
-      page: '1'
-    }))
-  }, [setSearchParams])
+    resetPage()
+  }, [resetPage])
 
   const renderTableContent = useCallback(() => {
     if (isTickTransactionsLoading) {
