@@ -6,6 +6,8 @@ export default function useTickEvents(tick: number): {
   total: number
   eventType: number | undefined
   isLoading: boolean
+  hasError: boolean
+  refetch: () => void
 } {
   const page = useValidatedPage()
   const pageSize = useValidatedPageSize()
@@ -13,7 +15,7 @@ export default function useTickEvents(tick: number): {
 
   const eventType = useSanitizedEventType()
 
-  const { data, isFetching } = useGetEventsQuery(
+  const { data, isFetching, isError, refetch } = useGetEventsQuery(
     { tickNumber: tick, offset, size: pageSize, eventType },
     { skip: !tick }
   )
@@ -22,6 +24,8 @@ export default function useTickEvents(tick: number): {
     events: data?.events ?? [],
     total: data?.total ?? 0,
     eventType,
-    isLoading: isFetching
+    isLoading: isFetching,
+    hasError: isError,
+    refetch
   }
 }

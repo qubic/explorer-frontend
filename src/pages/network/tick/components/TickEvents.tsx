@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { FunnelIcon } from '@app/assets/icons'
+import { Alert } from '@app/components/ui'
 import { getEventTypeLabel } from '@app/store/apis/events'
 import BetaBanner from '../../components/BetaBanner'
 import {
@@ -21,7 +22,7 @@ type Props = Readonly<{
 
 export default function TickEvents({ tick }: Props) {
   const { t } = useTranslation('network-page')
-  const { events, total, eventType, isLoading } = useTickEvents(tick)
+  const { events, total, eventType, isLoading, hasError } = useTickEvents(tick)
   const { isActive, handleSelect, handleClear, handleMobileApply } = useTickEventsFilters(eventType)
 
   const [showDropdown, setShowDropdown] = useState(false)
@@ -78,13 +79,17 @@ export default function TickEvents({ tick }: Props) {
         )}
       </div>
 
-      <TransactionEvents
-        events={events}
-        total={total}
-        isLoading={isLoading}
-        paginated
-        showBetaBanner={false}
-      />
+      {hasError ? (
+        <Alert variant="error">{t('eventsLoadFailed')}</Alert>
+      ) : (
+        <TransactionEvents
+          events={events}
+          total={total}
+          isLoading={isLoading}
+          paginated
+          showBetaBanner={false}
+        />
+      )}
     </div>
   )
 }
