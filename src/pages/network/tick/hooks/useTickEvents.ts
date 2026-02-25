@@ -1,4 +1,9 @@
-import { useSanitizedEventType, useValidatedPage, useValidatedPageSize } from '@app/hooks'
+import {
+  usePageAutoCorrect,
+  useSanitizedEventType,
+  useValidatedPage,
+  useValidatedPageSize
+} from '@app/hooks'
 import { useGetEventsQuery, type TransactionEvent } from '@app/store/apis/events'
 
 export default function useTickEvents(tick: number): {
@@ -20,9 +25,13 @@ export default function useTickEvents(tick: number): {
     { skip: !tick }
   )
 
+  const total = data?.total ?? 0
+
+  usePageAutoCorrect(!!data, total, pageSize)
+
   return {
     events: data?.events ?? [],
-    total: data?.total ?? 0,
+    total,
     eventType,
     isLoading: isFetching,
     hasError: isError,
