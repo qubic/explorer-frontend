@@ -97,11 +97,7 @@ function TxPage() {
         timestamp={tx.timestamp}
       />
       <div className="mt-24">
-        <TransactionEvents
-          events={events}
-          showTxId={false}
-          header={`${t('events')} (${events.length})`}
-        />
+        <TransactionEvents events={events} paginated showTxId={false} header={t('events')} />
       </div>
     </PageLayout>
   )
