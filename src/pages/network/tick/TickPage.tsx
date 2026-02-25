@@ -14,11 +14,11 @@ function TickPage() {
   const { tick = '0' } = useParams()
   const [searchParams, setSearchParams] = useSearchParams()
 
+  const tabParam = searchParams.get('tab')
   const selectedTabIndex = useMemo(() => {
-    const tab = searchParams.get('tab')
-    if (tab === 'events') return 1
+    if (tabParam === 'events') return 1
     return 0
-  }, [searchParams])
+  }, [tabParam])
 
   const handleTabChange = useCallback(
     (index: number) => {
