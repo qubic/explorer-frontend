@@ -5,7 +5,7 @@
 export type TransactionEvent = {
   epoch: number
   tickNumber: number
-  timestamp: number // epoch_millis
+  timestamp: number // epoch milliseconds (converted from API's epoch seconds)
   emittingContractIndex: number
   transactionHash: string
   logId: number
@@ -163,7 +163,7 @@ export function adaptApiEvent(raw: RawApiEvent): TransactionEvent {
   const base: TransactionEvent = {
     epoch: raw.epoch,
     tickNumber: raw.tickNumber,
-    timestamp: Number(raw.timestamp),
+    timestamp: Number(raw.timestamp) * 1000,
     emittingContractIndex: Number(raw.emittingContractIndex),
     transactionHash: raw.transactionHash,
     logId: Number(raw.logId),
