@@ -1,9 +1,12 @@
 {
   "address": "住所",
   "balance": "残高",
+  "navigationMenu": "ナビゲーションメニュー",
   "noResultsFound": "結果が見つかりません",
   "noResultsFoundFor": "「{{keyword}}」の結果が見つかりません",
   "searchPlaceholder": "TX、ティック、ID、トークン、コントラクト、取引所を検索...",
+  "selectLanguage": "言語を選択",
+  "selectNetwork": "ネットワークを選択",
   "tick": "ティック",
   "transaction": "取引",
   "transactions": "取引"

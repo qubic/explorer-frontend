@@ -22,6 +22,7 @@ export default function ChevronToggleButton({
         className
       )}
       onClick={onClick}
+      aria-expanded={isOpen}
     >
       {children && <span className="text-center font-space text-sm">{children}</span>}
       <ChevronDownIcon

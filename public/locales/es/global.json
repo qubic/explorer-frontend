@@ -1,9 +1,12 @@
 {
   "address": "Dirección",
   "balance": "Saldo",
+  "navigationMenu": "Menú de navegación",
   "noResultsFound": "No Se Encontraron Resultados",
   "noResultsFoundFor": "No se encontraron resultados para \"{{keyword}}\"",
   "searchPlaceholder": "Buscar TXs, ticks, IDs, tokens, contratos, exchanges...",
+  "selectLanguage": "Seleccionar idioma",
+  "selectNetwork": "Seleccionar red",
   "tick": "Tick",
   "transaction": "Transacción",
   "transactions": "Transacciones"

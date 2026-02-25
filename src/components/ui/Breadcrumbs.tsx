@@ -12,7 +12,7 @@ function Breadcrumbs({ children }: Props) {
           <Fragment key={`breadcrumb-${String(index)}`}>
             <li className="flex items-center">{child}</li>
             {index < Children.count(children) - 1 && (
-              <li aria-label="breadcrums-separator" className="mx-8 text-sm text-gray-500">
+              <li aria-hidden="true" className="mx-8 text-sm text-gray-500">
                 /
               </li>
             )}

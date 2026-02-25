@@ -48,6 +48,7 @@ export default function CopyTextButton({
           className
         )}
         onClick={handleCopy}
+        aria-label={isCopied ? t('copied') : getTooltipText()}
       >
         {isCopied ? (
           <CheckIcon className="size-14 text-success-40" />
