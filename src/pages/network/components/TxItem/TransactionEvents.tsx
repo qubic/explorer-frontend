@@ -1,13 +1,12 @@
-import { memo, useCallback, useMemo } from 'react'
+import { memo, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useSearchParams } from 'react-router-dom'
 
 import { Badge, PaginationBar, Select, Skeleton, Tooltip } from '@app/components/ui'
-import type { Option } from '@app/components/ui/Select'
 import { getPageSizeSelectOptions } from '@app/constants'
 import {
   useGetAddressName,
   useGetSmartContractByIndex,
+  usePaginationSearchParams,
   useValidatedPage,
   useValidatedPageSize
 } from '@app/hooks'
@@ -141,7 +140,7 @@ export default function TransactionEvents({
   highlightAddress
 }: Props) {
   const { t } = useTranslation('network-page')
-  const [, setSearchParams] = useSearchParams()
+  const { handlePageChange, handlePageSizeChange } = usePaginationSearchParams()
 
   const page = useValidatedPage(paginated)
   const pageSize = useValidatedPageSize(paginated)
@@ -157,27 +156,6 @@ export default function TransactionEvents({
   const pageCount = Math.ceil(totalCount / pageSize)
   const displayEvents =
     paginated && total === undefined ? events.slice((page - 1) * pageSize, page * pageSize) : events
-
-  const handlePageChange = useCallback(
-    (value: number) => {
-      setSearchParams((prev) => ({
-        ...Object.fromEntries(prev.entries()),
-        page: value.toString()
-      }))
-    },
-    [setSearchParams]
-  )
-
-  const handlePageSizeChange = useCallback(
-    (option: Option) => {
-      setSearchParams((prev) => ({
-        ...Object.fromEntries(prev.entries()),
-        pageSize: option.value,
-        page: '1'
-      }))
-    },
-    [setSearchParams]
-  )
 
   const columnCount = 5 + (showTickAndTimestamp ? 2 : 0) + (showTxId ? 1 : 0)
 
