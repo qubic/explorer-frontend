@@ -1,8 +1,6 @@
 import type { Config } from 'tailwindcss'
 
-import aspectRatioPlugin from '@tailwindcss/aspect-ratio'
 import formsPlugin from '@tailwindcss/forms'
-import typographyPlugin from '@tailwindcss/typography'
 import { colors } from './src/theme/colors'
 import { screens } from './src/theme/screens'
 
@@ -234,9 +232,7 @@ const tailwindConfig: Config = {
     }
   },
   plugins: [
-    aspectRatioPlugin,
     formsPlugin,
-    typographyPlugin,
     scrollbarPlugin({ nocompatible: true, preferredStrategy: 'pseudoelements' })
   ]
 }
