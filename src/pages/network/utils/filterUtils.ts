@@ -130,7 +130,7 @@ export const MAX_UINT64 = 2n ** 64n - 1n
  * @param strictComparison - If true, start must be < end (not <=)
  * Returns an error message key or null if valid.
  */
-function validateNumericRange(
+export function validateNumericRange(
   start: string | undefined,
   end: string | undefined,
   strictComparison = false

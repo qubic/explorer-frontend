@@ -5,7 +5,13 @@ import type {
 } from '@app/store/apis/query-service/query-service.types'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import type { TransactionFilters } from '../components/TransactionsOverview/filterUtils'
-import { extractErrorMessage } from '../components/TransactionsOverview/filterUtils'
+import {
+  buildDestinationFilter,
+  buildSourceFilter,
+  extractErrorMessage,
+  getStartDateFromDays
+} from '../components/TransactionsOverview/filterUtils'
+import { buildRangeFilter } from '../../utils/filterUtils'
 
 // Re-export types from filterUtils for backward compatibility
 export type {
@@ -16,21 +22,6 @@ export type {
 } from '../components/TransactionsOverview/filterUtils'
 
 export const MAX_TRANSACTION_RESULTS = 10_000 // query service limit
-
-// Helper function to calculate start date from preset days
-// This is called at request time so the date is always fresh
-// Returns full datetime format (YYYY-MM-DDTHH:mm:ss) to preserve time precision for presets like "Last hour"
-const getStartDateFromPresetDays = (days: number): string => {
-  const now = new Date()
-  const start = new Date(now.getTime() - days * 24 * 60 * 60 * 1000)
-  const year = start.getFullYear()
-  const month = String(start.getMonth() + 1).padStart(2, '0')
-  const day = String(start.getDate()).padStart(2, '0')
-  const hours = String(start.getHours()).padStart(2, '0')
-  const minutes = String(start.getMinutes()).padStart(2, '0')
-  const seconds = String(start.getSeconds()).padStart(2, '0')
-  return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`
-}
 
 export interface UseLatestTransactionsResult {
   transactions: QueryServiceTransaction[]
@@ -80,33 +71,9 @@ export default function useLatestTransactions(
         {} as Record<string, string>
       )
 
-      // Handle multi-address source filter
-      if (filters.sourceFilter?.addresses && filters.sourceFilter.addresses.length > 0) {
-        const validAddresses = filters.sourceFilter.addresses.filter((addr) => addr.trim() !== '')
-        if (validAddresses.length > 0) {
-          const commaSeparated = validAddresses.join(',')
-          if (filters.sourceFilter.mode === 'exclude') {
-            cleanFilters['source-exclude'] = commaSeparated
-          } else {
-            cleanFilters.source = commaSeparated
-          }
-        }
-      }
-
-      // Handle multi-address destination filter
-      if (filters.destinationFilter?.addresses && filters.destinationFilter.addresses.length > 0) {
-        const validAddresses = filters.destinationFilter.addresses.filter(
-          (addr) => addr.trim() !== ''
-        )
-        if (validAddresses.length > 0) {
-          const commaSeparated = validAddresses.join(',')
-          if (filters.destinationFilter.mode === 'exclude') {
-            cleanFilters['destination-exclude'] = commaSeparated
-          } else {
-            cleanFilters.destination = commaSeparated
-          }
-        }
-      }
+      // Handle multi-address source/destination filters
+      Object.assign(cleanFilters, buildSourceFilter(filters.sourceFilter))
+      Object.assign(cleanFilters, buildDestinationFilter(filters.destinationFilter))
 
       // Handle direction filter - set source or destination based on direction
       // Only apply if the corresponding multi-address filter is not already set
@@ -120,97 +87,32 @@ export default function useLatestTransactions(
         }
       }
 
-      // Handle amount range - if start equals end, use exact match
-      if (
-        filters.amountRange?.start &&
-        filters.amountRange?.end &&
-        filters.amountRange.start.trim() === filters.amountRange.end.trim()
-      ) {
-        cleanFilters.amount = filters.amountRange.start.trim()
-      }
+      // Build ranges for amount, inputType, and tickNumber using shared utility
+      const amountResult = buildRangeFilter(filters.amountRange?.start, filters.amountRange?.end)
+      const inputTypeResult = buildRangeFilter(
+        filters.inputTypeRange?.start,
+        filters.inputTypeRange?.end
+      )
+      const tickNumberResult = buildRangeFilter(
+        filters.tickNumberRange?.start,
+        filters.tickNumberRange?.end
+      )
 
-      // Handle inputType range - if start equals end, use exact match
-      if (
-        filters.inputTypeRange?.start &&
-        filters.inputTypeRange?.end &&
-        filters.inputTypeRange.start.trim() === filters.inputTypeRange.end.trim()
-      ) {
-        cleanFilters.inputType = filters.inputTypeRange.start.trim()
-      }
+      // Set exact match values as filters
+      if (amountResult.exactMatch) cleanFilters.amount = amountResult.exactMatch
+      if (inputTypeResult.exactMatch) cleanFilters.inputType = inputTypeResult.exactMatch
+      if (tickNumberResult.exactMatch) cleanFilters.tickNumber = tickNumberResult.exactMatch
 
-      // Handle tickNumber range - if start equals end, use exact match
-      if (
-        filters.tickNumberRange?.start &&
-        filters.tickNumberRange?.end &&
-        filters.tickNumberRange.start.trim() === filters.tickNumberRange.end.trim()
-      ) {
-        cleanFilters.tickNumber = filters.tickNumberRange.start.trim()
-      }
-
-      // Check if amount range should be used (has values and is not an exact match)
-      const hasAmountRange = filters.amountRange?.start || filters.amountRange?.end
-      const isExactAmountMatch =
-        filters.amountRange?.start &&
-        filters.amountRange?.end &&
-        filters.amountRange.start.trim() === filters.amountRange.end.trim()
-      const shouldUseAmountRange = hasAmountRange && !isExactAmountMatch
-
-      // Check if inputType range should be used (has values and is not an exact match)
-      const hasInputTypeRange = filters.inputTypeRange?.start || filters.inputTypeRange?.end
-      const isExactInputTypeMatch =
-        filters.inputTypeRange?.start &&
-        filters.inputTypeRange?.end &&
-        filters.inputTypeRange.start.trim() === filters.inputTypeRange.end.trim()
-      const shouldUseInputTypeRange = hasInputTypeRange && !isExactInputTypeMatch
-
-      // Check if tickNumber range should be used (has values and is not an exact match)
-      const hasTickNumberRange = filters.tickNumberRange?.start || filters.tickNumberRange?.end
-      const isExactTickNumberMatch =
-        filters.tickNumberRange?.start &&
-        filters.tickNumberRange?.end &&
-        filters.tickNumberRange.start.trim() === filters.tickNumberRange.end.trim()
-      const shouldUseTickNumberRange = hasTickNumberRange && !isExactTickNumberMatch
-
+      // Build ranges object
       const ranges = {
-        // Handle inputType range (when not exact match)
-        ...(shouldUseInputTypeRange && {
-          inputType: {
-            ...(filters.inputTypeRange?.start && filters.inputTypeRange.start.trim() !== ''
-              ? { gte: filters.inputTypeRange.start.trim() }
-              : {}),
-            ...(filters.inputTypeRange?.end && filters.inputTypeRange.end.trim() !== ''
-              ? { lte: filters.inputTypeRange.end.trim() }
-              : {})
-          }
-        }),
-        // Handle amount range (when not exact match)
-        ...(shouldUseAmountRange && {
-          amount: {
-            ...(filters.amountRange?.start && filters.amountRange.start.trim() !== ''
-              ? { gte: filters.amountRange.start.trim() }
-              : {}),
-            ...(filters.amountRange?.end && filters.amountRange.end.trim() !== ''
-              ? { lte: filters.amountRange.end.trim() }
-              : {})
-          }
-        }),
-        // Handle tickNumber range (when not exact match)
-        ...(shouldUseTickNumberRange && {
-          tickNumber: {
-            ...(filters.tickNumberRange?.start && filters.tickNumberRange.start.trim() !== ''
-              ? { gte: filters.tickNumberRange.start.trim() }
-              : {}),
-            ...(filters.tickNumberRange?.end && filters.tickNumberRange.end.trim() !== ''
-              ? { lte: filters.tickNumberRange.end.trim() }
-              : {})
-          }
-        }),
+        ...(amountResult.range && { amount: amountResult.range }),
+        ...(inputTypeResult.range && { inputType: inputTypeResult.range }),
+        ...(tickNumberResult.range && { tickNumber: tickNumberResult.range }),
         // Handle date range - recalculate from presetDays if set (so "Last 24 hours" is always fresh)
         ...(() => {
-          // If presetDays is set, calculate the start date now (at request time)
           const startDate =
             filters.dateRange?.presetDays !== undefined
-              ? getStartDateFromPresetDays(filters.dateRange.presetDays)
+              ? getStartDateFromDays(filters.dateRange.presetDays)
               : filters.dateRange?.start
 
           if (startDate || filters.dateRange?.end) {
