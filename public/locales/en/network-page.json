@@ -100,6 +100,7 @@
   "smartContracts": "Smart Contracts",
   "tokenLoadFailed": "Error: Failed to load tokens. Please refresh the page or try again later.",
   "smartContractsLoadFailed": "Error: Failed to load smart contracts. Please refresh the page or try again later.",
+  "eventsLoadFailed": "Error: Failed to load events. Please try again.",
   "issuer": "Issuer",
   "name": "Name",
   "wallets": "Wallets",
