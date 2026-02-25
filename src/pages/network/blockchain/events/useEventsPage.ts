@@ -1,6 +1,11 @@
 import { useSearchParams } from 'react-router-dom'
 
-import { useSanitizedEventType, useValidatedPage, useValidatedPageSize } from '@app/hooks'
+import {
+  usePageAutoCorrect,
+  useSanitizedEventType,
+  useValidatedPage,
+  useValidatedPageSize
+} from '@app/hooks'
 import { useGetEventsQuery, type TransactionEvent } from '@app/store/apis/events'
 
 export default function useEventsPage(): {
@@ -29,9 +34,13 @@ export default function useEventsPage(): {
     eventType
   })
 
+  const total = data?.total ?? 0
+
+  usePageAutoCorrect(!!data, total, pageSize)
+
   return {
     events: data?.events ?? [],
-    total: data?.total ?? 0,
+    total,
     eventType,
     tick,
     isLoading: isFetching
