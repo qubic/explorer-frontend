@@ -283,6 +283,7 @@ export default function SearchBar() {
               <input
                 className="w-full bg-inherit py-12 text-base placeholder:font-space placeholder:text-base placeholder:text-gray-50 focus:outline-none sm:text-sm"
                 placeholder={t('searchPlaceholder')}
+                aria-label={t('searchPlaceholder')}
                 value={keyword}
                 // eslint-disable-next-line jsx-a11y/no-autofocus
                 autoFocus

@@ -83,8 +83,9 @@ Tabs.List = function TabsList({
     <div
       className={clsxTwMerge(variant === 'default' && 'border-b-1 border-primary-60', className)}
     >
-      <nav
+      <div
         aria-label="Tabs"
+        role="tablist"
         className={clsxTwMerge('flex space-x-2', variant === 'buttons' && 'gap-6')}
       >
         {Children.map(children, (child, index) =>
@@ -96,7 +97,7 @@ Tabs.List = function TabsList({
               })
             : child
         )}
-      </nav>
+      </div>
     </div>
   )
 }
@@ -132,8 +133,9 @@ Tabs.Tab = function TabsTab({
         variant === 'default' ? defaultVariantClasses : buttonsVariantClasses,
         className
       )}
+      role="tab"
       onClick={onClick}
-      aria-current={isSelected ? 'page' : undefined}
+      aria-selected={isSelected}
     >
       {children}
     </button>
@@ -155,5 +157,9 @@ Tabs.Panels = function TabsPanels({ children, className, currentIndex }: TabsPan
 Tabs.Panel = function TabsPanel({ children, isSelected, className }: TabsPanelProps) {
   if (!isSelected) return null
 
-  return <div className={className}>{children}</div>
+  return (
+    <div role="tabpanel" className={className}>
+      {children}
+    </div>
+  )
 }

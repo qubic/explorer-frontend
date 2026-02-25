@@ -20,7 +20,7 @@ function FooterLink({ label, to, isInternal }: FooterLinkProps) {
     )
   }
   return (
-    <a href={to} className={footerTextClass} target="_blank" role="button" rel="noreferrer">
+    <a href={to} className={footerTextClass} target="_blank" rel="noreferrer">
       {label}
     </a>
   )
