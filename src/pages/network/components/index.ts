@@ -1,6 +1,7 @@
 export { default as AddressLink } from './AddressLink'
 export { default as CardItem } from './CardItem'
 export { default as HomeLink } from './HomeLink'
+export { default as RichListLoadingRows } from './RichListSkeletonRow'
 export { default as SubCardItem } from './SubCardItem'
 export { default as TickLink } from './TickLink'
 export { default as TickStatus } from './TickStatus'
