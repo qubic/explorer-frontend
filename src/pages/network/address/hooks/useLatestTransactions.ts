@@ -13,7 +13,6 @@ import {
 } from '../components/TransactionsOverview/filterUtils'
 import { buildRangeFilter } from '../../utils/filterUtils'
 
-// Re-export types from filterUtils for backward compatibility
 export type {
   AddressFilter,
   AddressFilterMode,
@@ -103,30 +102,27 @@ export default function useLatestTransactions(
       if (inputTypeResult.exactMatch) cleanFilters.inputType = inputTypeResult.exactMatch
       if (tickNumberResult.exactMatch) cleanFilters.tickNumber = tickNumberResult.exactMatch
 
+      // Build timestamp range - recalculate from presetDays if set (so "Last 24 hours" is always fresh)
+      const timestampStart =
+        filters.dateRange?.presetDays !== undefined
+          ? getStartDateFromDays(filters.dateRange.presetDays)
+          : filters.dateRange?.start
+      const timestampRange =
+        timestampStart || filters.dateRange?.end
+          ? {
+              ...(timestampStart ? { gte: new Date(timestampStart).getTime().toString() } : {}),
+              ...(filters.dateRange?.end
+                ? { lte: new Date(filters.dateRange.end).getTime().toString() }
+                : {})
+            }
+          : undefined
+
       // Build ranges object
       const ranges = {
         ...(amountResult.range && { amount: amountResult.range }),
         ...(inputTypeResult.range && { inputType: inputTypeResult.range }),
         ...(tickNumberResult.range && { tickNumber: tickNumberResult.range }),
-        // Handle date range - recalculate from presetDays if set (so "Last 24 hours" is always fresh)
-        ...(() => {
-          const startDate =
-            filters.dateRange?.presetDays !== undefined
-              ? getStartDateFromDays(filters.dateRange.presetDays)
-              : filters.dateRange?.start
-
-          if (startDate || filters.dateRange?.end) {
-            return {
-              timestamp: {
-                ...(startDate ? { gte: new Date(startDate).getTime().toString() } : {}),
-                ...(filters.dateRange?.end
-                  ? { lte: new Date(filters.dateRange.end).getTime().toString() }
-                  : {})
-              }
-            }
-          }
-          return {}
-        })()
+        ...(timestampRange && { timestamp: timestampRange })
       }
 
       const result: QueryServiceResponse = await getTransactionsForIdentity({
