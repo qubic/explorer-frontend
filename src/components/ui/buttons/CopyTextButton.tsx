@@ -26,7 +26,7 @@ export default function CopyTextButton({
     setTimeout(() => setIsCopied(false), 1000)
   }
 
-  const getTooltipText = () => {
+  const copyLabel = (() => {
     switch (type) {
       case COPY_BUTTON_TYPES.ADDRESS:
         return t('copyAddress')
@@ -36,10 +36,12 @@ export default function CopyTextButton({
       default:
         return t('copyToClipboard')
     }
-  }
+  })()
+
+  const label = isCopied ? t('copied') : copyLabel
 
   return (
-    <Tooltip content={isCopied ? t('copied') : getTooltipText()} tooltipId="copy-text-button">
+    <Tooltip content={label} tooltipId="copy-text-button">
       <button
         type="button"
         className={clsxTwMerge(
@@ -48,7 +50,7 @@ export default function CopyTextButton({
           className
         )}
         onClick={handleCopy}
-        aria-label={isCopied ? t('copied') : getTooltipText()}
+        aria-label={label}
       >
         {isCopied ? (
           <CheckIcon className="size-14 text-success-40" />
