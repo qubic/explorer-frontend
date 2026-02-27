@@ -1,38 +1,15 @@
-import { memo, useCallback, useEffect, useMemo } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router-dom'
 
 import { withHelmet } from '@app/components/hocs'
-import {
-  Breadcrumbs,
-  PaginationBar,
-  Select,
-  TableErrorRow,
-  TableSkeletonRow
-} from '@app/components/ui'
+import { Breadcrumbs, PaginationBar, Select, TableErrorRow } from '@app/components/ui'
 import { PageLayout } from '@app/components/ui/layouts'
 import { RICH_LIST_DEFAULT_PAGE_SIZE, getPageSizeSelectOptions } from '@app/constants'
 import { usePaginationSearchParams, useTailwindBreakpoint } from '@app/hooks'
 import { useGetRichListQuery } from '@app/store/apis/rpc-stats'
-import { HomeLink } from '../../components'
+import { HomeLink, RichListLoadingRows } from '../../components'
 import { RichListRow } from './components'
-
-const RICH_LIST_SKELETON_CELLS = [
-  { id: 'rank-skeleton-cell', className: 'mx-auto size-16 xs:size-20' },
-  {
-    id: 'address-skeleton-cell',
-    className:
-      'h-16 w-96 xs:h-20 sm:h-40 sm:w-full sm:min-w-[248px] sm:max-w-[532px] md:w-[546px] 827px:h-20'
-  },
-  { id: 'name-skeleton-cell', className: 'size-16 xs:size-20 sm:w-84 w-72' },
-  { id: 'amount-skeleton-cell', className: 'ml-auto h-16 w-136 xs:h-20' }
-]
-
-const RichListLoadingRows = memo(({ pageSize }: { pageSize: number }) =>
-  Array.from({ length: pageSize }).map((_, index) => (
-    <TableSkeletonRow key={String(`${index}`)} cells={RICH_LIST_SKELETON_CELLS} />
-  ))
-)
 
 function RichListPage() {
   const { t } = useTranslation('network-page')
@@ -113,7 +90,7 @@ function RichListPage() {
           />
         </div>
         <div className="w-full rounded-12 border-1 border-primary-60 bg-primary-70">
-          <div className="overflow-x-scroll">
+          <div className="overflow-x-auto">
             <table className="w-full">
               <thead className="border-b-1 border-primary-60 text-left font-space text-sm text-gray-50">
                 <tr>
