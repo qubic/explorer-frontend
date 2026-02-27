@@ -1,44 +1,25 @@
-import type { TFunction } from 'i18next'
-import { memo, useCallback, useEffect, useMemo } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router-dom'
 
 import { withHelmet } from '@app/components/hocs'
-import { Breadcrumbs, PaginationBar, Select } from '@app/components/ui'
+import { Breadcrumbs, PaginationBar, Select, TableErrorRow } from '@app/components/ui'
 import { PageLayout } from '@app/components/ui/layouts'
-import type { Option } from '@app/components/ui/Select'
-import { useTailwindBreakpoint } from '@app/hooks'
+import {
+  RICH_LIST_DEFAULT_PAGE_SIZE,
+  VALID_PAGE_SIZES,
+  getPageSizeSelectOptions
+} from '@app/constants'
+import { usePaginationSearchParams, useTailwindBreakpoint } from '@app/hooks'
 import { useGetAssetsIssuancesQuery } from '@app/store/apis/rpc-live'
 import { useGetAssetsRichListQuery } from '@app/store/apis/rpc-stats'
-import { HomeLink } from '../../components'
+import { HomeLink, RichListLoadingRows } from '../../components'
 import {
   AssetRichListEmptyRow,
-  AssetRichListErrorRow,
   AssetRichListInvalidAssetRow,
   AssetRichListRow,
-  AssetRichListSkeletonRow,
   AssetsTabs
 } from './components'
-
-const DEFAULT_PAGE_SIZE = 15
-const VALID_PAGE_SIZES = [15, 30, 50, 100] as const
-
-const PAGE_SIZE_OPTIONS = VALID_PAGE_SIZES.map((size) => ({
-  i18nKey: 'showItemsPerPage',
-  value: String(size)
-}))
-
-const getSelectOptions = (t: TFunction) =>
-  PAGE_SIZE_OPTIONS.map((option) => ({
-    label: t(option.i18nKey, { count: parseInt(option.value, 10) }),
-    value: option.value
-  }))
-
-const RichListLoadingRows = memo(({ pageSize }: { pageSize: number }) =>
-  Array.from({ length: pageSize }).map((_, index) => (
-    <AssetRichListSkeletonRow key={String(`${index}`)} />
-  ))
-)
 
 function AssetsRichListPage() {
   const { t } = useTranslation('network-page')
@@ -48,12 +29,15 @@ function AssetsRichListPage() {
   const issuerParam = searchParams.get('issuer') || ''
   const assetParam = searchParams.get('asset') || ''
   const page = parseInt(searchParams.get('page') || '1', 10)
-  const pageSizeParam = parseInt(searchParams.get('pageSize') ?? String(DEFAULT_PAGE_SIZE), 10)
-  const pageSize = VALID_PAGE_SIZES.includes(pageSizeParam as (typeof VALID_PAGE_SIZES)[number])
+  const pageSizeParam = parseInt(
+    searchParams.get('pageSize') ?? String(RICH_LIST_DEFAULT_PAGE_SIZE),
+    10
+  )
+  const pageSize = VALID_PAGE_SIZES.includes(pageSizeParam)
     ? pageSizeParam
-    : DEFAULT_PAGE_SIZE
+    : RICH_LIST_DEFAULT_PAGE_SIZE
 
-  const pageSizeOptions = useMemo(() => getSelectOptions(t), [t])
+  const pageSizeOptions = useMemo(() => getPageSizeSelectOptions(t), [t])
   const defaultPageSizeOption = useMemo(
     () => pageSizeOptions.find((option) => option.value === String(pageSize)),
     [pageSizeOptions, pageSize]
@@ -68,6 +52,8 @@ function AssetsRichListPage() {
     )
   }, [issuerParam, assetParam, assetsData])
 
+  const { handlePageChange, handlePageSizeChange } = usePaginationSearchParams()
+
   const { data, isFetching, error } = useGetAssetsRichListQuery(
     {
       issuer: issuerParam,
@@ -76,30 +62,6 @@ function AssetsRichListPage() {
       pageSize
     },
     { skip: !issuerParam || !assetParam || !isValidAsset }
-  )
-
-  const handlePageChange = useCallback(
-    (value: number) => {
-      setSearchParams((prev) => ({
-        ...Object.fromEntries(prev.entries()),
-        page: value.toString()
-      }))
-    },
-    [setSearchParams]
-  )
-
-  const handlePageSizeChange = useCallback(
-    (option: Option) => {
-      setSearchParams(
-        (prev) => ({
-          ...Object.fromEntries(prev.entries()),
-          pageSize: option.value,
-          page: '1'
-        }),
-        { replace: true }
-      )
-    },
-    [setSearchParams]
   )
 
   const entitiesWithRank = useMemo(
@@ -117,8 +79,7 @@ function AssetsRichListPage() {
     const hasAsset = searchParams.has('asset') && searchParams.has('issuer')
     const hasPage = searchParams.has('page')
     const hasValidPageSize =
-      searchParams.has('pageSize') &&
-      VALID_PAGE_SIZES.includes(pageSizeParam as (typeof VALID_PAGE_SIZES)[number])
+      searchParams.has('pageSize') && VALID_PAGE_SIZES.includes(pageSizeParam)
 
     // Only set page/pageSize defaults if asset/issuer already exist
     if (hasAsset && (!hasPage || !hasValidPageSize)) {
@@ -126,7 +87,7 @@ function AssetsRichListPage() {
         (prev) => ({
           ...Object.fromEntries(prev.entries()),
           ...(!prev.has('page') && { page: '1' }),
-          ...(!prev.has('pageSize') && { pageSize: String(DEFAULT_PAGE_SIZE) })
+          ...(!prev.has('pageSize') && { pageSize: String(RICH_LIST_DEFAULT_PAGE_SIZE) })
         }),
         { replace: true }
       )
@@ -141,7 +102,7 @@ function AssetsRichListPage() {
     }
 
     if (error) {
-      return <AssetRichListErrorRow />
+      return <TableErrorRow colSpan={4} message={t('richListLoadFailed')} />
     }
 
     if (entitiesWithRank?.length === 0) {
@@ -151,7 +112,7 @@ function AssetsRichListPage() {
     return entitiesWithRank?.map((entity) => (
       <AssetRichListRow key={entity.identity} entity={entity} isMobile={isMobile} />
     ))
-  }, [entitiesWithRank, isFetching, error, isMobile, pageSize, isValidAsset])
+  }, [entitiesWithRank, isFetching, error, isMobile, pageSize, isValidAsset, t])
 
   return (
     <PageLayout className="space-y-20">
@@ -181,7 +142,7 @@ function AssetsRichListPage() {
         </div>
 
         <div className="w-full rounded-12 border-1 border-primary-60 bg-primary-70">
-          <div className="overflow-x-scroll">
+          <div className="overflow-x-auto">
             <table className="w-full">
               <thead className="border-b-1 border-primary-60 text-left font-space text-sm text-gray-50">
                 <tr>

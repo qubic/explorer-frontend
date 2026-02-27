@@ -1,4 +1,5 @@
 import { useCallback, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { GlobeGrayIcon } from '@app/assets/icons'
 import { Alert, DropdownMenu } from '@app/components/ui'
@@ -10,6 +11,7 @@ import type { Language } from '@app/types'
 import { clsxTwMerge } from '@app/utils'
 
 export default function LanguagePicker() {
+  const { t } = useTranslation('global')
   const dispatch = useAppDispatch()
   const { language } = useAppSelector(selectLocale)
   const [showDropdown, setShowDropdown] = useState(false)
@@ -27,7 +29,10 @@ export default function LanguagePicker() {
   return (
     <ErrorBoundary fallback={<Alert variant="error" className="mx-5 my-2.5" />}>
       <DropdownMenu show={showDropdown} onToggle={handleDropdownToggle}>
-        <DropdownMenu.Trigger className="rounded-full p-8 transition-colors duration-500 ease-in-out hover:bg-primary-70">
+        <DropdownMenu.Trigger
+          className="rounded-full p-8 transition-colors duration-500 ease-in-out hover:bg-primary-70"
+          aria-label={t('selectLanguage')}
+        >
           <GlobeGrayIcon className="h-18 w-18" />
         </DropdownMenu.Trigger>
         <DropdownMenu.Content>

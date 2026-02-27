@@ -10,6 +10,7 @@ import ErrorDisplay from './ErrorDisplay'
 
 interface ErrorBoundaryProps extends WithTranslation {
   children: ReactNode
+  pathname?: string
   fallback?: ReactNode
   onError?: (error: Error, errorInfo: ErrorInfo) => void
   showRetry?: boolean
@@ -32,6 +33,12 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
 
   static getDerivedStateFromError(error: Error): ErrorBoundaryState {
     return { hasError: true, error }
+  }
+
+  componentDidUpdate(prevProps: ErrorBoundaryProps) {
+    if (this.props.pathname && this.props.pathname !== prevProps.pathname && this.state.hasError) {
+      this.setState({ hasError: false, error: undefined })
+    }
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {

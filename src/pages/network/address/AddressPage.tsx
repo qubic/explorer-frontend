@@ -78,11 +78,16 @@ function AddressPage() {
 
   const [searchParams, setSearchParams] = useSearchParams()
   const tabParam = searchParams.get('tab')
-  const selectedTabIndex = tabParam === 'contract' && isSmartContract ? 1 : 0
+
+  const selectedTabIndex = useMemo(() => {
+    if (tabParam === 'contract' && isSmartContract) return 1
+    return 0
+  }, [tabParam, isSmartContract])
 
   // Normalize invalid tab params so URL always reflects the visible tab
   useEffect(() => {
-    if (tabParam && !(tabParam === 'contract' && isSmartContract)) {
+    const isValidTab = tabParam === 'contract' && isSmartContract
+    if (tabParam && !isValidTab) {
       setSearchParams(
         (prev) => {
           prev.delete('tab')

@@ -2,11 +2,7 @@ import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { clsxTwMerge } from '@app/utils'
-import {
-  AMOUNT_PRESETS,
-  formatAmountForDisplay,
-  parseAmountFromDisplay
-} from '../../utils/filterUtils'
+import { AMOUNT_PRESETS, formatAmountForDisplay, parseNumericInput } from '../../utils/filterUtils'
 
 type AmountRange = {
   start?: string
@@ -124,7 +120,7 @@ export default function AmountFilterContent({
               type="text"
               inputMode="numeric"
               value={displayStart}
-              onChange={(e) => handleStartChange(parseAmountFromDisplay(e.target.value))}
+              onChange={(e) => handleStartChange(parseNumericInput(e.target.value))}
               className="w-full rounded bg-primary-60 px-10 py-6 text-right text-base text-white placeholder-gray-50 focus:outline-none focus:ring-1 focus:ring-primary-30 md:text-xs"
             />
           </div>
@@ -137,7 +133,7 @@ export default function AmountFilterContent({
               type="text"
               inputMode="numeric"
               value={displayEnd}
-              onChange={(e) => handleEndChange(parseAmountFromDisplay(e.target.value))}
+              onChange={(e) => handleEndChange(parseNumericInput(e.target.value))}
               className="w-full rounded bg-primary-60 px-10 py-6 text-right text-base text-white placeholder-gray-50 focus:outline-none focus:ring-1 focus:ring-primary-30 md:text-xs"
             />
           </div>

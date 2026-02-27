@@ -13,6 +13,7 @@ interface DropdownMenuProps {
 interface DropdownMenuTriggerPropsBase {
   onToggle?: () => void
   className?: string
+  'aria-label'?: string
 }
 
 interface DropdownMenuTriggerWithAs extends DropdownMenuTriggerPropsBase {
@@ -100,7 +101,10 @@ const ClonedComponent = <T extends HTMLElement>({
   })
 
 DropdownMenu.Trigger = forwardRef<HTMLElement, DropdownMenuTriggerProps>(
-  function DropdownMenuTrigger({ children, onToggle, className, as }, ref) {
+  function DropdownMenuTrigger(
+    { children, onToggle, className, as, 'aria-label': ariaLabel },
+    ref
+  ) {
     if (as) {
       return (
         <div ref={ref as React.Ref<HTMLDivElement>}>
@@ -115,6 +119,7 @@ DropdownMenu.Trigger = forwardRef<HTMLElement, DropdownMenuTriggerProps>(
         onClick={onToggle}
         className={className}
         ref={ref as React.Ref<HTMLButtonElement>}
+        aria-label={ariaLabel}
       >
         {children}
       </button>

@@ -1,70 +1,46 @@
-import { useCallback, useMemo } from 'react'
+import { memo, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { ChevronDownIcon, Infocon } from '@app/assets/icons'
-import { InfiniteScroll, Tooltip } from '@app/components/ui'
-import { Button } from '@app/components/ui/buttons'
-import { DotsLoader } from '@app/components/ui/loaders'
-import { useTransactionExpandCollapse } from '@app/hooks'
-import type { QueryServiceTransaction } from '@app/store/apis/query-service'
-import { TxItem } from '../../../components'
-import { MAX_TRANSACTION_RESULTS, type TransactionFilters } from '../../hooks/useLatestTransactions'
+import { Infocon } from '@app/assets/icons'
+import { PaginationBar, Select, Tooltip } from '@app/components/ui'
+import type { Option } from '@app/components/ui/Select'
+import { DEFAULT_PAGE_SIZE, getPageSizeSelectOptions } from '@app/constants'
+import useLatestTransactions, { MAX_TRANSACTION_RESULTS } from '../../hooks/useLatestTransactions'
+import { TransactionRow, TransactionSkeletonRow } from '../../../components'
 import { parseFilterApiError } from './filterUtils'
 import TransactionFiltersBar from './TransactionFiltersBar'
 
+const COLUMN_COUNT = 8
+
+const SkeletonRows = memo(({ count }: { count: number }) => (
+  <>
+    {Array.from({ length: count }).map((_, index) => (
+      // eslint-disable-next-line react/no-array-index-key
+      <TransactionSkeletonRow key={`skeleton-${index}`} />
+    ))}
+  </>
+))
+
 type Props = {
   addressId: string
-  transactions: QueryServiceTransaction[]
-  totalCount: number | null
-  loadMore: () => Promise<void>
-  hasMore: boolean
-  isLoading: boolean
-  error: string | null
-  onApplyFilters: (filters: TransactionFilters) => void
-  onClearFilters: () => void
-  activeFilters: TransactionFilters
 }
 
-export default function LatestTransactions({
-  addressId,
-  transactions,
-  totalCount,
-  loadMore,
-  hasMore,
-  isLoading,
-  error,
-  onApplyFilters,
-  onClearFilters,
-  activeFilters
-}: Props) {
+export default function LatestTransactions({ addressId }: Props) {
   const { t } = useTranslation('network-page')
+  const [page, setPage] = useState(1)
+  const [pageSize, setPageSize] = useState(DEFAULT_PAGE_SIZE)
 
-  // Use shared expand/collapse hook with custom ID extractor for QueryServiceTransaction
-  const { expandAll, expandedTxIds, handleExpandAllChange, handleTxToggle } =
-    useTransactionExpandCollapse({
-      transactions,
-      getTransactionId: (tx) => tx.hash,
-      resetDependency: addressId
-    })
+  const { transactions, totalCount, isLoading, error, applyFilters, clearFilters, activeFilters } =
+    useLatestTransactions(addressId, page, pageSize)
 
-  const renderTxItem = useCallback(
-    (tx: QueryServiceTransaction) => (
-      <TxItem
-        key={tx.hash}
-        tx={tx}
-        identity={addressId}
-        variant="primary"
-        nonExecutedTxIds={tx.moneyFlew ? [] : [tx.hash]}
-        timestamp={tx.timestamp}
-        isExpanded={expandedTxIds.has(tx.hash)}
-        onToggle={handleTxToggle}
-      />
-    ),
-    [addressId, expandedTxIds, handleTxToggle]
+  const pageSizeOptions = useMemo(() => getPageSizeSelectOptions(t), [t])
+
+  const defaultPageSizeOption = useMemo(
+    () => pageSizeOptions.find((option) => option.value === String(pageSize)),
+    [pageSizeOptions, pageSize]
   )
 
   // Parse API error to show localized message
-  // The server returns only a partial address in error messages, so we display it as-is
   const errorMessage = useMemo(() => {
     if (!error) return null
     const parsed = parseFilterApiError(error)
@@ -74,76 +50,142 @@ export default function LatestTransactions({
     return t('loadingTransactionsError')
   }, [error, t])
 
+  const pageCount = totalCount !== null ? Math.ceil(totalCount / pageSize) : 0
+
+  const handlePageChange = useCallback((value: number) => {
+    setPage(value)
+  }, [])
+
+  const handlePageSizeChange = useCallback((option: Option) => {
+    setPageSize(parseInt(option.value, 10))
+    setPage(1)
+  }, [])
+
+  const handleApplyFilters = useCallback(
+    (filters: Parameters<typeof applyFilters>[0]) => {
+      applyFilters(filters)
+      setPage(1)
+    },
+    [applyFilters]
+  )
+
+  const handleClearFilters = useCallback(() => {
+    clearFilters()
+    setPage(1)
+  }, [clearFilters])
+
+  const renderTableContent = useCallback(() => {
+    if (isLoading) {
+      return <SkeletonRows count={pageSize} />
+    }
+
+    if (errorMessage) {
+      return (
+        <tr>
+          <td colSpan={COLUMN_COUNT} className="px-16 py-32 text-center text-sm text-error-40">
+            {errorMessage}
+          </td>
+        </tr>
+      )
+    }
+
+    if (transactions.length === 0) {
+      return (
+        <tr>
+          <td colSpan={COLUMN_COUNT} className="px-16 py-32 text-center text-sm text-gray-50">
+            {t('noTransactions')}
+          </td>
+        </tr>
+      )
+    }
+
+    return transactions.map((tx) => (
+      <TransactionRow key={tx.hash} tx={tx} highlightAddress={addressId} />
+    ))
+  }, [isLoading, errorMessage, transactions, pageSize, t, addressId])
+
   return (
     <div className="flex w-full flex-col gap-10">
       <TransactionFiltersBar
         addressId={addressId}
         activeFilters={activeFilters}
-        onApplyFilters={onApplyFilters}
-        onClearFilters={onClearFilters}
+        onApplyFilters={handleApplyFilters}
+        onClearFilters={handleClearFilters}
       />
 
-      {(totalCount !== null || transactions.length > 0) && (
-        <div className="flex flex-wrap items-center justify-between gap-8">
-          {totalCount !== null && totalCount > 0 ? (
-            <div className="flex items-center text-sm text-gray-50">
-              {totalCount >= MAX_TRANSACTION_RESULTS ? (
-                <>
-                  <span>
-                    {t('showingMaxTransactions', {
-                      count: MAX_TRANSACTION_RESULTS.toLocaleString()
-                    } as Record<string, string>)}
-                  </span>
-                  <Tooltip
-                    tooltipId="max-results-info"
-                    content={t('maxResultsHint', {
-                      count: MAX_TRANSACTION_RESULTS.toLocaleString()
-                    } as Record<string, string>)}
-                  >
-                    <Infocon className="ml-6 h-16 w-16 cursor-help text-gray-50" />
-                  </Tooltip>
-                </>
-              ) : (
+      <div className="flex flex-wrap items-end justify-between gap-8">
+        {totalCount !== null && totalCount > 0 ? (
+          <div className="flex items-center text-sm text-gray-50">
+            {totalCount >= MAX_TRANSACTION_RESULTS ? (
+              <>
                 <span>
-                  {t('transactionsFound', { count: totalCount.toLocaleString() } as Record<
-                    string,
-                    string
-                  >)}
+                  {t('showingMaxTransactions', {
+                    count: MAX_TRANSACTION_RESULTS.toLocaleString()
+                  } as Record<string, string>)}
                 </span>
-              )}
-            </div>
-          ) : null}
+                <Tooltip
+                  tooltipId="max-results-info"
+                  content={t('maxResultsHint', {
+                    count: MAX_TRANSACTION_RESULTS.toLocaleString()
+                  } as Record<string, string>)}
+                >
+                  <Infocon className="ml-6 h-16 w-16 cursor-help text-gray-50" />
+                </Tooltip>
+              </>
+            ) : (
+              <span>
+                {t('transactionsFound', { count: totalCount.toLocaleString() } as Record<
+                  string,
+                  string
+                >)}
+              </span>
+            )}
+          </div>
+        ) : (
+          <span />
+        )}
+        <Select
+          className="w-[170px]"
+          label={t('itemsPerPage')}
+          defaultValue={defaultPageSizeOption}
+          onSelect={handlePageSizeChange}
+          options={pageSizeOptions}
+        />
+      </div>
 
-          {transactions.length > 0 && (
-            <Button
-              variant="link"
-              size="sm"
-              onClick={() => handleExpandAllChange(!expandAll)}
-              className="w-fit gap-6"
-            >
-              <ChevronDownIcon
-                className={`h-16 w-16 transition-transform duration-300 ${expandAll ? 'rotate-180' : 'rotate-0'}`}
-              />
-              {expandAll ? t('collapseAll') : t('expandAll')}
-            </Button>
-          )}
+      <div className="w-full rounded-12 border-1 border-primary-60 bg-primary-70">
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead className="border-b-1 border-primary-60 text-left font-space text-sm text-gray-50">
+              <tr>
+                <th className="whitespace-nowrap px-8 py-12 text-center font-400 sm:px-16">
+                  {t('status')}
+                </th>
+                <th className="whitespace-nowrap px-8 py-12 font-400 sm:px-16">{t('txID')}</th>
+                <th className="whitespace-nowrap px-8 py-12 font-400 sm:px-16">{t('txType')}</th>
+                <th className="whitespace-nowrap px-8 py-12 font-400 sm:px-16">{t('tick')}</th>
+                <th className="whitespace-nowrap px-8 py-12 font-400 sm:px-16">{t('timestamp')}</th>
+                <th className="whitespace-nowrap px-8 py-12 font-400 sm:px-16">{t('source')}</th>
+                <th className="whitespace-nowrap px-8 py-12 font-400 sm:px-16">
+                  {t('destination')}
+                </th>
+                <th className="whitespace-nowrap px-8 py-12 text-right font-400 sm:px-16">
+                  {t('amount')}
+                </th>
+              </tr>
+            </thead>
+            <tbody>{renderTableContent()}</tbody>
+          </table>
         </div>
-      )}
-
-      <InfiniteScroll
-        items={transactions}
-        loadMore={loadMore}
-        hasMore={hasMore}
-        isLoading={isLoading}
-        loader={<DotsLoader showLoadingText />}
-        error={errorMessage}
-        endMessage={
-          <p className="py-32 text-center text-sm text-gray-50">
-            {transactions.length === 0 ? t('noTransactions') : t('allTransactionsLoaded')}
-          </p>
-        }
-        renderItem={renderTxItem}
-      />
+        {pageCount > 1 && (
+          <PaginationBar
+            className="mx-auto w-fit gap-8 p-20"
+            pageCount={pageCount}
+            page={page}
+            onPageChange={handlePageChange}
+          />
+        )}
+      </div>
     </div>
   )
 }

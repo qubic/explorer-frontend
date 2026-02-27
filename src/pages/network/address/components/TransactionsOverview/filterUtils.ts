@@ -1,5 +1,5 @@
 import { isValidAddressFormat } from '@app/utils'
-import { MAX_UINT32 } from '../../../utils/filterUtils'
+import { MAX_UINT32, validateNumericRange } from '../../../utils/filterUtils'
 
 // Re-export shared utilities from network utils (only what's actually used by address page)
 export {
@@ -8,7 +8,7 @@ export {
   formatAddressShort,
   formatAmountForDisplay,
   formatAmountShort,
-  parseAmountFromDisplay,
+  parseNumericInput,
   parseFilterApiError,
   validateAmountRange,
   validateInputTypeRange
@@ -151,27 +151,6 @@ export function validateAddressFilter(filter: AddressFilter | undefined): string
 
   // Return the first error found
   return errors.find((e) => e !== null) ?? null
-}
-
-/**
- * Validates a numeric range filter (amount, inputType, tick).
- * @param start - Start value
- * @param end - End value
- * @param strictComparison - If true, start must be < end (not <=)
- * Returns an error message key or null if valid.
- */
-function validateNumericRange(
-  start: string | undefined,
-  end: string | undefined,
-  strictComparison = false
-): string | null {
-  if (!start || !end) return null
-
-  const startNum = Number(start)
-  const endNum = Number(end)
-  const isInvalid = strictComparison ? startNum >= endNum : startNum > endNum
-
-  return isInvalid ? 'invalid' : null
 }
 
 /**

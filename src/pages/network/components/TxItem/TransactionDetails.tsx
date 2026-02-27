@@ -99,7 +99,7 @@ export default function TransactionDetails({
         />
       ) : (
         <SubCardItem
-          title={`TX ${t('id')}`}
+          title={t('txID')}
           variant={variant}
           content={<TxLink className="text-sm text-primary-30" value={hash} copy />}
         />
@@ -107,7 +107,7 @@ export default function TransactionDetails({
 
       {variant === 'secondary' && (
         <SubCardItem
-          title={t('type')}
+          title={t('txType')}
           variant={variant}
           content={<p className="font-space text-sm">{transactionTypeDisplay}</p>}
         />
@@ -144,7 +144,7 @@ export default function TransactionDetails({
       />
       {variant === 'primary' && (
         <SubCardItem
-          title={t('type')}
+          title={t('txType')}
           variant={variant}
           content={<p className="font-space text-sm">{transactionTypeDisplay}</p>}
         />

@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { QubicWhiteLogo } from '@app/assets/icons'
 import { Alert, DropdownMenu } from '@app/components/ui'
@@ -8,6 +9,7 @@ import { EXPLORER_NETWORK_URLS } from '@app/constants/qubic'
 import { clsxTwMerge } from '@app/utils'
 
 export default function NetworkSelector() {
+  const { t } = useTranslation('global')
   const [showDropdown, setShowDropdown] = useState(false)
 
   const handleDropdownToggle = () => setShowDropdown((prev) => !prev)
@@ -15,7 +17,10 @@ export default function NetworkSelector() {
   return (
     <ErrorBoundary fallback={<Alert variant="error" className="mx-5 my-2.5" />}>
       <DropdownMenu show={showDropdown} onToggle={handleDropdownToggle}>
-        <DropdownMenu.Trigger className="rounded-full p-8 transition-colors duration-500 ease-in-out hover:bg-primary-70">
+        <DropdownMenu.Trigger
+          className="rounded-full p-8 transition-colors duration-500 ease-in-out hover:bg-primary-70"
+          aria-label={t('selectNetwork')}
+        >
           <QubicWhiteLogo className="size-28 shrink-0 rounded border border-primary-60 p-4" />
         </DropdownMenu.Trigger>
         <DropdownMenu.Content className="ltr:left-auto ltr:right-0">

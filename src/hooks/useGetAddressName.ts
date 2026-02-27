@@ -29,6 +29,8 @@ export function useGetAddressName(address: string): GetAddressNameResult | undef
   const { data: allAssetsIssuances } = useGetAssetsIssuancesQuery()
 
   return useMemo(() => {
+    if (address === '') return undefined
+
     // Check smart contracts first (highest priority)
     const smartContract = smartContracts?.find((sc) => sc.address === address)
     if (smartContract) {

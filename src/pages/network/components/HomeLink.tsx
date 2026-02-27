@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 
 export default function HomeLink() {
   return (
-    <Link to={Routes.NETWORK.ROOT} role="button">
+    <Link to={Routes.NETWORK.ROOT}>
       <HomeIcon />
     </Link>
   )

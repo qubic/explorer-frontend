@@ -1,9 +1,12 @@
 {
   "address": "Địa chỉ",
   "balance": "Số dư",
+  "navigationMenu": "Menu điều hướng",
   "noResultsFound": "Không Tìm Thấy Kết Quả",
   "noResultsFoundFor": "Không tìm thấy kết quả cho \"{{keyword}}\"",
   "searchPlaceholder": "Tìm TX, tick, ID, token, hợp đồng, sàn giao dịch...",
+  "selectLanguage": "Chọn ngôn ngữ",
+  "selectNetwork": "Chọn mạng",
   "tick": "Tick",
   "transaction": "Giao dịch",
   "transactions": "Các giao dịch"

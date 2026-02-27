@@ -1,37 +1,15 @@
-import type { TFunction } from 'i18next'
-import { memo, useCallback, useEffect, useMemo } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router-dom'
 
 import { withHelmet } from '@app/components/hocs'
-import { Breadcrumbs, PaginationBar, Select } from '@app/components/ui'
+import { Breadcrumbs, PaginationBar, Select, TableErrorRow } from '@app/components/ui'
 import { PageLayout } from '@app/components/ui/layouts'
-import type { Option } from '@app/components/ui/Select'
-import { useTailwindBreakpoint } from '@app/hooks'
+import { RICH_LIST_DEFAULT_PAGE_SIZE, getPageSizeSelectOptions } from '@app/constants'
+import { usePaginationSearchParams, useTailwindBreakpoint } from '@app/hooks'
 import { useGetRichListQuery } from '@app/store/apis/rpc-stats'
-import { HomeLink } from '../../components'
-import { RichListErrorRow, RichListRow, RichListSkeletonRow } from './components'
-
-const DEFAULT_PAGE_SIZE = 15
-
-const PAGE_SIZE_OPTIONS = [
-  { i18nKey: 'showItemsPerPage', value: '15' },
-  { i18nKey: 'showItemsPerPage', value: '30' },
-  { i18nKey: 'showItemsPerPage', value: '50' },
-  { i18nKey: 'showItemsPerPage', value: '100' }
-]
-
-const getSelectOptions = (t: TFunction) =>
-  PAGE_SIZE_OPTIONS.map((option) => ({
-    label: t(option.i18nKey, { count: parseInt(option.value, 10) }),
-    value: option.value
-  }))
-
-const RichListLoadingRows = memo(({ pageSize }: { pageSize: number }) =>
-  Array.from({ length: pageSize }).map((_, index) => (
-    <RichListSkeletonRow key={String(`${index}`)} />
-  ))
-)
+import { HomeLink, RichListLoadingRows } from '../../components'
+import { RichListRow } from './components'
 
 function RichListPage() {
   const { t } = useTranslation('network-page')
@@ -39,39 +17,20 @@ function RichListPage() {
   const [searchParams, setSearchParams] = useSearchParams()
 
   const page = parseInt(searchParams.get('page') || '1', 10)
-  const pageSize = parseInt(searchParams.get('pageSize') ?? String(DEFAULT_PAGE_SIZE), 10)
+  const pageSize = parseInt(searchParams.get('pageSize') ?? String(RICH_LIST_DEFAULT_PAGE_SIZE), 10)
 
-  const pageSizeOptions = useMemo(() => getSelectOptions(t), [t])
+  const pageSizeOptions = useMemo(() => getPageSizeSelectOptions(t), [t])
   const defaultPageSizeOption = useMemo(
     () => pageSizeOptions.find((option) => option.value === String(pageSize)),
     [pageSizeOptions, pageSize]
   )
 
+  const { handlePageChange, handlePageSizeChange } = usePaginationSearchParams()
+
   const { data, isFetching, error } = useGetRichListQuery({
     page,
     pageSize
   })
-
-  const handlePageChange = useCallback(
-    (value: number) => {
-      setSearchParams((prev) => ({
-        ...Object.fromEntries(prev.entries()),
-        page: value.toString()
-      }))
-    },
-    [setSearchParams]
-  )
-
-  const handlePageSizeChange = useCallback(
-    (option: Option) => {
-      setSearchParams((prev) => ({
-        ...Object.fromEntries(prev.entries()),
-        pageSize: option.value,
-        page: '1'
-      }))
-    },
-    [setSearchParams]
-  )
 
   const entitiesWithRank = useMemo(
     () =>
@@ -91,7 +50,7 @@ function RichListPage() {
         (prev) => ({
           ...Object.fromEntries(prev.entries()),
           ...(!prev.has('page') && { page: '1' }),
-          ...(!prev.has('pageSize') && { pageSize: String(DEFAULT_PAGE_SIZE) })
+          ...(!prev.has('pageSize') && { pageSize: String(RICH_LIST_DEFAULT_PAGE_SIZE) })
         }),
         { replace: true }
       )
@@ -102,13 +61,13 @@ function RichListPage() {
     if (isFetching) return <RichListLoadingRows pageSize={pageSize} />
 
     if (error || entitiesWithRank?.length === 0) {
-      return <RichListErrorRow />
+      return <TableErrorRow colSpan={3} message={t('richListLoadFailed')} />
     }
 
     return entitiesWithRank?.map((entity) => (
       <RichListRow key={entity.identity} entity={entity} isMobile={isMobile} />
     ))
-  }, [entitiesWithRank, isFetching, error, isMobile, pageSize])
+  }, [entitiesWithRank, isFetching, error, isMobile, pageSize, t])
 
   return (
     <PageLayout className="space-y-20">
@@ -131,7 +90,7 @@ function RichListPage() {
           />
         </div>
         <div className="w-full rounded-12 border-1 border-primary-60 bg-primary-70">
-          <div className="overflow-x-scroll">
+          <div className="overflow-x-auto">
             <table className="w-full">
               <thead className="border-b-1 border-primary-60 text-left font-space text-sm text-gray-50">
                 <tr>

@@ -1,4 +1,6 @@
 export { default as ActiveFilterChip } from './ActiveFilterChip'
+export { default as EventTypeChips } from './EventTypeChips'
+export { default as EventTypeDropdownList } from './EventTypeDropdownList'
 export { default as AmountFilterContent } from './AmountFilterContent'
 export { default as FilterDropdown } from './FilterDropdown'
 export { default as MobileAmountFilterSection } from './MobileAmountFilterSection'

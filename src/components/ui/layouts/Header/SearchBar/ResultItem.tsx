@@ -35,7 +35,6 @@ function ResultItem({ type, link, result, subInfo, onClick }: Props) {
     <Link
       className="flex flex-col gap-2 break-all rounded-12 px-12 py-6 hover:bg-primary-60"
       to={link}
-      role="button"
       onClick={onClick}
     >
       <div className="flex items-center gap-8">

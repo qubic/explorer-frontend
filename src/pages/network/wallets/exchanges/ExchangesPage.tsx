@@ -2,11 +2,11 @@ import { memo, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { withHelmet } from '@app/components/hocs'
-import { Breadcrumbs } from '@app/components/ui'
+import { Breadcrumbs, TableErrorRow } from '@app/components/ui'
 import { PageLayout } from '@app/components/ui/layouts'
 import { useTailwindBreakpoint } from '@app/hooks'
 import { HomeLink } from '../../components'
-import { ExchangeRow, ExchangesErrorRow, ExchangeSkeletonRow } from './components'
+import { ExchangeRow, ExchangeSkeletonRow } from './components'
 import { EXCHANGES_SKELETON_ROWS } from './constants'
 import { useGetExchangesBalances } from './hooks'
 
@@ -26,13 +26,13 @@ function ExchangesPage() {
     if (isLoading) return <ExchangesLoadingRows />
 
     if (error || exchangeWallets.length === 0) {
-      return <ExchangesErrorRow />
+      return <TableErrorRow colSpan={3} message={t('exchangesLoadFailed')} />
     }
 
     return exchangeWallets.map((entity) => (
       <ExchangeRow key={entity.address} entity={entity} isMobile={isMobile} />
     ))
-  }, [isLoading, error, exchangeWallets, isMobile])
+  }, [isLoading, error, exchangeWallets, isMobile, t])
 
   return (
     <PageLayout className="space-y-20">
@@ -47,7 +47,7 @@ function ExchangesPage() {
           </div>
         </div>
         <div className="w-full rounded-12 border-1 border-primary-60 bg-primary-70">
-          <div className="overflow-x-scroll">
+          <div className="overflow-x-auto">
             <table className="w-full">
               <thead className="border-b-1 border-primary-60 text-left font-space text-sm text-gray-50">
                 <tr>

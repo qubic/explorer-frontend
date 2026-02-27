@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router-dom'
 
 import { withHelmet } from '@app/components/hocs'
-import { Breadcrumbs } from '@app/components/ui'
+import { Breadcrumbs, TableErrorRow } from '@app/components/ui'
 import { PageLayout } from '@app/components/ui/layouts'
 import { useTailwindBreakpoint } from '@app/hooks'
 import { useGetAssetsIssuancesQuery } from '@app/store/apis/rpc-live'
@@ -16,7 +16,7 @@ import {
   filterTokensByCategory
 } from '@app/utils'
 import { HomeLink } from '../../components'
-import { CategoryChips, TokenRow, TokensErrorRow, TokenSkeletonRow } from './components'
+import { CategoryChips, TokenRow, TokenSkeletonRow } from './components'
 
 const TokensLoadingRows = memo(() =>
   Array.from({ length: 5 }).map((_, index) => <TokenSkeletonRow key={String(`${index}`)} />)
@@ -103,7 +103,7 @@ function TokensPage() {
     if (isLoading) return <TokensLoadingRows />
 
     if (error || tokens.length === 0) {
-      return <TokensErrorRow />
+      return <TableErrorRow colSpan={2} message={t('tokenLoadFailed')} />
     }
 
     return tokens.map(({ data: tokenAsset }) => (
@@ -113,7 +113,7 @@ function TokensPage() {
         isMobile={isMobile}
       />
     ))
-  }, [isLoading, error, tokens, isMobile])
+  }, [isLoading, error, tokens, isMobile, t])
 
   return (
     <PageLayout className="space-y-20">
@@ -136,7 +136,7 @@ function TokensPage() {
           />
         )}
         <div className="w-full rounded-12 border-1 border-primary-60 bg-primary-70">
-          <div className="overflow-x-scroll">
+          <div className="overflow-x-auto">
             <table className="w-full">
               <thead className="border-b-1 border-primary-60 text-left font-space text-sm text-gray-50">
                 <tr>

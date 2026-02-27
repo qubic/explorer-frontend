@@ -130,7 +130,7 @@ export const MAX_UINT64 = 2n ** 64n - 1n
  * @param strictComparison - If true, start must be < end (not <=)
  * Returns an error message key or null if valid.
  */
-function validateNumericRange(
+export function validateNumericRange(
   start: string | undefined,
   end: string | undefined,
   strictComparison = false
@@ -197,6 +197,30 @@ export function validateInputTypeRange(
 }
 
 // ============================================================================
+// SEARCH PARAMS UTILITIES
+// ============================================================================
+
+/**
+ * Applies updates to URL search params and resets page to 1.
+ * Pass `undefined` as a value to remove that key.
+ */
+export function updateSearchParams(
+  prev: URLSearchParams,
+  updates: Record<string, string | undefined>
+): Record<string, string> {
+  const next = Object.fromEntries(prev.entries())
+  Object.entries(updates).forEach(([key, value]) => {
+    if (value === undefined) {
+      delete next[key]
+    } else {
+      next[key] = value
+    }
+  })
+  next.page = '1'
+  return next
+}
+
+// ============================================================================
 // AMOUNT FORMATTING UTILITIES
 // ============================================================================
 
@@ -235,9 +259,8 @@ export function formatAmountShort(value: string | undefined, t: TranslationFn): 
   return num.toLocaleString('en-US')
 }
 
-// Parse a formatted string back to raw number string
-export function parseAmountFromDisplay(formatted: string): string {
-  // Remove all non-digit characters except for leading minus
+// Parse a formatted string back to raw number string (removes commas, spaces, etc.)
+export function parseNumericInput(formatted: string): string {
   return formatted.replace(/[^\d]/g, '')
 }
 

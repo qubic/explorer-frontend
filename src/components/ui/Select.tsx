@@ -102,7 +102,7 @@ export default function Select<ValueType = string>({
 
           <ListboxOptions
             transition
-            className="absolute z-10 mt-1 w-full overflow-auto rounded-md bg-primary-70 shadow-2xl ring-1 ring-black ring-opacity-5 drop-shadow-2xl scrollbar-thin scrollbar-thumb-rounded-full focus:outline-none"
+            className="absolute z-10 mt-1 max-h-[200px] w-full overflow-auto rounded-md bg-primary-70 shadow-2xl ring-1 ring-black ring-opacity-5 drop-shadow-2xl scrollbar-thin scrollbar-thumb-rounded-full focus:outline-none"
           >
             {options.map((option, index) => (
               <ListboxOption
