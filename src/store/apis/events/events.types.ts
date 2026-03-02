@@ -135,7 +135,7 @@ export interface RawApiEvent {
   transactionHash: string
   logId: string
   logDigest: string
-  eventType: number
+  logType: number
   category: number
   quTransfer?: QuTransferData
   assetIssuance?: AssetIssuanceData
@@ -168,7 +168,7 @@ export function adaptApiEvent(raw: RawApiEvent): TransactionEvent {
     transactionHash: raw.transactionHash,
     logId: Number(raw.logId),
     logDigest: raw.logDigest,
-    type: raw.eventType,
+    type: raw.logType,
     category: raw.category,
     source: '',
     destination: '',

@@ -21,7 +21,7 @@ export default function useTickEvents(tick: number): {
   const eventType = useSanitizedEventType()
 
   const { data, isFetching, isError, refetch } = useGetEventsQuery(
-    { tickNumber: tick, offset, size: pageSize, eventType },
+    { tickNumber: tick, offset, size: pageSize, logType: eventType },
     { skip: !tick }
   )
 

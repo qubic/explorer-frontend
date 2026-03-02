@@ -31,7 +31,7 @@ export default function useEventsPage(): {
     tickNumber: tick,
     offset,
     size: pageSize,
-    eventType
+    logType: eventType
   })
 
   const total = data?.total ?? 0

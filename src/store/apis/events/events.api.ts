@@ -17,7 +17,7 @@ export interface GetEventsRequest {
   transactionHash?: string
   offset?: number
   size?: number
-  eventType?: number
+  logType?: number
 }
 
 function adaptEventsList(response: RawGetEventsResponse): TransactionEvent[] {
@@ -43,20 +43,14 @@ export const eventsApi = createApi({
   keepUnusedDataFor: QUERY_CACHE_TIME,
   endpoints: (builder) => ({
     getEvents: builder.query<PaginatedEvents, GetEventsRequest>({
-      query: ({
-        tickNumber,
-        transactionHash,
-        offset = 0,
-        size = DEFAULT_PAGE_SIZE,
-        eventType
-      }) => ({
+      query: ({ tickNumber, transactionHash, offset = 0, size = DEFAULT_PAGE_SIZE, logType }) => ({
         url: '/getEvents',
         method: 'POST',
         body: {
           filters: {
             ...(tickNumber !== undefined && { tickNumber: String(tickNumber) }),
             ...(transactionHash && { transactionHash }),
-            ...(eventType !== undefined && { eventType: String(eventType) })
+            ...(logType !== undefined && { logType: String(logType) })
           },
           pagination: { offset, size }
         }
