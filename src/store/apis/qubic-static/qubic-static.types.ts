@@ -65,4 +65,13 @@ export type GetTokenCategoriesResponse = {
   allCategoryNameKey: string
 }
 
+export type TransactionInputType = {
+  id: number
+  label: string
+}
+
+export type GetProtocolResponse = {
+  transaction_input_types: TransactionInputType[]
+}
+
 export type ExplorerTranslations = Record<string, string>

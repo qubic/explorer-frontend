@@ -4,11 +4,11 @@ import { useTranslation } from 'react-i18next'
 import { Alert } from '@app/components/ui'
 import { COPY_BUTTON_TYPES, CopyTextButton } from '@app/components/ui/buttons'
 import { useGetAddressName } from '@app/hooks'
-import { useGetSmartContractsQuery } from '@app/store/apis/qubic-static'
+import { useGetProtocolQuery, useGetSmartContractsQuery } from '@app/store/apis/qubic-static'
 import type { QueryServiceTransaction } from '@app/store/apis/query-service'
 import { clsxTwMerge, formatDate, formatString } from '@app/utils'
-import { getProcedureName } from '@app/utils/qubic'
-import { type AssetTransfer, type Transfer } from '@app/utils/qubic-ts'
+import { getTransactionTypeDisplayLong } from '@app/utils/qubic'
+import type { AssetTransfer, Transfer } from '@app/utils/qubic-ts'
 import AddressLink from '../AddressLink'
 import SubCardItem from '../SubCardItem'
 import TickLink from '../TickLink'
@@ -53,6 +53,7 @@ export default function TransactionDetails({
 }: Props) {
   const { t } = useTranslation('network-page')
   const { data: smartContracts } = useGetSmartContractsQuery()
+  const { data: protocolData } = useGetProtocolQuery()
 
   const isSecondaryVariant = variant === 'secondary'
   const { date, time } = useMemo(() => formatDate(timestamp, { split: true }), [timestamp])
@@ -61,9 +62,9 @@ export default function TransactionDetails({
   const sourceAddressNameData = useGetAddressName(source)
   const destinationAddressNameData = useGetAddressName(destAddress)
 
-  const procedureName = useMemo(
-    () => getProcedureName(destination, inputType, smartContracts),
-    [destination, inputType, smartContracts]
+  const transactionTypeDisplay = useMemo(
+    () => getTransactionTypeDisplayLong(destination, inputType, smartContracts, protocolData),
+    [destination, inputType, smartContracts, protocolData]
   )
   const { isContractTransaction, shouldDecodeInput, decodedInput } = useDecodedContractInput({
     showExtendedDetails,
@@ -72,14 +73,6 @@ export default function TransactionDetails({
     inputType,
     inputData
   })
-
-  const transactionTypeDisplay = useMemo(() => {
-    const baseType = formatString(inputType)
-    const txCategory = isContractTransaction ? 'SC' : 'Standard'
-    return procedureName
-      ? `${baseType} ${txCategory} (${procedureName})`
-      : `${baseType} ${txCategory}`
-  }, [inputType, isContractTransaction, procedureName])
 
   return (
     <TransactionDetailsWrapper variant={variant}>

@@ -3,10 +3,9 @@ import { memo, useMemo } from 'react'
 import { Tooltip } from '@app/components/ui'
 import type { QueryServiceTransaction } from '@app/store/apis/query-service'
 import { useGetAddressName } from '@app/hooks'
-import { useGetSmartContractsQuery } from '@app/store/apis/qubic-static'
+import { useGetProtocolQuery, useGetSmartContractsQuery } from '@app/store/apis/qubic-static'
 import { formatDate, formatEllipsis, formatString } from '@app/utils'
-import { getProcedureName } from '@app/utils/qubic'
-import { isSmartContractTx } from '@app/utils/qubic-ts'
+import { getTransactionTypeDisplay, getTransactionTypeDisplayLong } from '@app/utils/qubic'
 import AddressLink from './AddressLink'
 import TickLink from './TickLink'
 import TxLink from './TxLink'
@@ -23,6 +22,7 @@ function TransactionRow({ tx, highlightTick, highlightAddress }: Props) {
   const { hash, source, destination, amount, inputType, tickNumber, timestamp, moneyFlew } = tx
 
   const { data: smartContracts } = useGetSmartContractsQuery()
+  const { data: protocolData } = useGetProtocolQuery()
   const sourceNameData = useGetAddressName(source)
   const destinationNameData = useGetAddressName(destination)
 
@@ -31,14 +31,9 @@ function TransactionRow({ tx, highlightTick, highlightAddress }: Props) {
     [inputType, amount, moneyFlew, destination]
   )
 
-  const procedureName = useMemo(
-    () => getProcedureName(destination, inputType, smartContracts),
-    [destination, inputType, smartContracts]
-  )
-
   const typeDisplay = useMemo(
-    () => procedureName || (isSmartContractTx(destination, inputType) ? 'SC' : 'Standard'),
-    [inputType, destination, procedureName]
+    () => getTransactionTypeDisplay(destination, inputType, smartContracts, protocolData),
+    [destination, inputType, smartContracts, protocolData]
   )
 
   return (
@@ -52,7 +47,15 @@ function TransactionRow({ tx, highlightTick, highlightAddress }: Props) {
         <TxLink value={hash} className="text-primary-30" ellipsis showTooltip copy />
       </td>
       <td className="whitespace-nowrap px-8 py-12 font-space text-xs xs:text-sm sm:px-16">
-        <Tooltip tooltipId="tx-type" content={`${typeDisplay} (${inputType})`}>
+        <Tooltip
+          tooltipId="tx-type"
+          content={getTransactionTypeDisplayLong(
+            destination,
+            inputType,
+            smartContracts,
+            protocolData
+          )}
+        >
           <span className="block max-w-[120px] truncate">{typeDisplay}</span>
         </Tooltip>
       </td>

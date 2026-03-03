@@ -1,4 +1,5 @@
-import type { SmartContract } from '@app/store/apis/qubic-static'
+import type { SmartContract, TransactionInputType } from '@app/store/apis/qubic-static'
+import { isSmartContractTx } from '@app/utils/qubic-ts'
 
 /**
  * Get the procedure name for a smart contract transaction
@@ -19,4 +20,33 @@ export const getProcedureName = (
 
   const procedure = contract.procedures.find((proc) => proc.id === inputType)
   return procedure?.name
+}
+
+export const getInputTypeLabel = (
+  inputType: number,
+  transactionInputTypes?: TransactionInputType[]
+): string | undefined => {
+  if (!transactionInputTypes) return undefined
+  return transactionInputTypes.find((t) => t.id === inputType)?.label
+}
+
+export const getTransactionTypeDisplay = (
+  destination: string,
+  inputType: number,
+  smartContracts?: SmartContract[],
+  protocolData?: TransactionInputType[]
+): string => {
+  if (isSmartContractTx(destination, inputType)) {
+    return getProcedureName(destination, inputType, smartContracts) || 'SC'
+  }
+  return getInputTypeLabel(inputType, protocolData) || 'Standard'
+}
+
+export const getTransactionTypeDisplayLong = (
+  destination: string,
+  inputType: number,
+  smartContracts?: SmartContract[],
+  protocolData?: TransactionInputType[]
+): string => {
+  return `${getTransactionTypeDisplay(destination, inputType, smartContracts, protocolData)} (${inputType})`
 }

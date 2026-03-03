@@ -4,6 +4,7 @@ import type {
   ExplorerTranslations,
   GetAddressLabelsResponse,
   GetExchangesResponse,
+  GetProtocolResponse,
   GetSmartContractsResponse,
   GetTokenCategoriesResponse,
   GetTokensResponse
@@ -43,6 +44,10 @@ export const qubicStaticApi = createApi({
     getTokenCategories: build.query<GetTokenCategoriesResponse, void>({
       query: () => `${EXPLORER_DATA_URL}/token_categories.json`
     }),
+    getProtocol: build.query<GetProtocolResponse['transaction_input_types'], void>({
+      query: () => `${GENERAL_DATA_URL}/protocol.json`,
+      transformResponse: (response: GetProtocolResponse) => response.transaction_input_types
+    }),
     getExplorerTranslations: build.query<ExplorerTranslations, string>({
       query: (lang) => `${EXPLORER_DATA_URL}/locales/${lang}.json`
     })
@@ -55,5 +60,6 @@ export const {
   useGetAddressLabelsQuery,
   useGetTokensQuery,
   useGetTokenCategoriesQuery,
+  useGetProtocolQuery,
   useGetExplorerTranslationsQuery
 } = qubicStaticApi
