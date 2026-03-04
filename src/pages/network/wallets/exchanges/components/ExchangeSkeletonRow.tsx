@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/control-has-associated-label */
 export default function ExchangesSkeletonRow() {
   return (
     <tr className="animate-pulse border-b border-primary-60">

@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/control-has-associated-label */
 export default function TokenSkeletonRow() {
   return (
     <tr className="animate-pulse border-b border-primary-60">
