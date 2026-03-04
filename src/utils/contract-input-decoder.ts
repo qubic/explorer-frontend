@@ -66,6 +66,8 @@ coreContractsRegistry.contracts.forEach((contract) => {
 
 const HEX_32_BYTES = /^0x[0-9a-fA-F]{64}$/
 const DECIMAL_STRING = /^\d+$/
+const MAX_INPUT_DATA_LENGTH = 64 * 1024
+const MAX_DECODE_NESTING_DEPTH = 20
 
 const hex32ToBytes = (hex: string): Uint8Array => {
   const raw = hex.slice(2)
@@ -105,9 +107,15 @@ const asIdentityString = (value: unknown): string | null => {
 }
 
 const toBigIntLike = (value: unknown): bigint | null => {
-  if (typeof value === 'bigint') return value
-  if (typeof value === 'number' && Number.isFinite(value)) return BigInt(Math.trunc(value))
-  if (typeof value === 'string' && DECIMAL_STRING.test(value)) return BigInt(value)
+  if (typeof value === 'bigint') return value >= 0n ? value : null
+  if (typeof value === 'number' && Number.isFinite(value)) {
+    const truncated = Math.trunc(value)
+    return truncated >= 0 ? BigInt(truncated) : null
+  }
+  if (typeof value === 'string' && DECIMAL_STRING.test(value)) {
+    const numeric = BigInt(value)
+    return numeric >= 0n ? numeric : null
+  }
   return null
 }
 
@@ -162,18 +170,31 @@ const isIdentityTypeExpression = (typeExpression: string): boolean => {
   return arraySpec ? isIdentityTypeExpression(arraySpec.elementType) : false
 }
 
-const collectIdentityPathsForInput = (candidate: RegistryEntryRef): ReadonlySet<string> => {
-  const contract = coreContractsRegistry.contracts.find(
-    (item) => item.name === candidate.contractName
-  )
-  if (!contract) return new Set<string>()
+const ioTypeMapByContractName = new Map<string, ReadonlyMap<string, IoTypeLike>>()
+
+const getIoTypeMapForContract = (contractName: string): ReadonlyMap<string, IoTypeLike> | null => {
+  const contract = coreContractsRegistry.contracts.find((item) => item.name === contractName)
+  if (!contract) return null
+
+  const cached = ioTypeMapByContractName.get(contract.name)
+  if (cached) return cached
 
   const ioTypeMap = new Map<string, IoTypeLike>()
   ;(contract.ioTypes ?? []).forEach((ioType) => {
     ioTypeMap.set(ioType.name, ioType)
   })
+  ioTypeMapByContractName.set(contract.name, ioTypeMap)
+  return ioTypeMap
+}
 
-  const identityPaths = new Set<string>()
+const collectPathsByPredicate = (
+  candidate: RegistryEntryRef,
+  isMatch: (normalizedTypeExpression: string) => boolean
+): ReadonlySet<string> => {
+  const ioTypeMap = getIoTypeMapForContract(candidate.contractName)
+  if (!ioTypeMap) return new Set<string>()
+
+  const matchingPaths = new Set<string>()
   const visitedTypeNames = new Set<string>()
   let visitByTypeExpression: (typeExpression: string, path: string) => void
 
@@ -201,12 +222,12 @@ const collectIdentityPathsForInput = (candidate: RegistryEntryRef): ReadonlySet<
   }
 
   visitByTypeExpression = (typeExpression: string, path: string): void => {
-    if (isIdentityTypeExpression(typeExpression)) {
-      identityPaths.add(path)
+    const normalized = normalizeTypeExpression(typeExpression)
+    if (isMatch(normalized)) {
+      matchingPaths.add(path)
       return
     }
 
-    const normalized = normalizeTypeExpression(typeExpression)
     const arraySpec = parseArrayType(normalized)
     if (arraySpec) {
       visitByTypeExpression(arraySpec.elementType, path)
@@ -219,75 +240,30 @@ const collectIdentityPathsForInput = (candidate: RegistryEntryRef): ReadonlySet<
   }
 
   visitByTypeName(candidate.inputTypeName, '')
-  return identityPaths
+  return matchingPaths
 }
 
-const collectUint64PathsForInput = (candidate: RegistryEntryRef): ReadonlySet<string> => {
-  const contract = coreContractsRegistry.contracts.find(
-    (item) => item.name === candidate.contractName
+const collectIdentityPathsForInput = (candidate: RegistryEntryRef): ReadonlySet<string> =>
+  collectPathsByPredicate(candidate, isIdentityTypeExpression)
+
+const collectUint64PathsForInput = (candidate: RegistryEntryRef): ReadonlySet<string> =>
+  collectPathsByPredicate(
+    candidate,
+    (normalizedTypeExpression) => normalizedTypeExpression === 'uint64'
   )
-  if (!contract) return new Set<string>()
-
-  const ioTypeMap = new Map<string, IoTypeLike>()
-  ;(contract.ioTypes ?? []).forEach((ioType) => {
-    ioTypeMap.set(ioType.name, ioType)
-  })
-
-  const uint64Paths = new Set<string>()
-  const visitedTypeNames = new Set<string>()
-  let visitByTypeExpression: (typeExpression: string, path: string) => void
-
-  const visitByTypeName = (typeName: string, path: string): void => {
-    const ioType = ioTypeMap.get(typeName)
-    if (!ioType) return
-
-    if (ioType.kind === 'alias') {
-      if (!ioType.target) return
-      if (visitedTypeNames.has(ioType.name)) return
-      visitedTypeNames.add(ioType.name)
-      visitByTypeExpression(ioType.target, path)
-      visitedTypeNames.delete(ioType.name)
-      return
-    }
-
-    if (ioType.kind !== 'struct' || !ioType.fields) return
-    if (visitedTypeNames.has(ioType.name)) return
-    visitedTypeNames.add(ioType.name)
-    ioType.fields.forEach((field) => {
-      const fieldPath = path ? `${path}.${field.name}` : field.name
-      visitByTypeExpression(field.type, fieldPath)
-    })
-    visitedTypeNames.delete(ioType.name)
-  }
-
-  visitByTypeExpression = (typeExpression: string, path: string): void => {
-    if (normalizeTypeExpression(typeExpression) === 'uint64') {
-      uint64Paths.add(path)
-    }
-
-    const normalized = normalizeTypeExpression(typeExpression)
-    const arraySpec = parseArrayType(normalized)
-    if (arraySpec) {
-      visitByTypeExpression(arraySpec.elementType, path)
-      return
-    }
-
-    const ioType = ioTypeMap.get(normalized)
-    if (!ioType) return
-    visitByTypeName(ioType.name, path)
-  }
-
-  visitByTypeName(candidate.inputTypeName, '')
-  return uint64Paths
-}
 
 const normalizeDecodedValue = (
   value: unknown,
-  _keyHint?: string,
   path = '',
   identityPaths?: ReadonlySet<string>,
-  uint64Paths?: ReadonlySet<string>
+  uint64Paths?: ReadonlySet<string>,
+  depth = 0,
+  seen?: WeakSet<object>
 ): unknown => {
+  if (depth > MAX_DECODE_NESTING_DEPTH) {
+    return '[Max depth exceeded]'
+  }
+
   if (path && identityPaths?.has(path)) {
     const identity = asIdentityString(value)
     if (identity) return identity
@@ -299,17 +275,39 @@ const normalizeDecodedValue = (
   }
 
   if (Array.isArray(value)) {
+    const localSeen = seen ?? new WeakSet<object>()
+    if (localSeen.has(value)) {
+      return '[Circular]'
+    }
+    localSeen.add(value)
+
     return value.map((item) =>
-      normalizeDecodedValue(item, undefined, path, identityPaths, uint64Paths)
+      normalizeDecodedValue(item, path, identityPaths, uint64Paths, depth + 1, localSeen)
     )
   }
 
   if (value && typeof value === 'object') {
+    const localSeen = seen ?? new WeakSet<object>()
+    if (localSeen.has(value)) {
+      return '[Circular]'
+    }
+    localSeen.add(value)
+
     const record = value as Record<string, unknown>
     return Object.fromEntries(
       Object.entries(record).map(([key, nested]) => {
         const nestedPath = path ? `${path}.${key}` : key
-        return [key, normalizeDecodedValue(nested, key, nestedPath, identityPaths, uint64Paths)]
+        return [
+          key,
+          normalizeDecodedValue(
+            nested,
+            nestedPath,
+            identityPaths,
+            uint64Paths,
+            depth + 1,
+            localSeen
+          )
+        ]
       })
     )
   }
@@ -321,15 +319,24 @@ const toBytes = (
   inputData: string | Uint8Array | number[] | null | undefined
 ): { bytes: Uint8Array | null; invalid: boolean } => {
   if (!inputData) return { bytes: null, invalid: false }
-  if (inputData instanceof Uint8Array) return { bytes: inputData, invalid: false }
-  if (Array.isArray(inputData)) return { bytes: Uint8Array.from(inputData), invalid: false }
+  if (inputData instanceof Uint8Array) {
+    if (inputData.length > MAX_INPUT_DATA_LENGTH) return { bytes: null, invalid: true }
+    return { bytes: inputData, invalid: false }
+  }
+  if (Array.isArray(inputData)) {
+    if (inputData.length > MAX_INPUT_DATA_LENGTH) return { bytes: null, invalid: true }
+    return { bytes: Uint8Array.from(inputData), invalid: false }
+  }
   if (typeof inputData !== 'string') return { bytes: null, invalid: true }
 
   const normalized = inputData.trim()
   if (!normalized) return { bytes: null, invalid: false }
+  if (normalized.length > MAX_INPUT_DATA_LENGTH) return { bytes: null, invalid: true }
 
   try {
-    return { bytes: bytesFromBase64(normalized), invalid: false }
+    const bytes = bytesFromBase64(normalized)
+    if (bytes.length > MAX_INPUT_DATA_LENGTH) return { bytes: null, invalid: true }
+    return { bytes, invalid: false }
   } catch {
     return { bytes: null, invalid: true }
   }
@@ -419,7 +426,7 @@ export const decodeContractInputData = (params: {
       entryName: candidate.entryName,
       kind: candidate.kind,
       inputType: candidate.inputType,
-      value: normalizeDecodedValue(decoded.value, undefined, '', identityPaths, uint64Paths)
+      value: normalizeDecodedValue(decoded.value, '', identityPaths, uint64Paths)
     }
   } catch (error) {
     return {

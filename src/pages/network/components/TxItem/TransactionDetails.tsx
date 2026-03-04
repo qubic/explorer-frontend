@@ -67,15 +67,16 @@ export default function TransactionDetails({
     () => getProcedureName(destination, inputType, smartContracts),
     [destination, inputType, smartContracts]
   )
-  const decodedInput = useMemo(
-    () =>
-      decodeContractInputData({
-        inputType,
-        inputData,
-        destinationHint: destination
-      }),
-    [inputData, inputType, destination]
-  )
+  const shouldDecodeInput =
+    showExtendedDetails && !!inputData && inputData.length > 0 && inputType > 0
+  const decodedInput = useMemo(() => {
+    if (!shouldDecodeInput) return null
+    return decodeContractInputData({
+      inputType,
+      inputData,
+      destinationHint: destination
+    })
+  }, [shouldDecodeInput, inputData, inputType, destination])
 
   const transactionTypeDisplay = useMemo(() => {
     const baseType = formatString(inputType)
@@ -226,11 +227,11 @@ export default function TransactionDetails({
           }
         />
       )}
-      {showExtendedDetails && inputData && inputData.length > 0 && inputType > 0 && (
+      {shouldDecodeInput && decodedInput && (
         <SubCardItem
           title={t('decodedData')}
           variant={variant}
-          content={<DecodedInputData decoded={decodedInput} t={t} />}
+          content={<DecodedInputData decoded={decodedInput} />}
         />
       )}
 

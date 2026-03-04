@@ -33,7 +33,7 @@ function AddressPage() {
     { address: addressId },
     { skip: !addressId || !isAddressValid }
   )
-  const { data: smartContracts } = useGetSmartContractsQuery()
+  const { data: smartContracts, isLoading: isSmartContractsLoading } = useGetSmartContractsQuery()
 
   const [detailsOpen, setDetailsOpen] = useState(false)
 
@@ -82,6 +82,7 @@ function AddressPage() {
 
   // Normalize invalid tab params so URL always reflects the visible tab
   useEffect(() => {
+    if (isSmartContractsLoading) return
     if (tabParam && !(tabParam === 'contract' && isSmartContract)) {
       setSearchParams(
         (prev) => {
@@ -91,7 +92,7 @@ function AddressPage() {
         { replace: true }
       )
     }
-  }, [tabParam, isSmartContract, setSearchParams])
+  }, [tabParam, isSmartContract, isSmartContractsLoading, setSearchParams])
 
   const handleTabChange = useCallback(
     (index: number) => {
