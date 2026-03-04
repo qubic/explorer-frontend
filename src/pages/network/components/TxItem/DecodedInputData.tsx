@@ -95,16 +95,19 @@ export default function DecodedInputData({ decoded }: Props) {
   }
 
   return (
-    <div className="flex w-full flex-col gap-8 rounded-8 bg-primary-60 p-12">
-      <div className="flex items-center gap-8 text-xs">
-        <span className="text-gray-50">{t('decodedDataContractEntry')}</span>
-        <span className="rounded-8 border border-gray-50 px-8 py-2 font-space text-white">
+    <div className="min-w-0 flex-1">
+      <p className="mb-8 font-space text-xs text-gray-50">
+        {t('decodedDataContractEntry')}:{' '}
+        <span className="text-primary-30">
           {decoded.contractName}.{decoded.entryName}
         </span>
-      </div>
-      <div className="flex flex-col gap-6">
+      </p>
+      <div className="divide-y divide-primary-60">
         {rows.map((row) => (
-          <div key={row.key} className="grid grid-cols-[minmax(130px,auto)_1fr] items-start gap-8">
+          <div
+            key={`${row.key}:${row.value}`}
+            className="grid grid-cols-[minmax(130px,auto)_1fr] items-start gap-8 py-6"
+          >
             <span className="font-space text-xs text-gray-50">{humanizePath(row.key)}</span>
             <span className="break-all font-space text-sm text-white">{row.value}</span>
           </div>
