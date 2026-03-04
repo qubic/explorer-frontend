@@ -1,8 +1,7 @@
 import { memo, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { PaginationBar, Select } from '@app/components/ui'
-import { getPageSizeSelectOptions } from '@app/constants'
+import { PageSizeSelect, PaginationBar } from '@app/components/ui'
 import { usePaginationSearchParams, useValidatedPage, useValidatedPageSize } from '@app/hooks'
 import { useGetTransactionsForTickQuery } from '@app/store/apis/query-service'
 import TickTransactionFiltersBar from './TickTransactionFiltersBar'
@@ -33,13 +32,6 @@ export default function TickTransactions({ tick }: Props) {
   const { handlePageChange, handlePageSizeChange, resetPage } = usePaginationSearchParams()
   const page = useValidatedPage()
   const pageSize = useValidatedPageSize()
-
-  const pageSizeOptions = useMemo(() => getPageSizeSelectOptions(t), [t])
-
-  const defaultPageSizeOption = useMemo(
-    () => pageSizeOptions.find((option) => option.value === String(pageSize)),
-    [pageSizeOptions, pageSize]
-  )
 
   // Build the API request with filters
   const request = useMemo(
@@ -124,7 +116,7 @@ export default function TickTransactions({ tick }: Props) {
         onClearFilters={handleClearFilters}
       />
 
-      <div className="flex flex-wrap items-end justify-between gap-8">
+      <div className="flex flex-wrap items-center justify-between gap-8">
         {!isTickTransactionsLoading && totalCount > 0 ? (
           <span className="text-sm text-gray-50">
             {t('transactionsFound', {
@@ -134,13 +126,7 @@ export default function TickTransactions({ tick }: Props) {
         ) : (
           <span />
         )}
-        <Select
-          className="w-[170px]"
-          label={t('itemsPerPage')}
-          defaultValue={defaultPageSizeOption}
-          onSelect={handlePageSizeChange}
-          options={pageSizeOptions}
-        />
+        <PageSizeSelect pageSize={pageSize} onSelect={handlePageSizeChange} />
       </div>
 
       <div className="w-full rounded-12 border-1 border-primary-60 bg-primary-70">

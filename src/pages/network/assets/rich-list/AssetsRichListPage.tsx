@@ -3,13 +3,9 @@ import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router-dom'
 
 import { withHelmet } from '@app/components/hocs'
-import { Breadcrumbs, PaginationBar, Select, TableErrorRow } from '@app/components/ui'
+import { Breadcrumbs, PageSizeSelect, PaginationBar, TableErrorRow } from '@app/components/ui'
 import { PageLayout } from '@app/components/ui/layouts'
-import {
-  RICH_LIST_DEFAULT_PAGE_SIZE,
-  VALID_PAGE_SIZES,
-  getPageSizeSelectOptions
-} from '@app/constants'
+import { RICH_LIST_DEFAULT_PAGE_SIZE, VALID_PAGE_SIZES } from '@app/constants'
 import { usePaginationSearchParams, useTailwindBreakpoint } from '@app/hooks'
 import { useGetAssetsIssuancesQuery } from '@app/store/apis/rpc-live'
 import { useGetAssetsRichListQuery } from '@app/store/apis/rpc-stats'
@@ -37,12 +33,6 @@ function AssetsRichListPage() {
   const pageSize = VALID_PAGE_SIZES.includes(pageSizeParam)
     ? pageSizeParam
     : RICH_LIST_DEFAULT_PAGE_SIZE
-
-  const pageSizeOptions = useMemo(() => getPageSizeSelectOptions(t), [t])
-  const defaultPageSizeOption = useMemo(
-    () => pageSizeOptions.find((option) => option.value === String(pageSize)),
-    [pageSizeOptions, pageSize]
-  )
 
   const { data: assetsData } = useGetAssetsIssuancesQuery()
 
@@ -130,15 +120,13 @@ function AssetsRichListPage() {
           </div>
         </div>
 
-        <div className="flex flex-col items-start justify-between gap-12 md:flex-row md:items-end">
+        <div className="flex flex-col gap-12">
           <AssetsTabs />
 
-          <Select
-            className="w-[170px] justify-self-start"
-            label={t('itemsPerPage')}
-            defaultValue={defaultPageSizeOption}
+          <PageSizeSelect
+            className="self-end"
+            pageSize={pageSize}
             onSelect={handlePageSizeChange}
-            options={pageSizeOptions}
           />
         </div>
 

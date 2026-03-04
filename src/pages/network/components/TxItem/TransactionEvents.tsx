@@ -1,8 +1,7 @@
-import { memo, useMemo } from 'react'
+import { memo } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { Badge, PaginationBar, Select, Skeleton, Tooltip } from '@app/components/ui'
-import { getPageSizeSelectOptions } from '@app/constants'
+import { Badge, PageSizeSelect, PaginationBar, Skeleton, Tooltip } from '@app/components/ui'
 import {
   useGetAddressName,
   useGetSmartContractByIndex,
@@ -145,12 +144,6 @@ export default function TransactionEvents({
   const page = useValidatedPage(paginated)
   const pageSize = useValidatedPageSize(paginated)
 
-  const pageSizeOptions = useMemo(() => getPageSizeSelectOptions(t), [t])
-  const defaultPageSizeOption = useMemo(
-    () => pageSizeOptions.find((option) => option.value === String(pageSize)),
-    [pageSizeOptions, pageSize]
-  )
-
   // When total is provided, pagination is server-side (events already paginated)
   const totalCount = total ?? events.length
   const pageCount = Math.ceil(totalCount / pageSize)
@@ -171,7 +164,7 @@ export default function TransactionEvents({
       {header && <p className="font-space text-base font-500">{header}</p>}
       {showBetaBanner && <BetaBanner />}
       {paginated && (
-        <div className="flex items-end justify-between">
+        <div className="flex items-center justify-between">
           <span className="text-sm text-gray-50">
             {!isLoading && totalCount > 0
               ? t('eventsFound', {
@@ -179,13 +172,7 @@ export default function TransactionEvents({
                 } as Record<string, string>)
               : '\u00A0'}
           </span>
-          <Select
-            className="w-[170px]"
-            label={t('itemsPerPage')}
-            defaultValue={defaultPageSizeOption}
-            onSelect={handlePageSizeChange}
-            options={pageSizeOptions}
-          />
+          <PageSizeSelect pageSize={pageSize} onSelect={handlePageSizeChange} />
         </div>
       )}
       <div className="rounded-12 border-1 border-primary-60 bg-primary-70">

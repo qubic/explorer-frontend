@@ -3,9 +3,9 @@ import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router-dom'
 
 import { withHelmet } from '@app/components/hocs'
-import { Breadcrumbs, PaginationBar, Select, TableErrorRow } from '@app/components/ui'
+import { Breadcrumbs, PageSizeSelect, PaginationBar, TableErrorRow } from '@app/components/ui'
 import { PageLayout } from '@app/components/ui/layouts'
-import { RICH_LIST_DEFAULT_PAGE_SIZE, getPageSizeSelectOptions } from '@app/constants'
+import { RICH_LIST_DEFAULT_PAGE_SIZE, VALID_PAGE_SIZES } from '@app/constants'
 import { usePaginationSearchParams, useTailwindBreakpoint } from '@app/hooks'
 import { useGetRichListQuery } from '@app/store/apis/rpc-stats'
 import { HomeLink, RichListLoadingRows } from '../../components'
@@ -17,13 +17,13 @@ function RichListPage() {
   const [searchParams, setSearchParams] = useSearchParams()
 
   const page = parseInt(searchParams.get('page') || '1', 10)
-  const pageSize = parseInt(searchParams.get('pageSize') ?? String(RICH_LIST_DEFAULT_PAGE_SIZE), 10)
-
-  const pageSizeOptions = useMemo(() => getPageSizeSelectOptions(t), [t])
-  const defaultPageSizeOption = useMemo(
-    () => pageSizeOptions.find((option) => option.value === String(pageSize)),
-    [pageSizeOptions, pageSize]
+  const pageSizeParam = parseInt(
+    searchParams.get('pageSize') ?? String(RICH_LIST_DEFAULT_PAGE_SIZE),
+    10
   )
+  const pageSize = VALID_PAGE_SIZES.includes(pageSizeParam)
+    ? pageSizeParam
+    : RICH_LIST_DEFAULT_PAGE_SIZE
 
   const { handlePageChange, handlePageSizeChange } = usePaginationSearchParams()
 
@@ -81,13 +81,7 @@ function RichListPage() {
             <p className="font-space text-24 font-500 leading-26">{t('richList')}</p>
             <p className="text-left text-sm text-gray-50">{t('richListWarning')}</p>
           </div>
-          <Select
-            className="w-[170px] justify-self-end"
-            label={t('itemsPerPage')}
-            defaultValue={defaultPageSizeOption}
-            onSelect={handlePageSizeChange}
-            options={pageSizeOptions}
-          />
+          <PageSizeSelect pageSize={pageSize} onSelect={handlePageSizeChange} />
         </div>
         <div className="w-full rounded-12 border-1 border-primary-60 bg-primary-70">
           <div className="overflow-x-auto">

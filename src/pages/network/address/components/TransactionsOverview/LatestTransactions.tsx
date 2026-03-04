@@ -2,9 +2,9 @@ import { memo, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Infocon } from '@app/assets/icons'
-import { PaginationBar, Select, Tooltip } from '@app/components/ui'
+import { PageSizeSelect, PaginationBar, Tooltip } from '@app/components/ui'
 import type { Option } from '@app/components/ui/Select'
-import { DEFAULT_PAGE_SIZE, getPageSizeSelectOptions } from '@app/constants'
+import { DEFAULT_PAGE_SIZE } from '@app/constants'
 import useLatestTransactions, { MAX_TRANSACTION_RESULTS } from '../../hooks/useLatestTransactions'
 import { TransactionRow, TransactionSkeletonRow } from '../../../components'
 import { parseFilterApiError } from './filterUtils'
@@ -32,13 +32,6 @@ export default function LatestTransactions({ addressId }: Props) {
 
   const { transactions, totalCount, isLoading, error, applyFilters, clearFilters, activeFilters } =
     useLatestTransactions(addressId, page, pageSize)
-
-  const pageSizeOptions = useMemo(() => getPageSizeSelectOptions(t), [t])
-
-  const defaultPageSizeOption = useMemo(
-    () => pageSizeOptions.find((option) => option.value === String(pageSize)),
-    [pageSizeOptions, pageSize]
-  )
 
   // Parse API error to show localized message
   const errorMessage = useMemo(() => {
@@ -113,7 +106,7 @@ export default function LatestTransactions({ addressId }: Props) {
         onClearFilters={handleClearFilters}
       />
 
-      <div className="flex flex-wrap items-end justify-between gap-8">
+      <div className="flex flex-wrap items-center justify-between gap-8">
         {totalCount !== null && totalCount > 0 ? (
           <div className="flex items-center text-sm text-gray-50">
             {totalCount >= MAX_TRANSACTION_RESULTS ? (
@@ -144,13 +137,7 @@ export default function LatestTransactions({ addressId }: Props) {
         ) : (
           <span />
         )}
-        <Select
-          className="w-[170px]"
-          label={t('itemsPerPage')}
-          defaultValue={defaultPageSizeOption}
-          onSelect={handlePageSizeChange}
-          options={pageSizeOptions}
-        />
+        <PageSizeSelect pageSize={pageSize} onSelect={handlePageSizeChange} />
       </div>
 
       <div className="w-full rounded-12 border-1 border-primary-60 bg-primary-70">

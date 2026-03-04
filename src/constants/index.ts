@@ -1,5 +1,3 @@
-import type { TFunction } from 'i18next'
-
 import type { Option } from '@app/components/ui/Select'
 import { TransactionOptionEnum } from '@app/types'
 
@@ -10,11 +8,11 @@ export const QUERY_CACHE_TIME = 30
 
 export const DEFAULT_PAGE_SIZE = 25
 
-export const PAGE_SIZE_OPTIONS = [
-  { i18nKey: 'showItemsPerPage', value: '10' },
-  { i18nKey: 'showItemsPerPage', value: '25' },
-  { i18nKey: 'showItemsPerPage', value: '50' },
-  { i18nKey: 'showItemsPerPage', value: '100' }
+export const PAGE_SIZE_OPTIONS: Option[] = [
+  { label: '10', value: '10' },
+  { label: '25', value: '25' },
+  { label: '50', value: '50' },
+  { label: '100', value: '100' }
 ]
 
 export const VALID_PAGE_SIZES = PAGE_SIZE_OPTIONS.map((o) => Number(o.value))
@@ -30,12 +28,6 @@ export function validatePage(raw: string | null): number {
   const parsed = parseInt(raw || '1', 10) || 1
   return Math.max(1, Math.min(parsed, MAX_PAGE))
 }
-
-export const getPageSizeSelectOptions = (t: TFunction) =>
-  PAGE_SIZE_OPTIONS.map((option) => ({
-    label: t(option.i18nKey, { count: parseInt(option.value, 10) }),
-    value: option.value
-  }))
 
 export const RICH_LIST_DEFAULT_PAGE_SIZE = 10
 
@@ -59,6 +51,5 @@ export default {
   DEFAULT_PAGE_SIZE,
   PAGE_SIZE_OPTIONS,
   VALID_PAGE_SIZES,
-  getPageSizeSelectOptions,
   RICH_LIST_DEFAULT_PAGE_SIZE
 }
