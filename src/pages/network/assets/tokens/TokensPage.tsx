@@ -26,13 +26,13 @@ function TokensPage() {
   const { t } = useTranslation('network-page')
   const { isMobile } = useTailwindBreakpoint()
   const [searchParams, setSearchParams] = useSearchParams()
-  const selectedCategory: CategoryFilter = searchParams.get('category') || TOKEN_CATEGORY_ALL
+  const selectedCategory: CategoryFilter = searchParams.get('category') || TOKEN_CATEGORY_STANDARD
 
   const handleCategoryChange = useCallback(
     (category: CategoryFilter) => {
       setSearchParams(
         (prev) => {
-          if (category === TOKEN_CATEGORY_ALL) {
+          if (category === TOKEN_CATEGORY_STANDARD) {
             prev.delete('category')
           } else {
             prev.set('category', category)
