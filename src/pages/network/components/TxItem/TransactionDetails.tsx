@@ -64,11 +64,19 @@ export default function TransactionDetails({
   const sourceAddressNameData = useGetAddressName(source)
   const destinationAddressNameData = useGetAddressName(destAddress)
 
-  const transactionTypeDisplay = useMemo(
-    () => getTransactionTypeDisplayLong(destination, inputType, smartContracts, protocolData),
-    [destination, inputType, smartContracts, protocolData]
-  )
-  const { isContractTransaction, shouldDecodeInput, decodedInput } = useDecodedContractInput({
+  const isSharesAuctionBid = useMemo(() => {
+    const contract = smartContracts?.find((sc) => sc.address === destination)
+    return contract && inputType === 1 && epoch != null && epoch === contract.sharesAuctionEpoch
+  }, [smartContracts, destination, inputType, epoch])
+
+  const transactionTypeDisplay = useMemo(() => {
+    if (isSharesAuctionBid) {
+      return `Place Bid (${inputType})`
+    }
+    return getTransactionTypeDisplayLong(destination, inputType, smartContracts, protocolData)
+  }, [destination, inputType, smartContracts, protocolData, isSharesAuctionBid])
+
+  const { shouldDecodeInput, decodedInput } = useDecodedContractInput({
     showExtendedDetails,
     tickNumber,
     destination,
@@ -158,7 +166,6 @@ export default function TransactionDetails({
           content={<p className="font-space text-sm">{transactionTypeDisplay}</p>}
         />
       )}
-
       {assetDetails?.units && (
         <SubCardItem
           title={t('fee')}

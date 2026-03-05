@@ -1,13 +1,28 @@
 import type { SmartContract, TransactionInputType } from '@app/store/apis/qubic-static'
 import { isSmartContractTx } from '@app/utils/qubic-ts'
 
-/**
- * Get the procedure name for a smart contract transaction
- * @param contractAddress - The smart contract address
- * @param inputType - The transaction input type (procedure ID)
- * @param smartContracts - The smart contracts data from the API
- * @returns The procedure name if found, undefined otherwise
- */
+export interface SharesAuctionBid {
+  price: bigint
+  quantity: number
+}
+
+export const decodeSharesAuctionBid = (inputData: string): SharesAuctionBid | undefined => {
+  try {
+    const binaryString = atob(inputData)
+    const bytes = new Uint8Array(binaryString.length)
+    bytes.forEach((_, i) => {
+      bytes[i] = binaryString.charCodeAt(i)
+    })
+    const view = new DataView(bytes.buffer)
+    return {
+      price: view.getBigInt64(0, true),
+      quantity: view.getInt16(8, true)
+    }
+  } catch {
+    return undefined
+  }
+}
+
 export const getProcedureName = (
   contractAddress: string,
   inputType: number,
