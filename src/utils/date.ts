@@ -5,8 +5,9 @@ export function formatDate<T extends boolean = false>(
   const defaultResult = (options?.split ? { date: '', time: '' } : '') as T extends true
     ? { date: string; time: string }
     : string
+  const locale = options?.shortDate ? 'sv-SE' : 'en-US'
   const formatDateTime = (date: Date, dateTimeFormatOptions: Intl.DateTimeFormatOptions) =>
-    new Intl.DateTimeFormat('en-US', dateTimeFormatOptions).format(date)
+    new Intl.DateTimeFormat(locale, dateTimeFormatOptions).format(date)
 
   if (!dateString) return defaultResult
 
