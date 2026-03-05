@@ -11,6 +11,7 @@ export type SmartContract = {
   contractIndex: number
   address: string
   procedures: SmartContractProcedure[]
+  sharesAuctionEpoch?: number
   website?: string
   proposalUrl?: string
 }

@@ -70,13 +70,17 @@ export default function TransactionDetails({
     [destination, inputType, smartContracts]
   )
 
+  const isSharesAuctionBid = useMemo(() => {
+    const contract = smartContracts?.find((sc) => sc.address === destination)
+    return contract && inputType === 1 && epoch != null && epoch === contract.sharesAuctionEpoch
+  }, [smartContracts, destination, inputType, epoch])
+
   const transactionTypeDisplay = useMemo(() => {
     const baseType = formatString(inputType)
     const txCategory = isSmartContractTx(destination, inputType) ? 'SC' : 'Standard'
-    return procedureName
-      ? `${baseType} ${txCategory} (${procedureName})`
-      : `${baseType} ${txCategory}`
-  }, [inputType, destination, procedureName])
+    const displayName = isSharesAuctionBid ? 'Place Bid' : procedureName
+    return displayName ? `${baseType} ${txCategory} (${displayName})` : `${baseType} ${txCategory}`
+  }, [inputType, destination, procedureName, isSharesAuctionBid])
 
   return (
     <TransactionDetailsWrapper variant={variant}>
@@ -167,7 +171,6 @@ export default function TransactionDetails({
           content={<p className="font-space text-sm">{transactionTypeDisplay}</p>}
         />
       )}
-
       {assetDetails?.units && (
         <SubCardItem
           title={t('fee')}
