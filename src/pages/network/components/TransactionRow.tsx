@@ -2,7 +2,7 @@ import { memo, useMemo } from 'react'
 
 import { Tooltip } from '@app/components/ui'
 import type { QueryServiceTransaction } from '@app/store/apis/query-service'
-import { useGetAddressName } from '@app/hooks'
+import { useGetAddressName, useGetEpochForTick } from '@app/hooks'
 import { useGetProtocolQuery, useGetSmartContractsQuery } from '@app/store/apis/qubic-static'
 import { formatDate, formatEllipsis, formatString } from '@app/utils'
 import { getTransactionTypeDisplay, getTransactionTypeDisplayLong } from '@app/utils/qubic'
@@ -23,6 +23,7 @@ function TransactionRow({ tx, highlightTick, highlightAddress }: Props) {
 
   const { data: smartContracts } = useGetSmartContractsQuery()
   const { data: protocolData } = useGetProtocolQuery()
+  const { epoch } = useGetEpochForTick(tickNumber)
   const sourceNameData = useGetAddressName(source)
   const destinationNameData = useGetAddressName(destination)
 
@@ -32,8 +33,8 @@ function TransactionRow({ tx, highlightTick, highlightAddress }: Props) {
   )
 
   const typeDisplay = useMemo(
-    () => getTransactionTypeDisplay(destination, inputType, smartContracts, protocolData),
-    [destination, inputType, smartContracts, protocolData]
+    () => getTransactionTypeDisplay(destination, inputType, smartContracts, protocolData, epoch),
+    [destination, inputType, smartContracts, protocolData, epoch]
   )
 
   return (
@@ -53,7 +54,8 @@ function TransactionRow({ tx, highlightTick, highlightAddress }: Props) {
             destination,
             inputType,
             smartContracts,
-            protocolData
+            protocolData,
+            epoch
           )}
         >
           <span className="block max-w-[120px] truncate">{typeDisplay}</span>

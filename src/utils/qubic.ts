@@ -45,12 +45,27 @@ export const getInputTypeLabel = (
   return transactionInputTypes.find((t) => t.id === inputType)?.label
 }
 
+export const isSharesAuctionBid = (
+  destination: string,
+  inputType: number,
+  epoch?: number,
+  smartContracts?: SmartContract[]
+): boolean => {
+  if (inputType !== 1 || epoch == null || !smartContracts) return false
+  const contract = smartContracts.find((sc) => sc.address === destination)
+  return !!contract && epoch === contract.sharesAuctionEpoch
+}
+
 export const getTransactionTypeDisplay = (
   destination: string,
   inputType: number,
   smartContracts?: SmartContract[],
-  protocolData?: TransactionInputType[]
+  protocolData?: TransactionInputType[],
+  epoch?: number
 ): string => {
+  if (isSharesAuctionBid(destination, inputType, epoch, smartContracts)) {
+    return 'Place Bid'
+  }
   if (isSmartContractTx(destination, inputType)) {
     return getProcedureName(destination, inputType, smartContracts) || 'SC'
   }
@@ -61,7 +76,8 @@ export const getTransactionTypeDisplayLong = (
   destination: string,
   inputType: number,
   smartContracts?: SmartContract[],
-  protocolData?: TransactionInputType[]
+  protocolData?: TransactionInputType[],
+  epoch?: number
 ): string => {
-  return `${getTransactionTypeDisplay(destination, inputType, smartContracts, protocolData)} (${inputType})`
+  return `${getTransactionTypeDisplay(destination, inputType, smartContracts, protocolData, epoch)} (${inputType})`
 }

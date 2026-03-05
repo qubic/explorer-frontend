@@ -64,17 +64,11 @@ export default function TransactionDetails({
   const sourceAddressNameData = useGetAddressName(source)
   const destinationAddressNameData = useGetAddressName(destAddress)
 
-  const isSharesAuctionBid = useMemo(() => {
-    const contract = smartContracts?.find((sc) => sc.address === destination)
-    return contract && inputType === 1 && epoch != null && epoch === contract.sharesAuctionEpoch
-  }, [smartContracts, destination, inputType, epoch])
-
-  const transactionTypeDisplay = useMemo(() => {
-    if (isSharesAuctionBid) {
-      return `Place Bid (${inputType})`
-    }
-    return getTransactionTypeDisplayLong(destination, inputType, smartContracts, protocolData)
-  }, [destination, inputType, smartContracts, protocolData, isSharesAuctionBid])
+  const transactionTypeDisplay = useMemo(
+    () =>
+      getTransactionTypeDisplayLong(destination, inputType, smartContracts, protocolData, epoch),
+    [destination, inputType, smartContracts, protocolData, epoch]
+  )
 
   const { shouldDecodeInput, decodedInput } = useDecodedContractInput({
     showExtendedDetails,
