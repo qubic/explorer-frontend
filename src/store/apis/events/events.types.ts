@@ -11,7 +11,8 @@ export type TransactionEvent = {
   logId: number
   logDigest: string
   type: number
-  category: number
+  categories: number[]
+  isVirtualTx: boolean
   source: string
   destination: string
   amount: number
@@ -97,6 +98,31 @@ export function parseEventTypeParam(raw: string | null): number | undefined {
   return (EVENT_TYPE_FILTER_OPTIONS as readonly number[]).includes(parsed) ? parsed : undefined
 }
 
+// Event category codes (from sysTransactionMap)
+export const SYSTEM_TX_CATEGORIES: Record<number, string> = {
+  1: 'SC_INITIALIZE_TX',
+  2: 'SC_BEGIN_EPOCH_TX',
+  3: 'SC_BEGIN_TICK_TX',
+  4: 'SC_END_TICK_TX',
+  5: 'SC_END_EPOCH_TX',
+  6: 'SC_NOTIFICATION_TX'
+}
+
+const VIRTUAL_TX_CATEGORIES = new Set([2, 3, 4, 5])
+
+export function isVirtualTxCategory(categories: number[]): boolean {
+  return categories.some((c) => VIRTUAL_TX_CATEGORIES.has(c))
+}
+
+export function getVirtualTxId(categories: number[], tickNumber: number): string {
+  const virtualCategory = categories.find((c) => VIRTUAL_TX_CATEGORIES.has(c))
+  const prefix =
+    virtualCategory != null
+      ? SYSTEM_TX_CATEGORIES[virtualCategory] ?? `CATEGORY_${virtualCategory}`
+      : 'UNKNOWN'
+  return `${prefix}_${tickNumber}`
+}
+
 // ============================================================================
 // RAW API RESPONSE TYPES
 // ============================================================================
@@ -145,7 +171,7 @@ export interface RawApiEvent {
   logId: string
   logDigest: string
   logType: number
-  category: number
+  categories: number[]
   quTransfer?: QuTransferData
   assetIssuance?: AssetIssuanceData
   assetOwnershipChange?: AssetChangeData
@@ -169,16 +195,20 @@ export interface RawGetEventsResponse {
 // ============================================================================
 
 export function adaptApiEvent(raw: RawApiEvent): TransactionEvent {
+  const virtualTx = isVirtualTxCategory(raw.categories)
   const base: TransactionEvent = {
     epoch: raw.epoch,
     tickNumber: raw.tickNumber,
     timestamp: Number(raw.timestamp) * 1000,
     emittingContractIndex: Number(raw.emittingContractIndex),
-    transactionHash: raw.transactionHash,
+    transactionHash: virtualTx
+      ? getVirtualTxId(raw.categories, raw.tickNumber)
+      : raw.transactionHash,
     logId: Number(raw.logId),
     logDigest: raw.logDigest,
     type: raw.logType,
-    category: raw.category,
+    categories: raw.categories,
+    isVirtualTx: virtualTx,
     source: '',
     destination: '',
     amount: 0

@@ -72,7 +72,16 @@ const EventRow = memo(function EventRow({
       )}
       {showTxId && (
         <td className="whitespace-nowrap px-16 py-14">
-          <TxLink value={event.transactionHash} className="text-primary-30" ellipsis showTooltip />
+          {event.isVirtualTx ? (
+            <span className="font-space text-sm">{event.transactionHash}</span>
+          ) : (
+            <TxLink
+              value={event.transactionHash}
+              className="text-primary-30"
+              ellipsis
+              showTooltip
+            />
+          )}
         </td>
       )}
       <td className="px-16 py-14">
