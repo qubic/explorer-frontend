@@ -14,6 +14,12 @@ importers:
       '@qubic-lib/qubic-ts-library':
         specifier: 0.1.6
         version: 0.1.6
+      '@qubic.ts/contracts':
+        specifier: ^1.0.0
+        version: 1.0.0
+      '@qubic.ts/core':
+        specifier: ^1.0.0
+        version: 1.0.0(typescript@5.5.3)
       '@react-spring/web':
         specifier: ^9.7.5
         version: 9.7.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -602,6 +608,10 @@ packages:
   '@jridgewell/trace-mapping@0.3.25':
     resolution: {integrity: sha512-vNk6aEwybGtawWmy/PzwnGDOjCkLWSD2wqvjGGAgOAwCGWySYXfYoxt00IJkTF+8Lb57DwOb3Aa0o9CApepiYQ==}
 
+  '@noble/hashes@1.8.0':
+    resolution: {integrity: sha512-jCs9ldd7NwzpgXDIf6P3+NrHh9/sD6CQdxHyjQI+h/6rDNo88ypBxxz45UDuZHz9r3tNz7N/VInSVoVdtXEI4A==}
+    engines: {node: ^14.21.3 || >=16}
+
   '@nodelib/fs.scandir@2.1.5':
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
     engines: {node: '>= 8'}
@@ -682,8 +692,19 @@ packages:
     resolution: {integrity: sha512-c83qWb22rNRuB0UaVCI0uRPNRr8Z0FWnEIvT47jiHAmOIUHbBOg5XvV7pM5x+rKn9HRpjxquDbXYSXr3fAKFcw==}
     engines: {node: '>=12'}
 
+  '@qubic-labs/schnorrq@1.0.2':
+    resolution: {integrity: sha512-5siomdXGgycQAGJXYIaKqS5EvbEKYYf6hfEShGBfaHw2R3hFxLCwZa8eF5EBHGlR4e8oMb1fkJVL6Eb1uZb86g==}
+    peerDependencies:
+      typescript: ^5
+
   '@qubic-lib/qubic-ts-library@0.1.6':
     resolution: {integrity: sha512-VbiJxFgmOpSKCgJkvPbUUFG/d8wcOYnh9pci1MXhINvUTD9i9twBKZv2SRc3v0fOTiasvaBeiz3HtUSy0oJfEA==}
+
+  '@qubic.ts/contracts@1.0.0':
+    resolution: {integrity: sha512-nazjSt+0Z1WmEL9nk+M6qufx8hWM9pezxveF8x5nCveeH0Or/rcFQIsMb0gIjH/8vscVP1EPkiSLgeX/9Oamng==}
+
+  '@qubic.ts/core@1.0.0':
+    resolution: {integrity: sha512-8F3xMJjUSYCM63EyNu8tNlnvPywCm9q1/kiC/kqiCzdSB9/z+6wvBB6NfNmAn2cyLgDYXVmrFC1lQrETAIaBdA==}
 
   '@react-aria/focus@3.18.1':
     resolution: {integrity: sha512-N0Cy61WCIv+57mbqC7hiZAsB+3rF5n4JKabxUmg/2RTJL6lq7hJ5N4gx75ymKxkN8GnVDwt4pKZah48Wopa5jw==}
@@ -4042,6 +4063,9 @@ packages:
     resolution: {integrity: sha512-GQHQqAopRhwU8Kt1DDM8NjibDXHC8eoh1erhGAJPEyveY9qqVeXvVikNKrDz69sHowPMorbPUrH/mx8c50eiBQ==}
     engines: {node: '>=18'}
 
+  zod@4.3.6:
+    resolution: {integrity: sha512-rftlrkhHZOcjDwkGlnUtZZkvaPHCsDATp4pGpuOOMDaTdDDXF91wuVDJoWoPsKX/3YPQ5fHuF3STjcYyKr+Qhg==}
+
 snapshots:
 
   '@alloc/quick-lru@5.2.0': {}
@@ -4477,6 +4501,8 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.4.15
 
+  '@noble/hashes@1.8.0': {}
+
   '@nodelib/fs.scandir@2.1.5':
     dependencies:
       '@nodelib/fs.stat': 2.0.5
@@ -4564,10 +4590,26 @@ snapshots:
       '@pnpm/network.ca-file': 1.0.2
       config-chain: 1.1.13
 
+  '@qubic-labs/schnorrq@1.0.2(typescript@5.5.3)':
+    dependencies:
+      '@noble/hashes': 1.8.0
+      typescript: 5.5.3
+
   '@qubic-lib/qubic-ts-library@0.1.6':
     dependencies:
       bignumber.js: 9.1.2
       net: 1.0.2
+
+  '@qubic.ts/contracts@1.0.0':
+    dependencies:
+      zod: 4.3.6
+
+  '@qubic.ts/core@1.0.0(typescript@5.5.3)':
+    dependencies:
+      '@noble/hashes': 1.8.0
+      '@qubic-labs/schnorrq': 1.0.2(typescript@5.5.3)
+    transitivePeerDependencies:
+      - typescript
 
   '@react-aria/focus@3.18.1(react@18.3.1)':
     dependencies:
@@ -8098,3 +8140,5 @@ snapshots:
   yocto-queue@1.1.1: {}
 
   yoctocolors@2.1.1: {}
+
+  zod@4.3.6: {}
