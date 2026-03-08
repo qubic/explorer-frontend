@@ -1,6 +1,8 @@
-import { decodeContractEntryInputData } from '@qubic.ts/contracts/src/codec/entry-input.js'
-import { coreContractsRegistry } from '@qubic.ts/contracts/src/generated/core-registry.js'
-import type { ContractEntryKind } from '@qubic.ts/contracts/src/registry/types.js'
+import {
+  decodeContractEntryInputData,
+  coreContractsRegistry,
+  type ContractEntryKind
+} from '@qubic.ts/contracts'
 import { identityFromPublicKey } from '@qubic.ts/core'
 
 type RegistryEntryRef = Readonly<{
