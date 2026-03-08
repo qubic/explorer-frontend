@@ -13,7 +13,6 @@ import AddressLink from '../AddressLink'
 import SubCardItem from '../SubCardItem'
 import TickLink from '../TickLink'
 import TxLink from '../TxLink'
-import DecodedDataSection from './DecodedDataSection'
 import InputDataSection from './InputDataSection'
 import TransferList from './TransferList/TransferList'
 import type { TxItemVariant } from './TxItem.types'
@@ -191,16 +190,12 @@ export default function TransactionDetails({
         />
       )}
 
-      <DecodedDataSection
-        variant={variant}
-        shouldDecodeInput={shouldDecodeInput}
-        decodedInput={decodedInput}
-      />
-
       <InputDataSection
         variant={variant}
         showExtendedDetails={showExtendedDetails}
         inputData={inputData}
+        shouldDecodeInput={shouldDecodeInput}
+        decodedInput={decodedInput}
       />
 
       <TransferList entries={entries} variant={variant} />

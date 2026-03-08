@@ -112,7 +112,7 @@ type IoTypeLike = Readonly<{
 }>
 
 const normalizeTypeExpression = (typeExpression: string): string =>
-  typeExpression.replace(/\s+/g, '').trim()
+  typeExpression.replace(/\s+/g, '')
 
 const parseArrayType = (
   typeExpression: string
