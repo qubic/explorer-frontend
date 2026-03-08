@@ -196,6 +196,7 @@ export default function TransactionDetails({
         inputData={inputData}
         shouldDecodeInput={shouldDecodeInput}
         decodedInput={decodedInput}
+        txHash={hash}
       />
 
       <TransferList entries={entries} variant={variant} />
