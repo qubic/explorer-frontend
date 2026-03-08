@@ -114,7 +114,9 @@ export default function InputDataSection({
             {t('unableToDecodeContractInput')}
           </p>
           {decodedInput.message && (
-            <p className="text-gray-40 mt-8 break-all font-space text-xs">{decodedInput.message}</p>
+            <p className="mt-8 break-all font-space text-xs italic text-gray-50">
+              {decodedInput.message}
+            </p>
           )}
         </>
       )
