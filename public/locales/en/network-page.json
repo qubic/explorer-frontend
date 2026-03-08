@@ -47,6 +47,8 @@
   "transactionPreview": "Transaction Preview",
   "transactions": "Transactions",
   "data": "Data",
+  "decodedData": "Decoded Data",
+  "unableToDecodeContractInput": "Unable to decode this contract input.",
   "type": "Type",
   "unexecuted": "Unexecuted",
   "value": "Value",

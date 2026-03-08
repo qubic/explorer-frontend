@@ -1,4 +1,5 @@
 import { useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import type { DecodedContractInput } from '@app/utils/contract-input-decoder'
 import SubCardItem from '../SubCardItem'
@@ -11,6 +12,8 @@ type Props = Readonly<{
 }>
 
 export default function DecodedDataSection({ variant, shouldDecodeInput, decodedInput }: Props) {
+  const { t } = useTranslation('network-page')
+
   const decodedInputJson = useMemo(() => {
     if (!decodedInput || decodedInput.status !== 'decoded') return null
     return JSON.stringify(decodedInput.value, null, 2)
@@ -20,7 +23,7 @@ export default function DecodedDataSection({ variant, shouldDecodeInput, decoded
 
   return (
     <SubCardItem
-      title="Decoded Data"
+      title={t('decodedData')}
       variant={variant}
       content={
         <div className="min-w-0 flex-1">
@@ -31,7 +34,7 @@ export default function DecodedDataSection({ variant, shouldDecodeInput, decoded
           ) : (
             <>
               <p className="break-all font-space text-sm text-gray-50">
-                Unable to decode this contract input.
+                {t('unableToDecodeContractInput')}
               </p>
               {decodedInput.message && (
                 <p className="text-gray-40 mt-8 break-all font-space text-xs">

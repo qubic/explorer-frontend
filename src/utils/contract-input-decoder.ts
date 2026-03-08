@@ -140,8 +140,9 @@ const getIoTypeMapForContract = (contractName: string): ReadonlyMap<string, IoTy
   const cached = ioTypeMapByContractName.get(contract.name)
   if (cached) return cached
 
+  const ioTypes = contract.ioTypes ?? []
   const ioTypeMap = new Map<string, IoTypeLike>()
-  ;(contract.ioTypes ?? []).forEach((ioType) => {
+  ioTypes.forEach((ioType) => {
     ioTypeMap.set(ioType.name, ioType)
   })
   ioTypeMapByContractName.set(contract.name, ioTypeMap)
