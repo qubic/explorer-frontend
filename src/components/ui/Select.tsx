@@ -64,7 +64,10 @@ export default function Select<ValueType = string>({
   // Sync internal state with defaultValue when it changes
   useEffect(() => {
     if (defaultValue) {
-      setSelected(defaultValue)
+      setSelected((prev) => {
+        if (prev.value === defaultValue.value && prev.label === defaultValue.label) return prev
+        return defaultValue
+      })
     }
   }, [defaultValue])
 
