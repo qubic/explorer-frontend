@@ -4,7 +4,8 @@ import { Link } from 'react-router-dom'
 import { COPY_BUTTON_TYPES, CopyTextButton } from '@app/components/ui/buttons'
 import { Routes } from '@app/router'
 import type { DecodedContractInput } from '@app/utils/contract-input-decoder'
-import { isValidAddressFormat } from '@app/utils/qubic-ts'
+
+const stripArrayIndices = (path: string): string => path.replace(/\[\d+\]/g, '')
 
 type FlatRow = Readonly<{ key: string; value: string }>
 
@@ -80,10 +81,10 @@ const humanizePath = (path: string): string =>
     .map((segment) => humanizeSegment(segment))
     .join(' / ')
 
-const shouldUseMonospaceValue = (value: string): boolean => {
+const shouldUseMonospaceValue = (value: string, isAddress: boolean): boolean => {
   if (value.length < MONOSPACE_VALUE_MIN_LENGTH) return false
   if (value.startsWith('0x')) return true
-  if (isValidAddressFormat(value)) return true
+  if (isAddress) return true
   if (/^[a-zA-Z0-9+/=]{24,}$/.test(value)) return true
   return false
 }
@@ -98,38 +99,41 @@ export default function DecodedInputTable({ decoded }: Props) {
   return (
     <div className="min-w-0 flex-1">
       <dl className="divide-y divide-gray-60 pl-10">
-        {rows.map((row) => (
-          <div
-            key={`${row.key}:${row.value}`}
-            className="grid grid-cols-1 gap-4 py-8 sm:grid-cols-[minmax(180px,220px)_1fr] sm:gap-10"
-          >
-            <dt className="font-space text-xs leading-5 tracking-wide text-gray-50">
-              {humanizePath(row.key)}
-            </dt>
-            <dd
-              className={
-                shouldUseMonospaceValue(row.value)
-                  ? 'break-all font-space text-sm text-white'
-                  : 'break-words font-space text-sm text-white'
-              }
+        {rows.map((row) => {
+          const isAddress = decoded.identityPaths.has(stripArrayIndices(row.key))
+          return (
+            <div
+              key={`${row.key}:${row.value}`}
+              className="grid grid-cols-1 gap-4 py-8 sm:grid-cols-[minmax(180px,220px)_1fr] sm:gap-10"
             >
-              {isValidAddressFormat(row.value) ? (
-                <span className="flex items-center gap-8">
-                  <Link
-                    className="text-primary-30"
-                    to={Routes.NETWORK.ADDRESS(row.value)}
-                    state={{ skipValidation: true }}
-                  >
-                    {row.value}
-                  </Link>
-                  <CopyTextButton text={row.value} type={COPY_BUTTON_TYPES.ADDRESS} />
-                </span>
-              ) : (
-                row.value
-              )}
-            </dd>
-          </div>
-        ))}
+              <dt className="font-space text-xs leading-5 tracking-wide text-gray-50">
+                {humanizePath(row.key)}
+              </dt>
+              <dd
+                className={
+                  shouldUseMonospaceValue(row.value, isAddress)
+                    ? 'break-all font-space text-sm text-white'
+                    : 'break-words font-space text-sm text-white'
+                }
+              >
+                {isAddress ? (
+                  <span className="flex items-center gap-8">
+                    <Link
+                      className="text-primary-30"
+                      to={Routes.NETWORK.ADDRESS(row.value)}
+                      state={{ skipValidation: true }}
+                    >
+                      {row.value}
+                    </Link>
+                    <CopyTextButton text={row.value} type={COPY_BUTTON_TYPES.ADDRESS} />
+                  </span>
+                ) : (
+                  row.value
+                )}
+              </dd>
+            </div>
+          )
+        })}
       </dl>
     </div>
   )

@@ -24,6 +24,7 @@ export type DecodedContractInput =
       kind: ContractEntryKind
       inputType: number
       value: unknown
+      identityPaths: ReadonlySet<string>
     }>
   | Readonly<{
       status: 'unsupported'
@@ -405,6 +406,7 @@ export const decodeContractInputData = (params: {
         decoded = decodeCandidate(candidate, paddedBytes)
       }
 
+      const identityPaths = collectIdentityPathsForInput(candidate)
       decodedResult = {
         status: 'decoded',
         contractName: candidate.contractName,
@@ -415,9 +417,10 @@ export const decodeContractInputData = (params: {
         value: normalizeDecodedValue(
           decoded.value,
           '',
-          collectIdentityPathsForInput(candidate),
+          identityPaths,
           collectHumanReadableUint64PathsForInput(candidate)
-        )
+        ),
+        identityPaths
       }
 
       return true
