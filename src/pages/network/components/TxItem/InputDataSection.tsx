@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useSearchParams } from 'react-router-dom'
 
 import { ArrowDownTrayIcon, ChevronDownIcon } from '@app/assets/icons'
 import { Select, Tooltip } from '@app/components/ui'
@@ -11,11 +12,28 @@ import SubCardItem from '../SubCardItem'
 import DecodedInputTable from './DecodedInputTable'
 import type { TxItemVariant } from './TxItem.types'
 
-type ViewMode = 'default' | 'json' | 'hex' | 'base64'
+// Global param name is safe: InputDataSection only renders when showExtendedDetails=true,
+// which only happens on the single-transaction detail page (TxPage, variant="secondary").
+const DATA_VIEW_PARAM = 'dataView'
+const VIEW_MODES = ['default', 'json', 'hex', 'base64'] as const
+type ViewMode = (typeof VIEW_MODES)[number]
 
 const JSON_OPTION: Option<ViewMode> = { label: 'JSON', value: 'json' }
 const HEX_OPTION: Option<ViewMode> = { label: 'Hex', value: 'hex' }
 const BASE64_OPTION: Option<ViewMode> = { label: 'Base64', value: 'base64' }
+
+function isViewMode(value: string): value is ViewMode {
+  return (VIEW_MODES as readonly string[]).includes(value)
+}
+
+function sanitizeViewMode(
+  value: string | null,
+  defaultMode: ViewMode,
+  availableModes: ViewMode[]
+): ViewMode {
+  if (!value || !isViewMode(value) || !availableModes.includes(value)) return defaultMode
+  return value
+}
 
 type Props = Readonly<{
   variant: TxItemVariant
@@ -35,18 +53,9 @@ export default function InputDataSection({
   txHash
 }: Props) {
   const { t } = useTranslation('network-page')
-  const [viewMode, setViewMode] = useState<ViewMode>(shouldDecodeInput ? 'default' : 'hex')
-  const [isExpanded, setIsExpanded] = useState(false)
-  const [isOverflowing, setIsOverflowing] = useState(false)
-  const contentRef = useRef<HTMLDivElement>(null)
-  const inputDataHex = useMemo(() => formatHex(inputData ?? undefined), [inputData])
-
-  const decodedInputJson = useMemo(() => {
-    if (!decodedInput || decodedInput.status !== 'decoded') return null
-    return JSON.stringify(decodedInput.value, null, 2)
-  }, [decodedInput])
-
-  const isDecodedView = viewMode === 'default' || viewMode === 'json'
+  const [searchParams, setSearchParams] = useSearchParams()
+  const defaultMode: ViewMode = shouldDecodeInput ? 'default' : 'hex'
+  const rawDataView = searchParams.get(DATA_VIEW_PARAM)
 
   const viewModeOptions: Option<ViewMode>[] = useMemo(
     () =>
@@ -61,10 +70,24 @@ export default function InputDataSection({
     [shouldDecodeInput, t]
   )
 
+  const availableModes = useMemo(() => viewModeOptions.map((o) => o.value), [viewModeOptions])
+  const viewMode = sanitizeViewMode(rawDataView, defaultMode, availableModes)
+  const isDecodedView = viewMode === 'default' || viewMode === 'json'
+
   const selectedOption = useMemo(
     () => viewModeOptions.find((o) => o.value === viewMode) ?? viewModeOptions[0],
     [viewModeOptions, viewMode]
   )
+
+  const [isExpanded, setIsExpanded] = useState(false)
+  const [isOverflowing, setIsOverflowing] = useState(false)
+  const contentRef = useRef<HTMLDivElement>(null)
+  const inputDataHex = useMemo(() => formatHex(inputData ?? undefined), [inputData])
+
+  const decodedInputJson = useMemo(() => {
+    if (!decodedInput || decodedInput.status !== 'decoded') return null
+    return JSON.stringify(decodedInput.value, null, 2)
+  }, [decodedInput])
 
   const selectWidth = useMemo(() => {
     const canvas = document.createElement('canvas')
@@ -74,6 +97,35 @@ export default function InputDataSection({
     const maxLabelWidth = Math.max(...viewModeOptions.map((o) => ctx.measureText(o.label).width))
     return `${Math.ceil(maxLabelWidth) + 48}px`
   }, [viewModeOptions])
+
+  const handleViewModeChange = useCallback(
+    (mode: ViewMode) => {
+      setSearchParams(
+        (prev) => {
+          if (mode === defaultMode) {
+            prev.delete(DATA_VIEW_PARAM)
+          } else {
+            prev.set(DATA_VIEW_PARAM, mode)
+          }
+          return prev
+        },
+        { replace: true }
+      )
+    },
+    [setSearchParams, defaultMode]
+  )
+
+  useEffect(() => {
+    if (rawDataView && (!isViewMode(rawDataView) || !availableModes.includes(rawDataView))) {
+      setSearchParams(
+        (prev) => {
+          prev.delete(DATA_VIEW_PARAM)
+          return prev
+        },
+        { replace: true }
+      )
+    }
+  }, [rawDataView, availableModes, setSearchParams])
 
   const handleExportJson = useCallback(() => {
     if (!decodedInputJson) return
@@ -142,7 +194,7 @@ export default function InputDataSection({
                   label={t('data')}
                   options={viewModeOptions}
                   defaultValue={selectedOption}
-                  onSelect={(option) => setViewMode(option.value)}
+                  onSelect={(option) => handleViewModeChange(option.value)}
                   size="sm"
                 />
               </div>
