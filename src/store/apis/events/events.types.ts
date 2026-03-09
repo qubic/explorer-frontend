@@ -199,7 +199,7 @@ export function adaptApiEvent(raw: RawApiEvent): TransactionEvent {
   const base: TransactionEvent = {
     epoch: raw.epoch,
     tickNumber: raw.tickNumber,
-    timestamp: Number(raw.timestamp) * 1000,
+    timestamp: Number(raw.timestamp),
     emittingContractIndex: Number(raw.emittingContractIndex),
     transactionHash: virtualTx
       ? getVirtualTxId(raw.categories, raw.tickNumber)
