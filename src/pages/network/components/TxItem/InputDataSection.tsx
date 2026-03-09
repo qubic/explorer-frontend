@@ -18,6 +18,7 @@ const DATA_VIEW_PARAM = 'dataView'
 const VIEW_MODES = ['default', 'json', 'hex', 'base64'] as const
 type ViewMode = (typeof VIEW_MODES)[number]
 
+const OVERFLOW_TOLERANCE = 4
 const JSON_OPTION: Option<ViewMode> = { label: 'JSON', value: 'json' }
 const HEX_OPTION: Option<ViewMode> = { label: 'Hex', value: 'hex' }
 const BASE64_OPTION: Option<ViewMode> = { label: 'Base64', value: 'base64' }
@@ -139,10 +140,19 @@ export default function InputDataSection({
   }, [decodedInputJson, txHash])
 
   useEffect(() => {
-    if (contentRef.current && !isExpanded) {
-      setIsOverflowing(contentRef.current.scrollHeight > contentRef.current.clientHeight)
+    const el = contentRef.current
+    if (!el || isExpanded) return undefined
+
+    const checkOverflow = () => {
+      setIsOverflowing(el.scrollHeight - el.clientHeight > OVERFLOW_TOLERANCE)
     }
-  }, [decodedInputJson, viewMode, isExpanded])
+
+    const observer = new ResizeObserver(checkOverflow)
+    observer.observe(el)
+    checkOverflow()
+
+    return () => observer.disconnect()
+  }, [viewMode, isExpanded])
 
   if (!showExtendedDetails || !inputData || inputData.length === 0) return null
 
