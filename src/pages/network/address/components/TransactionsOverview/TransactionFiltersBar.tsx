@@ -15,7 +15,12 @@ import {
   RangeFilterContent,
   ResetFiltersButton
 } from '../../../components/filters'
-import { formatRangeLabel, useAmountPresetHandler, useClearFilterHandler } from '../../../hooks'
+import {
+  formatRangeLabel,
+  getAmountRangeLabel,
+  useAmountPresetHandler,
+  useClearFilterHandler
+} from '../../../hooks'
 import type {
   AddressFilter,
   TransactionDirection,
@@ -271,21 +276,13 @@ export default function TransactionFiltersBar({
     return `${t('destination')}: ${prefix}${destinationAddresses.length}`
   }
 
-  const getAmountLabel = () => {
-    if (!isAmountActive) return t('amount')
-    const { start, end, presetKey } = activeFilters.amountRange || {}
-
-    if (presetKey) {
-      const preset = AMOUNT_PRESETS.find((p) => p.labelKey === presetKey)
-      if (preset) return `${t('amount')}: ${t(preset.labelKey)}`
-    }
-
-    if (start && end)
-      return `${t('amount')}: ${formatAmountShort(start, t)} - ${formatAmountShort(end, t)}`
-    if (start) return `${t('amount')}: >= ${formatAmountShort(start, t)}`
-    if (end) return `${t('amount')}: <= ${formatAmountShort(end, t)}`
-    return t('amount')
-  }
+  const amountLabel = getAmountRangeLabel(
+    t('amount'),
+    activeFilters.amountRange,
+    AMOUNT_PRESETS,
+    t,
+    formatAmountShort
+  )
 
   const getDateLabel = () => {
     if (!isDateActive) return t('date')
@@ -339,9 +336,7 @@ export default function TransactionFiltersBar({
             {isDestinationActive && (
               <ActiveFilterChip label={getDestinationLabel()} onClear={clearDestinationFilter} />
             )}
-            {isAmountActive && (
-              <ActiveFilterChip label={getAmountLabel()} onClear={clearAmountFilter} />
-            )}
+            {isAmountActive && <ActiveFilterChip label={amountLabel} onClear={clearAmountFilter} />}
             {isDateActive && <ActiveFilterChip label={getDateLabel()} onClear={clearDateFilter} />}
             {isTickActive && <ActiveFilterChip label={getTickLabel()} onClear={clearTickFilter} />}
             {isInputTypeActive && (
@@ -432,7 +427,7 @@ export default function TransactionFiltersBar({
 
         {/* Amount Filter */}
         <FilterDropdown
-          label={getAmountLabel()}
+          label={amountLabel}
           isActive={isAmountActive}
           show={openDropdown === 'amount'}
           onToggle={() => handleToggle('amount')}

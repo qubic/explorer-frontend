@@ -1,7 +1,7 @@
 import { memo } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { Badge, PageSizeSelect, PaginationBar, Skeleton, Tooltip } from '@app/components/ui'
+import { Badge, PageSizeSelect, PaginationBar, Skeleton } from '@app/components/ui'
 import {
   useGetAddressName,
   useGetSmartContractByIndex,
@@ -10,8 +10,8 @@ import {
   useValidatedPageSize
 } from '@app/hooks'
 import { EVENT_TYPES, getEventTypeLabel, type TransactionEvent } from '@app/store/apis/events'
-import { formatDate, formatEllipsis, formatString } from '@app/utils'
-import AddressLink from '../AddressLink'
+import { formatDate, formatString } from '@app/utils'
+import AddressCell from '../AddressCell'
 import BetaBanner from '../BetaBanner'
 import TickLink from '../TickLink'
 import TxLink from '../TxLink'
@@ -78,6 +78,7 @@ const EventRow = memo(function EventRow({
             <TxLink
               value={event.transactionHash}
               className="text-primary-30"
+              copy
               ellipsis
               showTooltip
             />
@@ -90,31 +91,22 @@ const EventRow = memo(function EventRow({
         </Badge>
       </td>
       <td className="px-16 py-14">
-        {!source && <span className="font-space text-sm text-gray-50">-</span>}
-        {source && highlightAddress === source && (
-          <Tooltip tooltipId="source-address" content={source}>
-            <span className="font-space text-sm">{formatEllipsis(source)}</span>
-          </Tooltip>
-        )}
-        {source && highlightAddress !== source && (
-          <AddressLink value={source} label={sourceAddressName?.name} showTooltip ellipsis />
-        )}
+        <AddressCell
+          address={source}
+          highlightAddress={highlightAddress}
+          addressName={sourceAddressName?.name}
+          tooltipId="source-address"
+          showDash
+        />
       </td>
       <td className="px-16 py-14">
-        {!event.destination && <span className="font-space text-sm text-gray-50">-</span>}
-        {event.destination && highlightAddress === event.destination && (
-          <Tooltip tooltipId="destination-address" content={event.destination}>
-            <span className="font-space text-sm">{formatEllipsis(event.destination)}</span>
-          </Tooltip>
-        )}
-        {event.destination && highlightAddress !== event.destination && (
-          <AddressLink
-            value={event.destination}
-            label={destinationAddressName?.name}
-            showTooltip
-            ellipsis
-          />
-        )}
+        <AddressCell
+          address={event.destination}
+          highlightAddress={highlightAddress}
+          addressName={destinationAddressName?.name}
+          tooltipId="destination-address"
+          showDash
+        />
       </td>
       <td className="whitespace-nowrap px-16 py-14 text-right font-space text-sm">
         <span className="font-500">{formatString(event.amount)}</span>{' '}

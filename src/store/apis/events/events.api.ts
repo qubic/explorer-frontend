@@ -12,12 +12,28 @@ export interface PaginatedEvents {
   total: number
 }
 
+export interface ShouldFilter {
+  terms?: Record<string, string>
+}
+
+export interface EventRange {
+  gte?: string
+  lte?: string
+}
+
 export interface GetEventsRequest {
   tickNumber?: number
   transactionHash?: string
   offset?: number
   size?: number
   logType?: number
+  should?: ShouldFilter[]
+  source?: string
+  destination?: string
+  excludeSource?: string
+  excludeDestination?: string
+  tickRange?: EventRange
+  timestampRange?: EventRange
 }
 
 function adaptEventsList(response: RawGetEventsResponse): TransactionEvent[] {
@@ -43,18 +59,50 @@ export const eventsApi = createApi({
   keepUnusedDataFor: QUERY_CACHE_TIME,
   endpoints: (builder) => ({
     getEvents: builder.query<PaginatedEvents, GetEventsRequest>({
-      query: ({ tickNumber, transactionHash, offset = 0, size = DEFAULT_PAGE_SIZE, logType }) => ({
-        url: '/getEvents',
-        method: 'POST',
-        body: {
-          filters: {
-            ...(tickNumber !== undefined && { tickNumber: String(tickNumber) }),
-            ...(transactionHash && { transactionHash }),
-            ...(logType !== undefined && { logType: String(logType) })
-          },
-          pagination: { offset, size }
+      query: ({
+        tickNumber,
+        transactionHash,
+        offset = 0,
+        size = DEFAULT_PAGE_SIZE,
+        logType,
+        should,
+        source,
+        destination,
+        excludeSource,
+        excludeDestination,
+        tickRange,
+        timestampRange
+      }) => {
+        const filters: Record<string, string> = {
+          ...(tickNumber !== undefined && { tickNumber: String(tickNumber) }),
+          ...(transactionHash && { transactionHash }),
+          ...(logType !== undefined && { logType: String(logType) }),
+          ...(source && { source }),
+          ...(destination && { destination })
         }
-      }),
+
+        const exclude: Record<string, string> = {
+          ...(excludeSource && { source: excludeSource }),
+          ...(excludeDestination && { destination: excludeDestination })
+        }
+
+        const ranges: Record<string, EventRange> = {
+          ...(tickRange && { tickNumber: tickRange }),
+          ...(timestampRange && { timestamp: timestampRange })
+        }
+
+        return {
+          url: '/getEvents',
+          method: 'POST',
+          body: {
+            filters,
+            ...(Object.keys(exclude).length > 0 && { exclude }),
+            ...(Object.keys(ranges).length > 0 && { ranges }),
+            ...(should && { should }),
+            pagination: { offset, size }
+          }
+        }
+      },
       transformResponse: adaptPaginatedEvents
     })
   })

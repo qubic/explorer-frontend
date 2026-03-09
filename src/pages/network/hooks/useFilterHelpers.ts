@@ -135,6 +135,8 @@ type RangeValue = {
 
 type FormatValueFn = (value: string) => string
 
+type TranslationFn = (key: string) => string
+
 /**
  * Formats a range filter label for display.
  * Handles the common pattern: "Label: start - end" or "Label: >= start" or "Label: <= end"
@@ -152,8 +154,29 @@ export function formatRangeLabel(
   if (!range?.start && !range?.end) return label
 
   const { start, end } = range
-  if (start && end) return `${label}: ${formatValue(start)} - ${formatValue(end)}`
+  if (start && end) {
+    return start === end
+      ? `${label}: ${formatValue(start)}`
+      : `${label}: ${formatValue(start)} - ${formatValue(end)}`
+  }
   if (start) return `${label}: >= ${formatValue(start)}`
   if (end) return `${label}: <= ${formatValue(end)}`
   return label
+}
+
+export function getAmountRangeLabel(
+  label: string,
+  range: AmountRange | undefined,
+  presets: AmountPreset[],
+  t: TranslationFn,
+  formatValue: (value: string | undefined, t: TranslationFn) => string
+): string {
+  if (!range?.start && !range?.end && !range?.presetKey) return label
+
+  if (range?.presetKey) {
+    const preset = presets.find((p) => p.labelKey === range.presetKey)
+    if (preset) return `${label}: ${t(preset.labelKey)}`
+  }
+
+  return formatRangeLabel(label, range, (v) => formatValue(v, t))
 }

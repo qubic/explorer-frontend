@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import { useSearchParams } from 'react-router-dom'
 
 import {
@@ -6,8 +7,8 @@ import {
   useValidatedPage,
   useValidatedPageSize
 } from '@app/hooks'
-import { type TransactionEvent, useGetEventsQuery } from '@app/store/apis/events'
-import type { AddressFilter } from '../../address/components/TransactionsOverview/filterUtils'
+import { type ShouldFilter, type TransactionEvent, useGetEventsQuery } from '@app/store/apis/events'
+import type { AddressFilter } from '../components/TransactionsOverview/filterUtils'
 import {
   buildEventAddressFilter,
   buildTickFilter,
@@ -18,7 +19,7 @@ import {
   parseTickRange
 } from '../../utils/eventFilterUtils'
 
-export default function useEventsPage(): {
+export default function useAddressEvents(addressId: string): {
   events: TransactionEvent[]
   total: number
   eventType: number | undefined
@@ -28,6 +29,7 @@ export default function useEventsPage(): {
   sourceFilter: AddressFilter | undefined
   destinationFilter: AddressFilter | undefined
   isLoading: boolean
+  hasError: boolean
 } {
   const [searchParams] = useSearchParams()
 
@@ -43,24 +45,33 @@ export default function useEventsPage(): {
 
   const eventType = useSanitizedEventType()
 
+  const should = useMemo<ShouldFilter[]>(
+    () => [{ terms: { source: addressId, destination: addressId } }],
+    [addressId]
+  )
+
   const { tickNumber, tickRange } = buildTickFilter(tickStart, tickEnd)
 
   const timestampRange = buildTimestampRange(dateRange)
   const sourceResult = buildEventAddressFilter(sourceFilter)
   const destResult = buildEventAddressFilter(destinationFilter)
 
-  const { data, isFetching } = useGetEventsQuery({
-    tickNumber,
-    tickRange,
-    timestampRange,
-    offset,
-    size: pageSize,
-    logType: eventType,
-    source: sourceResult.include,
-    excludeSource: sourceResult.exclude,
-    destination: destResult.include,
-    excludeDestination: destResult.exclude
-  })
+  const { data, isFetching, isError } = useGetEventsQuery(
+    {
+      should,
+      tickNumber,
+      tickRange,
+      timestampRange,
+      offset,
+      size: pageSize,
+      logType: eventType,
+      source: sourceResult.include,
+      excludeSource: sourceResult.exclude,
+      destination: destResult.include,
+      excludeDestination: destResult.exclude
+    },
+    { skip: !addressId }
+  )
 
   const total = data?.total ?? 0
 
@@ -75,6 +86,7 @@ export default function useEventsPage(): {
     dateRange,
     sourceFilter,
     destinationFilter,
-    isLoading: isFetching
+    isLoading: isFetching,
+    hasError: isError
   }
 }

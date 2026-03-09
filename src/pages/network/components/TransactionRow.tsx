@@ -4,9 +4,9 @@ import { Tooltip } from '@app/components/ui'
 import type { QueryServiceTransaction } from '@app/store/apis/query-service'
 import { useGetAddressName, useGetEpochForTick } from '@app/hooks'
 import { useGetProtocolQuery, useGetSmartContractsQuery } from '@app/store/apis/qubic-static'
-import { formatDate, formatEllipsis, formatString } from '@app/utils'
+import { formatDate, formatString } from '@app/utils'
 import { getTransactionTypeDisplay, getTransactionTypeDisplayLong } from '@app/utils/qubic'
-import AddressLink from './AddressLink'
+import AddressCell from './AddressCell'
 import TickLink from './TickLink'
 import TxLink from './TxLink'
 import TxStatus from './TxStatus'
@@ -72,28 +72,22 @@ function TransactionRow({ tx, highlightTick, highlightAddress }: Props) {
         {formatDate(timestamp, { shortDate: true }) || '-'}
       </td>
       <td className="whitespace-nowrap px-8 py-12 sm:px-16">
-        {highlightAddress === source ? (
-          <Tooltip tooltipId="source-address" content={source}>
-            <span className="font-space text-xs xs:text-sm">{formatEllipsis(source)}</span>
-          </Tooltip>
-        ) : (
-          <AddressLink value={source} label={sourceNameData?.name} ellipsis showTooltip copy />
-        )}
+        <AddressCell
+          address={source}
+          highlightAddress={highlightAddress}
+          addressName={sourceNameData?.name}
+          tooltipId="source-address"
+          textClassName="font-space text-xs xs:text-sm"
+        />
       </td>
       <td className="whitespace-nowrap px-8 py-12 sm:px-16">
-        {highlightAddress === destination ? (
-          <Tooltip tooltipId="destination-address" content={destination}>
-            <span className="font-space text-xs xs:text-sm">{formatEllipsis(destination)}</span>
-          </Tooltip>
-        ) : (
-          <AddressLink
-            value={destination}
-            label={destinationNameData?.name}
-            ellipsis
-            showTooltip
-            copy
-          />
-        )}
+        <AddressCell
+          address={destination}
+          highlightAddress={highlightAddress}
+          addressName={destinationNameData?.name}
+          tooltipId="destination-address"
+          textClassName="font-space text-xs xs:text-sm"
+        />
       </td>
       <td className="whitespace-nowrap px-8 py-12 text-right font-space text-xs xs:text-sm sm:px-16">
         {formatString(amount)} <span className="text-gray-50">QUBIC</span>

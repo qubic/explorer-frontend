@@ -5,23 +5,34 @@ import BetaBanner from '../../components/BetaBanner'
 import { EventsFilterBar } from '../../components/filters'
 import TransactionEvents from '../../components/TxItem/TransactionEvents'
 import { useEventFilters } from '../../hooks'
-import { useTickEvents } from '../hooks'
+import { useAddressEvents } from '../hooks'
 
 type Props = Readonly<{
-  tick: number
+  addressId: string
 }>
 
-export default function TickEvents({ tick }: Props) {
+export default function AddressEvents({ addressId }: Props) {
   const { t } = useTranslation('network-page')
-  const { events, total, eventType, sourceFilter, destinationFilter, isLoading, hasError } =
-    useTickEvents(tick)
-
-  const filters = useEventFilters({
+  const {
+    events,
+    total,
     eventType,
+    tickStart,
+    tickEnd,
+    dateRange,
     sourceFilter,
     destinationFilter,
-    supportsTick: false,
-    supportsDate: false
+    isLoading,
+    hasError
+  } = useAddressEvents(addressId)
+
+  const filters = useEventFilters({
+    tickStart,
+    tickEnd,
+    eventType,
+    dateRange,
+    sourceFilter,
+    destinationFilter
   })
 
   return (
@@ -31,11 +42,12 @@ export default function TickEvents({ tick }: Props) {
       <EventsFilterBar
         filters={filters}
         eventType={eventType}
+        tickStart={tickStart}
+        tickEnd={tickEnd}
+        dateRange={dateRange}
         sourceFilter={sourceFilter}
         destinationFilter={destinationFilter}
-        idPrefix="tick-events"
-        showTickFilter={false}
-        showDateFilter={false}
+        idPrefix="addr-events"
       />
 
       {hasError ? (
@@ -46,7 +58,10 @@ export default function TickEvents({ tick }: Props) {
           total={total}
           isLoading={isLoading}
           paginated
+          showTxId
+          showTickAndTimestamp
           showBetaBanner={false}
+          highlightAddress={addressId}
         />
       )}
     </div>

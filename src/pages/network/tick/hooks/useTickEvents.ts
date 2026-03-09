@@ -1,3 +1,5 @@
+import { useSearchParams } from 'react-router-dom'
+
 import {
   usePageAutoCorrect,
   useSanitizedEventType,
@@ -5,23 +7,44 @@ import {
   useValidatedPageSize
 } from '@app/hooks'
 import { useGetEventsQuery, type TransactionEvent } from '@app/store/apis/events'
+import type { AddressFilter } from '../../address/components/TransactionsOverview/filterUtils'
+import { buildEventAddressFilter, parseAddressFilter } from '../../utils/eventFilterUtils'
 
 export default function useTickEvents(tick: number): {
   events: TransactionEvent[]
   total: number
   eventType: number | undefined
+  sourceFilter: AddressFilter | undefined
+  destinationFilter: AddressFilter | undefined
   isLoading: boolean
   hasError: boolean
   refetch: () => void
 } {
+  const [searchParams] = useSearchParams()
+
   const page = useValidatedPage()
   const pageSize = useValidatedPageSize()
   const offset = (page - 1) * pageSize
 
   const eventType = useSanitizedEventType()
 
+  const sourceFilter = parseAddressFilter(searchParams, 'source', 'sourceMode')
+  const destinationFilter = parseAddressFilter(searchParams, 'destination', 'destMode')
+
+  const sourceResult = buildEventAddressFilter(sourceFilter)
+  const destResult = buildEventAddressFilter(destinationFilter)
+
   const { data, isFetching, isError, refetch } = useGetEventsQuery(
-    { tickNumber: tick, offset, size: pageSize, logType: eventType },
+    {
+      tickNumber: tick,
+      offset,
+      size: pageSize,
+      logType: eventType,
+      source: sourceResult.include,
+      excludeSource: sourceResult.exclude,
+      destination: destResult.include,
+      excludeDestination: destResult.exclude
+    },
     { skip: !tick }
   )
 
@@ -33,6 +56,8 @@ export default function useTickEvents(tick: number): {
     events: data?.events ?? [],
     total,
     eventType,
+    sourceFilter,
+    destinationFilter,
     isLoading: isFetching,
     hasError: isError,
     refetch
