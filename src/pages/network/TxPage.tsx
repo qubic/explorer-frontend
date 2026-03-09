@@ -89,7 +89,7 @@ function TxPage() {
         </p>
         <p className="font-space text-xs text-primary-30">{formatEllipsis(tx.hash)}</p>
       </Breadcrumbs>
-      <p className="my-16 font-space text-24 leading-28">{t('transactionPreview')}</p>
+      <p className="my-16 font-space text-base font-500">{t('transactionPreview')}</p>
       <TxItem
         tx={tx}
         nonExecutedTxIds={tx.moneyFlew ? [] : [tx.hash]}
