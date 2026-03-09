@@ -5,3 +5,4 @@ export {
   useClearFilterHandler,
   useLocalFilterSync
 } from './useFilterHelpers'
+export { default as useTickWatcher } from './useTickWatcher'

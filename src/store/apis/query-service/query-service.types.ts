@@ -81,6 +81,13 @@ export interface GetComputorListsForEpochResponse {
   computorsLists: ComputorList[]
 }
 
+// getLastProcessedTick types
+export interface GetLastProcessedTickResponse {
+  tickNumber: number
+  epoch: number
+  intervalInitialTick: number
+}
+
 // getTransactionsForTick request with filters
 // Note: Unlike getTransactionsForIdentity, this endpoint only supports single address (no multi, no exclude)
 export interface GetTransactionsForTickRequest {

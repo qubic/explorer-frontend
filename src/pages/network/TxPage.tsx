@@ -1,3 +1,4 @@
+import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 
@@ -8,18 +9,69 @@ import { PageLayout } from '@app/components/ui/layouts'
 import { LinearProgress } from '@app/components/ui/loaders'
 import { useGetTransactionByHashQuery } from '@app/store/apis/query-service'
 import { formatEllipsis } from '@app/utils'
-import { HomeLink, TickLink, TxItem } from './components'
+import { HomeLink, TickLink, TxItem, WaitingForTick } from './components'
+import { useTickWatcher } from './hooks'
 
 function TxPage() {
   const { t } = useTranslation('network-page')
   const { txId = '' } = useParams()
 
-  const { data: tx, isFetching } = useGetTransactionByHashQuery(txId, {
+  const {
+    data: tx,
+    isFetching,
+    isError,
+    error,
+    refetch
+  } = useGetTransactionByHashQuery(txId, {
     skip: !txId
   })
 
-  if (isFetching) {
+  const isLoading = isFetching
+  const isInvalidFormat =
+    isError && error && 'data' in error && (error.data as { code?: number })?.code === 3
+  const isTxNotFound = !isLoading && !isInvalidFormat && !tx
+
+  const refetchTx = useCallback(() => {
+    refetch()
+  }, [refetch])
+
+  const {
+    isWaitingForTick,
+    isTickCheckFailed,
+    targetTick,
+    currentTick,
+    estimatedWaitSeconds,
+    isLoading: isTickWatcherLoading
+  } = useTickWatcher({
+    isTxNotFound,
+    refetch: refetchTx
+  })
+
+  if (isLoading) {
     return <LinearProgress />
+  }
+
+  if (isInvalidFormat) {
+    return <ErrorFallback message={t('invalidTransactionId')} hideErrorHeader />
+  }
+
+  if (isTickWatcherLoading) {
+    return <LinearProgress />
+  }
+
+  if (isTickCheckFailed) {
+    return <ErrorFallback message={t('tickCheckFailed')} hideErrorHeader />
+  }
+
+  if (isWaitingForTick && targetTick) {
+    return (
+      <WaitingForTick
+        txId={txId}
+        targetTick={targetTick}
+        currentTick={currentTick}
+        estimatedWaitSeconds={estimatedWaitSeconds}
+      />
+    )
   }
 
   if (!tx) {

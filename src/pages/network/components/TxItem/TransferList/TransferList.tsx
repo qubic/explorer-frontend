@@ -55,7 +55,7 @@ export default function TransferListToggle({ entries, variant = 'primary' }: Pro
   if (variant === 'secondary') {
     return (
       <>
-        <p className="py-12 font-space text-18 leading-20">
+        <p className="pb-12 pt-4 font-space text-18 leading-20">
           {entries.length} {t('transactions')}
         </p>
         <TransferList entries={entries} variant="secondary" />
