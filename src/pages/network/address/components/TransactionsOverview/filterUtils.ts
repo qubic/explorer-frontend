@@ -250,7 +250,7 @@ export const DATE_PRESETS = [
 /**
  * Helper to check if an address filter contains only the page address
  */
-function isOnlyPageAddress(filter: AddressFilter | undefined, addressId: string): boolean {
+export function isOnlyPageAddress(filter: AddressFilter | undefined, addressId: string): boolean {
   if (!filter) return false
   const validAddresses = filter.addresses.filter((addr) => addr.trim() !== '')
   return validAddresses.length === 1 && validAddresses[0] === addressId

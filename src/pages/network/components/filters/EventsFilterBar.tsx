@@ -3,7 +3,11 @@ import { useTranslation } from 'react-i18next'
 
 import { FunnelIcon } from '@app/assets/icons'
 import { getEventTypeLabel } from '@app/store/apis/events'
-import type { AddressFilter } from '../../address/components/TransactionsOverview/filterUtils'
+import type {
+  AddressFilter,
+  TransactionDirection
+} from '../../address/components/TransactionsOverview/filterUtils'
+import DirectionControl from '../../address/components/TransactionsOverview/DirectionControl'
 import DateFilterContent from '../../address/components/TransactionsOverview/DateFilterContent'
 import MultiAddressFilterContent from '../../address/components/TransactionsOverview/MultiAddressFilterContent'
 import { formatRangeLabel } from '../../hooks'
@@ -22,6 +26,7 @@ import ResetFiltersButton from './ResetFiltersButton'
 type Props = {
   filters: EventFiltersResult
   eventType: number | undefined
+  direction?: TransactionDirection | undefined
   tickStart?: string
   tickEnd?: string
   dateRange?: DateRangeValue
@@ -30,11 +35,14 @@ type Props = {
   idPrefix: string
   showTickFilter?: boolean
   showDateFilter?: boolean
+  showDirectionFilter?: boolean
+  addressId?: string
 }
 
 export default function EventsFilterBar({
   filters,
   eventType,
+  direction,
   tickStart,
   tickEnd,
   dateRange,
@@ -42,7 +50,9 @@ export default function EventsFilterBar({
   destinationFilter,
   idPrefix,
   showTickFilter = true,
-  showDateFilter = true
+  showDateFilter = true,
+  showDirectionFilter = false,
+  addressId
 }: Props) {
   const { t } = useTranslation('network-page')
   const [openDropdown, setOpenDropdown] = useState<string | null>(null)
@@ -66,6 +76,7 @@ export default function EventsFilterBar({
 
   const mobileActiveFilters: EventsFilters = {
     eventType,
+    direction,
     sourceFilter,
     destinationFilter,
     ...(showTickFilter && {
@@ -76,9 +87,18 @@ export default function EventsFilterBar({
 
   return (
     <>
-      {/* Mobile: Filters button + active filter chips */}
+      {/* Mobile: Direction control + filters button + active filter chips */}
       <div className="flex flex-col gap-10 sm:hidden">
-        <div className="flex items-center justify-end">
+        <div
+          className={`flex items-center ${showDirectionFilter ? 'justify-between' : 'justify-end'}`}
+        >
+          {showDirectionFilter && (
+            <DirectionControl
+              value={direction}
+              onChange={filters.handleDirectionChange}
+              showTooltips
+            />
+          )}
           <MobileFiltersButton onClick={() => setIsMobileModalOpen(true)} />
         </div>
 
@@ -116,11 +136,20 @@ export default function EventsFilterBar({
         idPrefix={idPrefix}
         showTickFilter={showTickFilter}
         showDateFilter={showDateFilter}
+        showDirectionFilter={showDirectionFilter}
+        addressId={addressId}
       />
 
       {/* Desktop: Dropdown filters */}
       <div className="hidden items-center gap-8 sm:flex">
         <FunnelIcon className="h-16 w-16 text-gray-50" />
+        {showDirectionFilter && (
+          <DirectionControl
+            value={direction}
+            onChange={filters.handleDirectionChange}
+            showTooltips
+          />
+        )}
         <FilterDropdown
           label={eventTypeLabel}
           isActive={filters.isEventTypeActive}

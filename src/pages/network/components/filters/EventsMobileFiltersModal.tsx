@@ -3,9 +3,14 @@ import { useTranslation } from 'react-i18next'
 
 import { useBodyScrollLock } from '@app/hooks'
 import DateFilterContent from '../../address/components/TransactionsOverview/DateFilterContent'
-import type { AddressFilter } from '../../address/components/TransactionsOverview/filterUtils'
+import type {
+  AddressFilter,
+  TransactionDirection
+} from '../../address/components/TransactionsOverview/filterUtils'
+import DirectionControl from '../../address/components/TransactionsOverview/DirectionControl'
 import MultiAddressFilterContent from '../../address/components/TransactionsOverview/MultiAddressFilterContent'
 import type { DateRangeValue, TickRangeValue } from '../../utils/eventFilterUtils'
+import { applyEventDirectionSync } from '../../utils/eventFilterUtils'
 import EventTypeChips from './EventTypeChips'
 import MobileFiltersModalWrapper from './MobileFiltersModalWrapper'
 import MobileFilterSection from './MobileFilterSection'
@@ -17,6 +22,7 @@ export type EventsFilters = {
   dateRange?: DateRangeValue
   sourceFilter?: AddressFilter
   destinationFilter?: AddressFilter
+  direction?: TransactionDirection
 }
 
 type Props = {
@@ -27,6 +33,8 @@ type Props = {
   idPrefix: string
   showTickFilter?: boolean
   showDateFilter?: boolean
+  showDirectionFilter?: boolean
+  addressId?: string
 }
 
 export default function EventsMobileFiltersModal({
@@ -36,7 +44,9 @@ export default function EventsMobileFiltersModal({
   onApplyFilters,
   idPrefix,
   showTickFilter = true,
-  showDateFilter = true
+  showDateFilter = true,
+  showDirectionFilter = false,
+  addressId
 }: Props) {
   const { t } = useTranslation('network-page')
 
@@ -55,6 +65,25 @@ export default function EventsMobileFiltersModal({
   const [localDestFilter, setLocalDestFilter] = useState<AddressFilter | undefined>(
     activeFilters.destinationFilter
   )
+  const [localDirection, setLocalDirection] = useState<TransactionDirection | undefined>(
+    activeFilters.direction
+  )
+
+  const handleLocalDirectionChange = useCallback(
+    (newDirection: TransactionDirection | undefined) => {
+      setLocalDirection(newDirection)
+      if (!addressId) return
+      const { sourceFilter: newSrc, destinationFilter: newDest } = applyEventDirectionSync(
+        newDirection,
+        addressId,
+        localSourceFilter,
+        localDestFilter
+      )
+      setLocalSourceFilter(newSrc)
+      setLocalDestFilter(newDest)
+    },
+    [addressId, localSourceFilter, localDestFilter]
+  )
 
   useEffect(() => {
     if (isOpen) {
@@ -63,6 +92,7 @@ export default function EventsMobileFiltersModal({
       setLocalDateRange(activeFilters.dateRange)
       setLocalSourceFilter(activeFilters.sourceFilter)
       setLocalDestFilter(activeFilters.destinationFilter)
+      setLocalDirection(activeFilters.direction)
     }
   }, [
     isOpen,
@@ -70,7 +100,8 @@ export default function EventsMobileFiltersModal({
     activeFilters.eventType,
     activeFilters.dateRange,
     activeFilters.sourceFilter,
-    activeFilters.destinationFilter
+    activeFilters.destinationFilter,
+    activeFilters.direction
   ])
 
   const handleApply = useCallback(() => {
@@ -79,7 +110,8 @@ export default function EventsMobileFiltersModal({
       eventType: localEventType,
       dateRange: localDateRange,
       sourceFilter: localSourceFilter,
-      destinationFilter: localDestFilter
+      destinationFilter: localDestFilter,
+      direction: localDirection
     })
     onClose()
   }, [
@@ -88,6 +120,7 @@ export default function EventsMobileFiltersModal({
     localDateRange,
     localSourceFilter,
     localDestFilter,
+    localDirection,
     onApplyFilters,
     onClose
   ])
@@ -99,6 +132,12 @@ export default function EventsMobileFiltersModal({
       onClose={onClose}
       onApply={handleApply}
     >
+      {showDirectionFilter && (
+        <MobileFilterSection id={`${idPrefix}-mobile-direction-filter`} label={t('direction')}>
+          <DirectionControl value={localDirection} onChange={handleLocalDirectionChange} />
+        </MobileFilterSection>
+      )}
+
       <MobileFilterSection id={`${idPrefix}-mobile-event-type-filter`} label={t('eventType')}>
         <EventTypeChips selectedType={localEventType} onSelectType={setLocalEventType} />
       </MobileFilterSection>

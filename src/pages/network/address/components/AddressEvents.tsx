@@ -17,6 +17,7 @@ export default function AddressEvents({ addressId }: Props) {
     events,
     total,
     eventType,
+    direction,
     tickStart,
     tickEnd,
     dateRange,
@@ -30,9 +31,11 @@ export default function AddressEvents({ addressId }: Props) {
     tickStart,
     tickEnd,
     eventType,
+    direction,
     dateRange,
     sourceFilter,
-    destinationFilter
+    destinationFilter,
+    addressId
   })
 
   return (
@@ -42,12 +45,15 @@ export default function AddressEvents({ addressId }: Props) {
       <EventsFilterBar
         filters={filters}
         eventType={eventType}
+        direction={direction}
         tickStart={tickStart}
         tickEnd={tickEnd}
         dateRange={dateRange}
         sourceFilter={sourceFilter}
         destinationFilter={destinationFilter}
         idPrefix="addr-events"
+        showDirectionFilter
+        addressId={addressId}
       />
 
       {hasError ? (

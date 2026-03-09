@@ -1,24 +1,31 @@
 import { useCallback, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 
-import type { AddressFilter } from '../address/components/TransactionsOverview/filterUtils'
+import type {
+  AddressFilter,
+  TransactionDirection
+} from '../address/components/TransactionsOverview/filterUtils'
 import {
+  DIRECTION,
+  isOnlyPageAddress,
   validateDateRange,
   validateTickRange
 } from '../address/components/TransactionsOverview/filterUtils'
 import type { DateRangeValue, TickRangeValue } from '../utils/eventFilterUtils'
-import { toTickRangeValue } from '../utils/eventFilterUtils'
+import { applyEventDirectionSync, toTickRangeValue } from '../utils/eventFilterUtils'
 import { updateSearchParams } from '../utils/filterUtils'
 
 type EventFilterOptions = {
   tickStart?: string
   tickEnd?: string
   eventType: number | undefined
+  direction?: TransactionDirection | undefined
   dateRange?: DateRangeValue
   sourceFilter: AddressFilter | undefined
   destinationFilter: AddressFilter | undefined
   supportsTick?: boolean
   supportsDate?: boolean
+  addressId?: string
 }
 
 export type EventFiltersResult = ReturnType<typeof useEventFilters>
@@ -27,11 +34,13 @@ export default function useEventFilters({
   tickStart,
   tickEnd,
   eventType,
+  direction,
   dateRange,
   sourceFilter,
   destinationFilter,
   supportsTick = true,
-  supportsDate = true
+  supportsDate = true,
+  addressId
 }: EventFilterOptions) {
   const [, setSearchParams] = useSearchParams()
 
@@ -52,6 +61,9 @@ export default function useEventFilters({
   const [localDestFilter, setLocalDestFilter] = useState<AddressFilter | undefined>(
     destinationFilter
   )
+
+  const isPageAddress = (filter: AddressFilter | undefined): boolean =>
+    !!addressId && filter?.mode === 'include' && isOnlyPageAddress(filter, addressId)
 
   const isTickActive = supportsTick && (tickStart !== undefined || tickEnd !== undefined)
   const isEventTypeActive = eventType !== undefined
@@ -103,6 +115,36 @@ export default function useEventFilters({
   const handleClearEventType = useCallback(() => {
     setSearchParams((prev) => updateSearchParams(prev, { eventType: undefined }))
   }, [setSearchParams])
+
+  // --- Direction ---
+
+  const handleDirectionChange = useCallback(
+    (newDirection: TransactionDirection | undefined) => {
+      const updates: Record<string, string | undefined> = {
+        direction: newDirection
+      }
+      if (addressId) {
+        const { sourceFilter: newSrc, destinationFilter: newDest } = applyEventDirectionSync(
+          newDirection,
+          addressId,
+          sourceFilter,
+          destinationFilter
+        )
+        // Sync URL params
+        const srcAddresses = newSrc?.addresses.filter((a) => a.trim() !== '') ?? []
+        updates.source = srcAddresses.length > 0 ? srcAddresses.join(',') : undefined
+        updates.sourceMode = srcAddresses.length > 0 ? newSrc?.mode : undefined
+        const dstAddresses = newDest?.addresses.filter((a) => a.trim() !== '') ?? []
+        updates.destination = dstAddresses.length > 0 ? dstAddresses.join(',') : undefined
+        updates.destMode = dstAddresses.length > 0 ? newDest?.mode : undefined
+        // Sync local state
+        setLocalSourceFilter(newSrc)
+        setLocalDestFilter(newDest)
+      }
+      setSearchParams((prev) => updateSearchParams(prev, updates))
+    },
+    [setSearchParams, addressId, sourceFilter, destinationFilter]
+  )
 
   // --- Date Range ---
 
@@ -159,46 +201,67 @@ export default function useEventFilters({
   const handleSourceApply = useCallback(() => {
     const validAddresses = localSourceFilter?.addresses.filter((addr) => addr.trim() !== '') ?? []
     if (validAddresses.length === 0) return
-    setSearchParams((prev) =>
-      updateSearchParams(prev, {
-        source: validAddresses.join(','),
-        sourceMode: localSourceFilter?.mode ?? 'include'
-      })
-    )
-  }, [localSourceFilter, setSearchParams])
+    const updates: Record<string, string | undefined> = {
+      source: validAddresses.join(','),
+      sourceMode: localSourceFilter?.mode ?? 'include'
+    }
+    if (isPageAddress(localSourceFilter)) {
+      updates.direction = DIRECTION.OUTGOING
+    } else if (direction === DIRECTION.OUTGOING) {
+      updates.direction = undefined
+    }
+    setSearchParams((prev) => updateSearchParams(prev, updates))
+  }, [localSourceFilter, setSearchParams, addressId, direction])
 
   const handleClearSource = useCallback(() => {
-    setSearchParams((prev) =>
-      updateSearchParams(prev, { source: undefined, sourceMode: undefined })
-    )
+    const updates: Record<string, string | undefined> = {
+      source: undefined,
+      sourceMode: undefined
+    }
+    // Clear direction if it was auto-synced from source
+    if (direction === DIRECTION.OUTGOING) {
+      updates.direction = undefined
+    }
+    setSearchParams((prev) => updateSearchParams(prev, updates))
     setLocalSourceFilter(undefined)
-  }, [setSearchParams])
+  }, [setSearchParams, direction])
 
   // --- Destination ---
 
   const handleDestApply = useCallback(() => {
     const validAddresses = localDestFilter?.addresses.filter((addr) => addr.trim() !== '') ?? []
     if (validAddresses.length === 0) return
-    setSearchParams((prev) =>
-      updateSearchParams(prev, {
-        destination: validAddresses.join(','),
-        destMode: localDestFilter?.mode ?? 'include'
-      })
-    )
-  }, [localDestFilter, setSearchParams])
+    const updates: Record<string, string | undefined> = {
+      destination: validAddresses.join(','),
+      destMode: localDestFilter?.mode ?? 'include'
+    }
+    if (isPageAddress(localDestFilter)) {
+      updates.direction = DIRECTION.INCOMING
+    } else if (direction === DIRECTION.INCOMING) {
+      updates.direction = undefined
+    }
+    setSearchParams((prev) => updateSearchParams(prev, updates))
+  }, [localDestFilter, setSearchParams, addressId, direction])
 
   const handleClearDest = useCallback(() => {
-    setSearchParams((prev) =>
-      updateSearchParams(prev, { destination: undefined, destMode: undefined })
-    )
+    const updates: Record<string, string | undefined> = {
+      destination: undefined,
+      destMode: undefined
+    }
+    // Clear direction if it was auto-synced from destination
+    if (direction === DIRECTION.INCOMING) {
+      updates.direction = undefined
+    }
+    setSearchParams((prev) => updateSearchParams(prev, updates))
     setLocalDestFilter(undefined)
-  }, [setSearchParams])
+  }, [setSearchParams, direction])
 
   // --- Clear All ---
 
   const handleClearAll = useCallback(() => {
     const updates: Record<string, undefined> = {
       eventType: undefined,
+      direction: undefined,
       source: undefined,
       sourceMode: undefined,
       destination: undefined,
@@ -235,24 +298,26 @@ export default function useEventFilters({
       dateRange?: DateRangeValue
       sourceFilter?: AddressFilter
       destinationFilter?: AddressFilter
+      direction?: TransactionDirection
     }) => {
       const srcAddresses =
         filters.sourceFilter?.addresses.filter((addr) => addr.trim() !== '') ?? []
       const dstAddresses =
         filters.destinationFilter?.addresses.filter((addr) => addr.trim() !== '') ?? []
 
-      // Validate tick range — skip invalid values (Fix #1)
+      // Validate tick range — skip invalid values
       const tickValid = !validateTickRange(filters.tickRange?.start, filters.tickRange?.end)
       const validTickStart = tickValid ? filters.tickRange?.start || undefined : undefined
       const validTickEnd = tickValid ? filters.tickRange?.end || undefined : undefined
 
-      // Validate date range — skip invalid values, presets bypass validation (Fix #1)
+      // Validate date range — skip invalid values, presets bypass validation
       const dateIsPreset = filters.dateRange?.presetDays !== undefined
       const dateValid =
         dateIsPreset || !validateDateRange(filters.dateRange?.start, filters.dateRange?.end)
 
       const updates: Record<string, string | undefined> = {
         eventType: filters.eventType !== undefined ? String(filters.eventType) : undefined,
+        direction: filters.direction,
         source: srcAddresses.length > 0 ? srcAddresses.join(',') : undefined,
         sourceMode: srcAddresses.length > 0 ? filters.sourceFilter?.mode ?? 'include' : undefined,
         destination: dstAddresses.length > 0 ? dstAddresses.join(',') : undefined,
@@ -308,6 +373,7 @@ export default function useEventFilters({
     handleClearTick,
     handleSelectEventType,
     handleClearEventType,
+    handleDirectionChange,
     handleDateRangeChange,
     handleDateRangeApply,
     handleDatePresetSelect,

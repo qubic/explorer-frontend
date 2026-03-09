@@ -1,8 +1,13 @@
 import type { EventRange } from '@app/store/apis/events'
-import type { AddressFilter } from '../address/components/TransactionsOverview/filterUtils'
+import type {
+  AddressFilter,
+  TransactionDirection
+} from '../address/components/TransactionsOverview/filterUtils'
 import {
   DATE_PRESETS,
+  DIRECTION,
   getStartDateFromDays,
+  isOnlyPageAddress,
   MODE
 } from '../address/components/TransactionsOverview/filterUtils'
 import { formatAddressShort } from './filterUtils'
@@ -106,6 +111,42 @@ export function buildTimestampRange(dateRange: DateRangeValue | undefined): Even
   return {
     ...(timestampStart ? { gte: new Date(timestampStart).getTime().toString() } : {}),
     ...(dateRange.end ? { lte: new Date(dateRange.end).getTime().toString() } : {})
+  }
+}
+
+// ============================================================================
+// DIRECTION SYNC
+// ============================================================================
+
+/**
+ * Computes new source/dest filters when direction changes.
+ * Used by both the desktop direction handler and the mobile modal.
+ */
+export function applyEventDirectionSync(
+  newDirection: TransactionDirection | undefined,
+  addressId: string,
+  currentSource: AddressFilter | undefined,
+  currentDest: AddressFilter | undefined
+): { sourceFilter: AddressFilter | undefined; destinationFilter: AddressFilter | undefined } {
+  const isPageAddr = (filter: AddressFilter | undefined): boolean =>
+    !!filter && filter.mode === MODE.INCLUDE && isOnlyPageAddress(filter, addressId)
+
+  if (newDirection === DIRECTION.INCOMING) {
+    return {
+      sourceFilter: isPageAddr(currentSource) ? undefined : currentSource,
+      destinationFilter: { mode: MODE.INCLUDE, addresses: [addressId] }
+    }
+  }
+  if (newDirection === DIRECTION.OUTGOING) {
+    return {
+      sourceFilter: { mode: MODE.INCLUDE, addresses: [addressId] },
+      destinationFilter: isPageAddr(currentDest) ? undefined : currentDest
+    }
+  }
+  // "All" — clear page-address-only filters
+  return {
+    sourceFilter: isPageAddr(currentSource) ? undefined : currentSource,
+    destinationFilter: isPageAddr(currentDest) ? undefined : currentDest
   }
 }
 
