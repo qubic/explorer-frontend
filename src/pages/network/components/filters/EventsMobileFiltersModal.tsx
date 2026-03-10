@@ -3,12 +3,14 @@ import { useTranslation } from 'react-i18next'
 
 import { useBodyScrollLock } from '@app/hooks'
 import DateFilterContent from '../../address/components/TransactionsOverview/DateFilterContent'
-import type {
-  AddressFilter,
-  TransactionDirection
+import {
+  validateAddressFilter,
+  type AddressFilter,
+  type TransactionDirection
 } from '../../address/components/TransactionsOverview/filterUtils'
 import DirectionControl from '../../address/components/TransactionsOverview/DirectionControl'
 import MultiAddressFilterContent from '../../address/components/TransactionsOverview/MultiAddressFilterContent'
+import { scrollToValidationError } from '../../hooks'
 import type { DateRangeValue, TickRangeValue } from '../../utils/eventFilterUtils'
 import { applyEventDirectionSync } from '../../utils/eventFilterUtils'
 import EventTypeChips from './EventTypeChips'
@@ -68,6 +70,7 @@ export default function EventsMobileFiltersModal({
   const [localDirection, setLocalDirection] = useState<TransactionDirection | undefined>(
     activeFilters.direction
   )
+  const [validationErrors, setValidationErrors] = useState<Record<string, string | null>>({})
 
   const handleLocalDirectionChange = useCallback(
     (newDirection: TransactionDirection | undefined) => {
@@ -81,6 +84,7 @@ export default function EventsMobileFiltersModal({
       )
       setLocalSourceFilter(newSrc)
       setLocalDestFilter(newDest)
+      setValidationErrors({})
     },
     [addressId, localSourceFilter, localDestFilter]
   )
@@ -93,6 +97,7 @@ export default function EventsMobileFiltersModal({
       setLocalSourceFilter(activeFilters.sourceFilter)
       setLocalDestFilter(activeFilters.destinationFilter)
       setLocalDirection(activeFilters.direction)
+      setValidationErrors({})
     }
   }, [
     isOpen,
@@ -105,6 +110,27 @@ export default function EventsMobileFiltersModal({
   ])
 
   const handleApply = useCallback(() => {
+    const errors: Record<string, string | null> = {}
+    let firstErrorId: string | null = null
+
+    const sourceError = validateAddressFilter(localSourceFilter)
+    if (sourceError) {
+      errors.source = t(sourceError)
+      if (!firstErrorId) firstErrorId = `${idPrefix}-mobile-source-filter`
+    }
+
+    const destError = validateAddressFilter(localDestFilter)
+    if (destError) {
+      errors.destination = t(destError)
+      if (!firstErrorId) firstErrorId = `${idPrefix}-mobile-dest-filter`
+    }
+
+    if (Object.keys(errors).length > 0) {
+      setValidationErrors(errors)
+      scrollToValidationError(firstErrorId)
+      return
+    }
+
     onApplyFilters({
       tickRange: localTickRange,
       eventType: localEventType,
@@ -114,6 +140,7 @@ export default function EventsMobileFiltersModal({
       direction: localDirection
     })
     onClose()
+    setValidationErrors({})
   }, [
     localTickRange,
     localEventType,
@@ -122,14 +149,21 @@ export default function EventsMobileFiltersModal({
     localDestFilter,
     localDirection,
     onApplyFilters,
-    onClose
+    onClose,
+    idPrefix,
+    t
   ])
+
+  const handleClose = useCallback(() => {
+    onClose()
+    setValidationErrors({})
+  }, [onClose])
 
   return (
     <MobileFiltersModalWrapper
       id={`${idPrefix}-mobile-filters-modal`}
       isOpen={isOpen}
-      onClose={onClose}
+      onClose={handleClose}
       onApply={handleApply}
     >
       {showDirectionFilter && (
@@ -147,8 +181,9 @@ export default function EventsMobileFiltersModal({
           id={`${idPrefix}-mobile-source`}
           value={localSourceFilter}
           onChange={setLocalSourceFilter}
-          onApply={handleApply}
+          onApply={() => {}}
           showApplyButton={false}
+          error={validationErrors.source}
         />
       </MobileFilterSection>
 
@@ -157,8 +192,9 @@ export default function EventsMobileFiltersModal({
           id={`${idPrefix}-mobile-dest`}
           value={localDestFilter}
           onChange={setLocalDestFilter}
-          onApply={handleApply}
+          onApply={() => {}}
           showApplyButton={false}
+          error={validationErrors.destination}
         />
       </MobileFilterSection>
 
@@ -168,7 +204,7 @@ export default function EventsMobileFiltersModal({
             idPrefix={`${idPrefix}-mobile-date`}
             value={localDateRange}
             onChange={setLocalDateRange}
-            onApply={handleApply}
+            onApply={() => {}}
             selectedPresetDays={localDateRange?.presetDays}
             showApplyButton={false}
           />
@@ -181,7 +217,7 @@ export default function EventsMobileFiltersModal({
             idPrefix={`${idPrefix}-mobile-tick-range`}
             value={localTickRange}
             onChange={setLocalTickRange}
-            onApply={handleApply}
+            onApply={() => {}}
             startLabel={t('startTick')}
             endLabel={t('endTick')}
             showApplyButton={false}

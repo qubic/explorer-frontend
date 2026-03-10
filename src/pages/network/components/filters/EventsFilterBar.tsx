@@ -87,18 +87,9 @@ export default function EventsFilterBar({
 
   return (
     <>
-      {/* Mobile: Direction control + filters button + active filter chips */}
+      {/* Mobile: Filters button + active filter chips */}
       <div className="flex flex-col gap-10 sm:hidden">
-        <div
-          className={`flex items-center ${showDirectionFilter ? 'justify-between' : 'justify-end'}`}
-        >
-          {showDirectionFilter && (
-            <DirectionControl
-              value={direction}
-              onChange={filters.handleDirectionChange}
-              showTooltips
-            />
-          )}
+        <div className="flex items-center justify-end">
           <MobileFiltersButton onClick={() => setIsMobileModalOpen(true)} />
         </div>
 
