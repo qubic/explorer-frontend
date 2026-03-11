@@ -92,6 +92,7 @@
   "exchanges": "Börsen",
   "exchangesLoadFailed": "Fehler: Laden der Börsen fehlgeschlagen. Bitte aktualisieren Sie die Seite oder versuchen Sie es später erneut.",
   "token": "Token",
+  "tokenIssuer": "{{name}} Emittent",
   "tokens": "Token",
   "smartContract": "Smart Contract",
   "smartContracts": "Smart Contracts",

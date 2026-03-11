@@ -92,6 +92,7 @@
   "exchanges": "交易所",
   "exchangesLoadFailed": "错误：无法加载交易所。请刷新页面或稍后再试。",
   "token": "代币",
+  "tokenIssuer": "{{name}} 发行人",
   "tokens": "代币",
   "smartContract": "智能合约",
   "smartContracts": "智能合约",

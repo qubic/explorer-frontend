@@ -92,6 +92,7 @@
   "exchanges": "Биржи",
   "exchangesLoadFailed": "Ошибка: Не удалось загрузить биржи. Обновите страницу или попробуйте позже.",
   "token": "Токен",
+  "tokenIssuer": "{{name}} Эмитент",
   "tokens": "Токены",
   "smartContract": "Смарт-контракт",
   "smartContracts": "Смарт-контракты",

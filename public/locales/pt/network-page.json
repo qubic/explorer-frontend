@@ -92,6 +92,7 @@
   "exchanges": "Câmbios",
   "exchangesLoadFailed": "Erro: Falha ao carregar as câmbios. Por favor, atualize a página ou tente novamente mais tarde.",
   "token": "Token",
+  "tokenIssuer": "{{name}} Emissor",
   "tokens": "Tokens",
   "smartContract": "Contrato Inteligente",
   "smartContracts": "Contratos Inteligentes",

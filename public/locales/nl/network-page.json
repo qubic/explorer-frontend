@@ -92,6 +92,7 @@
   "exchanges": "Beurzen",
   "exchangesLoadFailed": "Fout: Het laden van beurzen is mislukt. Vernieuw de pagina of probeer het later opnieuw.",
   "token": "Token",
+  "tokenIssuer": "{{name}} Uitgever",
   "tokens": "Tokens",
   "smartContract": "Slim contract",
   "smartContracts": "Slimme Contracten",

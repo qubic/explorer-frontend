@@ -92,6 +92,7 @@
   "exchanges": "Échanges",
   "exchangesLoadFailed": "Erreur : Échec du chargement des échanges. Veuillez actualiser la page ou réessayer plus tard.",
   "token": "Jeton",
+  "tokenIssuer": "{{name}} Émetteur",
   "tokens": "Jetons",
   "smartContract": "Contrat intelligent",
   "smartContracts": "Contrats intelligents",

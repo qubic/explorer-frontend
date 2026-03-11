@@ -92,6 +92,7 @@
   "exchanges": "Intercambios",
   "exchangesLoadFailed": "Error: No se pudieron cargar los intercambios. Por favor, actualiza la página o inténtalo de nuevo más tarde.",
   "token": "Token",
+  "tokenIssuer": "{{name}} Emisor",
   "tokens": "Tokens",
   "smartContract": "Contrato inteligente",
   "smartContracts": "Contratos inteligentes",

@@ -92,6 +92,7 @@
   "exchanges": "Exchanges",
   "exchangesLoadFailed": "Error: Failed to load exchanges. Please refresh the page or try again later.",
   "token": "Token",
+  "tokenIssuer": "{{name}} Issuer",
   "tokens": "Tokens",
   "smartContract": "Smart Contract",
   "smartContracts": "Smart Contracts",

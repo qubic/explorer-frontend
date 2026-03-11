@@ -92,6 +92,7 @@
   "exchanges": "取引所",
   "exchangesLoadFailed": "エラー: 取引所の読み込みに失敗しました。ページを更新するか、後でもう一度お試しください。",
   "token": "トークン",
+  "tokenIssuer": "{{name}} 発行者",
   "tokens": "トークン",
   "smartContract": "スマートコントラクト",
   "smartContracts": "スマートコントラクト",

@@ -150,7 +150,7 @@ function AddressPage() {
       {addressName && (
         <div className="flex items-center gap-4 pb-16">
           {/* Type Label (not for named addresses) */}
-          {addressName.i18nKey !== 'named-address' && (
+          {addressName.i18nKey !== 'named-address' && addressName.i18nKey !== 'tokenIssuer' && (
             <Badge color="primary" size="xs" variant="outlined">
               {t(addressName.i18nKey)}
             </Badge>

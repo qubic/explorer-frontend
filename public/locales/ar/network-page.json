@@ -92,6 +92,7 @@
   "exchanges": "التبادلات",
   "exchangesLoadFailed": "خطأ: فشل في تحميل التبادلات. يرجى تحديث الصفحة أو المحاولة لاحقًا.",
   "token": "رمز",
+  "tokenIssuer": "{{name}} المُصدر",
   "tokens": "رموز",
   "smartContract": "عقد ذكي",
   "smartContracts": "العقود الذكية",

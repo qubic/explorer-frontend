@@ -92,6 +92,7 @@
   "exchanges": "Các sàn giao dịch",
   "exchangesLoadFailed": "Lỗi: Không tải được danh sách sàn giao dịch. Vui lòng tải lại trang hoặc thử lại sau.",
   "token": "Token",
+  "tokenIssuer": "{{name}} Người phát hành",
   "tokens": "Các token",
   "smartContract": "Hợp đồng thông minh",
   "smartContracts": "Các hợp đồng thông minh",
