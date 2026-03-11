@@ -1,3 +1,26 @@
+# [1.34.0](https://github.com/qubic/explorer-frontend/compare/v1.33.0...v1.34.0) (2026-03-11)
+
+
+### Bug Fixes
+
+* **network:** localize decoded data strings and clean ioTypes map ([9717a63](https://github.com/qubic/explorer-frontend/commit/9717a6358fa42f232b93784f3376cc36de2095f4))
+* normalize invalid tab query params on address page ([637ca37](https://github.com/qubic/explorer-frontend/commit/637ca3777facd2760a695953dd35d6a9e67129aa))
+* **tx:** improve show more/less overflow detection accuracy ([9f08e2f](https://github.com/qubic/explorer-frontend/commit/9f08e2f3f729e3a544a402e5c36a02fd8aa9cf2a))
+* **tx:** use contract type metadata for address detection in decoded input ([91c19c1](https://github.com/qubic/explorer-frontend/commit/91c19c1088a20d93a553fff732c90a2d499fb983))
+* **tx:** use correct muted color for decode error detail message ([4ad2df5](https://github.com/qubic/explorer-frontend/commit/4ad2df5f02b1c77b4367544ac22f7bb48746b74f))
+
+
+### Features
+
+* add waiting-for-tick screen for pending transactions on tx page ([#424](https://github.com/qubic/explorer-frontend/issues/424)) ([28b8b31](https://github.com/qubic/explorer-frontend/commit/28b8b31ec46dc0b12d9a0d4b90e855641db14e7d))
+* display epoch in tick page details ([2f83091](https://github.com/qubic/explorer-frontend/commit/2f83091413d0e8a8801c3126ddddddff55c78cc5))
+* remove historical tab and all related code from address/tx pages ([ab18c18](https://github.com/qubic/explorer-frontend/commit/ab18c18beab337f819ae55a20aa4e9b9fb523bd2))
+* sync address page tabs with URL search params ([acc90d6](https://github.com/qubic/explorer-frontend/commit/acc90d6a0f41a818c4edc2cd60abee1a4e5dd52c))
+* sync token category filter with URL search params ([#426](https://github.com/qubic/explorer-frontend/issues/426)) ([a44d655](https://github.com/qubic/explorer-frontend/commit/a44d6550772040457d9cdd9fa62b1e6c575c7fad))
+* **tx:** add decoded input data UI with view mode selector ([cfb7945](https://github.com/qubic/explorer-frontend/commit/cfb7945eeb365b108f6d2cfa7b6c57958d3b398e))
+* **tx:** add qubic.ts contract input decoder ([e6c0db1](https://github.com/qubic/explorer-frontend/commit/e6c0db1e5fb0685301c3c6e635d52c76b163f392))
+* **tx:** persist data view mode in URL for shareable transaction links ([53e5679](https://github.com/qubic/explorer-frontend/commit/53e56794961b3730eeff64510900683e2aba1cd1))
+
 # [1.34.0-rc.2](https://github.com/qubic/explorer-frontend/compare/v1.34.0-rc.1...v1.34.0-rc.2) (2026-03-09)
 
 
