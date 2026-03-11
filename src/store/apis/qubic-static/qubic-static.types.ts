@@ -40,6 +40,7 @@ export type GetAddressLabelsResponse = {
 
 export type Token = {
   name: string
+  issuer?: string
   website: string
 }
 
