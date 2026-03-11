@@ -3,6 +3,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import type {
   ComputorList,
   GetComputorListsForEpochResponse,
+  GetLastProcessedTickResponse,
   GetTickDataResponse,
   GetTransactionsForIdentityRequest,
   GetTransactionsForTickRequest,
@@ -58,6 +59,9 @@ export const rpcQueryServiceApi = createApi({
         body: { epoch }
       }),
       transformResponse: (response: GetComputorListsForEpochResponse) => response.computorsLists
+    }),
+    getLastProcessedTick: builder.query<GetLastProcessedTickResponse, void>({
+      query: () => '/getLastProcessedTick'
     })
   })
 })
@@ -67,5 +71,6 @@ export const {
   useGetTransactionByHashQuery,
   useGetTransactionsForTickQuery,
   useGetTickDataQuery,
-  useGetComputorListsForEpochQuery
+  useGetComputorListsForEpochQuery,
+  useGetLastProcessedTickQuery
 } = rpcQueryServiceApi

@@ -14,26 +14,6 @@ export interface GetUserResponse {
   user: User
 }
 
-export interface GetAddressHistoryQueryParams {
-  addressId: string
-  page: number
-  pageSize: number
-}
-
-export interface HistoricalTx {
-  id: string
-  executed: boolean
-  tick: number
-  includedByTickLeader: boolean
-  sourceId: string
-  destId: string
-  amount: number
-  type: number
-  digest: string
-  moneyFlew: boolean
-  data: string
-}
-
 export interface TickQualityResponse {
   created: string
   calculationTick: number

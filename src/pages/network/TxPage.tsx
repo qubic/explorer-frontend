@@ -1,43 +1,77 @@
-import { useMemo } from 'react'
+import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 
 import { withHelmet } from '@app/components/hocs'
-import { Alert, Breadcrumbs } from '@app/components/ui'
+import { Breadcrumbs } from '@app/components/ui'
 import { ErrorFallback } from '@app/components/ui/error-boundaries'
 import { PageLayout } from '@app/components/ui/layouts'
 import { LinearProgress } from '@app/components/ui/loaders'
 import { useGetTransactionByHashQuery } from '@app/store/apis/query-service'
-import { convertToQueryServiceTx } from '@app/store/apis/query-service/query-service.adapters'
-import { useGetQliTransactionQuery } from '@app/store/apis/qli'
 import { formatEllipsis } from '@app/utils'
-import { HomeLink, TickLink, TxItem } from './components'
-import { useValidatedTxEra } from './hooks'
+import { HomeLink, TickLink, TxItem, WaitingForTick } from './components'
+import { useTickWatcher } from './hooks'
 
 function TxPage() {
   const { t } = useTranslation('network-page')
   const { txId = '' } = useParams()
-  const txEra = useValidatedTxEra()
 
-  const queryServiceTx = useGetTransactionByHashQuery(txId, {
-    skip: !txId || txEra === 'historical'
+  const {
+    data: tx,
+    isFetching,
+    isError,
+    error,
+    refetch
+  } = useGetTransactionByHashQuery(txId, {
+    skip: !txId
   })
-  const qliTx = useGetQliTransactionQuery(txId, {
-    skip: !txId || txEra === 'latest'
+
+  const isLoading = isFetching
+  const isInvalidFormat =
+    isError && error && 'data' in error && (error.data as { code?: number })?.code === 3
+  const isTxNotFound = !isLoading && !isInvalidFormat && !tx
+
+  const refetchTx = useCallback(() => {
+    refetch()
+  }, [refetch])
+
+  const {
+    isWaitingForTick,
+    isTickCheckFailed,
+    targetTick,
+    currentTick,
+    estimatedWaitSeconds,
+    isLoading: isTickWatcherLoading
+  } = useTickWatcher({
+    isTxNotFound,
+    refetch: refetchTx
   })
 
-  const tx = useMemo(() => {
-    if (queryServiceTx.data) {
-      return queryServiceTx.data
-    }
-    if (qliTx.data) {
-      return convertToQueryServiceTx(qliTx.data)
-    }
-    return undefined
-  }, [queryServiceTx.data, qliTx.data])
-
-  if (queryServiceTx.isFetching || qliTx.isFetching) {
+  if (isLoading) {
     return <LinearProgress />
+  }
+
+  if (isInvalidFormat) {
+    return <ErrorFallback message={t('invalidTransactionId')} hideErrorHeader />
+  }
+
+  if (isTickWatcherLoading) {
+    return <LinearProgress />
+  }
+
+  if (isTickCheckFailed) {
+    return <ErrorFallback message={t('tickCheckFailed')} hideErrorHeader />
+  }
+
+  if (isWaitingForTick && targetTick) {
+    return (
+      <WaitingForTick
+        txId={txId}
+        targetTick={targetTick}
+        currentTick={currentTick}
+        estimatedWaitSeconds={estimatedWaitSeconds}
+      />
+    )
   }
 
   if (!tx) {
@@ -46,11 +80,6 @@ function TxPage() {
 
   return (
     <PageLayout>
-      {txEra === 'historical' && (
-        <Alert variant="info" className="mb-24" size="sm">
-          {t('historicalDataWarning')}
-        </Alert>
-      )}
       <Breadcrumbs aria-label="breadcrumb">
         <HomeLink />
         <p className="font-space text-xs text-gray-50">

@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom'
 import { Tooltip } from '@app/components/ui'
 import { CopyTextButton, COPY_BUTTON_TYPES } from '@app/components/ui/buttons'
 import { Routes } from '@app/router'
-import type { NetworkTxQueryParams } from '@app/router/routes'
 import { clsxTwMerge, formatEllipsis } from '@app/utils'
 
 type Props = {
@@ -11,26 +10,14 @@ type Props = {
   className?: string
   copy?: boolean
   ellipsis?: boolean
-  isHistoricalTx?: boolean
   showTooltip?: boolean
 }
 
-export default function TxLink({
-  value,
-  className,
-  copy,
-  ellipsis,
-  isHistoricalTx = false,
-  showTooltip = false
-}: Props) {
-  const queryParams: NetworkTxQueryParams = {
-    type: isHistoricalTx ? 'historical' : 'latest'
-  }
-
+export default function TxLink({ value, className, copy, ellipsis, showTooltip = false }: Props) {
   const linkElement = (
     <Link
       className={clsxTwMerge('break-all font-space text-sm', className)}
-      to={Routes.NETWORK.TX(value, queryParams)}
+      to={Routes.NETWORK.TX(value)}
     >
       {ellipsis ? formatEllipsis(value) : value}
     </Link>

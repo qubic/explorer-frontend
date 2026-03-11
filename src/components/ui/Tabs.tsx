@@ -1,6 +1,6 @@
 import { clsxTwMerge } from '@app/utils'
 import type { ReactElement, ReactNode } from 'react'
-import React, { Children, isValidElement, useState } from 'react'
+import React, { Children, isValidElement, useEffect, useState } from 'react'
 
 type BaseComponentProps = {
   children: ReactNode
@@ -41,6 +41,10 @@ export default function Tabs({
   variant = 'default'
 }: TabsProps) {
   const [currentIndex, setCurrentIndex] = useState(selectedIndex)
+
+  useEffect(() => {
+    setCurrentIndex(selectedIndex)
+  }, [selectedIndex])
 
   const handleTabClick = (index: number) => {
     setCurrentIndex(index)

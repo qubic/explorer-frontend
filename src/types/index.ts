@@ -3,8 +3,6 @@ export type Language = {
   label: string
 }
 
-export type TxEra = 'latest' | 'historical'
-
 export enum TransactionOptionEnum {
   ALL = 'ALL',
   TRANSFER = 'TRANSFER',

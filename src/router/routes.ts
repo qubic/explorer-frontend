@@ -1,5 +1,3 @@
-import type { TxEra } from '@app/types'
-
 function buildUrlWithQueryParams<T extends Record<string, string | undefined>>(
   path: string,
   queryParams?: T
@@ -17,16 +15,11 @@ function buildUrlWithQueryParams<T extends Record<string, string | undefined>>(
   return queryString ? `${path}?${queryString}` : path
 }
 
-export type NetworkTxQueryParams = {
-  type?: TxEra
-}
-
 export const Routes = {
   NETWORK: {
     ROOT: '/network',
     ADDRESS: (address: string) => `${Routes.NETWORK.ROOT}/address/${address}`,
-    TX: (txId: string, query: NetworkTxQueryParams = { type: 'latest' }) =>
-      buildUrlWithQueryParams(`${Routes.NETWORK.ROOT}/tx/${txId}`, query),
+    TX: (txId: string) => `${Routes.NETWORK.ROOT}/tx/${txId}`,
     TICK: (tick: string | number) => `${Routes.NETWORK.ROOT}/tick/${tick}`,
     WALLETS: {
       RICH_LIST: '/network/wallets/rich-list',

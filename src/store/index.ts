@@ -6,7 +6,6 @@ import { rpcQueryServiceApi } from './apis/query-service'
 import { qubicStaticApi } from './apis/qubic-static'
 import { rpcLiveApi } from './apis/rpc-live'
 import { rpcStatsApi } from './apis/rpc-stats'
-import { testnetQubicRpcV1 } from './apis/testnet-qubic-rpc-v1'
 import localeReducer from './localeSlice'
 import searchReducer from './searchSlice'
 
@@ -19,7 +18,6 @@ export const store = configureStore({
     [rpcQueryServiceApi.reducerPath]: rpcQueryServiceApi.reducer,
     [rpcLiveApi.reducerPath]: rpcLiveApi.reducer,
     [rpcStatsApi.reducerPath]: rpcStatsApi.reducer,
-    [testnetQubicRpcV1.reducerPath]: testnetQubicRpcV1.reducer,
     [qubicStaticApi.reducerPath]: qubicStaticApi.reducer
   },
 
@@ -30,7 +28,6 @@ export const store = configureStore({
       .concat(rpcQueryServiceApi.middleware)
       .concat(rpcLiveApi.middleware)
       .concat(rpcStatsApi.middleware)
-      .concat(testnetQubicRpcV1.middleware)
       .concat(qubicStaticApi.middleware)
 })
 

@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Alert } from '@app/components/ui'
@@ -6,20 +6,21 @@ import { COPY_BUTTON_TYPES, CopyTextButton } from '@app/components/ui/buttons'
 import { useGetAddressName } from '@app/hooks'
 import { useGetSmartContractsQuery } from '@app/store/apis/qubic-static'
 import type { QueryServiceTransaction } from '@app/store/apis/query-service'
-import { clsxTwMerge, formatDate, formatHex, formatString } from '@app/utils'
+import { clsxTwMerge, formatDate, formatString } from '@app/utils'
 import { getProcedureName } from '@app/utils/qubic'
-import { type AssetTransfer, type Transfer, isSmartContractTx } from '@app/utils/qubic-ts'
+import { type AssetTransfer, type Transfer } from '@app/utils/qubic-ts'
 import AddressLink from '../AddressLink'
 import SubCardItem from '../SubCardItem'
 import TickLink from '../TickLink'
 import TxLink from '../TxLink'
+import InputDataSection from './InputDataSection'
 import TransferList from './TransferList/TransferList'
 import type { TxItemVariant } from './TxItem.types'
+import { useDecodedContractInput } from './useDecodedContractInput'
 
 type Props = {
   readonly txDetails: Omit<QueryServiceTransaction, 'inputSize' | 'moneyFlew' | 'timestamp'>
   readonly entries: Transfer[]
-  readonly isHistoricalTx?: boolean
   readonly variant?: TxItemVariant
   readonly assetDetails?: AssetTransfer
   readonly timestamp?: string
@@ -46,18 +47,15 @@ export default function TransactionDetails({
   txDetails: { hash, source, tickNumber, destination, inputType, amount, inputData, signature },
   assetDetails,
   entries,
-  isHistoricalTx = false,
   timestamp,
   variant = 'primary',
   showExtendedDetails = false
 }: Props) {
   const { t } = useTranslation('network-page')
   const { data: smartContracts } = useGetSmartContractsQuery()
-  const [inputDataFormat, setInputDataFormat] = useState<'base64' | 'hex'>('hex')
 
   const isSecondaryVariant = variant === 'secondary'
   const { date, time } = useMemo(() => formatDate(timestamp, { split: true }), [timestamp])
-  const inputDataHex = useMemo(() => formatHex(inputData), [inputData])
 
   const destAddress = assetDetails?.newOwnerAndPossessor ?? destination
   const sourceAddressNameData = useGetAddressName(source)
@@ -67,14 +65,20 @@ export default function TransactionDetails({
     () => getProcedureName(destination, inputType, smartContracts),
     [destination, inputType, smartContracts]
   )
+  const { isContractTransaction, shouldDecodeInput, decodedInput } = useDecodedContractInput({
+    showExtendedDetails,
+    destination,
+    inputType,
+    inputData
+  })
 
   const transactionTypeDisplay = useMemo(() => {
     const baseType = formatString(inputType)
-    const txCategory = isSmartContractTx(destination, inputType) ? 'SC' : 'Standard'
+    const txCategory = isContractTransaction ? 'SC' : 'Standard'
     return procedureName
       ? `${baseType} ${txCategory} (${procedureName})`
       : `${baseType} ${txCategory}`
-  }, [inputType, destination, procedureName])
+  }, [inputType, isContractTransaction, procedureName])
 
   return (
     <TransactionDetailsWrapper variant={variant}>
@@ -103,14 +107,7 @@ export default function TransactionDetails({
         <SubCardItem
           title={`TX ${t('id')}`}
           variant={variant}
-          content={
-            <TxLink
-              isHistoricalTx={isHistoricalTx}
-              className="text-sm text-primary-30"
-              value={hash}
-              copy
-            />
-          }
+          content={<TxLink className="text-sm text-primary-30" value={hash} copy />}
         />
       )}
 
@@ -193,37 +190,14 @@ export default function TransactionDetails({
         />
       )}
 
-      {showExtendedDetails && inputData && inputData.length > 0 && (
-        <SubCardItem
-          title={t('data')}
-          variant={variant}
-          content={
-            <div className="min-w-0 flex-1">
-              <p className="break-all rounded-8 bg-primary-60 p-12 font-space text-sm text-gray-50">
-                <span className="float-right mb-4 ml-8 inline-flex overflow-hidden rounded-8 border border-gray-50 bg-primary-80">
-                  {(['hex', 'base64'] as const).map((format, index) => (
-                    <button
-                      key={format}
-                      type="button"
-                      onClick={() => setInputDataFormat(format)}
-                      className={clsxTwMerge(
-                        'px-8 py-2 text-xs font-medium transition-colors',
-                        index > 0 && 'border-l border-gray-50',
-                        inputDataFormat === format
-                          ? 'bg-primary-60 text-white'
-                          : 'bg-transparent text-gray-50 hover:bg-primary-70 hover:text-white'
-                      )}
-                    >
-                      {format === 'hex' ? 'Hex' : 'Base64'}
-                    </button>
-                  ))}
-                </span>
-                {inputDataFormat === 'hex' ? `0x${inputDataHex}` : inputData}
-              </p>
-            </div>
-          }
-        />
-      )}
+      <InputDataSection
+        variant={variant}
+        showExtendedDetails={showExtendedDetails}
+        inputData={inputData}
+        shouldDecodeInput={shouldDecodeInput}
+        decodedInput={decodedInput}
+        txHash={hash}
+      />
 
       <TransferList entries={entries} variant={variant} />
     </TransactionDetailsWrapper>

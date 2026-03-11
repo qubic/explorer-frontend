@@ -20,7 +20,6 @@ type Props = {
   readonly identity?: string
   readonly nonExecutedTxIds: string[]
   readonly variant?: TxItemVariant
-  readonly isHistoricalTx?: boolean
   readonly timestamp?: string
   readonly isExpanded?: boolean
   readonly onToggle?: (txId: string, isOpen: boolean) => void
@@ -31,7 +30,6 @@ function TxItem({
   identity,
   nonExecutedTxIds,
   variant = 'primary',
-  isHistoricalTx = false,
   timestamp,
   isExpanded,
   onToggle
@@ -101,12 +99,7 @@ function TxItem({
       <>
         <div className="mb-24 flex items-center gap-10 md:gap-16">
           <TxStatus status={txStatus} />
-          <TxLink
-            isHistoricalTx={isHistoricalTx}
-            className="text-base text-gray-50"
-            value={hash}
-            copy
-          />
+          <TxLink className="text-base text-gray-50" value={hash} copy />
         </div>
         <TransactionDetails
           txDetails={{
@@ -119,7 +112,6 @@ function TxItem({
             inputData,
             signature
           }}
-          isHistoricalTx={isHistoricalTx}
           variant={variant}
           entries={entries}
           assetDetails={asset}
@@ -152,14 +144,7 @@ function TxItem({
               />
             </div>
           ) : (
-            <TxLink
-              isHistoricalTx={isHistoricalTx}
-              value={hash}
-              className="text-primary-30"
-              showTooltip
-              ellipsis
-              copy
-            />
+            <TxLink value={hash} className="text-primary-30" showTooltip ellipsis copy />
           )}
           <p className="text-center font-space text-base">
             {asset ? (
@@ -191,7 +176,6 @@ function TxItem({
             inputData,
             signature
           }}
-          isHistoricalTx={isHistoricalTx}
           variant={variant}
           entries={entries}
           assetDetails={asset}

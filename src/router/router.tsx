@@ -37,7 +37,7 @@ const router: ReturnType<typeof createBrowserRouter> = createBrowserRouter([
             element: <TickPageLazy />
           },
           {
-            path: Routes.NETWORK.TX(':txId', {}),
+            path: Routes.NETWORK.TX(':txId'),
             element: <TxPageLazy />
           },
           {
