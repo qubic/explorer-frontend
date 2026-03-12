@@ -10,7 +10,15 @@ import { LinearProgress } from '@app/components/ui/loaders'
 import { useGetAddressName } from '@app/hooks'
 import { useGetEventsQuery, getEventTypeLabel } from '@app/store/apis/events'
 import { formatDate, formatString } from '@app/utils'
-import { AddressLink, CardItem, HomeLink, SubCardItem, TickLink, TxLink } from '../components'
+import {
+  AddressLink,
+  CardItem,
+  HomeLink,
+  SubCardItem,
+  TickLink,
+  TxLink,
+  VirtualTxLink
+} from '../components'
 
 function EventDetailPage() {
   const { t } = useTranslation('network-page')
@@ -63,6 +71,7 @@ function EventDetailPage() {
           variant="secondary"
           title={t('id')}
           content={<p className="font-space text-sm">{event.logId}</p>}
+          hideTopBorder
         />
         <SubCardItem
           variant="secondary"
@@ -96,13 +105,26 @@ function EventDetailPage() {
         <SubCardItem
           variant="secondary"
           title={t('txID')}
-          content={<TxLink value={event.transactionHash} className="text-primary-30" copy />}
+          content={
+            event.isVirtualTx ? (
+              <VirtualTxLink value={event.transactionHash} />
+            ) : (
+              <TxLink value={event.transactionHash} className="text-primary-30" copy />
+            )
+          }
         />
         {event.contractIndex > 0 && (
           <SubCardItem
             variant="secondary"
-            title={t('contract')}
+            title={t('contractIndex')}
             content={<p className="font-space text-sm">{event.contractIndex}</p>}
+          />
+        )}
+        {event.contractMessageType !== undefined && (
+          <SubCardItem
+            variant="secondary"
+            title={t('contractMessageType')}
+            content={<p className="font-space text-sm">{event.contractMessageType}</p>}
           />
         )}
         <SubCardItem
@@ -139,16 +161,18 @@ function EventDetailPage() {
             }
           />
         )}
-        <SubCardItem
-          variant="secondary"
-          title={t('amount')}
-          content={
-            <p className="font-space text-sm">
-              <span className="font-500">{formatString(event.amount)}</span>{' '}
-              <span className="text-gray-50">{event.assetName ?? 'QUBIC'}</span>
-            </p>
-          }
-        />
+        {(event.source || event.destination || event.amount > 0) && (
+          <SubCardItem
+            variant="secondary"
+            title={t('amount')}
+            content={
+              <p className="font-space text-sm">
+                <span className="font-500">{formatString(event.amount)}</span>{' '}
+                <span className="text-gray-50">{event.assetName ?? 'QUBIC'}</span>
+              </p>
+            }
+          />
+        )}
 
         {event.assetIssuer && (
           <SubCardItem
@@ -183,6 +207,13 @@ function EventDetailPage() {
             variant="secondary"
             title={t('numberOfDecimalPlaces')}
             content={<p className="font-space text-sm">{event.numberOfDecimalPlaces}</p>}
+          />
+        )}
+        {event.value && (
+          <SubCardItem
+            variant="secondary"
+            title={t('value')}
+            content={<p className="break-all font-space text-sm">{event.value}</p>}
           />
         )}
         {event.deductedAmount !== undefined && (

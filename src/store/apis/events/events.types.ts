@@ -24,6 +24,8 @@ export type TransactionEvent = {
   numberOfDecimalPlaces?: number
   deductedAmount?: number
   remainingAmount?: number
+  value?: string
+  contractMessageType?: number
 }
 
 // Log type numeric codes (from core/src/logging.h)
@@ -124,13 +126,43 @@ export function isVirtualTxCategory(categories: number[]): boolean {
   return categories.some((c) => VIRTUAL_TX_CATEGORIES.has(c))
 }
 
+function getVirtualCategory(categories: number[]): number | undefined {
+  return categories.find((c) => VIRTUAL_TX_CATEGORIES.has(c))
+}
+
 export function getVirtualTxId(categories: number[], tickNumber: number): string {
-  const virtualCategory = categories.find((c) => VIRTUAL_TX_CATEGORIES.has(c))
+  const virtualCategory = getVirtualCategory(categories)
   const prefix =
     virtualCategory != null
       ? SYSTEM_TX_CATEGORIES[virtualCategory] ?? `CATEGORY_${virtualCategory}`
       : 'UNKNOWN'
   return `${prefix}_${tickNumber}`
+}
+
+// Reverse lookup: prefix → category number
+const CATEGORY_BY_PREFIX = new Map(
+  Object.entries(SYSTEM_TX_CATEGORIES)
+    .filter(([key]) => VIRTUAL_TX_CATEGORIES.has(Number(key)))
+    .map(([key, label]) => [label, Number(key)])
+)
+
+export interface ParsedVirtualTxId {
+  tickNumber: number
+  category: number
+}
+
+export function parseVirtualTxId(txId: string): ParsedVirtualTxId | null {
+  const lastUnderscore = txId.lastIndexOf('_')
+  if (lastUnderscore === -1) return null
+
+  const prefix = txId.slice(0, lastUnderscore)
+  const tickNumber = Number(txId.slice(lastUnderscore + 1))
+  if (!Number.isFinite(tickNumber) || tickNumber <= 0) return null
+
+  const category = CATEGORY_BY_PREFIX.get(prefix)
+  if (category === undefined) return null
+
+  return { tickNumber, category }
 }
 
 // ============================================================================
@@ -172,6 +204,15 @@ interface ContractReserveDeductionData {
   remainingAmount: string
 }
 
+interface CustomMessageData {
+  value: string
+}
+
+interface SmartContractMessageData {
+  contractIndex: string
+  contractMessageType: string
+}
+
 export interface RawApiEvent {
   epoch: number
   tickNumber: number
@@ -189,6 +230,8 @@ export interface RawApiEvent {
   burning?: BurningData
   dustBurning?: BurningData
   contractReserveDeduction?: ContractReserveDeductionData
+  customMessage?: CustomMessageData
+  smartContractMessage?: SmartContractMessageData
 }
 
 export interface RawGetEventsResponse {
@@ -264,6 +307,13 @@ export function adaptApiEvent(raw: RawApiEvent): TransactionEvent {
     base.deductedAmount = Number(raw.contractReserveDeduction.deductedAmount)
     base.remainingAmount = Number(raw.contractReserveDeduction.remainingAmount)
     base.amount = Number(raw.contractReserveDeduction.deductedAmount)
+  } else if (raw.customMessage) {
+    base.value = raw.customMessage.value
+  }
+
+  if (raw.smartContractMessage) {
+    base.contractIndex = Number(raw.smartContractMessage.contractIndex)
+    base.contractMessageType = Number(raw.smartContractMessage.contractMessageType)
   }
 
   return base

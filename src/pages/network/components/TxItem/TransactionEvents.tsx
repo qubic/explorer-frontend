@@ -12,10 +12,11 @@ import {
 import { EVENT_TYPES, getEventTypeLabel, type TransactionEvent } from '@app/store/apis/events'
 import { formatDate, formatString } from '@app/utils'
 import AddressCell from '../AddressCell'
-import EventLink from '../EventLink'
 import BetaBanner from '../BetaBanner'
+import EventLink from '../EventLink'
 import TickLink from '../TickLink'
 import TxLink from '../TxLink'
+import VirtualTxLink from '../VirtualTxLink'
 
 const SKELETON_CELLS = [
   { id: 'id', className: 'h-16 w-32' },
@@ -76,7 +77,7 @@ const EventRow = memo(function EventRow({
       {showTxId && (
         <td className="whitespace-nowrap px-16 py-14">
           {event.isVirtualTx ? (
-            <span className="font-space text-sm">{event.transactionHash}</span>
+            <VirtualTxLink value={event.transactionHash} />
           ) : (
             <TxLink
               value={event.transactionHash}
