@@ -15,7 +15,7 @@ export type TransactionEvent = {
   isVirtualTx: boolean
   source: string
   destination: string
-  amount: number
+  amount?: number
   assetName?: string
   assetIssuer?: string
   numberOfShares?: number
@@ -91,6 +91,17 @@ export const EVENT_TYPE_LABELS: Record<number, string> = {
 
 export function getEventTypeLabel(type: number): string {
   return EVENT_TYPE_LABELS[type] ?? `UNKNOWN(${type})`
+}
+
+/**
+ * Decode unitOfMeasurement from the API.
+ * The API returns a base64-encoded char[7] where each byte is a small integer (0–9).
+ * We base64-decode to get the raw bytes, then join them as a digit string.
+ */
+export function decodeUnitOfMeasurement(raw: string): string {
+  const bytes = Uint8Array.from(atob(raw), (ch) => ch.charCodeAt(0))
+  const digits = Array.from(bytes, (b) => String(b)).join('')
+  return digits.replace(/0+$/, '') || '0'
 }
 
 export const MAX_EVENT_TYPE_SELECTIONS = 5
@@ -263,8 +274,7 @@ export function adaptApiEvent(raw: RawApiEvent): TransactionEvent {
     categories: raw.categories,
     isVirtualTx: virtualTx,
     source: '',
-    destination: '',
-    amount: 0
+    destination: ''
   }
 
   if (raw.quTransfer) {
@@ -277,7 +287,7 @@ export function adaptApiEvent(raw: RawApiEvent): TransactionEvent {
     base.assetIssuer = raw.assetIssuance.assetIssuer
     base.numberOfShares = Number(raw.assetIssuance.numberOfShares)
     base.managingContractIndex = Number(raw.assetIssuance.managingContractIndex)
-    base.unitOfMeasurement = raw.assetIssuance.unitOfMeasurement
+    base.unitOfMeasurement = decodeUnitOfMeasurement(raw.assetIssuance.unitOfMeasurement)
     base.numberOfDecimalPlaces = raw.assetIssuance.numberOfDecimalPlaces
     base.amount = Number(raw.assetIssuance.numberOfShares)
   } else if (raw.assetOwnershipChange) {
@@ -306,7 +316,6 @@ export function adaptApiEvent(raw: RawApiEvent): TransactionEvent {
     base.contractIndex = Number(raw.contractReserveDeduction.contractIndex)
     base.deductedAmount = Number(raw.contractReserveDeduction.deductedAmount)
     base.remainingAmount = Number(raw.contractReserveDeduction.remainingAmount)
-    base.amount = Number(raw.contractReserveDeduction.deductedAmount)
   } else if (raw.customMessage) {
     base.value = raw.customMessage.value
   }

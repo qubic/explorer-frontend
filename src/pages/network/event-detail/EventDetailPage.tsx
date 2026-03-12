@@ -7,7 +7,7 @@ import { Badge, Breadcrumbs } from '@app/components/ui'
 import { ErrorFallback } from '@app/components/ui/error-boundaries'
 import { PageLayout } from '@app/components/ui/layouts'
 import { LinearProgress } from '@app/components/ui/loaders'
-import { useGetAddressName } from '@app/hooks'
+import { useGetAddressName, useGetSmartContractByIndex } from '@app/hooks'
 import { useGetEventsQuery, getEventTypeLabel } from '@app/store/apis/events'
 import { formatDate, formatString } from '@app/utils'
 import { AddressLink, HomeLink, SubCardItem, TickLink, TxLink, VirtualTxLink } from '../components'
@@ -31,6 +31,11 @@ function EventDetailPage() {
   const sourceAddressName = useGetAddressName(event?.source ?? '')
   const destinationAddressName = useGetAddressName(event?.destination ?? '')
   const issuerAddressName = useGetAddressName(event?.assetIssuer ?? '')
+
+  const contract = useGetSmartContractByIndex(
+    event?.contractIndex && event.contractIndex > 0 ? event.contractIndex : undefined
+  )
+  const managingContract = useGetSmartContractByIndex(event?.managingContractIndex)
 
   const { date, time } = useMemo(
     () =>
@@ -109,7 +114,12 @@ function EventDetailPage() {
           <SubCardItem
             variant="secondary"
             title={t('contractIndex')}
-            content={<p className="font-space text-sm">{event.contractIndex}</p>}
+            content={
+              <p className="font-space text-sm">
+                {event.contractIndex}
+                {contract && <span className="text-gray-50"> ({contract.name})</span>}
+              </p>
+            }
           />
         )}
         {event.contractMessageType !== undefined && (
@@ -153,7 +163,7 @@ function EventDetailPage() {
             }
           />
         )}
-        {(event.source || event.destination || event.amount > 0) && (
+        {event.amount !== undefined && (
           <SubCardItem
             variant="secondary"
             title={t('amount')}
@@ -184,7 +194,14 @@ function EventDetailPage() {
           <SubCardItem
             variant="secondary"
             title={t('managingContractIndex')}
-            content={<p className="font-space text-sm">{event.managingContractIndex}</p>}
+            content={
+              <p className="font-space text-sm">
+                {event.managingContractIndex}
+                {managingContract && (
+                  <span className="text-gray-50"> ({managingContract.name})</span>
+                )}
+              </p>
+            }
           />
         )}
         {event.unitOfMeasurement && (
