@@ -168,6 +168,7 @@
   "showPerPagePrefix": "Показать",
   "showPerPageSuffix": "на странице",
   "showQRCode": "Показать QR-код",
+  "showingMaxEvents": "Показаны последние {{count}} событий",
   "showingMaxTransactions": "Показаны последние {{count}} транзакций",
   "signature": "Подпись",
   "smartContract": "Смарт-контракт",

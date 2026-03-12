@@ -168,6 +168,7 @@
   "showPerPagePrefix": "Sayfa başına",
   "showPerPageSuffix": "göster",
   "showQRCode": "QR Kodunu Göster",
+  "showingMaxEvents": "Son {{count}} olay gösteriliyor",
   "showingMaxTransactions": "Son {{count}} işlem gösteriliyor",
   "signature": "İmza",
   "smartContract": "Akıllı Sözleşme",

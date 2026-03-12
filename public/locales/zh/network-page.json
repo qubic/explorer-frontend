@@ -168,6 +168,7 @@
   "showPerPagePrefix": "每页显示",
   "showPerPageSuffix": "条",
   "showQRCode": "显示二维码",
+  "showingMaxEvents": "显示最近 {{count}} 个事件",
   "showingMaxTransactions": "显示最近 {{count}} 笔交易",
   "signature": "签名",
   "smartContract": "智能合约",

@@ -168,6 +168,7 @@
   "showPerPagePrefix": "Mostrar",
   "showPerPageSuffix": "por página",
   "showQRCode": "Mostrar código QR",
+  "showingMaxEvents": "Mostrando los últimos {{count}} eventos",
   "showingMaxTransactions": "Mostrando las últimas {{count}} transacciones",
   "signature": "Firma",
   "smartContract": "Contrato inteligente",

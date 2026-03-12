@@ -168,6 +168,7 @@
   "showPerPagePrefix": "عرض",
   "showPerPageSuffix": "لكل صفحة",
   "showQRCode": "عرض رمز الاستجابة السريعة",
+  "showingMaxEvents": "عرض آخر {{count}} حدث",
   "showingMaxTransactions": "عرض آخر {{count}} معاملة",
   "signature": "توقيع",
   "smartContract": "عقد ذكي",

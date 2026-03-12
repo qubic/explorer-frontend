@@ -168,6 +168,7 @@
   "showPerPagePrefix": "Hiển thị",
   "showPerPageSuffix": "mỗi trang",
   "showQRCode": "Hiển thị mã QR",
+  "showingMaxEvents": "Hiển thị {{count}} sự kiện gần nhất",
   "showingMaxTransactions": "Hiển thị {{count}} giao dịch gần nhất",
   "signature": "Chữ ký",
   "smartContract": "Hợp đồng thông minh",

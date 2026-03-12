@@ -168,6 +168,7 @@
   "showPerPagePrefix": "ページあたり",
   "showPerPageSuffix": "件表示",
   "showQRCode": "QRコードを表示",
+  "showingMaxEvents": "最新の {{count}} イベントを表示",
   "showingMaxTransactions": "最新{{count}}件のトランザクションを表示",
   "signature": "署名",
   "smartContract": "スマートコントラクト",

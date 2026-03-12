@@ -168,6 +168,7 @@
   "showPerPagePrefix": "Show",
   "showPerPageSuffix": "per page",
   "showQRCode": "Show QR Code",
+  "showingMaxEvents": "Showing the last {{count}} events",
   "showingMaxTransactions": "Showing the last {{count}} transactions",
   "signature": "Signature",
   "smartContract": "Smart Contract",

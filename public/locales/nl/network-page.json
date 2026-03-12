@@ -168,6 +168,7 @@
   "showPerPagePrefix": "Toon",
   "showPerPageSuffix": "per pagina",
   "showQRCode": "QR-code weergeven",
+  "showingMaxEvents": "Toont de laatste {{count}} evenementen",
   "showingMaxTransactions": "Toont de laatste {{count}} transacties",
   "signature": "Handtekening",
   "smartContract": "Slim contract",

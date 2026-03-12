@@ -1,7 +1,8 @@
 import { memo } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { Badge, PageSizeSelect, PaginationBar, Skeleton } from '@app/components/ui'
+import { Infocon } from '@app/assets/icons'
+import { Badge, PageSizeSelect, PaginationBar, Skeleton, Tooltip } from '@app/components/ui'
 import {
   useGetAddressName,
   useGetSmartContractByIndex,
@@ -17,6 +18,8 @@ import EventLink from '../EventLink'
 import TickLink from '../TickLink'
 import TxLink from '../TxLink'
 import VirtualTxLink from '../VirtualTxLink'
+
+const MAX_EVENT_RESULTS = 10_000
 
 const SKELETON_CELLS = [
   { id: 'id', className: 'h-16 w-32' },
@@ -169,14 +172,36 @@ export default function TransactionEvents({
       {header && <p className="font-space text-base font-500">{header}</p>}
       {showBetaBanner && <BetaBanner />}
       {paginated && (
-        <div className="flex items-center justify-between">
-          <span className="text-sm text-gray-50">
-            {!isLoading && totalCount > 0
-              ? t('eventsFound', {
-                  count: totalCount.toLocaleString()
-                } as Record<string, string>)
-              : '\u00A0'}
-          </span>
+        <div className="flex flex-wrap items-center justify-between gap-8">
+          {!isLoading && totalCount > 0 ? (
+            <div className="flex items-center text-sm text-gray-50">
+              {totalCount >= MAX_EVENT_RESULTS ? (
+                <>
+                  <span>
+                    {t('showingMaxEvents', {
+                      count: MAX_EVENT_RESULTS.toLocaleString()
+                    } as Record<string, string>)}
+                  </span>
+                  <Tooltip
+                    tooltipId="max-events-info"
+                    content={t('maxResultsHint', {
+                      count: MAX_EVENT_RESULTS.toLocaleString()
+                    } as Record<string, string>)}
+                  >
+                    <Infocon className="ml-6 h-16 w-16 cursor-help text-gray-50" />
+                  </Tooltip>
+                </>
+              ) : (
+                <span>
+                  {t('eventsFound', {
+                    count: totalCount.toLocaleString()
+                  } as Record<string, string>)}
+                </span>
+              )}
+            </div>
+          ) : (
+            <span />
+          )}
           <PageSizeSelect pageSize={pageSize} onSelect={handlePageSizeChange} />
         </div>
       )}
