@@ -201,5 +201,6 @@
   "tickCheckFailed": "تعذر التحقق من حالة التك. يرجى المحاولة مرة أخرى لاحقًا.",
   "txType": "TX Type",
   "selectContract": "Select contract",
-  "allProcedures": "All procedures"
+  "allProcedures": "All procedures",
+  "selectUpTo": "اختر حتى {{max}}"
 }

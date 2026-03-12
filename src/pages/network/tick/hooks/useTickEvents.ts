@@ -2,7 +2,7 @@ import { useSearchParams } from 'react-router-dom'
 
 import {
   usePageAutoCorrect,
-  useSanitizedEventType,
+  useSanitizedEventTypes,
   useValidatedPage,
   useValidatedPageSize
 } from '@app/hooks'
@@ -13,7 +13,7 @@ import { buildEventAddressFilter, parseAddressFilter } from '../../utils/eventFi
 export default function useTickEvents(tick: number): {
   events: TransactionEvent[]
   total: number
-  eventType: number | undefined
+  eventTypes: number[]
   sourceFilter: AddressFilter | undefined
   destinationFilter: AddressFilter | undefined
   isLoading: boolean
@@ -26,7 +26,7 @@ export default function useTickEvents(tick: number): {
   const pageSize = useValidatedPageSize()
   const offset = (page - 1) * pageSize
 
-  const eventType = useSanitizedEventType()
+  const eventTypes = useSanitizedEventTypes()
 
   const sourceFilter = parseAddressFilter(searchParams, 'source', 'sourceMode')
   const destinationFilter = parseAddressFilter(searchParams, 'destination', 'destMode')
@@ -39,7 +39,7 @@ export default function useTickEvents(tick: number): {
       tickNumber: tick,
       offset,
       size: pageSize,
-      logType: eventType,
+      logType: eventTypes.length > 0 ? eventTypes : undefined,
       source: sourceResult.include,
       excludeSource: sourceResult.exclude,
       destination: destResult.include,
@@ -55,7 +55,7 @@ export default function useTickEvents(tick: number): {
   return {
     events: data?.events ?? [],
     total,
-    eventType,
+    eventTypes,
     sourceFilter,
     destinationFilter,
     isLoading: isFetching,

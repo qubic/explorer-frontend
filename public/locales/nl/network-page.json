@@ -201,5 +201,6 @@
   "tickCheckFailed": "Kan tickstatus niet controleren. Probeer het later opnieuw.",
   "txType": "TX Type",
   "selectContract": "Select contract",
-  "allProcedures": "All procedures"
+  "allProcedures": "All procedures",
+  "selectUpTo": "Selecteer maximaal {{max}}"
 }

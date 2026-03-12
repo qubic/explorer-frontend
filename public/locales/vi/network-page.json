@@ -201,5 +201,6 @@
   "tickCheckFailed": "Không thể kiểm tra trạng thái tick. Vui lòng thử lại sau.",
   "txType": "TX Type",
   "selectContract": "Select contract",
-  "allProcedures": "All procedures"
+  "allProcedures": "All procedures",
+  "selectUpTo": "Chọn tối đa {{max}}"
 }

@@ -201,5 +201,6 @@
   "tickCheckFailed": "Tick durumu kontrol edilemedi. Lütfen daha sonra tekrar deneyin.",
   "txType": "TX Type",
   "selectContract": "Select contract",
-  "allProcedures": "All procedures"
+  "allProcedures": "All procedures",
+  "selectUpTo": "En fazla {{max}} seçin"
 }

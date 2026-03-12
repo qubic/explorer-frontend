@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { useBodyScrollLock } from '@app/hooks'
+import { MAX_EVENT_TYPE_SELECTIONS } from '@app/store/apis/events'
 import DateFilterContent from '../../address/components/TransactionsOverview/DateFilterContent'
 import {
   validateAddressFilter,
@@ -20,7 +21,7 @@ import RangeFilterContent from './RangeFilterContent'
 
 export type EventsFilters = {
   tickRange?: TickRangeValue
-  eventType?: number
+  eventTypes?: number[]
   dateRange?: DateRangeValue
   sourceFilter?: AddressFilter
   destinationFilter?: AddressFilter
@@ -57,7 +58,7 @@ export default function EventsMobileFiltersModal({
   const [localTickRange, setLocalTickRange] = useState<TickRangeValue | undefined>(
     activeFilters.tickRange
   )
-  const [localEventType, setLocalEventType] = useState(activeFilters.eventType)
+  const [localEventTypes, setLocalEventTypes] = useState<number[]>(activeFilters.eventTypes ?? [])
   const [localDateRange, setLocalDateRange] = useState<DateRangeValue | undefined>(
     activeFilters.dateRange
   )
@@ -89,10 +90,18 @@ export default function EventsMobileFiltersModal({
     [addressId, localSourceFilter, localDestFilter]
   )
 
+  const handleToggleEventType = useCallback((type: number) => {
+    setLocalEventTypes((prev) => {
+      if (prev.includes(type)) return prev.filter((v) => v !== type)
+      if (prev.length >= MAX_EVENT_TYPE_SELECTIONS) return prev
+      return [...prev, type]
+    })
+  }, [])
+
   useEffect(() => {
     if (isOpen) {
       setLocalTickRange(activeFilters.tickRange)
-      setLocalEventType(activeFilters.eventType)
+      setLocalEventTypes(activeFilters.eventTypes ?? [])
       setLocalDateRange(activeFilters.dateRange)
       setLocalSourceFilter(activeFilters.sourceFilter)
       setLocalDestFilter(activeFilters.destinationFilter)
@@ -102,7 +111,7 @@ export default function EventsMobileFiltersModal({
   }, [
     isOpen,
     activeFilters.tickRange,
-    activeFilters.eventType,
+    activeFilters.eventTypes,
     activeFilters.dateRange,
     activeFilters.sourceFilter,
     activeFilters.destinationFilter,
@@ -133,7 +142,7 @@ export default function EventsMobileFiltersModal({
 
     onApplyFilters({
       tickRange: localTickRange,
-      eventType: localEventType,
+      eventTypes: localEventTypes,
       dateRange: localDateRange,
       sourceFilter: localSourceFilter,
       destinationFilter: localDestFilter,
@@ -143,7 +152,7 @@ export default function EventsMobileFiltersModal({
     setValidationErrors({})
   }, [
     localTickRange,
-    localEventType,
+    localEventTypes,
     localDateRange,
     localSourceFilter,
     localDestFilter,
@@ -173,7 +182,7 @@ export default function EventsMobileFiltersModal({
       )}
 
       <MobileFilterSection id={`${idPrefix}-mobile-event-type-filter`} label={t('eventType')}>
-        <EventTypeChips selectedType={localEventType} onSelectType={setLocalEventType} />
+        <EventTypeChips selectedTypes={localEventTypes} onToggle={handleToggleEventType} />
       </MobileFilterSection>
 
       <MobileFilterSection id={`${idPrefix}-mobile-source-filter`} label={t('source')}>

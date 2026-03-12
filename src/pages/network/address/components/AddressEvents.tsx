@@ -16,7 +16,7 @@ export default function AddressEvents({ addressId }: Props) {
   const {
     events,
     total,
-    eventType,
+    eventTypes,
     direction,
     tickStart,
     tickEnd,
@@ -30,7 +30,7 @@ export default function AddressEvents({ addressId }: Props) {
   const filters = useEventFilters({
     tickStart,
     tickEnd,
-    eventType,
+    eventTypes,
     direction,
     dateRange,
     sourceFilter,
@@ -44,7 +44,7 @@ export default function AddressEvents({ addressId }: Props) {
 
       <EventsFilterBar
         filters={filters}
-        eventType={eventType}
+        eventTypes={eventTypes}
         direction={direction}
         tickStart={tickStart}
         tickEnd={tickEnd}

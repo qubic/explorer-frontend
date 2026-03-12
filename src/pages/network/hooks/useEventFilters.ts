@@ -1,6 +1,8 @@
 import { useCallback, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 
+import { EVENT_TYPE_FILTER_OPTIONS, MAX_EVENT_TYPE_SELECTIONS } from '@app/store/apis/events'
+
 import type {
   AddressFilter,
   TransactionDirection
@@ -18,7 +20,7 @@ import { updateSearchParams } from '../utils/filterUtils'
 type EventFilterOptions = {
   tickStart?: string
   tickEnd?: string
-  eventType: number | undefined
+  eventTypes: number[]
   direction?: TransactionDirection | undefined
   dateRange?: DateRangeValue
   sourceFilter: AddressFilter | undefined
@@ -33,7 +35,7 @@ export type EventFiltersResult = ReturnType<typeof useEventFilters>
 export default function useEventFilters({
   tickStart,
   tickEnd,
-  eventType,
+  eventTypes,
   direction,
   dateRange,
   sourceFilter,
@@ -62,11 +64,14 @@ export default function useEventFilters({
     destinationFilter
   )
 
-  const isPageAddress = (filter: AddressFilter | undefined): boolean =>
-    !!addressId && filter?.mode === 'include' && isOnlyPageAddress(filter, addressId)
+  const checkIsPageAddress = useCallback(
+    (filter: AddressFilter | undefined): boolean =>
+      !!addressId && filter?.mode === 'include' && isOnlyPageAddress(filter, addressId),
+    [addressId]
+  )
 
   const isTickActive = supportsTick && (tickStart !== undefined || tickEnd !== undefined)
-  const isEventTypeActive = eventType !== undefined
+  const isEventTypeActive = eventTypes.length > 0
   const isDateActive = supportsDate && dateRange !== undefined
   const isSourceActive = sourceFilter !== undefined
   const isDestActive = destinationFilter !== undefined
@@ -105,9 +110,33 @@ export default function useEventFilters({
 
   // --- Event Type ---
 
-  const handleSelectEventType = useCallback(
+  const handleToggleEventType = useCallback(
     (type: number) => {
-      setSearchParams((prev) => updateSearchParams(prev, { eventType: String(type) }))
+      setSearchParams((prev) => {
+        const current = prev.get('eventType')
+        const types = current
+          ? current
+              .split(',')
+              .filter((s) => s !== '')
+              .map(Number)
+              .filter(
+                (n) =>
+                  !Number.isNaN(n) && (EVENT_TYPE_FILTER_OPTIONS as readonly number[]).includes(n)
+              )
+          : []
+        const index = types.indexOf(type)
+        let next: number[]
+        if (index >= 0) {
+          next = types.filter((t) => t !== type)
+        } else if (types.length < MAX_EVENT_TYPE_SELECTIONS) {
+          next = [...types, type]
+        } else {
+          return prev
+        }
+        return updateSearchParams(prev, {
+          eventType: next.length > 0 ? next.join(',') : undefined
+        })
+      })
     },
     [setSearchParams]
   )
@@ -205,13 +234,13 @@ export default function useEventFilters({
       source: validAddresses.join(','),
       sourceMode: localSourceFilter?.mode ?? 'include'
     }
-    if (isPageAddress(localSourceFilter)) {
+    if (checkIsPageAddress(localSourceFilter)) {
       updates.direction = DIRECTION.OUTGOING
     } else if (direction === DIRECTION.OUTGOING) {
       updates.direction = undefined
     }
     setSearchParams((prev) => updateSearchParams(prev, updates))
-  }, [localSourceFilter, setSearchParams, addressId, direction])
+  }, [localSourceFilter, setSearchParams, checkIsPageAddress, direction])
 
   const handleClearSource = useCallback(() => {
     const updates: Record<string, string | undefined> = {
@@ -235,13 +264,13 @@ export default function useEventFilters({
       destination: validAddresses.join(','),
       destMode: localDestFilter?.mode ?? 'include'
     }
-    if (isPageAddress(localDestFilter)) {
+    if (checkIsPageAddress(localDestFilter)) {
       updates.direction = DIRECTION.INCOMING
     } else if (direction === DIRECTION.INCOMING) {
       updates.direction = undefined
     }
     setSearchParams((prev) => updateSearchParams(prev, updates))
-  }, [localDestFilter, setSearchParams, addressId, direction])
+  }, [localDestFilter, setSearchParams, checkIsPageAddress, direction])
 
   const handleClearDest = useCallback(() => {
     const updates: Record<string, string | undefined> = {
@@ -294,7 +323,7 @@ export default function useEventFilters({
   const handleMobileApplyFilters = useCallback(
     (filters: {
       tickRange?: TickRangeValue
-      eventType?: number
+      eventTypes?: number[]
       dateRange?: DateRangeValue
       sourceFilter?: AddressFilter
       destinationFilter?: AddressFilter
@@ -316,7 +345,10 @@ export default function useEventFilters({
         dateIsPreset || !validateDateRange(filters.dateRange?.start, filters.dateRange?.end)
 
       const updates: Record<string, string | undefined> = {
-        eventType: filters.eventType !== undefined ? String(filters.eventType) : undefined,
+        eventType:
+          filters.eventTypes && filters.eventTypes.length > 0
+            ? filters.eventTypes.join(',')
+            : undefined,
         direction: filters.direction,
         source: srcAddresses.length > 0 ? srcAddresses.join(',') : undefined,
         sourceMode: srcAddresses.length > 0 ? filters.sourceFilter?.mode ?? 'include' : undefined,
@@ -371,7 +403,7 @@ export default function useEventFilters({
     handleTickRangeChange,
     handleTickRangeApply,
     handleClearTick,
-    handleSelectEventType,
+    handleToggleEventType,
     handleClearEventType,
     handleDirectionChange,
     handleDateRangeChange,

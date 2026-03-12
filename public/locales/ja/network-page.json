@@ -201,5 +201,6 @@
   "tickCheckFailed": "ティックの状態を確認できませんでした。後でもう一度お試しください。",
   "txType": "TX Type",
   "selectContract": "Select contract",
-  "allProcedures": "All procedures"
+  "allProcedures": "All procedures",
+  "selectUpTo": "最大{{max}}個まで選択"
 }

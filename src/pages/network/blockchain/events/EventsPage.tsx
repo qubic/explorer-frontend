@@ -15,7 +15,7 @@ function EventsPage() {
   const {
     events,
     total,
-    eventType,
+    eventTypes,
     tickStart,
     tickEnd,
     dateRange,
@@ -27,7 +27,7 @@ function EventsPage() {
   const filters = useEventFilters({
     tickStart,
     tickEnd,
-    eventType,
+    eventTypes,
     dateRange,
     sourceFilter,
     destinationFilter
@@ -48,7 +48,7 @@ function EventsPage() {
 
         <EventsFilterBar
           filters={filters}
-          eventType={eventType}
+          eventTypes={eventTypes}
           tickStart={tickStart}
           tickEnd={tickEnd}
           dateRange={dateRange}

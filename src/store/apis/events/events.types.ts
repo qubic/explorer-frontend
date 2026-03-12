@@ -48,7 +48,8 @@ export const EVENT_TYPES = {
   CUSTOM_MESSAGE: 255
 } as const
 
-// Event types supported by the events API for filtering
+// Event types supported by the events API for filtering.
+// ORACLE_QUERY_STATUS_CHANGE (14) is excluded — not yet supported by the events API.
 export const EVENT_TYPE_FILTER_OPTIONS = [
   EVENT_TYPES.QU_TRANSFER,
   EVENT_TYPES.ASSET_ISSUANCE,
@@ -92,10 +93,21 @@ export function getEventTypeLabel(type: number): string {
   return EVENT_TYPE_LABELS[type] ?? `UNKNOWN(${type})`
 }
 
-export function parseEventTypeParam(raw: string | null): number | undefined {
-  if (raw === null || raw === '') return undefined
-  const parsed = Number(raw)
-  return (EVENT_TYPE_FILTER_OPTIONS as readonly number[]).includes(parsed) ? parsed : undefined
+export const MAX_EVENT_TYPE_SELECTIONS = 5
+
+export function parseEventTypesParam(raw: string | null): number[] {
+  if (raw === null || raw === '') return []
+  return [
+    ...new Set(
+      raw
+        .split(',')
+        .filter((s) => s !== '')
+        .map(Number)
+        .filter(
+          (n) => !Number.isNaN(n) && (EVENT_TYPE_FILTER_OPTIONS as readonly number[]).includes(n)
+        )
+    )
+  ].slice(0, MAX_EVENT_TYPE_SELECTIONS)
 }
 
 // Event category codes (from sysTransactionMap)

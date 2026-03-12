@@ -1,16 +1,20 @@
-import { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 import { useSearchParams } from 'react-router-dom'
 
-import { parseEventTypeParam } from '@app/store/apis/events'
+import { parseEventTypesParam } from '@app/store/apis/events'
 
-export function useSanitizedEventType(): number | undefined {
+export function useSanitizedEventTypes(): number[] {
   const [searchParams, setSearchParams] = useSearchParams()
 
   const rawEventType = searchParams.get('eventType')
-  const eventType = parseEventTypeParam(rawEventType)
+  const eventTypes = useMemo(() => parseEventTypesParam(rawEventType), [rawEventType])
 
   useEffect(() => {
-    if (rawEventType !== null && eventType === undefined) {
+    if (rawEventType === null) return
+
+    const sanitized = eventTypes.join(',')
+    if (eventTypes.length === 0) {
+      // All values were invalid — remove param
       setSearchParams(
         (prev) => {
           const next = new URLSearchParams(prev)
@@ -19,8 +23,18 @@ export function useSanitizedEventType(): number | undefined {
         },
         { replace: true }
       )
+    } else if (sanitized !== rawEventType) {
+      // Some values were invalid or duplicated — fix param
+      setSearchParams(
+        (prev) => {
+          const next = new URLSearchParams(prev)
+          next.set('eventType', sanitized)
+          return next
+        },
+        { replace: true }
+      )
     }
-  }, [rawEventType, eventType, setSearchParams])
+  }, [rawEventType, eventTypes, setSearchParams])
 
-  return eventType
+  return eventTypes
 }

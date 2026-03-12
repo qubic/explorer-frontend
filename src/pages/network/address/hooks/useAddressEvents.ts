@@ -3,7 +3,7 @@ import { useSearchParams } from 'react-router-dom'
 
 import {
   usePageAutoCorrect,
-  useSanitizedEventType,
+  useSanitizedEventTypes,
   useValidatedPage,
   useValidatedPageSize
 } from '@app/hooks'
@@ -26,7 +26,7 @@ import {
 export default function useAddressEvents(addressId: string): {
   events: TransactionEvent[]
   total: number
-  eventType: number | undefined
+  eventTypes: number[]
   direction: TransactionDirection | undefined
   tickStart: string | undefined
   tickEnd: string | undefined
@@ -48,7 +48,7 @@ export default function useAddressEvents(addressId: string): {
   const pageSize = useValidatedPageSize()
   const offset = (page - 1) * pageSize
 
-  const eventType = useSanitizedEventType()
+  const eventTypes = useSanitizedEventTypes()
 
   const directionRaw = searchParams.get('direction')
   const direction: TransactionDirection | undefined =
@@ -93,7 +93,7 @@ export default function useAddressEvents(addressId: string): {
       timestampRange,
       offset,
       size: pageSize,
-      logType: eventType,
+      logType: eventTypes.length > 0 ? eventTypes : undefined,
       source: sourceResult.include ?? implicitSource,
       excludeSource: sourceResult.exclude,
       destination: destResult.include ?? implicitDest,
@@ -109,7 +109,7 @@ export default function useAddressEvents(addressId: string): {
   return {
     events: data?.events ?? [],
     total,
-    eventType,
+    eventTypes,
     direction,
     tickStart,
     tickEnd,

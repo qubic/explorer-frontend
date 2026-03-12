@@ -201,5 +201,6 @@
   "tickCheckFailed": "无法检查tick状态，请稍后再试。",
   "txType": "TX Type",
   "selectContract": "Select contract",
-  "allProcedures": "All procedures"
+  "allProcedures": "All procedures",
+  "selectUpTo": "最多选择{{max}}个"
 }

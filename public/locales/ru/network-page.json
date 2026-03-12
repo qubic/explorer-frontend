@@ -201,5 +201,6 @@
   "tickCheckFailed": "Не удалось проверить статус тика. Пожалуйста, попробуйте позже.",
   "txType": "TX Type",
   "selectContract": "Select contract",
-  "allProcedures": "All procedures"
+  "allProcedures": "All procedures",
+  "selectUpTo": "Выберите до {{max}}"
 }

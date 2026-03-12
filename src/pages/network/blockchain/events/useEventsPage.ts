@@ -2,7 +2,7 @@ import { useSearchParams } from 'react-router-dom'
 
 import {
   usePageAutoCorrect,
-  useSanitizedEventType,
+  useSanitizedEventTypes,
   useValidatedPage,
   useValidatedPageSize
 } from '@app/hooks'
@@ -21,7 +21,7 @@ import {
 export default function useEventsPage(): {
   events: TransactionEvent[]
   total: number
-  eventType: number | undefined
+  eventTypes: number[]
   tickStart: string | undefined
   tickEnd: string | undefined
   dateRange: DateRangeValue | undefined
@@ -41,7 +41,7 @@ export default function useEventsPage(): {
   const pageSize = useValidatedPageSize()
   const offset = (page - 1) * pageSize
 
-  const eventType = useSanitizedEventType()
+  const eventTypes = useSanitizedEventTypes()
 
   const { tickNumber, tickRange } = buildTickFilter(tickStart, tickEnd)
 
@@ -55,7 +55,7 @@ export default function useEventsPage(): {
     timestampRange,
     offset,
     size: pageSize,
-    logType: eventType,
+    logType: eventTypes.length > 0 ? eventTypes : undefined,
     source: sourceResult.include,
     excludeSource: sourceResult.exclude,
     destination: destResult.include,
@@ -69,7 +69,7 @@ export default function useEventsPage(): {
   return {
     events: data?.events ?? [],
     total,
-    eventType,
+    eventTypes,
     tickStart,
     tickEnd,
     dateRange,

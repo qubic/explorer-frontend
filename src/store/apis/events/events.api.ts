@@ -26,7 +26,7 @@ export interface GetEventsRequest {
   transactionHash?: string
   offset?: number
   size?: number
-  logType?: number
+  logType?: number[]
   should?: ShouldFilter[]
   source?: string
   destination?: string

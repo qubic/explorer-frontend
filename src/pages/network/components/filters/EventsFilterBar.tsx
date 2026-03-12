@@ -17,7 +17,7 @@ import { getAddressFilterLabel, getDateRangeLabel } from '../../utils/eventFilte
 import { formatAmountForDisplay } from '../../utils/filterUtils'
 import ActiveFilterChip from './ActiveFilterChip'
 import EventsMobileFiltersModal, { type EventsFilters } from './EventsMobileFiltersModal'
-import EventTypeDropdownList from './EventTypeDropdownList'
+import EventTypeChips from './EventTypeChips'
 import FilterDropdown from './FilterDropdown'
 import MobileFiltersButton from './MobileFiltersButton'
 import RangeFilterContent from './RangeFilterContent'
@@ -25,7 +25,7 @@ import ResetFiltersButton from './ResetFiltersButton'
 
 type Props = {
   filters: EventFiltersResult
-  eventType: number | undefined
+  eventTypes: number[]
   direction?: TransactionDirection | undefined
   tickStart?: string
   tickEnd?: string
@@ -39,9 +39,15 @@ type Props = {
   addressId?: string
 }
 
+function getEventTypesLabel(eventTypes: number[], fallback: string): string {
+  if (eventTypes.length === 0) return fallback
+  if (eventTypes.length === 1) return getEventTypeLabel(eventTypes[0])
+  return `${getEventTypeLabel(eventTypes[0])} +${eventTypes.length - 1}`
+}
+
 export default function EventsFilterBar({
   filters,
-  eventType,
+  eventTypes,
   direction,
   tickStart,
   tickEnd,
@@ -65,7 +71,7 @@ export default function EventsFilterBar({
         formatAmountForDisplay
       )
     : ''
-  const eventTypeLabel = eventType !== undefined ? getEventTypeLabel(eventType) : t('eventType')
+  const eventTypeLabel = getEventTypesLabel(eventTypes, t('eventType'))
   const dateLabel = showDateFilter ? getDateRangeLabel(dateRange, t) : ''
   const sourceLabel = getAddressFilterLabel('source', sourceFilter, t)
   const destLabel = getAddressFilterLabel('destination', destinationFilter, t)
@@ -75,7 +81,7 @@ export default function EventsFilterBar({
   }
 
   const mobileActiveFilters: EventsFilters = {
-    eventType,
+    eventTypes,
     direction,
     sourceFilter,
     destinationFilter,
@@ -95,9 +101,9 @@ export default function EventsFilterBar({
 
         {filters.hasActiveFilters && (
           <div className="flex flex-wrap items-center gap-6">
-            {eventType !== undefined && (
+            {eventTypes.length > 0 && (
               <ActiveFilterChip
-                label={`${t('eventType')}: ${getEventTypeLabel(eventType)}`}
+                label={`${t('eventType')}: ${eventTypes.map(getEventTypeLabel).join(', ')}`}
                 onClear={filters.handleClearEventType}
               />
             )}
@@ -148,11 +154,10 @@ export default function EventsFilterBar({
           onToggle={() => handleToggleDropdown('eventType')}
           onClear={filters.isEventTypeActive ? filters.handleClearEventType : undefined}
         >
-          <EventTypeDropdownList
-            onSelect={(type) => {
-              filters.handleSelectEventType(type)
-              setOpenDropdown(null)
-            }}
+          <EventTypeChips
+            selectedTypes={eventTypes}
+            onToggle={filters.handleToggleEventType}
+            className="p-8"
           />
         </FilterDropdown>
         <FilterDropdown
