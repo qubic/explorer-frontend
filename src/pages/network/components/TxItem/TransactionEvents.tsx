@@ -116,8 +116,14 @@ const EventRow = memo(function EventRow({
         />
       </td>
       <td className="whitespace-nowrap px-16 py-14 text-right font-space text-sm">
-        <span className="font-500">{formatString(event.amount)}</span>{' '}
-        <span className="text-gray-50">{event.assetName ?? 'QUBIC'}</span>
+        {event.amount !== undefined ? (
+          <>
+            <span className="font-500">{formatString(event.amount)}</span>{' '}
+            <span className="text-gray-50">{event.assetName ?? 'QUBIC'}</span>
+          </>
+        ) : (
+          <span className="text-gray-50">-</span>
+        )}
       </td>
     </tr>
   )
