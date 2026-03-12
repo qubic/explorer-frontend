@@ -10,15 +10,7 @@ import { LinearProgress } from '@app/components/ui/loaders'
 import { useGetAddressName } from '@app/hooks'
 import { useGetEventsQuery, getEventTypeLabel } from '@app/store/apis/events'
 import { formatDate, formatString } from '@app/utils'
-import {
-  AddressLink,
-  CardItem,
-  HomeLink,
-  SubCardItem,
-  TickLink,
-  TxLink,
-  VirtualTxLink
-} from '../components'
+import { AddressLink, HomeLink, SubCardItem, TickLink, TxLink, VirtualTxLink } from '../components'
 
 function EventDetailPage() {
   const { t } = useTranslation('network-page')
@@ -66,7 +58,7 @@ function EventDetailPage() {
 
       <p className="my-16 font-space text-base font-500">{t('eventDetails')}</p>
 
-      <CardItem className="p-20">
+      <div>
         <SubCardItem
           variant="secondary"
           title={t('id')}
@@ -234,7 +226,7 @@ function EventDetailPage() {
             }
           />
         )}
-      </CardItem>
+      </div>
     </PageLayout>
   )
 }
