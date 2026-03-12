@@ -202,5 +202,16 @@
   "txType": "TX Type",
   "selectContract": "Select contract",
   "allProcedures": "All procedures",
-  "selectUpTo": "En fazla {{max}} seçin"
+  "selectUpTo": "En fazla {{max}} seçin",
+  "event": "Olay",
+  "eventDetails": "Olay detayları",
+  "eventNotFound": "Olay bulunamadı",
+  "eventsLoadFailed": "Olaylar yüklenemedi",
+  "logDigest": "Log özeti",
+  "managingContractIndex": "Yönetim sözleşme indeksi",
+  "unitOfMeasurement": "Ölçü birimi",
+  "numberOfDecimalPlaces": "Ondalık basamak sayısı",
+  "deductedAmount": "Düşülen tutar",
+  "remainingAmount": "Kalan tutar",
+  "assetIssuer": "Varlık ihraç eden"
 }

@@ -202,5 +202,16 @@
   "txType": "TX Type",
   "selectContract": "Select contract",
   "allProcedures": "All procedures",
-  "selectUpTo": "Chọn tối đa {{max}}"
+  "selectUpTo": "Chọn tối đa {{max}}",
+  "event": "Sự kiện",
+  "eventDetails": "Chi tiết sự kiện",
+  "eventNotFound": "Không tìm thấy sự kiện",
+  "eventsLoadFailed": "Không thể tải sự kiện",
+  "logDigest": "Tóm tắt nhật ký",
+  "managingContractIndex": "Chỉ mục hợp đồng quản lý",
+  "unitOfMeasurement": "Đơn vị đo lường",
+  "numberOfDecimalPlaces": "Số chữ số thập phân",
+  "deductedAmount": "Số tiền bị trừ",
+  "remainingAmount": "Số tiền còn lại",
+  "assetIssuer": "Nhà phát hành tài sản"
 }

@@ -202,5 +202,16 @@
   "txType": "TX Type",
   "selectContract": "Select contract",
   "allProcedures": "All procedures",
-  "selectUpTo": "最多选择{{max}}个"
+  "selectUpTo": "最多选择{{max}}个",
+  "event": "事件",
+  "eventDetails": "事件详情",
+  "eventNotFound": "未找到事件",
+  "eventsLoadFailed": "加载事件失败",
+  "logDigest": "日志摘要",
+  "managingContractIndex": "管理合约索引",
+  "unitOfMeasurement": "计量单位",
+  "numberOfDecimalPlaces": "小数位数",
+  "deductedAmount": "扣除金额",
+  "remainingAmount": "剩余金额",
+  "assetIssuer": "资产发行者"
 }

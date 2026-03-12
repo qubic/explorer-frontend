@@ -202,5 +202,16 @@
   "txType": "TX Type",
   "selectContract": "Select contract",
   "allProcedures": "All procedures",
-  "selectUpTo": "اختر حتى {{max}}"
+  "selectUpTo": "اختر حتى {{max}}",
+  "event": "حدث",
+  "eventDetails": "تفاصيل الحدث",
+  "eventNotFound": "الحدث غير موجود",
+  "eventsLoadFailed": "فشل في تحميل الأحداث",
+  "logDigest": "ملخص السجل",
+  "managingContractIndex": "فهرس عقد الإدارة",
+  "unitOfMeasurement": "وحدة القياس",
+  "numberOfDecimalPlaces": "عدد المنازل العشرية",
+  "deductedAmount": "المبلغ المخصوم",
+  "remainingAmount": "المبلغ المتبقي",
+  "assetIssuer": "مُصدر الأصل"
 }

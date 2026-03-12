@@ -202,5 +202,16 @@
   "txType": "TX Type",
   "selectContract": "Select contract",
   "allProcedures": "All procedures",
-  "selectUpTo": "Выберите до {{max}}"
+  "selectUpTo": "Выберите до {{max}}",
+  "event": "Событие",
+  "eventDetails": "Детали события",
+  "eventNotFound": "Событие не найдено",
+  "eventsLoadFailed": "Не удалось загрузить события",
+  "logDigest": "Дайджест лога",
+  "managingContractIndex": "Индекс управляющего контракта",
+  "unitOfMeasurement": "Единица измерения",
+  "numberOfDecimalPlaces": "Количество десятичных знаков",
+  "deductedAmount": "Списанная сумма",
+  "remainingAmount": "Оставшаяся сумма",
+  "assetIssuer": "Эмитент актива"
 }

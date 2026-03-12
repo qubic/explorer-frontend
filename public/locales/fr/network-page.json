@@ -202,5 +202,16 @@
   "txType": "TX Type",
   "selectContract": "Select contract",
   "allProcedures": "All procedures",
-  "selectUpTo": "Sélectionnez jusqu'à {{max}}"
+  "selectUpTo": "Sélectionnez jusqu'à {{max}}",
+  "event": "Événement",
+  "eventDetails": "Détails de l'événement",
+  "eventNotFound": "Événement non trouvé",
+  "eventsLoadFailed": "Échec du chargement des événements",
+  "logDigest": "Résumé du journal",
+  "managingContractIndex": "Index du contrat de gestion",
+  "unitOfMeasurement": "Unité de mesure",
+  "numberOfDecimalPlaces": "Nombre de décimales",
+  "deductedAmount": "Montant déduit",
+  "remainingAmount": "Montant restant",
+  "assetIssuer": "Émetteur de l'actif"
 }

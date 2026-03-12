@@ -12,6 +12,7 @@ import {
 import { EVENT_TYPES, getEventTypeLabel, type TransactionEvent } from '@app/store/apis/events'
 import { formatDate, formatString } from '@app/utils'
 import AddressCell from '../AddressCell'
+import EventLink from '../EventLink'
 import BetaBanner from '../BetaBanner'
 import TickLink from '../TickLink'
 import TxLink from '../TxLink'
@@ -57,11 +58,13 @@ const EventRow = memo(function EventRow({
 
   return (
     <tr className="border-b-1 border-primary-60 last:border-b-0">
-      <td className="px-16 py-14 font-space text-sm">{event.logId}</td>
+      <td className="px-16 py-14">
+        <EventLink tickNumber={event.tickNumber} logId={event.logId} />
+      </td>
       {showTickAndTimestamp && (
         <>
           <td className="px-16 py-14">
-            {event.tickNumber && (
+            {event.tickNumber > 0 && (
               <TickLink className="text-sm text-primary-30" value={event.tickNumber} />
             )}
           </td>
@@ -178,7 +181,7 @@ export default function TransactionEvents({
       )}
       <div className="rounded-12 border-1 border-primary-60 bg-primary-70">
         <div className="overflow-x-auto">
-          <table className="w-full">
+          <table className="w-full" aria-label={header || t('events')}>
             <thead className="border-b-1 border-primary-60 text-left font-space text-sm text-gray-50">
               <tr>
                 <th className="whitespace-nowrap px-16 py-12 font-400">{t('id')}</th>

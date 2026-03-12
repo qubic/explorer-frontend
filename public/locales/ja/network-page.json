@@ -202,5 +202,16 @@
   "txType": "TX Type",
   "selectContract": "Select contract",
   "allProcedures": "All procedures",
-  "selectUpTo": "最大{{max}}個まで選択"
+  "selectUpTo": "最大{{max}}個まで選択",
+  "event": "イベント",
+  "eventDetails": "イベント詳細",
+  "eventNotFound": "イベントが見つかりません",
+  "eventsLoadFailed": "イベントの読み込みに失敗しました",
+  "logDigest": "ログダイジェスト",
+  "managingContractIndex": "管理コントラクトインデックス",
+  "unitOfMeasurement": "測定単位",
+  "numberOfDecimalPlaces": "小数点以下の桁数",
+  "deductedAmount": "控除額",
+  "remainingAmount": "残額",
+  "assetIssuer": "アセット発行者"
 }

@@ -27,6 +27,7 @@ export interface GetEventsRequest {
   offset?: number
   size?: number
   logType?: number[]
+  logId?: number
   should?: ShouldFilter[]
   source?: string
   destination?: string

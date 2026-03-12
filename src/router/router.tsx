@@ -12,7 +12,8 @@ import {
   SmartContractsPageLazy,
   TickPageLazy,
   TokensPageLazy,
-  TxPageLazy
+  TxPageLazy,
+  EventDetailPageLazy
 } from '@app/pages/network'
 import { Routes } from './routes'
 
@@ -36,6 +37,10 @@ const router: ReturnType<typeof createBrowserRouter> = createBrowserRouter([
           {
             path: Routes.NETWORK.TICK(':tick'),
             element: <TickPageLazy />
+          },
+          {
+            path: Routes.NETWORK.EVENT(':tickNumber', ':logId'),
+            element: <EventDetailPageLazy />
           },
           {
             path: Routes.NETWORK.TX(':txId'),

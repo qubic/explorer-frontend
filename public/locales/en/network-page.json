@@ -105,7 +105,7 @@
   "smartContracts": "Smart Contracts",
   "tokenLoadFailed": "Error: Failed to load tokens. Please refresh the page or try again later.",
   "smartContractsLoadFailed": "Error: Failed to load smart contracts. Please refresh the page or try again later.",
-  "eventsLoadFailed": "Error: Failed to load events. Please try again.",
+  "eventsLoadFailed": "Failed to load events",
   "issuer": "Issuer",
   "name": "Name",
   "wallets": "Wallets",
@@ -203,5 +203,15 @@
   "txType": "TX Type",
   "selectContract": "Select contract",
   "allProcedures": "All procedures",
-  "selectUpTo": "Select up to {{max}}"
+  "selectUpTo": "Select up to {{max}}",
+  "event": "Event",
+  "eventDetails": "Event Details",
+  "eventNotFound": "Event not found",
+  "logDigest": "Log Digest",
+  "managingContractIndex": "Managing Contract Index",
+  "unitOfMeasurement": "Unit of Measurement",
+  "numberOfDecimalPlaces": "Number of Decimal Places",
+  "deductedAmount": "Deducted Amount",
+  "remainingAmount": "Remaining Amount",
+  "assetIssuer": "Asset Issuer"
 }

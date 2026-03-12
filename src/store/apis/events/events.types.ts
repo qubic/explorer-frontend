@@ -6,7 +6,7 @@ export type TransactionEvent = {
   epoch: number
   tickNumber: number
   timestamp: number // epoch milliseconds (converted from API's epoch seconds)
-  emittingContractIndex: number
+  contractIndex: number
   transactionHash: string
   logId: number
   logDigest: string
@@ -24,8 +24,6 @@ export type TransactionEvent = {
   numberOfDecimalPlaces?: number
   deductedAmount?: number
   remainingAmount?: number
-  contractIndex?: number
-  contractIndexBurnedFor?: number
 }
 
 // Log type numeric codes (from core/src/logging.h)
@@ -111,7 +109,7 @@ export function parseEventTypesParam(raw: string | null): number[] {
 }
 
 // Event category codes (from sysTransactionMap)
-export const SYSTEM_TX_CATEGORIES: Record<number, string> = {
+const SYSTEM_TX_CATEGORIES: Record<number, string> = {
   1: 'SC_INITIALIZE_TX',
   2: 'SC_BEGIN_EPOCH_TX',
   3: 'SC_BEGIN_TICK_TX',
@@ -165,7 +163,7 @@ interface AssetChangeData {
 interface BurningData {
   source: string
   amount: string
-  contractIndexBurnedFor: string
+  contractIndex: string
 }
 
 interface ContractReserveDeductionData {
@@ -178,7 +176,7 @@ export interface RawApiEvent {
   epoch: number
   tickNumber: number
   timestamp: string
-  emittingContractIndex: string
+  contractIndex: string
   transactionHash: string
   logId: string
   logDigest: string
@@ -212,7 +210,7 @@ export function adaptApiEvent(raw: RawApiEvent): TransactionEvent {
     epoch: raw.epoch,
     tickNumber: raw.tickNumber,
     timestamp: Number(raw.timestamp),
-    emittingContractIndex: Number(raw.emittingContractIndex),
+    contractIndex: Number(raw.contractIndex),
     transactionHash: virtualTx
       ? getVirtualTxId(raw.categories, raw.tickNumber)
       : raw.transactionHash,
@@ -256,11 +254,11 @@ export function adaptApiEvent(raw: RawApiEvent): TransactionEvent {
   } else if (raw.burning) {
     base.source = raw.burning.source
     base.amount = Number(raw.burning.amount)
-    base.contractIndexBurnedFor = Number(raw.burning.contractIndexBurnedFor)
+    base.contractIndex = Number(raw.burning.contractIndex)
   } else if (raw.dustBurning) {
     base.source = raw.dustBurning.source
     base.amount = Number(raw.dustBurning.amount)
-    base.contractIndexBurnedFor = Number(raw.dustBurning.contractIndexBurnedFor)
+    base.contractIndex = Number(raw.dustBurning.contractIndex)
   } else if (raw.contractReserveDeduction) {
     base.contractIndex = Number(raw.contractReserveDeduction.contractIndex)
     base.deductedAmount = Number(raw.contractReserveDeduction.deductedAmount)

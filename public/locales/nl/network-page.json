@@ -202,5 +202,16 @@
   "txType": "TX Type",
   "selectContract": "Select contract",
   "allProcedures": "All procedures",
-  "selectUpTo": "Selecteer maximaal {{max}}"
+  "selectUpTo": "Selecteer maximaal {{max}}",
+  "event": "Gebeurtenis",
+  "eventDetails": "Gebeurtenisdetails",
+  "eventNotFound": "Gebeurtenis niet gevonden",
+  "eventsLoadFailed": "Kan gebeurtenissen niet laden",
+  "logDigest": "Log-digest",
+  "managingContractIndex": "Beheercontractindex",
+  "unitOfMeasurement": "Meeteenheid",
+  "numberOfDecimalPlaces": "Aantal decimalen",
+  "deductedAmount": "Afgetrokken bedrag",
+  "remainingAmount": "Resterend bedrag",
+  "assetIssuer": "Asset-uitgever"
 }
