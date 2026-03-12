@@ -123,7 +123,7 @@
   "loadingTransactionsError": "Ошибка: Произошла ошибка при загрузке транзакций. Пожалуйста, попробуйте позже.",
   "logDigest": "Дайджест лога",
   "managedBy": "Управляется {{contract}}",
-  "managingContractIndex": "Управляющий контракт",
+  "managingContractIndex": "Индекс управляющего контракта",
   "marketCap": "Рыночная капитализация",
   "matchingEntities": "Совпадающие результаты",
   "maxAddressesReached": "Достигнуто максимум 5 адресов",

@@ -123,7 +123,7 @@
   "loadingTransactionsError": "Hata: İşlemleri yüklerken bir sorun oluştu. Lütfen daha sonra tekrar deneyin.",
   "logDigest": "Log Özeti",
   "managedBy": "{{contract}} tarafından yönetiliyor",
-  "managingContractIndex": "Yöneten Sözleşme",
+  "managingContractIndex": "Yönetim Sözleşme İndeksi",
   "marketCap": "Piyasa Değeri",
   "matchingEntities": "Eşleşen Sonuçlar",
   "maxAddressesReached": "Maksimum 5 adrese ulaşıldı",

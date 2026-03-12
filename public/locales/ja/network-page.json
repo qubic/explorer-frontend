@@ -123,7 +123,7 @@
   "loadingTransactionsError": "エラー：トランザクションの読み込み中に問題が発生しました。後でもう一度試してください。",
   "logDigest": "ログダイジェスト",
   "managedBy": "{{contract}}によって管理",
-  "managingContractIndex": "管理コントラクト",
+  "managingContractIndex": "管理コントラクトインデックス",
   "marketCap": "時価総額",
   "matchingEntities": "一致する結果",
   "maxAddressesReached": "最大5アドレスに達しました",

@@ -123,7 +123,7 @@
   "loadingTransactionsError": "Erreur : Quelque chose a mal tourné lors du chargement des transactions. Veuillez réessayer plus tard.",
   "logDigest": "Résumé du journal",
   "managedBy": "Géré par {{contract}}",
-  "managingContractIndex": "Contrat gestionnaire",
+  "managingContractIndex": "Indice du Contrat de Gestion",
   "marketCap": "Capitalisation boursière",
   "matchingEntities": "Résultats correspondants",
   "maxAddressesReached": "Maximum 5 adresses atteint",

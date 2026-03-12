@@ -123,7 +123,7 @@
   "loadingTransactionsError": "Lỗi: Đã xảy ra sự cố khi tải giao dịch. Vui lòng thử lại sau.",
   "logDigest": "Tóm tắt nhật ký",
   "managedBy": "Được quản lý bởi {{contract}}",
-  "managingContractIndex": "Hợp đồng quản lý",
+  "managingContractIndex": "Chỉ mục hợp đồng quản lý",
   "marketCap": "Vốn hóa thị trường",
   "matchingEntities": "Kết quả phù hợp",
   "maxAddressesReached": "Đã đạt tối đa 5 địa chỉ",

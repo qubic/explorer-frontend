@@ -123,7 +123,7 @@
   "loadingTransactionsError": "Erro: Algo deu errado ao carregar as transações. Por favor, tente novamente mais tarde.",
   "logDigest": "Resumo do Log",
   "managedBy": "Gerenciado por {{contract}}",
-  "managingContractIndex": "Contrato Gerenciador",
+  "managingContractIndex": "Índice do Contrato de Gestão",
   "marketCap": "Capitalização de mercado",
   "matchingEntities": "Resultados correspondentes",
   "maxAddressesReached": "Máximo de 5 endereços atingido",

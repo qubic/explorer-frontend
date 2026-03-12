@@ -123,7 +123,7 @@
   "loadingTransactionsError": "Error: Something went wrong while loading transactions. Please try again later.",
   "logDigest": "Log Digest",
   "managedBy": "Managed by {{contract}}",
-  "managingContractIndex": "Managing Contract",
+  "managingContractIndex": "Managing Contract Index",
   "marketCap": "Market Cap",
   "matchingEntities": "Matching Results",
   "maxAddressesReached": "Maximum 5 addresses reached",

@@ -123,7 +123,7 @@
   "loadingTransactionsError": "Fout: Er is iets misgegaan bij het laden van de transacties. Probeer het later opnieuw.",
   "logDigest": "Logsamenvatting",
   "managedBy": "Beheerd door {{contract}}",
-  "managingContractIndex": "Beherend Contract",
+  "managingContractIndex": "Beheercontractindex",
   "marketCap": "Marktkapitalisatie",
   "matchingEntities": "Overeenkomende resultaten",
   "maxAddressesReached": "Maximum 5 adressen bereikt",

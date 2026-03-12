@@ -123,7 +123,7 @@
   "loadingTransactionsError": "خطأ: حدث خطأ أثناء تحميل المعاملات. يرجى المحاولة مرة أخرى لاحقًا.",
   "logDigest": "ملخص السجل",
   "managedBy": "يُدار بواسطة {{contract}}",
-  "managingContractIndex": "العقد المُدير",
+  "managingContractIndex": "فهرس عقد الإدارة",
   "marketCap": "القيمة السوقية",
   "matchingEntities": "النتائج المطابقة",
   "maxAddressesReached": "تم الوصول للحد الأقصى 5 عناوين",

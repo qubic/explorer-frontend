@@ -123,7 +123,7 @@
   "loadingTransactionsError": "Fehler: Beim Laden der Transaktionen ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.",
   "logDigest": "Log-Zusammenfassung",
   "managedBy": "Verwaltet von {{contract}}",
-  "managingContractIndex": "Verwaltender Vertrag",
+  "managingContractIndex": "Verwaltungsvertragsindex",
   "marketCap": "Marktkapitalisierung",
   "matchingEntities": "Übereinstimmende Ergebnisse",
   "maxAddressesReached": "Maximal 5 Adressen erreicht",
