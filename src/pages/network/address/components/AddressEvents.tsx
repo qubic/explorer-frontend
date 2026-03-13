@@ -23,6 +23,7 @@ export default function AddressEvents({ addressId }: Props) {
     dateRange,
     sourceFilter,
     destinationFilter,
+    amountFilter,
     isLoading,
     hasError
   } = useAddressEvents(addressId)
@@ -35,6 +36,7 @@ export default function AddressEvents({ addressId }: Props) {
     dateRange,
     sourceFilter,
     destinationFilter,
+    amountFilter,
     addressId
   })
 
@@ -51,6 +53,7 @@ export default function AddressEvents({ addressId }: Props) {
         dateRange={dateRange}
         sourceFilter={sourceFilter}
         destinationFilter={destinationFilter}
+        amountFilter={amountFilter}
         idPrefix="addr-events"
         showDirectionFilter
         addressId={addressId}

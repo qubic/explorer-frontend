@@ -2,7 +2,6 @@ import { useCallback, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 
 import { EVENT_TYPE_FILTER_OPTIONS, MAX_EVENT_TYPE_SELECTIONS } from '@app/store/apis/events'
-
 import type {
   AddressFilter,
   TransactionDirection
@@ -13,9 +12,13 @@ import {
   validateDateRange,
   validateTickRange
 } from '../address/components/TransactionsOverview/filterUtils'
-import type { DateRangeValue, TickRangeValue } from '../utils/eventFilterUtils'
-import { applyEventDirectionSync, toTickRangeValue } from '../utils/eventFilterUtils'
-import { updateSearchParams } from '../utils/filterUtils'
+import type { DateRangeValue, EventAmountFilter, TickRangeValue } from '../utils/eventFilterUtils'
+import {
+  amountFilterToParams,
+  applyEventDirectionSync,
+  toTickRangeValue
+} from '../utils/eventFilterUtils'
+import { updateSearchParams, validateAmountRange } from '../utils/filterUtils'
 
 type EventFilterOptions = {
   tickStart?: string
@@ -25,6 +28,7 @@ type EventFilterOptions = {
   dateRange?: DateRangeValue
   sourceFilter: AddressFilter | undefined
   destinationFilter: AddressFilter | undefined
+  amountFilter?: EventAmountFilter
   supportsTick?: boolean
   supportsDate?: boolean
   addressId?: string
@@ -40,6 +44,7 @@ export default function useEventFilters({
   dateRange,
   sourceFilter,
   destinationFilter,
+  amountFilter,
   supportsTick = true,
   supportsDate = true,
   addressId
@@ -64,6 +69,12 @@ export default function useEventFilters({
     destinationFilter
   )
 
+  // Local state for amount filter
+  const [localAmountFilter, setLocalAmountFilter] = useState<EventAmountFilter | undefined>(
+    amountFilter
+  )
+  const [amountFilterError, setAmountFilterError] = useState<string | null>(null)
+
   const checkIsPageAddress = useCallback(
     (filter: AddressFilter | undefined): boolean =>
       !!addressId && filter?.mode === 'include' && isOnlyPageAddress(filter, addressId),
@@ -75,8 +86,15 @@ export default function useEventFilters({
   const isDateActive = supportsDate && dateRange !== undefined
   const isSourceActive = sourceFilter !== undefined
   const isDestActive = destinationFilter !== undefined
+  const isAmountActive =
+    amountFilter !== undefined && (amountFilter.min !== undefined || amountFilter.max !== undefined)
   const hasActiveFilters =
-    isTickActive || isEventTypeActive || isDateActive || isSourceActive || isDestActive
+    isTickActive ||
+    isEventTypeActive ||
+    isDateActive ||
+    isSourceActive ||
+    isDestActive ||
+    isAmountActive
 
   // --- Tick Range ---
 
@@ -85,11 +103,11 @@ export default function useEventFilters({
     setTickRangeError(null)
   }, [])
 
-  const handleTickRangeApply = useCallback(() => {
+  const handleTickRangeApply = useCallback((): boolean => {
     const error = validateTickRange(tickRange?.start, tickRange?.end)
     if (error) {
       setTickRangeError(error)
-      return
+      return false
     }
     setTickRangeError(null)
     setSearchParams((prev) =>
@@ -98,6 +116,7 @@ export default function useEventFilters({
         tickEnd: tickRange?.end || undefined
       })
     )
+    return true
   }, [tickRange, setSearchParams])
 
   const handleClearTick = useCallback(() => {
@@ -182,11 +201,11 @@ export default function useEventFilters({
     setDateRangeError(null)
   }, [])
 
-  const handleDateRangeApply = useCallback(() => {
+  const handleDateRangeApply = useCallback((): boolean => {
     const error = validateDateRange(localDateRange?.start, localDateRange?.end)
     if (error) {
       setDateRangeError(error)
-      return
+      return false
     }
     setDateRangeError(null)
     setSearchParams((prev) =>
@@ -196,6 +215,7 @@ export default function useEventFilters({
         datePresetDays: undefined
       })
     )
+    return true
   }, [localDateRange, setSearchParams])
 
   const handleDatePresetSelect = useCallback(
@@ -285,6 +305,36 @@ export default function useEventFilters({
     setLocalDestFilter(undefined)
   }, [setSearchParams, direction])
 
+  // --- Amount ---
+
+  const handleAmountChange = useCallback((value: EventAmountFilter | undefined) => {
+    setLocalAmountFilter(value)
+    setAmountFilterError(null)
+  }, [])
+
+  const handleAmountApply = useCallback((): boolean => {
+    const error = validateAmountRange(localAmountFilter?.min, localAmountFilter?.max)
+    if (error) {
+      setAmountFilterError(error)
+      return false
+    }
+    setAmountFilterError(null)
+    setSearchParams((prev) => updateSearchParams(prev, amountFilterToParams(localAmountFilter)))
+    return true
+  }, [localAmountFilter, setSearchParams])
+
+  const handleClearAmount = useCallback(() => {
+    setSearchParams((prev) =>
+      updateSearchParams(prev, {
+        amountMin: undefined,
+        amountMax: undefined,
+        amountAsset: undefined
+      })
+    )
+    setLocalAmountFilter(undefined)
+    setAmountFilterError(null)
+  }, [setSearchParams])
+
   // --- Clear All ---
 
   const handleClearAll = useCallback(() => {
@@ -294,7 +344,10 @@ export default function useEventFilters({
       source: undefined,
       sourceMode: undefined,
       destination: undefined,
-      destMode: undefined
+      destMode: undefined,
+      amountMin: undefined,
+      amountMax: undefined,
+      amountAsset: undefined
     }
     if (supportsTick) {
       updates.tickStart = undefined
@@ -316,6 +369,8 @@ export default function useEventFilters({
     }
     setLocalSourceFilter(undefined)
     setLocalDestFilter(undefined)
+    setLocalAmountFilter(undefined)
+    setAmountFilterError(null)
   }, [setSearchParams, supportsTick, supportsDate])
 
   // --- Mobile ---
@@ -328,6 +383,7 @@ export default function useEventFilters({
       sourceFilter?: AddressFilter
       destinationFilter?: AddressFilter
       direction?: TransactionDirection
+      amountFilter?: EventAmountFilter
     }) => {
       const srcAddresses =
         filters.sourceFilter?.addresses.filter((addr) => addr.trim() !== '') ?? []
@@ -353,7 +409,9 @@ export default function useEventFilters({
         source: srcAddresses.length > 0 ? srcAddresses.join(',') : undefined,
         sourceMode: srcAddresses.length > 0 ? filters.sourceFilter?.mode ?? 'include' : undefined,
         destination: dstAddresses.length > 0 ? dstAddresses.join(',') : undefined,
-        destMode: dstAddresses.length > 0 ? filters.destinationFilter?.mode ?? 'include' : undefined
+        destMode:
+          dstAddresses.length > 0 ? filters.destinationFilter?.mode ?? 'include' : undefined,
+        ...amountFilterToParams(filters.amountFilter)
       }
 
       if (supportsTick) {
@@ -383,6 +441,8 @@ export default function useEventFilters({
       }
       setLocalSourceFilter(filters.sourceFilter)
       setLocalDestFilter(filters.destinationFilter)
+      setLocalAmountFilter(filters.amountFilter)
+      setAmountFilterError(null)
     },
     [setSearchParams, supportsTick, supportsDate]
   )
@@ -416,6 +476,12 @@ export default function useEventFilters({
     setLocalDestFilter,
     handleDestApply,
     handleClearDest,
+    localAmountFilter,
+    amountFilterError,
+    isAmountActive,
+    handleAmountChange,
+    handleAmountApply,
+    handleClearAmount,
     handleClearAll,
     handleMobileApplyFilters
   }

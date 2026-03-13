@@ -1,4 +1,4 @@
-import type { EventRange } from '@app/store/apis/events'
+import type { EventRange, ShouldFilter } from '@app/store/apis/events'
 import type {
   AddressFilter,
   TransactionDirection
@@ -15,6 +15,16 @@ import { formatAddressShort } from './filterUtils'
 // ============================================================================
 // SHARED TYPES
 // ============================================================================
+
+export type AmountAssetType = 'any' | 'qubic' | 'other'
+
+export type EventAmountFilter = {
+  assetType: AmountAssetType
+  min?: string
+  max?: string
+}
+
+export const ASSET_TYPE_OPTIONS: AmountAssetType[] = ['any', 'qubic', 'other']
 
 export type TickRangeValue = { start?: string; end?: string }
 export type DateRangeValue = { start?: string; end?: string; presetDays?: number }
@@ -67,6 +77,27 @@ export function parseDateRange(searchParams: URLSearchParams): DateRangeValue | 
   return undefined
 }
 
+export function amountFilterToParams(
+  filter: EventAmountFilter | undefined
+): Record<string, string | undefined> {
+  return {
+    amountMin: filter?.min ?? undefined,
+    amountMax: filter?.max ?? undefined,
+    amountAsset: filter?.min || filter?.max ? filter?.assetType ?? 'any' : undefined
+  }
+}
+
+export function parseAmountFilter(searchParams: URLSearchParams): EventAmountFilter | undefined {
+  const min = searchParams.get('amountMin') || undefined
+  const max = searchParams.get('amountMax') || undefined
+  if (!min && !max) return undefined
+  const rawAsset = searchParams.get('amountAsset') || 'any'
+  const assetType = (ASSET_TYPE_OPTIONS as readonly string[]).includes(rawAsset)
+    ? (rawAsset as EventAmountFilter['assetType'])
+    : 'any'
+  return { assetType, min, max }
+}
+
 // ============================================================================
 // API REQUEST BUILDING
 // ============================================================================
@@ -112,6 +143,46 @@ export function buildTimestampRange(dateRange: DateRangeValue | undefined): Even
     ...(timestampStart ? { gte: new Date(timestampStart).getTime().toString() } : {}),
     ...(dateRange.end ? { lte: new Date(dateRange.end).getTime().toString() } : {})
   }
+}
+
+export type AmountApiParams = {
+  amount?: string
+  numberOfShares?: string
+  amountRange?: EventRange
+  numberOfSharesRange?: EventRange
+  amountShould?: ShouldFilter[]
+}
+
+/**
+ * Converts an EventAmountFilter into API request params.
+ * - QUBIC: uses `amount` filter (exact) or `amountRange` (range)
+ * - Other: uses `numberOfShares` filter (exact) or `numberOfSharesRange` (range)
+ * - Any: uses `should` with both amount and numberOfShares (OR logic)
+ * When min === max, uses exact value filter; otherwise uses range.
+ */
+export function buildAmountFilter(filter: EventAmountFilter | undefined): AmountApiParams {
+  if (!filter) return {}
+  const { assetType, min, max } = filter
+  if (!min && !max) return {}
+
+  const isExact = min && max && min === max
+  const range: EventRange = {
+    ...(min && { gte: min }),
+    ...(max && { lte: max })
+  }
+
+  if (assetType === 'qubic') {
+    return isExact ? { amount: min } : { amountRange: range }
+  }
+
+  if (assetType === 'other') {
+    return isExact ? { numberOfShares: min } : { numberOfSharesRange: range }
+  }
+
+  // "any" — OR logic via should: both fields in a single entry
+  return isExact
+    ? { amountShould: [{ terms: { amount: min, numberOfShares: min } }] }
+    : { amountShould: [{ ranges: { amount: range, numberOfShares: range } }] }
 }
 
 // ============================================================================

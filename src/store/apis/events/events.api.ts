@@ -14,6 +14,7 @@ export interface PaginatedEvents {
 
 export interface ShouldFilter {
   terms?: Record<string, string>
+  ranges?: Record<string, EventRange>
 }
 
 export interface EventRange {
@@ -36,6 +37,10 @@ export interface GetEventsRequest {
   category?: number
   tickRange?: EventRange
   timestampRange?: EventRange
+  amountRange?: EventRange
+  numberOfSharesRange?: EventRange
+  amount?: string
+  numberOfShares?: string
 }
 
 function adaptEventsList(response: RawGetEventsResponse): TransactionEvent[] {
@@ -75,7 +80,11 @@ export const eventsApi = createApi({
         excludeSource,
         excludeDestination,
         tickRange,
-        timestampRange
+        timestampRange,
+        amountRange,
+        numberOfSharesRange,
+        amount,
+        numberOfShares
       }) => {
         const filters: Record<string, string> = {
           ...(tickNumber !== undefined && { tickNumber: String(tickNumber) }),
@@ -84,7 +93,9 @@ export const eventsApi = createApi({
           ...(logType && logType.length > 0 && { logType: logType.join(',') }),
           ...(category !== undefined && { categories: String(category) }),
           ...(source && { source }),
-          ...(destination && { destination })
+          ...(destination && { destination }),
+          ...(amount !== undefined && { amount }),
+          ...(numberOfShares !== undefined && { numberOfShares })
         }
 
         const exclude: Record<string, string> = {
@@ -94,7 +105,9 @@ export const eventsApi = createApi({
 
         const ranges: Record<string, EventRange> = {
           ...(tickRange && { tickNumber: tickRange }),
-          ...(timestampRange && { timestamp: timestampRange })
+          ...(timestampRange && { timestamp: timestampRange }),
+          ...(amountRange && { amount: amountRange }),
+          ...(numberOfSharesRange && { numberOfShares: numberOfSharesRange })
         }
 
         return {

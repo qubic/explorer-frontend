@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import { useSearchParams } from 'react-router-dom'
 
 import {
@@ -8,7 +9,13 @@ import {
 } from '@app/hooks'
 import { useGetEventsQuery, type TransactionEvent } from '@app/store/apis/events'
 import type { AddressFilter } from '../../address/components/TransactionsOverview/filterUtils'
-import { buildEventAddressFilter, parseAddressFilter } from '../../utils/eventFilterUtils'
+import {
+  type EventAmountFilter,
+  buildAmountFilter,
+  buildEventAddressFilter,
+  parseAddressFilter,
+  parseAmountFilter
+} from '../../utils/eventFilterUtils'
 
 export default function useTickEvents(tick: number): {
   events: TransactionEvent[]
@@ -16,6 +23,7 @@ export default function useTickEvents(tick: number): {
   eventTypes: number[]
   sourceFilter: AddressFilter | undefined
   destinationFilter: AddressFilter | undefined
+  amountFilter: EventAmountFilter | undefined
   isLoading: boolean
   hasError: boolean
   refetch: () => void
@@ -31,8 +39,14 @@ export default function useTickEvents(tick: number): {
   const sourceFilter = parseAddressFilter(searchParams, 'source', 'sourceMode')
   const destinationFilter = parseAddressFilter(searchParams, 'destination', 'destMode')
 
+  const amountFilter = parseAmountFilter(searchParams)
+
   const sourceResult = buildEventAddressFilter(sourceFilter)
   const destResult = buildEventAddressFilter(destinationFilter)
+  const { amountShould, ...amountParams } = useMemo(
+    () => buildAmountFilter(amountFilter),
+    [amountFilter]
+  )
 
   const { data, isFetching, isError, refetch } = useGetEventsQuery(
     {
@@ -43,7 +57,9 @@ export default function useTickEvents(tick: number): {
       source: sourceResult.include,
       excludeSource: sourceResult.exclude,
       destination: destResult.include,
-      excludeDestination: destResult.exclude
+      excludeDestination: destResult.exclude,
+      ...(amountShould && { should: amountShould }),
+      ...amountParams
     },
     { skip: !tick }
   )
@@ -58,6 +74,7 @@ export default function useTickEvents(tick: number): {
     eventTypes,
     sourceFilter,
     destinationFilter,
+    amountFilter,
     isLoading: isFetching,
     hasError: isError,
     refetch

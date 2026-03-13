@@ -13,13 +13,22 @@ type Props = Readonly<{
 
 export default function TickEvents({ tick }: Props) {
   const { t } = useTranslation('network-page')
-  const { events, total, eventTypes, sourceFilter, destinationFilter, isLoading, hasError } =
-    useTickEvents(tick)
+  const {
+    events,
+    total,
+    eventTypes,
+    sourceFilter,
+    destinationFilter,
+    amountFilter,
+    isLoading,
+    hasError
+  } = useTickEvents(tick)
 
   const filters = useEventFilters({
     eventTypes,
     sourceFilter,
     destinationFilter,
+    amountFilter,
     supportsTick: false,
     supportsDate: false
   })
@@ -33,6 +42,7 @@ export default function TickEvents({ tick }: Props) {
         eventTypes={eventTypes}
         sourceFilter={sourceFilter}
         destinationFilter={destinationFilter}
+        amountFilter={amountFilter}
         idPrefix="tick-events"
         showTickFilter={false}
         showDateFilter={false}

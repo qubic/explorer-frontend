@@ -21,6 +21,7 @@ function EventsPage() {
     dateRange,
     sourceFilter,
     destinationFilter,
+    amountFilter,
     isLoading
   } = useEventsPage()
 
@@ -30,7 +31,8 @@ function EventsPage() {
     eventTypes,
     dateRange,
     sourceFilter,
-    destinationFilter
+    destinationFilter,
+    amountFilter
   })
 
   return (
@@ -54,6 +56,7 @@ function EventsPage() {
           dateRange={dateRange}
           sourceFilter={sourceFilter}
           destinationFilter={destinationFilter}
+          amountFilter={amountFilter}
           idPrefix="events"
         />
 

@@ -12,10 +12,11 @@ import DateFilterContent from '../../address/components/TransactionsOverview/Dat
 import MultiAddressFilterContent from '../../address/components/TransactionsOverview/MultiAddressFilterContent'
 import { formatRangeLabel } from '../../hooks'
 import type { EventFiltersResult } from '../../hooks/useEventFilters'
-import type { DateRangeValue } from '../../utils/eventFilterUtils'
+import type { DateRangeValue, EventAmountFilter } from '../../utils/eventFilterUtils'
 import { getAddressFilterLabel, getDateRangeLabel } from '../../utils/eventFilterUtils'
 import { formatAmountForDisplay } from '../../utils/filterUtils'
 import ActiveFilterChip from './ActiveFilterChip'
+import EventAmountFilterContent from './EventAmountFilterContent'
 import EventsMobileFiltersModal, { type EventsFilters } from './EventsMobileFiltersModal'
 import EventTypeChips from './EventTypeChips'
 import FilterDropdown from './FilterDropdown'
@@ -32,6 +33,7 @@ type Props = {
   dateRange?: DateRangeValue
   sourceFilter?: AddressFilter
   destinationFilter?: AddressFilter
+  amountFilter?: EventAmountFilter
   idPrefix: string
   showTickFilter?: boolean
   showDateFilter?: boolean
@@ -54,6 +56,7 @@ export default function EventsFilterBar({
   dateRange,
   sourceFilter,
   destinationFilter,
+  amountFilter,
   idPrefix,
   showTickFilter = true,
   showDateFilter = true,
@@ -80,11 +83,18 @@ export default function EventsFilterBar({
     setOpenDropdown((prev) => (prev === key ? null : key))
   }
 
+  const amountLabel = formatRangeLabel(
+    t('amount'),
+    amountFilter ? { start: amountFilter.min, end: amountFilter.max } : undefined,
+    formatAmountForDisplay
+  )
+
   const mobileActiveFilters: EventsFilters = {
     eventTypes,
     direction,
     sourceFilter,
     destinationFilter,
+    amountFilter: filters.localAmountFilter,
     ...(showTickFilter && {
       tickRange: tickStart || tickEnd ? { start: tickStart, end: tickEnd } : undefined
     }),
@@ -115,6 +125,9 @@ export default function EventsFilterBar({
             )}
             {showDateFilter && filters.isDateActive && (
               <ActiveFilterChip label={dateLabel} onClear={filters.handleClearDate} />
+            )}
+            {filters.isAmountActive && (
+              <ActiveFilterChip label={amountLabel} onClear={filters.handleClearAmount} />
             )}
             {showTickFilter && filters.isTickActive && (
               <ActiveFilterChip label={tickLabel} onClear={filters.handleClearTick} />
@@ -209,8 +222,7 @@ export default function EventsFilterBar({
               value={filters.localDateRange}
               onChange={filters.handleDateRangeChange}
               onApply={() => {
-                filters.handleDateRangeApply()
-                setOpenDropdown(null)
+                if (filters.handleDateRangeApply()) setOpenDropdown(null)
               }}
               onPresetSelect={(days) => {
                 filters.handleDatePresetSelect(days)
@@ -234,8 +246,7 @@ export default function EventsFilterBar({
               value={filters.tickRange}
               onChange={filters.handleTickRangeChange}
               onApply={() => {
-                filters.handleTickRangeApply()
-                setOpenDropdown(null)
+                if (filters.handleTickRangeApply()) setOpenDropdown(null)
               }}
               startLabel={t('startTick')}
               endLabel={t('endTick')}
@@ -244,6 +255,25 @@ export default function EventsFilterBar({
             />
           </FilterDropdown>
         )}
+        <FilterDropdown
+          label={amountLabel}
+          isActive={filters.isAmountActive}
+          show={openDropdown === 'amount'}
+          onToggle={() => handleToggleDropdown('amount')}
+          onClear={filters.isAmountActive ? filters.handleClearAmount : undefined}
+          contentClassName="min-w-[280px]"
+          allowFullWidth
+        >
+          <EventAmountFilterContent
+            idPrefix={`${idPrefix}-amount`}
+            value={filters.localAmountFilter}
+            onChange={filters.handleAmountChange}
+            onApply={() => {
+              if (filters.handleAmountApply()) setOpenDropdown(null)
+            }}
+            error={filters.amountFilterError ? t(filters.amountFilterError) : null}
+          />
+        </FilterDropdown>
         {filters.hasActiveFilters && (
           <>
             <div className="grow" />

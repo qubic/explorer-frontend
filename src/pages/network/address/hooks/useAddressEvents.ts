@@ -14,11 +14,14 @@ import type {
 } from '../components/TransactionsOverview/filterUtils'
 import { DIRECTION } from '../components/TransactionsOverview/filterUtils'
 import {
+  type EventAmountFilter,
+  buildAmountFilter,
   buildEventAddressFilter,
   buildTickFilter,
   buildTimestampRange,
   type DateRangeValue,
   parseAddressFilter,
+  parseAmountFilter,
   parseDateRange,
   parseTickRange
 } from '../../utils/eventFilterUtils'
@@ -33,6 +36,7 @@ export default function useAddressEvents(addressId: string): {
   dateRange: DateRangeValue | undefined
   sourceFilter: AddressFilter | undefined
   destinationFilter: AddressFilter | undefined
+  amountFilter: EventAmountFilter | undefined
   isLoading: boolean
   hasError: boolean
 } {
@@ -56,6 +60,8 @@ export default function useAddressEvents(addressId: string): {
       ? directionRaw
       : undefined
 
+  const amountFilter = parseAmountFilter(searchParams)
+
   const { tickNumber, tickRange } = buildTickFilter(tickStart, tickEnd)
 
   const timestampRange = buildTimestampRange(dateRange)
@@ -74,11 +80,22 @@ export default function useAddressEvents(addressId: string): {
   // When direction is set, implicit source/dest handles the scoping instead.
   const useShouldFilter = !direction
 
-  const should = useMemo<ShouldFilter[] | undefined>(
+  const addressShould = useMemo<ShouldFilter[] | undefined>(
     () =>
       useShouldFilter ? [{ terms: { source: addressId, destination: addressId } }] : undefined,
     [addressId, useShouldFilter]
   )
+
+  const { amountShould, ...amountParams } = useMemo(
+    () => buildAmountFilter(amountFilter),
+    [amountFilter]
+  )
+
+  // Merge address should (OR) with amount should (OR) when both are present
+  const should = useMemo<ShouldFilter[] | undefined>(() => {
+    if (!addressShould && !amountShould) return undefined
+    return [...(addressShould ?? []), ...(amountShould ?? [])]
+  }, [addressShould, amountShould])
 
   // When direction is set, implicit source/dest scopes to the page address.
   // When direction is undefined, `should` (OR) handles scoping instead.
@@ -97,7 +114,8 @@ export default function useAddressEvents(addressId: string): {
       source: sourceResult.include ?? implicitSource,
       excludeSource: sourceResult.exclude,
       destination: destResult.include ?? implicitDest,
-      excludeDestination: destResult.exclude
+      excludeDestination: destResult.exclude,
+      ...amountParams
     },
     { skip: !addressId }
   )
@@ -116,6 +134,7 @@ export default function useAddressEvents(addressId: string): {
     dateRange,
     sourceFilter,
     destinationFilter,
+    amountFilter,
     isLoading: isFetching,
     hasError: isError
   }

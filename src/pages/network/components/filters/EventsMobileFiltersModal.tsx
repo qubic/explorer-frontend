@@ -12,8 +12,14 @@ import {
 import DirectionControl from '../../address/components/TransactionsOverview/DirectionControl'
 import MultiAddressFilterContent from '../../address/components/TransactionsOverview/MultiAddressFilterContent'
 import { scrollToValidationError } from '../../hooks'
-import type { DateRangeValue, TickRangeValue } from '../../utils/eventFilterUtils'
+import type {
+  DateRangeValue,
+  EventAmountFilter,
+  TickRangeValue
+} from '../../utils/eventFilterUtils'
 import { applyEventDirectionSync } from '../../utils/eventFilterUtils'
+import { validateAmountRange } from '../../utils/filterUtils'
+import EventAmountFilterContent from './EventAmountFilterContent'
 import EventTypeChips from './EventTypeChips'
 import MobileFiltersModalWrapper from './MobileFiltersModalWrapper'
 import MobileFilterSection from './MobileFilterSection'
@@ -26,6 +32,7 @@ export type EventsFilters = {
   sourceFilter?: AddressFilter
   destinationFilter?: AddressFilter
   direction?: TransactionDirection
+  amountFilter?: EventAmountFilter
 }
 
 type Props = {
@@ -71,6 +78,9 @@ export default function EventsMobileFiltersModal({
   const [localDirection, setLocalDirection] = useState<TransactionDirection | undefined>(
     activeFilters.direction
   )
+  const [localAmountFilter, setLocalAmountFilter] = useState<EventAmountFilter | undefined>(
+    activeFilters.amountFilter
+  )
   const [validationErrors, setValidationErrors] = useState<Record<string, string | null>>({})
 
   const handleLocalDirectionChange = useCallback(
@@ -106,6 +116,7 @@ export default function EventsMobileFiltersModal({
       setLocalSourceFilter(activeFilters.sourceFilter)
       setLocalDestFilter(activeFilters.destinationFilter)
       setLocalDirection(activeFilters.direction)
+      setLocalAmountFilter(activeFilters.amountFilter)
       setValidationErrors({})
     }
   }, [
@@ -115,7 +126,8 @@ export default function EventsMobileFiltersModal({
     activeFilters.dateRange,
     activeFilters.sourceFilter,
     activeFilters.destinationFilter,
-    activeFilters.direction
+    activeFilters.direction,
+    activeFilters.amountFilter
   ])
 
   const handleApply = useCallback(() => {
@@ -134,6 +146,12 @@ export default function EventsMobileFiltersModal({
       if (!firstErrorId) firstErrorId = `${idPrefix}-mobile-dest-filter`
     }
 
+    const amountError = validateAmountRange(localAmountFilter?.min, localAmountFilter?.max)
+    if (amountError) {
+      errors.amount = t(amountError)
+      if (!firstErrorId) firstErrorId = `${idPrefix}-mobile-amount-filter`
+    }
+
     if (Object.keys(errors).length > 0) {
       setValidationErrors(errors)
       scrollToValidationError(firstErrorId)
@@ -146,7 +164,8 @@ export default function EventsMobileFiltersModal({
       dateRange: localDateRange,
       sourceFilter: localSourceFilter,
       destinationFilter: localDestFilter,
-      direction: localDirection
+      direction: localDirection,
+      amountFilter: localAmountFilter
     })
     onClose()
     setValidationErrors({})
@@ -157,6 +176,7 @@ export default function EventsMobileFiltersModal({
     localSourceFilter,
     localDestFilter,
     localDirection,
+    localAmountFilter,
     onApplyFilters,
     onClose,
     idPrefix,
@@ -204,6 +224,18 @@ export default function EventsMobileFiltersModal({
           onApply={() => {}}
           showApplyButton={false}
           error={validationErrors.destination}
+        />
+      </MobileFilterSection>
+
+      <MobileFilterSection id={`${idPrefix}-mobile-amount-filter`} label={t('amount')}>
+        <EventAmountFilterContent
+          idPrefix={`${idPrefix}-mobile-amount`}
+          value={localAmountFilter}
+          onChange={setLocalAmountFilter}
+          onApply={() => {}}
+          showApplyButton={false}
+          layout="horizontal"
+          error={validationErrors.amount}
         />
       </MobileFilterSection>
 

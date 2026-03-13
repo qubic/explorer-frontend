@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import { useSearchParams } from 'react-router-dom'
 
 import {
@@ -9,11 +10,14 @@ import {
 import { type TransactionEvent, useGetEventsQuery } from '@app/store/apis/events'
 import type { AddressFilter } from '../../address/components/TransactionsOverview/filterUtils'
 import {
+  type EventAmountFilter,
+  buildAmountFilter,
   buildEventAddressFilter,
   buildTickFilter,
   buildTimestampRange,
   type DateRangeValue,
   parseAddressFilter,
+  parseAmountFilter,
   parseDateRange,
   parseTickRange
 } from '../../utils/eventFilterUtils'
@@ -27,6 +31,7 @@ export default function useEventsPage(): {
   dateRange: DateRangeValue | undefined
   sourceFilter: AddressFilter | undefined
   destinationFilter: AddressFilter | undefined
+  amountFilter: EventAmountFilter | undefined
   isLoading: boolean
 } {
   const [searchParams] = useSearchParams()
@@ -43,11 +48,17 @@ export default function useEventsPage(): {
 
   const eventTypes = useSanitizedEventTypes()
 
+  const amountFilter = parseAmountFilter(searchParams)
+
   const { tickNumber, tickRange } = buildTickFilter(tickStart, tickEnd)
 
   const timestampRange = buildTimestampRange(dateRange)
   const sourceResult = buildEventAddressFilter(sourceFilter)
   const destResult = buildEventAddressFilter(destinationFilter)
+  const { amountShould, ...amountParams } = useMemo(
+    () => buildAmountFilter(amountFilter),
+    [amountFilter]
+  )
 
   const { data, isFetching } = useGetEventsQuery({
     tickNumber,
@@ -59,7 +70,9 @@ export default function useEventsPage(): {
     source: sourceResult.include,
     excludeSource: sourceResult.exclude,
     destination: destResult.include,
-    excludeDestination: destResult.exclude
+    excludeDestination: destResult.exclude,
+    ...(amountShould && { should: amountShould }),
+    ...amountParams
   })
 
   const total = data?.total ?? 0
@@ -75,6 +88,7 @@ export default function useEventsPage(): {
     dateRange,
     sourceFilter,
     destinationFilter,
+    amountFilter,
     isLoading: isFetching
   }
 }
