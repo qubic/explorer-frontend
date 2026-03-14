@@ -53,10 +53,7 @@ const versionByContractAndFingerprint = new Map<string, ContractVersionDefinitio
 
 coreVersionedContractsRegistry.contracts.forEach((timeline) => {
   timeline.versions.forEach((version) => {
-    versionByContractAndFingerprint.set(
-      `${timeline.contractIndex}:${version.fingerprint}`,
-      version
-    )
+    versionByContractAndFingerprint.set(`${timeline.contractIndex}:${version.fingerprint}`, version)
   })
 })
 
@@ -200,14 +197,20 @@ const collectIdentityPathsForInput = (
   contract: ContractDefinition,
   entry: ContractEntry,
   fingerprint: string
-): ReadonlySet<string> => collectPathsByPredicate(contract, entry, fingerprint, isIdentityTypeExpression)
+): ReadonlySet<string> =>
+  collectPathsByPredicate(contract, entry, fingerprint, isIdentityTypeExpression)
 
 const collectUint64PathsForInput = (
   contract: ContractDefinition,
   entry: ContractEntry,
   fingerprint: string
 ): ReadonlySet<string> =>
-  collectPathsByPredicate(contract, entry, fingerprint, (normalizedTypeExpression) => normalizedTypeExpression === 'uint64')
+  collectPathsByPredicate(
+    contract,
+    entry,
+    fingerprint,
+    (normalizedTypeExpression) => normalizedTypeExpression === 'uint64'
+  )
 
 const isHumanReadableU64Path = (path: string): boolean => {
   const normalized = path.trim().toLowerCase()
@@ -323,7 +326,9 @@ const resolveContractDecodeMetadata = (
   entryInputType: number,
   entryName: string
 ): ContractDecodeMetadata | null => {
-  const version = versionByContractAndFingerprint.get(getVersionLookupKey(contractIndex, fingerprint))
+  const version = versionByContractAndFingerprint.get(
+    getVersionLookupKey(contractIndex, fingerprint)
+  )
   if (!version) return null
 
   const entry = version.contract.entries.find(
@@ -413,7 +418,12 @@ export const decodeContractInputData = (params: {
 
   const normalizedValue =
     decoded.decoded.mode === 'typed'
-      ? normalizeDecodedValue(decoded.decoded.value, ROOT_PATH, identityPaths, humanReadableUint64Paths)
+      ? normalizeDecodedValue(
+          decoded.decoded.value,
+          ROOT_PATH,
+          identityPaths,
+          humanReadableUint64Paths
+        )
       : normalizeDecodedValue(
           { rawBytes: decoded.decoded.rawBytes },
           ROOT_PATH,

@@ -53,13 +53,7 @@ export const useDecodedContractInput = (
       inputData: params.inputData,
       destinationHint: params.destination
     })
-  }, [
-    shouldDecodeInput,
-    tickData?.epoch,
-    params.inputData,
-    params.inputType,
-    params.destination
-  ])
+  }, [shouldDecodeInput, tickData?.epoch, params.inputData, params.inputType, params.destination])
 
   return {
     isContractTransaction,
