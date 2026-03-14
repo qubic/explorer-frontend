@@ -1,19 +1,12 @@
 import {
-  decodeContractEntryInputData,
-  coreContractsRegistry,
-  type ContractEntryKind
+  coreVersionedContractsRegistry,
+  decodeHistoricalTransactionInput,
+  type ContractDefinition,
+  type ContractEntry,
+  type ContractEntryKind,
+  type ContractVersionDefinition
 } from '@qubic.ts/contracts'
 import { identityFromPublicKey } from '@qubic.ts/core'
-
-type RegistryEntryRef = Readonly<{
-  contractName: string
-  contractIndex: number
-  entryName: string
-  inputTypeName: string
-  kind: ContractEntryKind
-  inputType: number
-  inputSize?: number
-}>
 
 export type DecodedContractInput =
   | Readonly<{
@@ -25,44 +18,47 @@ export type DecodedContractInput =
       inputType: number
       value: unknown
       identityPaths: ReadonlySet<string>
+      decodeMode: 'typed' | 'named' | 'raw'
     }>
   | Readonly<{
       status: 'unsupported'
-      reason: 'missing-input-data' | 'invalid-input-data' | 'no-match' | 'decode-failed'
+      reason:
+        | 'missing-input-data'
+        | 'invalid-input-data'
+        | 'missing-epoch'
+        | 'no-match'
+        | 'decode-failed'
       message?: string
     }>
-
-const registryEntries: readonly RegistryEntryRef[] = coreContractsRegistry.contracts.flatMap(
-  (contract) =>
-    contract.entries.map((entry) => ({
-      contractName: contract.name,
-      contractIndex: contract.contractIndex,
-      entryName: entry.name,
-      inputTypeName: entry.inputTypeName,
-      kind: entry.kind,
-      inputType: entry.inputType,
-      inputSize: 'inputSize' in entry ? entry.inputSize : undefined
-    }))
-)
-
-const entriesByInputType = new Map<number, RegistryEntryRef[]>()
-registryEntries.forEach((entry) => {
-  const current = entriesByInputType.get(entry.inputType)
-  if (current) {
-    current.push(entry)
-  } else {
-    entriesByInputType.set(entry.inputType, [entry])
-  }
-})
-
-const registryContractNameByAddress = new Map<string, string>()
-coreContractsRegistry.contracts.forEach((contract) => {
-  registryContractNameByAddress.set(contract.address.trim().toUpperCase(), contract.name.trim())
-})
 
 const MAX_INPUT_DATA_LENGTH = 64 * 1024
 const HEX_32_BYTES = /^0x[0-9a-fA-F]{64}$/
 const DECIMAL_STRING = /^\d+$/
+const ROOT_PATH = ''
+
+type IoTypeLike = Readonly<{
+  kind: string
+  name: string
+  target?: string
+  fields?: readonly Readonly<{ name: string; type: string }>[]
+}>
+
+type ContractDecodeMetadata = Readonly<{
+  contract: ContractDefinition
+  entry: ContractEntry
+  fingerprint: string
+}>
+
+const versionByContractAndFingerprint = new Map<string, ContractVersionDefinition>()
+
+coreVersionedContractsRegistry.contracts.forEach((timeline) => {
+  timeline.versions.forEach((version) => {
+    versionByContractAndFingerprint.set(
+      `${timeline.contractIndex}:${version.fingerprint}`,
+      version
+    )
+  })
+})
 
 const bytesFromBase64 = (value: string): Uint8Array => {
   const decoded = atob(value)
@@ -72,9 +68,6 @@ const bytesFromBase64 = (value: string): Uint8Array => {
   }
   return bytes
 }
-
-const getErrorMessage = (error: unknown): string =>
-  error instanceof Error ? error.message : String(error)
 
 const toBytes = (
   inputData: string | Uint8Array | number[] | null | undefined
@@ -105,13 +98,6 @@ const toBytes = (
   }
 }
 
-type IoTypeLike = Readonly<{
-  kind: string
-  name: string
-  target?: string
-  fields?: readonly Readonly<{ name: string; type: string }>[]
-}>
-
 const normalizeTypeExpression = (typeExpression: string): string =>
   typeExpression.replace(/\s+/g, '')
 
@@ -134,13 +120,13 @@ const isIdentityTypeExpression = (typeExpression: string): boolean => {
   return arraySpec ? isIdentityTypeExpression(arraySpec.elementType) : false
 }
 
-const ioTypeMapByContractName = new Map<string, ReadonlyMap<string, IoTypeLike>>()
+const ioTypeMapByFingerprint = new Map<string, ReadonlyMap<string, IoTypeLike>>()
 
-const getIoTypeMapForContract = (contractName: string): ReadonlyMap<string, IoTypeLike> | null => {
-  const contract = coreContractsRegistry.contracts.find((item) => item.name === contractName)
-  if (!contract) return null
-
-  const cached = ioTypeMapByContractName.get(contract.name)
+const getIoTypeMapForContract = (
+  contract: ContractDefinition,
+  fingerprint: string
+): ReadonlyMap<string, IoTypeLike> => {
+  const cached = ioTypeMapByFingerprint.get(fingerprint)
   if (cached) return cached
 
   const ioTypes = contract.ioTypes ?? []
@@ -148,16 +134,17 @@ const getIoTypeMapForContract = (contractName: string): ReadonlyMap<string, IoTy
   ioTypes.forEach((ioType) => {
     ioTypeMap.set(ioType.name, ioType)
   })
-  ioTypeMapByContractName.set(contract.name, ioTypeMap)
+  ioTypeMapByFingerprint.set(fingerprint, ioTypeMap)
   return ioTypeMap
 }
 
 const collectPathsByPredicate = (
-  candidate: RegistryEntryRef,
+  contract: ContractDefinition,
+  entry: ContractEntry,
+  fingerprint: string,
   isMatch: (normalizedTypeExpression: string) => boolean
 ): ReadonlySet<string> => {
-  const ioTypeMap = getIoTypeMapForContract(candidate.contractName)
-  if (!ioTypeMap) return new Set<string>()
+  const ioTypeMap = getIoTypeMapForContract(contract, fingerprint)
 
   const matchingPaths = new Set<string>()
   const visitedTypeNames = new Set<string>()
@@ -205,18 +192,22 @@ const collectPathsByPredicate = (
     visitByTypeName(ioType.name, path)
   }
 
-  visitByTypeName(candidate.inputTypeName, '')
+  visitByTypeName(entry.inputTypeName ?? `${entry.name}_input`, '')
   return matchingPaths
 }
 
-const collectIdentityPathsForInput = (candidate: RegistryEntryRef): ReadonlySet<string> =>
-  collectPathsByPredicate(candidate, isIdentityTypeExpression)
+const collectIdentityPathsForInput = (
+  contract: ContractDefinition,
+  entry: ContractEntry,
+  fingerprint: string
+): ReadonlySet<string> => collectPathsByPredicate(contract, entry, fingerprint, isIdentityTypeExpression)
 
-const collectUint64PathsForInput = (candidate: RegistryEntryRef): ReadonlySet<string> =>
-  collectPathsByPredicate(
-    candidate,
-    (normalizedTypeExpression) => normalizedTypeExpression === 'uint64'
-  )
+const collectUint64PathsForInput = (
+  contract: ContractDefinition,
+  entry: ContractEntry,
+  fingerprint: string
+): ReadonlySet<string> =>
+  collectPathsByPredicate(contract, entry, fingerprint, (normalizedTypeExpression) => normalizedTypeExpression === 'uint64')
 
 const isHumanReadableU64Path = (path: string): boolean => {
   const normalized = path.trim().toLowerCase()
@@ -226,9 +217,11 @@ const isHumanReadableU64Path = (path: string): boolean => {
 }
 
 const collectHumanReadableUint64PathsForInput = (
-  candidate: RegistryEntryRef
+  contract: ContractDefinition,
+  entry: ContractEntry,
+  fingerprint: string
 ): ReadonlySet<string> => {
-  const uint64Paths = collectUint64PathsForInput(candidate)
+  const uint64Paths = collectUint64PathsForInput(contract, entry, fingerprint)
   return new Set(Array.from(uint64Paths).filter((path) => isHumanReadableU64Path(path)))
 }
 
@@ -278,7 +271,7 @@ const decodeU64AsciiIfLikely = (value: unknown): string | null => {
 
 const normalizeDecodedValue = (
   value: unknown,
-  path = '',
+  path = ROOT_PATH,
   identityPaths?: ReadonlySet<string>,
   humanReadableUint64Paths?: ReadonlySet<string>
 ): unknown => {
@@ -320,123 +313,123 @@ const normalizeDecodedValue = (
   return value
 }
 
-const decodeCandidate = (candidate: RegistryEntryRef, bytes: Uint8Array) =>
-  decodeContractEntryInputData({
-    registry: coreContractsRegistry,
-    contractName: candidate.contractName,
-    entryName: candidate.entryName,
-    kind: candidate.kind,
-    bytes
-  })
+const getVersionLookupKey = (contractIndex: number, fingerprint: string): string =>
+  `${contractIndex}:${fingerprint}`
 
-const sortCandidatesForTxInput = (
-  candidates: readonly RegistryEntryRef[],
-  byteLength: number
-): RegistryEntryRef[] =>
-  [...candidates].sort((a, b) => {
-    const aKindRank = a.kind === 'procedure' ? 0 : 1
-    const bKindRank = b.kind === 'procedure' ? 0 : 1
-    if (aKindRank !== bKindRank) return aKindRank - bKindRank
+const resolveContractDecodeMetadata = (
+  contractIndex: number,
+  fingerprint: string,
+  entryKind: ContractEntryKind,
+  entryInputType: number,
+  entryName: string
+): ContractDecodeMetadata | null => {
+  const version = versionByContractAndFingerprint.get(getVersionLookupKey(contractIndex, fingerprint))
+  if (!version) return null
 
-    const aSizeGap =
-      a.inputSize === undefined ? Number.MAX_SAFE_INTEGER : Math.abs(a.inputSize - byteLength)
-    const bSizeGap =
-      b.inputSize === undefined ? Number.MAX_SAFE_INTEGER : Math.abs(b.inputSize - byteLength)
-    if (aSizeGap !== bSizeGap) return aSizeGap - bSizeGap
+  const entry = version.contract.entries.find(
+    (candidate) =>
+      candidate.kind === entryKind &&
+      candidate.inputType === entryInputType &&
+      candidate.name === entryName
+  )
+  if (!entry) return null
 
-    return a.entryName.localeCompare(b.entryName)
-  })
+  return {
+    contract: version.contract,
+    entry,
+    fingerprint: version.fingerprint
+  }
+}
+
+const createUnsupportedResult = (
+  reason: Extract<DecodedContractInput, { status: 'unsupported' }>['reason'],
+  message?: string
+): DecodedContractInput => ({
+  status: 'unsupported',
+  reason,
+  ...(message ? { message } : {})
+})
 
 export const decodeContractInputData = (params: {
   inputType: number
   inputData: string | Uint8Array | number[] | null | undefined
   destinationHint?: string | null
+  epoch?: number | null
 }): DecodedContractInput => {
   if (params.inputType <= 0) {
-    return {
-      status: 'unsupported',
-      reason: 'no-match',
-      message: 'Input type must be greater than zero for contract decoding.'
-    }
+    return createUnsupportedResult(
+      'no-match',
+      'Input type must be greater than zero for contract decoding.'
+    )
   }
 
   const { bytes, invalid } = toBytes(params.inputData)
   if (invalid) {
-    return { status: 'unsupported', reason: 'invalid-input-data' }
+    return createUnsupportedResult('invalid-input-data')
   }
   if (!bytes) {
-    return { status: 'unsupported', reason: 'missing-input-data' }
+    return createUnsupportedResult('missing-input-data')
+  }
+  if (!params.epoch || params.epoch <= 0) {
+    return createUnsupportedResult('missing-epoch')
   }
 
-  const candidates = entriesByInputType.get(params.inputType) ?? []
-  if (candidates.length === 0) {
-    return { status: 'unsupported', reason: 'no-match' }
-  }
-
-  const destinationContractName = params.destinationHint
-    ? registryContractNameByAddress.get(params.destinationHint.trim().toUpperCase())
-    : undefined
-
-  const preferredCandidates = destinationContractName
-    ? candidates.filter((candidate) => candidate.contractName === destinationContractName)
-    : []
-  const fallbackCandidates = destinationContractName
-    ? candidates.filter((candidate) => candidate.contractName !== destinationContractName)
-    : candidates
-  const orderedCandidates = [
-    ...sortCandidatesForTxInput(preferredCandidates, bytes.length),
-    ...sortCandidatesForTxInput(fallbackCandidates, bytes.length)
-  ]
-
-  let firstDecodeError: string | undefined
-  let decodedResult: DecodedContractInput | null = null
-
-  orderedCandidates.some((candidate) => {
-    try {
-      let decoded
-      try {
-        decoded = decodeCandidate(candidate, bytes)
-      } catch (error) {
-        if (candidate.inputSize === undefined || bytes.length >= candidate.inputSize) {
-          throw error
-        }
-
-        const paddedBytes = new Uint8Array(candidate.inputSize)
-        paddedBytes.set(bytes)
-        decoded = decodeCandidate(candidate, paddedBytes)
-      }
-
-      const identityPaths = collectIdentityPathsForInput(candidate)
-      decodedResult = {
-        status: 'decoded',
-        contractName: candidate.contractName,
-        contractIndex: candidate.contractIndex,
-        entryName: candidate.entryName,
-        kind: candidate.kind,
-        inputType: candidate.inputType,
-        value: normalizeDecodedValue(
-          decoded.value,
-          '',
-          identityPaths,
-          collectHumanReadableUint64PathsForInput(candidate)
-        ),
-        identityPaths
-      }
-
-      return true
-    } catch (error) {
-      if (!firstDecodeError) {
-        firstDecodeError = getErrorMessage(error)
-      }
-      return false
-    }
+  const decoded = decodeHistoricalTransactionInput({
+    registry: coreVersionedContractsRegistry,
+    destination: params.destinationHint ?? undefined,
+    inputType: params.inputType,
+    inputBytes: bytes,
+    epoch: params.epoch
   })
 
-  if (decodedResult) return decodedResult
+  if (!decoded.resolvedVersion || !decoded.entry) {
+    return createUnsupportedResult('no-match')
+  }
+
+  const metadata = resolveContractDecodeMetadata(
+    decoded.resolvedVersion.contractIndex,
+    decoded.resolvedVersion.fingerprint,
+    decoded.entry.kind,
+    decoded.entry.inputType,
+    decoded.entry.name
+  )
+  if (!metadata) {
+    return createUnsupportedResult(
+      'decode-failed',
+      'Resolved contract version metadata was not found in the bundled registry.'
+    )
+  }
+
+  const identityPaths = collectIdentityPathsForInput(
+    metadata.contract,
+    metadata.entry,
+    metadata.fingerprint
+  )
+  const humanReadableUint64Paths = collectHumanReadableUint64PathsForInput(
+    metadata.contract,
+    metadata.entry,
+    metadata.fingerprint
+  )
+
+  const normalizedValue =
+    decoded.decoded.mode === 'typed'
+      ? normalizeDecodedValue(decoded.decoded.value, ROOT_PATH, identityPaths, humanReadableUint64Paths)
+      : normalizeDecodedValue(
+          { rawBytes: decoded.decoded.rawBytes },
+          ROOT_PATH,
+          identityPaths,
+          humanReadableUint64Paths
+        )
 
   return {
-    status: 'unsupported',
-    reason: 'decode-failed',
-    message: firstDecodeError
+    status: 'decoded',
+    contractName: decoded.resolvedVersion.contractName,
+    contractIndex: decoded.resolvedVersion.contractIndex,
+    entryName: decoded.entry.name,
+    kind: decoded.entry.kind,
+    inputType: decoded.entry.inputType,
+    value: normalizedValue,
+    identityPaths,
+    decodeMode: decoded.decoded.mode
   }
 }
