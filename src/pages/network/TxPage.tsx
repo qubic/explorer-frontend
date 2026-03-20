@@ -139,7 +139,6 @@ function VirtualTxContent({ txId, virtualTx }: { txId: string; virtualTx: Parsed
           paginated
           showTxId={false}
           header={t('events')}
-          validForTick={data?.validForTick}
         />
       </div>
     </PageLayout>
@@ -153,8 +152,7 @@ function RegularTxContent({ txId }: { txId: string }) {
     total,
     isLoading: isEventsLoading,
     hasError: hasEventsError,
-    lastProcessedTick: eventsLastProcessedTick,
-    validForTick
+    lastProcessedTick: eventsLastProcessedTick
   } = useTransactionEvents(txId)
 
   const eventsErrorMessage = getEventsErrorMessage(hasEventsError, eventsLastProcessedTick, t)
@@ -246,7 +244,6 @@ function RegularTxContent({ txId }: { txId: string }) {
           showTxId={false}
           header={t('events')}
           errorMessage={eventsErrorMessage}
-          validForTick={validForTick}
         />
       </div>
     </PageLayout>
