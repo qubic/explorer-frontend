@@ -20,6 +20,10 @@ export type TransactionEvent = {
   assetIssuer?: string
   numberOfShares?: number
   managingContractIndex?: number
+  owner?: string
+  sourceContractIndex?: number
+  destinationContractIndex?: number
+  possessor?: string
   unitOfMeasurement?: string
   numberOfDecimalPlaces?: number
   deductedAmount?: number
@@ -203,6 +207,20 @@ interface AssetChangeData {
   numberOfShares: string
 }
 
+interface AssetOwnershipManagingContractChangeData {
+  assetName: string
+  assetIssuer: string
+  owner: string
+  numberOfShares: string
+  sourceContractIndex: string
+  destinationContractIndex: string
+}
+
+interface AssetPossessionManagingContractChangeData
+  extends AssetOwnershipManagingContractChangeData {
+  possessor: string
+}
+
 interface BurningData {
   source: string
   amount: string
@@ -242,6 +260,8 @@ export interface RawApiEvent {
   dustBurning?: BurningData
   contractReserveDeduction?: ContractReserveDeductionData
   customMessage?: CustomMessageData
+  assetOwnershipManagingContractChange?: AssetOwnershipManagingContractChangeData
+  assetPossessionManagingContractChange?: AssetPossessionManagingContractChangeData
   smartContractMessage?: SmartContractMessageData
 }
 
@@ -282,7 +302,6 @@ export function adaptApiEvent(raw: RawApiEvent): TransactionEvent {
     base.destination = raw.quTransfer.destination
     base.amount = Number(raw.quTransfer.amount)
   } else if (raw.assetIssuance) {
-    base.source = raw.assetIssuance.assetIssuer
     base.assetName = raw.assetIssuance.assetName
     base.assetIssuer = raw.assetIssuance.assetIssuer
     base.numberOfShares = Number(raw.assetIssuance.numberOfShares)
@@ -304,6 +323,25 @@ export function adaptApiEvent(raw: RawApiEvent): TransactionEvent {
     base.assetIssuer = raw.assetPossessionChange.assetIssuer
     base.numberOfShares = Number(raw.assetPossessionChange.numberOfShares)
     base.amount = Number(raw.assetPossessionChange.numberOfShares)
+  } else if (raw.assetOwnershipManagingContractChange) {
+    const d = raw.assetOwnershipManagingContractChange
+    base.owner = d.owner
+    base.assetName = d.assetName
+    base.assetIssuer = d.assetIssuer
+    base.numberOfShares = Number(d.numberOfShares)
+    base.amount = Number(d.numberOfShares)
+    base.sourceContractIndex = Number(d.sourceContractIndex)
+    base.destinationContractIndex = Number(d.destinationContractIndex)
+  } else if (raw.assetPossessionManagingContractChange) {
+    const d = raw.assetPossessionManagingContractChange
+    base.owner = d.owner
+    base.possessor = d.possessor
+    base.assetName = d.assetName
+    base.assetIssuer = d.assetIssuer
+    base.numberOfShares = Number(d.numberOfShares)
+    base.amount = Number(d.numberOfShares)
+    base.sourceContractIndex = Number(d.sourceContractIndex)
+    base.destinationContractIndex = Number(d.destinationContractIndex)
   } else if (raw.burning) {
     base.source = raw.burning.source
     base.amount = Number(raw.burning.amount)

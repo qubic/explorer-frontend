@@ -32,10 +32,15 @@ function EventDetailPage() {
   const destinationAddressName = useGetAddressName(event?.destination ?? '')
   const issuerAddressName = useGetAddressName(event?.assetIssuer ?? '')
 
+  const ownerAddressName = useGetAddressName(event?.owner ?? '')
+  const possessorAddressName = useGetAddressName(event?.possessor ?? '')
+
   const contract = useGetSmartContractByIndex(
     event?.contractIndex && event.contractIndex > 0 ? event.contractIndex : undefined
   )
   const managingContract = useGetSmartContractByIndex(event?.managingContractIndex)
+  const sourceContract = useGetSmartContractByIndex(event?.sourceContractIndex)
+  const destinationContract = useGetSmartContractByIndex(event?.destinationContractIndex)
 
   const { date, time } = useMemo(
     () =>
@@ -113,7 +118,7 @@ function EventDetailPage() {
         {event.contractIndex > 0 && (
           <SubCardItem
             variant="secondary"
-            title={t('contractIndex')}
+            title={t('eventContractIndex')}
             content={
               <p className="font-space text-sm">
                 {event.contractIndex}
@@ -199,6 +204,60 @@ function EventDetailPage() {
                 {event.managingContractIndex}
                 {managingContract && (
                   <span className="text-gray-50"> ({managingContract.name})</span>
+                )}
+              </p>
+            }
+          />
+        )}
+        {event.owner && (
+          <SubCardItem
+            variant="secondary"
+            title={t('owner')}
+            content={
+              <AddressLink
+                value={event.owner}
+                label={ownerAddressName?.name}
+                copy
+                showTooltip={!!ownerAddressName?.name}
+              />
+            }
+          />
+        )}
+        {event.possessor && (
+          <SubCardItem
+            variant="secondary"
+            title={t('possessor')}
+            content={
+              <AddressLink
+                value={event.possessor}
+                label={possessorAddressName?.name}
+                copy
+                showTooltip={!!possessorAddressName?.name}
+              />
+            }
+          />
+        )}
+        {event.sourceContractIndex !== undefined && (
+          <SubCardItem
+            variant="secondary"
+            title={t('sourceContractIndex')}
+            content={
+              <p className="font-space text-sm">
+                {event.sourceContractIndex}
+                {sourceContract && <span className="text-gray-50"> ({sourceContract.name})</span>}
+              </p>
+            }
+          />
+        )}
+        {event.destinationContractIndex !== undefined && (
+          <SubCardItem
+            variant="secondary"
+            title={t('destinationContractIndex')}
+            content={
+              <p className="font-space text-sm">
+                {event.destinationContractIndex}
+                {destinationContract && (
+                  <span className="text-gray-50"> ({destinationContract.name})</span>
                 )}
               </p>
             }
