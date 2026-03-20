@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 
 import { ChevronLeftIcon, ChevronRightIcon } from '@app/assets/icons'
-import { Skeleton } from '@app/components/ui'
+import { Alert, Skeleton } from '@app/components/ui'
 import { Routes } from '@app/router'
 import {
   useGetComputorListsForEpochQuery,
@@ -11,6 +11,7 @@ import {
 } from '@app/store/apis/query-service'
 import { formatDate, formatString } from '@app/utils'
 import { AddressLink, SubCardItem, TickStatus } from '../../components'
+import { parseLastProcessedTickFromMessage } from './tickFilterUtils'
 
 type Props = Readonly<{
   tick: number
@@ -39,6 +40,8 @@ export default function TickDetails({ tick }: Props) {
     },
     [navigate, tick, searchParams]
   )
+
+  const lastProcessedTick = parseLastProcessedTickFromMessage(tickDataError)
 
   const tickLeader = useMemo(() => {
     if (!computorLists?.length || !tickData) return ''
@@ -82,6 +85,13 @@ export default function TickDetails({ tick }: Props) {
           />
         </div>
       </div>
+      {lastProcessedTick !== null && (
+        <Alert variant="warning" className="mb-24">
+          {t('tickNotYetProcessedData', {
+            lastProcessedTick: lastProcessedTick.toLocaleString()
+          })}
+        </Alert>
+      )}
       {!tickDataError && (
         <div className="mb-24">
           <SubCardItem

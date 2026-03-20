@@ -1,10 +1,10 @@
 import { useTranslation } from 'react-i18next'
 
-import { Alert } from '@app/components/ui'
 import BetaBanner from '../../components/BetaBanner'
 import { EventsFilterBar } from '../../components/filters'
 import TransactionEvents from '../../components/TxItem/TransactionEvents'
 import { useEventFilters } from '../../hooks'
+import { getEventsErrorMessage } from '../../utils/filterUtils'
 import { useTickEvents } from '../hooks'
 
 type Props = Readonly<{
@@ -21,8 +21,12 @@ export default function TickEvents({ tick }: Props) {
     destinationFilter,
     amountFilter,
     isLoading,
-    hasError
+    hasError,
+    lastProcessedTick,
+    validForTick
   } = useTickEvents(tick)
+
+  const errorMessage = getEventsErrorMessage(hasError, lastProcessedTick, t)
 
   const filters = useEventFilters({
     eventTypes,
@@ -48,17 +52,15 @@ export default function TickEvents({ tick }: Props) {
         showDateFilter={false}
       />
 
-      {hasError ? (
-        <Alert variant="error">{t('eventsLoadFailed')}</Alert>
-      ) : (
-        <TransactionEvents
-          events={events}
-          total={total}
-          isLoading={isLoading}
-          paginated
-          showBetaBanner={false}
-        />
-      )}
+      <TransactionEvents
+        events={events}
+        total={total}
+        isLoading={isLoading}
+        paginated
+        showBetaBanner={false}
+        errorMessage={errorMessage}
+        validForTick={validForTick}
+      />
     </div>
   )
 }

@@ -8,6 +8,7 @@ import BetaBanner from '../../components/BetaBanner'
 import { EventsFilterBar } from '../../components/filters'
 import TransactionEvents from '../../components/TxItem/TransactionEvents'
 import { useEventFilters } from '../../hooks'
+import { getEventsErrorMessage } from '../../utils/filterUtils'
 import useEventsPage from './useEventsPage'
 
 function EventsPage() {
@@ -22,8 +23,13 @@ function EventsPage() {
     sourceFilter,
     destinationFilter,
     amountFilter,
-    isLoading
+    isLoading,
+    hasError,
+    lastProcessedTick,
+    validForTick
   } = useEventsPage()
+
+  const errorMessage = getEventsErrorMessage(hasError, lastProcessedTick, t)
 
   const filters = useEventFilters({
     tickStart,
@@ -68,6 +74,8 @@ function EventsPage() {
           showTxId
           showTickAndTimestamp
           showBetaBanner={false}
+          errorMessage={errorMessage}
+          validForTick={validForTick}
         />
       </div>
     </PageLayout>

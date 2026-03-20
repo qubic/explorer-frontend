@@ -8,12 +8,18 @@ import { ErrorFallback } from '@app/components/ui/error-boundaries'
 import { PageLayout } from '@app/components/ui/layouts'
 import { LinearProgress } from '@app/components/ui/loaders'
 import { usePageAutoCorrect, useValidatedPage, useValidatedPageSize } from '@app/hooks'
-import { useGetEventsQuery, type ParsedVirtualTxId, parseVirtualTxId } from '@app/store/apis/events'
+import {
+  useGetEventsQuery,
+  type ParsedVirtualTxId,
+  parseVirtualTxId,
+  getLastProcessedTickFromEventsError
+} from '@app/store/apis/events'
 import { useGetTransactionByHashQuery } from '@app/store/apis/query-service'
 import { formatDate, formatEllipsis } from '@app/utils'
 import { CardItem, HomeLink, SubCardItem, TickLink, TxItem, WaitingForTick } from './components'
 import TransactionEvents from './components/TxItem/TransactionEvents'
 import { useTickWatcher, useTransactionEvents } from './hooks'
+import { getEventsErrorMessage } from './utils/filterUtils'
 
 const VIRTUAL_TX_TYPE_LABELS: Record<number, string> = {
   2: 'Smart Contract Begin Epoch',
@@ -29,7 +35,7 @@ function VirtualTxContent({ txId, virtualTx }: { txId: string; virtualTx: Parsed
   const pageSize = useValidatedPageSize()
   const offset = (page - 1) * pageSize
 
-  const { data, isFetching, isError } = useGetEventsQuery({
+  const { data, isFetching, isError, error } = useGetEventsQuery({
     tickNumber: virtualTx.tickNumber,
     category: virtualTx.category,
     offset,
@@ -53,8 +59,23 @@ function VirtualTxContent({ txId, virtualTx }: { txId: string; virtualTx: Parsed
     [firstEventTimestamp]
   )
 
+  const lastProcessedTick = isError ? getLastProcessedTickFromEventsError(error) : null
+
   if (isFetching && events.length === 0) return <LinearProgress />
-  if (isError) return <ErrorFallback message={t('virtualTransactionNotFound')} hideErrorHeader />
+  if (isError) {
+    return (
+      <ErrorFallback
+        message={
+          lastProcessedTick !== null
+            ? t('tickNotYetProcessedEvents', {
+                lastProcessedTick: lastProcessedTick.toLocaleString()
+              })
+            : t('virtualTransactionNotFound')
+        }
+        hideErrorHeader
+      />
+    )
+  }
 
   return (
     <PageLayout>
@@ -118,6 +139,7 @@ function VirtualTxContent({ txId, virtualTx }: { txId: string; virtualTx: Parsed
           paginated
           showTxId={false}
           header={t('events')}
+          validForTick={data?.validForTick}
         />
       </div>
     </PageLayout>
@@ -126,7 +148,16 @@ function VirtualTxContent({ txId, virtualTx }: { txId: string; virtualTx: Parsed
 
 function RegularTxContent({ txId }: { txId: string }) {
   const { t } = useTranslation('network-page')
-  const { events, total, isLoading: isEventsLoading } = useTransactionEvents(txId)
+  const {
+    events,
+    total,
+    isLoading: isEventsLoading,
+    hasError: hasEventsError,
+    lastProcessedTick: eventsLastProcessedTick,
+    validForTick
+  } = useTransactionEvents(txId)
+
+  const eventsErrorMessage = getEventsErrorMessage(hasEventsError, eventsLastProcessedTick, t)
 
   const {
     data: tx,
@@ -214,6 +245,8 @@ function RegularTxContent({ txId }: { txId: string }) {
           paginated
           showTxId={false}
           header={t('events')}
+          errorMessage={eventsErrorMessage}
+          validForTick={validForTick}
         />
       </div>
     </PageLayout>

@@ -7,7 +7,11 @@ import {
   useValidatedPage,
   useValidatedPageSize
 } from '@app/hooks'
-import { type TransactionEvent, useGetEventsQuery } from '@app/store/apis/events'
+import {
+  type TransactionEvent,
+  useGetEventsQuery,
+  getLastProcessedTickFromEventsError
+} from '@app/store/apis/events'
 import type { AddressFilter } from '../../address/components/TransactionsOverview/filterUtils'
 import {
   type EventAmountFilter,
@@ -33,6 +37,9 @@ export default function useEventsPage(): {
   destinationFilter: AddressFilter | undefined
   amountFilter: EventAmountFilter | undefined
   isLoading: boolean
+  hasError: boolean
+  lastProcessedTick: number | null
+  validForTick: number | undefined
 } {
   const [searchParams] = useSearchParams()
 
@@ -60,7 +67,7 @@ export default function useEventsPage(): {
     [amountFilter]
   )
 
-  const { data, isFetching } = useGetEventsQuery({
+  const { data, isFetching, isError, error } = useGetEventsQuery({
     tickNumber,
     tickRange,
     timestampRange,
@@ -89,6 +96,9 @@ export default function useEventsPage(): {
     sourceFilter,
     destinationFilter,
     amountFilter,
-    isLoading: isFetching
+    isLoading: isFetching,
+    hasError: isError,
+    lastProcessedTick: isError ? getLastProcessedTickFromEventsError(error) : null,
+    validForTick: data?.validForTick
   }
 }

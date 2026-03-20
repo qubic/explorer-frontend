@@ -10,7 +10,8 @@ import type { TickTransactionFilters } from './tickFilterUtils'
 import {
   buildTickTransactionsRequest,
   extractErrorMessage,
-  parseFilterApiError
+  parseFilterApiError,
+  parseLastProcessedTickFromMessage
 } from './tickFilterUtils'
 
 const TickTransactionsSkeletonRows = memo(({ count }: { count: number }) => (
@@ -48,6 +49,12 @@ export default function TickTransactions({ tick }: Props) {
   // Extract error message from RTK Query error
   const errorMessage = useMemo(() => {
     if (!tickTransactionsError) return null
+    const lastProcessedTick = parseLastProcessedTickFromMessage(tickTransactionsError)
+    if (lastProcessedTick !== null) {
+      return t('tickNotYetProcessedTransactions', {
+        lastProcessedTick: lastProcessedTick.toLocaleString()
+      })
+    }
     const errorStr = extractErrorMessage(tickTransactionsError)
     const parsed = parseFilterApiError(errorStr)
     if (parsed) {

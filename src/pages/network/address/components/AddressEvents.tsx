@@ -1,10 +1,10 @@
 import { useTranslation } from 'react-i18next'
 
-import { Alert } from '@app/components/ui'
 import BetaBanner from '../../components/BetaBanner'
 import { EventsFilterBar } from '../../components/filters'
 import TransactionEvents from '../../components/TxItem/TransactionEvents'
 import { useEventFilters } from '../../hooks'
+import { getEventsErrorMessage } from '../../utils/filterUtils'
 import { useAddressEvents } from '../hooks'
 
 type Props = Readonly<{
@@ -25,8 +25,12 @@ export default function AddressEvents({ addressId }: Props) {
     destinationFilter,
     amountFilter,
     isLoading,
-    hasError
+    hasError,
+    lastProcessedTick,
+    validForTick
   } = useAddressEvents(addressId)
+
+  const errorMessage = getEventsErrorMessage(hasError, lastProcessedTick, t)
 
   const filters = useEventFilters({
     tickStart,
@@ -59,20 +63,18 @@ export default function AddressEvents({ addressId }: Props) {
         addressId={addressId}
       />
 
-      {hasError ? (
-        <Alert variant="error">{t('eventsLoadFailed')}</Alert>
-      ) : (
-        <TransactionEvents
-          events={events}
-          total={total}
-          isLoading={isLoading}
-          paginated
-          showTxId
-          showTickAndTimestamp
-          showBetaBanner={false}
-          highlightAddress={addressId}
-        />
-      )}
+      <TransactionEvents
+        events={events}
+        total={total}
+        isLoading={isLoading}
+        paginated
+        showTxId
+        showTickAndTimestamp
+        showBetaBanner={false}
+        highlightAddress={addressId}
+        errorMessage={errorMessage}
+        validForTick={validForTick}
+      />
     </div>
   )
 }

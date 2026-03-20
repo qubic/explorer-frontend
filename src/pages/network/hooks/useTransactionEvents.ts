@@ -1,16 +1,23 @@
 import { usePageAutoCorrect, useValidatedPage, useValidatedPageSize } from '@app/hooks'
-import { useGetEventsQuery, type TransactionEvent } from '@app/store/apis/events'
+import {
+  useGetEventsQuery,
+  type TransactionEvent,
+  getLastProcessedTickFromEventsError
+} from '@app/store/apis/events'
 
 export default function useTransactionEvents(txId: string): {
   events: TransactionEvent[]
   total: number
   isLoading: boolean
+  hasError: boolean
+  lastProcessedTick: number | null
+  validForTick: number | undefined
 } {
   const page = useValidatedPage()
   const pageSize = useValidatedPageSize()
   const offset = (page - 1) * pageSize
 
-  const { data, isFetching } = useGetEventsQuery(
+  const { data, isFetching, isError, error } = useGetEventsQuery(
     { transactionHash: txId, offset, size: pageSize },
     { skip: !txId }
   )
@@ -22,6 +29,9 @@ export default function useTransactionEvents(txId: string): {
   return {
     events: data?.events ?? [],
     total,
-    isLoading: isFetching
+    isLoading: isFetching,
+    hasError: isError,
+    lastProcessedTick: isError ? getLastProcessedTickFromEventsError(error) : null,
+    validForTick: data?.validForTick
   }
 }

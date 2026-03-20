@@ -139,6 +139,8 @@ type Props = {
   showBetaBanner?: boolean
   header?: string
   highlightAddress?: string
+  errorMessage?: string | null
+  validForTick?: number
 }
 
 export default function TransactionEvents({
@@ -150,7 +152,9 @@ export default function TransactionEvents({
   showTickAndTimestamp = false,
   showBetaBanner = true,
   header,
-  highlightAddress
+  highlightAddress,
+  errorMessage,
+  validForTick
 }: Props) {
   const { t } = useTranslation('network-page')
   const { handlePageChange, handlePageSizeChange } = usePaginationSearchParams()
@@ -180,28 +184,35 @@ export default function TransactionEvents({
       {paginated && (
         <div className="flex flex-wrap items-center justify-between gap-8">
           {!isLoading && totalCount > 0 ? (
-            <div className="flex items-center text-sm text-gray-50">
-              {totalCount >= MAX_EVENT_RESULTS ? (
-                <>
+            <div className="flex flex-col gap-2">
+              <div className="flex items-center text-sm text-gray-50">
+                {totalCount >= MAX_EVENT_RESULTS ? (
+                  <>
+                    <span>
+                      {t('showingMaxEvents', {
+                        count: MAX_EVENT_RESULTS.toLocaleString()
+                      } as Record<string, string>)}
+                    </span>
+                    <Tooltip
+                      tooltipId="max-events-info"
+                      content={t('maxResultsHint', {
+                        count: MAX_EVENT_RESULTS.toLocaleString()
+                      } as Record<string, string>)}
+                    >
+                      <Infocon className="ml-6 h-16 w-16 cursor-help text-gray-50" />
+                    </Tooltip>
+                  </>
+                ) : (
                   <span>
-                    {t('showingMaxEvents', {
-                      count: MAX_EVENT_RESULTS.toLocaleString()
+                    {t('eventsFound', {
+                      count: totalCount.toLocaleString()
                     } as Record<string, string>)}
                   </span>
-                  <Tooltip
-                    tooltipId="max-events-info"
-                    content={t('maxResultsHint', {
-                      count: MAX_EVENT_RESULTS.toLocaleString()
-                    } as Record<string, string>)}
-                  >
-                    <Infocon className="ml-6 h-16 w-16 cursor-help text-gray-50" />
-                  </Tooltip>
-                </>
-              ) : (
-                <span>
-                  {t('eventsFound', {
-                    count: totalCount.toLocaleString()
-                  } as Record<string, string>)}
+                )}
+              </div>
+              {validForTick !== undefined && (
+                <span className="text-xs text-gray-50">
+                  {t('eventsValidForTickShort', { tick: validForTick.toLocaleString() })}
                 </span>
               )}
             </div>
@@ -246,7 +257,17 @@ export default function TransactionEvents({
                     ))}
                   </tr>
                 ))}
-              {!isLoading && displayEvents.length === 0 && (
+              {!isLoading && errorMessage && (
+                <tr>
+                  <td
+                    colSpan={columnCount}
+                    className="px-16 py-32 text-center text-sm text-error-40"
+                  >
+                    {errorMessage}
+                  </td>
+                </tr>
+              )}
+              {!isLoading && !errorMessage && displayEvents.length === 0 && (
                 <tr>
                   <td
                     colSpan={columnCount}
@@ -257,6 +278,7 @@ export default function TransactionEvents({
                 </tr>
               )}
               {!isLoading &&
+                !errorMessage &&
                 displayEvents.map((event) => (
                   <EventRow
                     key={`${event.transactionHash}-${event.logId}`}

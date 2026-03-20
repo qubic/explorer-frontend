@@ -10,6 +10,7 @@ const BASE_URL = `${envConfig.EVENTS_API_URL}/query/v1`
 export interface PaginatedEvents {
   events: TransactionEvent[]
   total: number
+  validForTick?: number
 }
 
 export interface ShouldFilter {
@@ -56,7 +57,8 @@ function adaptEventsList(response: RawGetEventsResponse): TransactionEvent[] {
 function adaptPaginatedEvents(response: RawGetEventsResponse): PaginatedEvents {
   return {
     events: adaptEventsList(response),
-    total: response?.hits?.total ?? 0
+    total: response?.hits?.total ?? 0,
+    validForTick: response?.validForTick
   }
 }
 

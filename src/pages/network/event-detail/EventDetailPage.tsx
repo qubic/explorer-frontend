@@ -8,7 +8,11 @@ import { ErrorFallback } from '@app/components/ui/error-boundaries'
 import { PageLayout } from '@app/components/ui/layouts'
 import { LinearProgress } from '@app/components/ui/loaders'
 import { useGetAddressName, useGetSmartContractByIndex } from '@app/hooks'
-import { useGetEventsQuery, getEventTypeLabel } from '@app/store/apis/events'
+import {
+  useGetEventsQuery,
+  getEventTypeLabel,
+  getLastProcessedTickFromEventsError
+} from '@app/store/apis/events'
 import { formatDate, formatString } from '@app/utils'
 import { AddressLink, HomeLink, SubCardItem, TickLink, TxLink, VirtualTxLink } from '../components'
 
@@ -21,7 +25,7 @@ function EventDetailPage() {
   const isValidParams =
     Number.isFinite(tickNumber) && tickNumber > 0 && Number.isFinite(logId) && logId >= 0
 
-  const { data, isFetching, isError } = useGetEventsQuery(
+  const { data, isFetching, isError, error } = useGetEventsQuery(
     { tickNumber, logId, size: 1 },
     { skip: !isValidParams }
   )
@@ -50,8 +54,23 @@ function EventDetailPage() {
     [event?.timestamp]
   )
 
+  const lastProcessedTick = isError ? getLastProcessedTickFromEventsError(error) : null
+
   if (isFetching) return <LinearProgress />
-  if (isError) return <ErrorFallback message={t('eventsLoadFailed')} hideErrorHeader />
+  if (isError) {
+    return (
+      <ErrorFallback
+        message={
+          lastProcessedTick !== null
+            ? t('tickNotYetProcessedEvents', {
+                lastProcessedTick: lastProcessedTick.toLocaleString()
+              })
+            : t('eventsLoadFailed')
+        }
+        hideErrorHeader
+      />
+    )
+  }
   if (!event) return <ErrorFallback message={t('eventNotFound')} hideErrorHeader />
 
   return (

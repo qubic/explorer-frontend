@@ -272,6 +272,33 @@ export interface RawGetEventsResponse {
     size: number
   }
   events: RawApiEvent[]
+  validForTick?: number
+}
+
+/**
+ * Check if an RTK Query error is a "tick not yet processed" error (gRPC code 9).
+ * This happens when the requested tick is greater than the last processed tick.
+ */
+export function getLastProcessedTickFromEventsError(error: unknown): number | null {
+  if (
+    error == null ||
+    typeof error !== 'object' ||
+    !('data' in error) ||
+    typeof (error as Record<string, unknown>).data !== 'object'
+  )
+    return null
+
+  const { data } = error as { data: Record<string, unknown> }
+  if (data?.code !== 9) return null
+
+  const details = Array.isArray(data.details) ? data.details : []
+  const tickDetail = details.find(
+    (d: Record<string, unknown>) =>
+      typeof d === 'object' && d !== null && typeof d.tickNumber === 'number'
+  )
+
+  const tick = tickDetail?.tickNumber
+  return typeof tick === 'number' && Number.isFinite(tick) ? tick : null
 }
 
 // ============================================================================

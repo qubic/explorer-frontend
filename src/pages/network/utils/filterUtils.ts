@@ -110,6 +110,37 @@ export function parseFilterApiError(error: string | null): ParsedApiError | null
   return null
 }
 
+/**
+ * Builds an error message for events that failed to load.
+ * Returns a tick-specific message when lastProcessedTick is available,
+ * or a generic failure message otherwise.
+ */
+export function getEventsErrorMessage(
+  hasError: boolean,
+  lastProcessedTick: number | null,
+  t: (key: string, params?: Record<string, string>) => string
+): string | null {
+  if (!hasError) return null
+  return lastProcessedTick !== null
+    ? t('tickNotYetProcessedEvents', { lastProcessedTick: lastProcessedTick.toLocaleString() })
+    : t('eventsLoadFailed')
+}
+
+/**
+ * Extracts the last processed tick from a "tick number greater than last processed" error.
+ * Handles messages like:
+ * "invalid tick number: rpc error: ... requested tick number 46584753 is greater than last processed tick 46584267"
+ */
+export function parseLastProcessedTickFromMessage(error: unknown): number | null {
+  if (!error) return null
+  const msg = extractErrorMessage(error)
+  if (!msg) return null
+  const match = msg.match(/greater than last processed tick (\d+)/)
+  if (!match) return null
+  const tick = Number(match[1])
+  return Number.isFinite(tick) ? tick : null
+}
+
 // ============================================================================
 // VALIDATION UTILITIES
 // ============================================================================
