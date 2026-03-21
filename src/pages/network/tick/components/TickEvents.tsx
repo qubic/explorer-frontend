@@ -22,8 +22,7 @@ export default function TickEvents({ tick }: Props) {
     amountFilter,
     isLoading,
     hasError,
-    lastProcessedTick,
-    validForTick
+    lastProcessedTick
   } = useTickEvents(tick)
 
   const errorMessage = getEventsErrorMessage(hasError, lastProcessedTick, t)
@@ -59,7 +58,6 @@ export default function TickEvents({ tick }: Props) {
         paginated
         showBetaBanner={false}
         errorMessage={errorMessage}
-        validForTick={validForTick}
       />
     </div>
   )

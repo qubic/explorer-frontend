@@ -31,7 +31,6 @@ export default function useTickEvents(tick: number): {
   isLoading: boolean
   hasError: boolean
   lastProcessedTick: number | null
-  validForTick: number | undefined
   refetch: () => void
 } {
   const [searchParams] = useSearchParams()
@@ -84,7 +83,6 @@ export default function useTickEvents(tick: number): {
     isLoading: isFetching,
     hasError: isError,
     lastProcessedTick: isError ? getLastProcessedTickFromEventsError(error) : null,
-    validForTick: data?.validForTick,
     refetch
   }
 }
