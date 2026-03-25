@@ -5,7 +5,7 @@ import {
   type ContractEntry,
   type ContractEntryKind,
   type ContractVersionDefinition
-} from '@qubic.ts/contracts'
+} from '@qubic.ts/contracts/browser'
 import { identityFromPublicKey } from '@qubic.ts/core'
 
 export type DecodedContractInput =
