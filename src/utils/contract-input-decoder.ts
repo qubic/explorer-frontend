@@ -219,6 +219,31 @@ const isHumanReadableU64Path = (path: string): boolean => {
   return /name|symbol|ticker|label|code|unit/.test(lastSegment)
 }
 
+const isHumanReadableByteArrayPath = (path: string): boolean => {
+  const normalized = path.trim().toLowerCase()
+  if (!normalized) return false
+  const lastSegment = normalized.split('.').at(-1) ?? normalized
+  return /url|name|symbol|ticker|label|code|unit|title|description|memo|text/.test(lastSegment)
+}
+
+const decodeAsciiByteArray = (value: readonly number[]): string | null => {
+  if (value.length === 0) return null
+  if (!value.every((item) => Number.isInteger(item) && item >= 0 && item <= 255)) return null
+
+  const bytes = Uint8Array.from(value)
+  const zeroIndex = bytes.indexOf(0)
+  const endIndex = zeroIndex === -1 ? bytes.length : zeroIndex
+  if (endIndex === 0) return ''
+
+  if (zeroIndex !== -1 && !bytes.subarray(zeroIndex).every((byte) => byte === 0)) return null
+
+  const printable = bytes.subarray(0, endIndex)
+  const allPrintable = printable.every((byte) => byte >= 32 && byte <= 126)
+  if (!allPrintable) return null
+
+  return String.fromCharCode(...printable)
+}
+
 const collectHumanReadableUint64PathsForInput = (
   contract: ContractDefinition,
   entry: ContractEntry,
@@ -300,6 +325,10 @@ const normalizeDecodedValue = (
       .join('')}`
   }
   if (Array.isArray(value)) {
+    if (isHumanReadableByteArrayPath(path)) {
+      const decodedText = decodeAsciiByteArray(value as readonly number[])
+      if (decodedText !== null) return decodedText
+    }
     return value.map((item) =>
       normalizeDecodedValue(item, path, identityPaths, humanReadableUint64Paths)
     )
