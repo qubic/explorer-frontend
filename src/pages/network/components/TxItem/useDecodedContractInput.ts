@@ -9,8 +9,8 @@ import { isSmartContractTx } from '@app/utils/qubic-ts'
 
 type UseDecodedContractInputParams = Readonly<{
   showExtendedDetails: boolean
-  destination: string
   tickNumber: number
+  destination: string
   inputType: number
   inputData: string | Uint8Array | number[] | null | undefined
 }>
