@@ -129,6 +129,8 @@
   "scShares": "Доли смарт-контрактов",
   "sharesIssuer": "Эмитент акций",
   "contractIndex": "Индекс",
+  "firstUseEpoch": "Эпоха первого использования",
+  "sharesAuctionEpoch": "Эпоха аукциона",
   "expandAll": "Развернуть все",
   "collapseAll": "Свернуть все",
   "managedBy": "Управляется {{contract}}",

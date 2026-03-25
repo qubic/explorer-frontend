@@ -129,6 +129,8 @@
   "scShares": "Cổ phần hợp đồng thông minh",
   "sharesIssuer": "Nhà Phát Hành Cổ Phiếu",
   "contractIndex": "Chỉ Số",
+  "firstUseEpoch": "Kỷ nguyên sử dụng đầu tiên",
+  "sharesAuctionEpoch": "Kỷ nguyên đấu giá",
   "expandAll": "Mở rộng tất cả",
   "collapseAll": "Thu gọn tất cả",
   "managedBy": "Được quản lý bởi {{contract}}",

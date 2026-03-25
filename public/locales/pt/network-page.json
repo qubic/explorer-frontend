@@ -129,6 +129,8 @@
   "scShares": "Ações de Contratos Inteligentes",
   "sharesIssuer": "Emissor de Ações",
   "contractIndex": "Índice",
+  "firstUseEpoch": "Época de primeiro uso",
+  "sharesAuctionEpoch": "Época de leilão",
   "expandAll": "Expandir tudo",
   "collapseAll": "Recolher tudo",
   "managedBy": "Gerenciado por {{contract}}",

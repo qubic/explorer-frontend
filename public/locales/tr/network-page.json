@@ -129,6 +129,8 @@
   "scShares": "Akıllı Sözleşme Payları",
   "sharesIssuer": "Hisse Senedi İhraççısı",
   "contractIndex": "İndeks",
+  "firstUseEpoch": "İlk kullanım dönemi",
+  "sharesAuctionEpoch": "Açık artırma dönemi",
   "expandAll": "Tümünü genişlet",
   "collapseAll": "Tümünü daralt",
   "managedBy": "{{contract}} tarafından yönetiliyor",

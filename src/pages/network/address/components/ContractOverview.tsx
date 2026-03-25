@@ -16,9 +16,18 @@ type Props = {
   githubUrl: string
   proposalUrl?: string
   contractIndex?: number
+  firstUseEpoch?: number
+  sharesAuctionEpoch?: number
 }
 
-export default function ContractOverview({ asset, githubUrl, proposalUrl, contractIndex }: Props) {
+export default function ContractOverview({
+  asset,
+  githubUrl,
+  proposalUrl,
+  contractIndex,
+  firstUseEpoch,
+  sharesAuctionEpoch
+}: Props) {
   const { t } = useTranslation('network-page')
   const [code, setCode] = useState<string>('')
   const [error, setError] = useState<string | null>(null)
@@ -83,16 +92,34 @@ export default function ContractOverview({ asset, githubUrl, proposalUrl, contra
     <div className="grid gap-8 rounded-lg border border-primary-60 p-20">
       <div className="grid gap-6">
         <div className="flex flex-col justify-between gap-6 sm:flex-row">
-          <div className="flex flex-col gap-2 font-space">
-            <p>
-              <span className="text-gray-50">{t('contractName')}: </span>
-              <span className="font-bold text-gray-100">{asset}</span>
-            </p>
-            {contractIndex !== undefined && (
+          <div className="flex flex-col gap-6 font-space sm:flex-row sm:gap-40">
+            <div className="flex flex-col gap-2">
               <p>
-                <span className="text-gray-50">{t('contractIndex')}: </span>
-                <span className="font-bold text-gray-100">{contractIndex}</span>
+                <span className="text-gray-50">{t('contractName')}: </span>
+                <span className="font-bold text-gray-100">{asset}</span>
               </p>
+              {contractIndex !== undefined && (
+                <p>
+                  <span className="text-gray-50">{t('contractIndex')}: </span>
+                  <span className="font-bold text-gray-100">{contractIndex}</span>
+                </p>
+              )}
+            </div>
+            {(firstUseEpoch !== undefined || sharesAuctionEpoch !== undefined) && (
+              <div className="flex flex-col gap-2">
+                {firstUseEpoch !== undefined && (
+                  <p>
+                    <span className="text-gray-50">{t('firstUseEpoch')}: </span>
+                    <span className="font-bold text-gray-100">{firstUseEpoch}</span>
+                  </p>
+                )}
+                {sharesAuctionEpoch !== undefined && (
+                  <p>
+                    <span className="text-gray-50">{t('sharesAuctionEpoch')}: </span>
+                    <span className="font-bold text-gray-100">{sharesAuctionEpoch}</span>
+                  </p>
+                )}
+              </div>
             )}
           </div>
 

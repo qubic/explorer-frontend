@@ -13,6 +13,8 @@ export type SmartContract = {
   procedures: SmartContractProcedure[]
   website?: string
   proposalUrl?: string
+  firstUseEpoch?: number
+  sharesAuctionEpoch?: number
 }
 
 export type GetSmartContractsResponse = {

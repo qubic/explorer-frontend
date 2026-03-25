@@ -227,6 +227,8 @@ function AddressPage() {
                 githubUrl={smartContractDetails.githubUrl}
                 proposalUrl={smartContractDetails.proposalUrl}
                 contractIndex={smartContractDetails.contractIndex}
+                firstUseEpoch={smartContractDetails.firstUseEpoch}
+                sharesAuctionEpoch={smartContractDetails.sharesAuctionEpoch}
               />
             </Tabs.Panel>
           )}

@@ -129,6 +129,8 @@
   "scShares": "Smart Contract Shares",
   "sharesIssuer": "Shares Issuer",
   "contractIndex": "Index",
+  "firstUseEpoch": "First Use Epoch",
+  "sharesAuctionEpoch": "Auction Epoch",
   "expandAll": "Expand All",
   "collapseAll": "Collapse All",
   "managedBy": "Managed by {{contract}}",

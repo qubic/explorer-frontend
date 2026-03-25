@@ -129,6 +129,8 @@
   "scShares": "Smart Contract Aandelen",
   "sharesIssuer": "Aandelen Uitgever",
   "contractIndex": "Index",
+  "firstUseEpoch": "Eerste gebruik epoch",
+  "sharesAuctionEpoch": "Veiling epoch",
   "expandAll": "Alles uitvouwen",
   "collapseAll": "Alles invouwen",
   "managedBy": "Beheerd door {{contract}}",

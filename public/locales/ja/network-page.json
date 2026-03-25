@@ -129,6 +129,8 @@
   "scShares": "スマートコントラクトシェア",
   "sharesIssuer": "株式発行者",
   "contractIndex": "インデックス",
+  "firstUseEpoch": "初回使用エポック",
+  "sharesAuctionEpoch": "オークションエポック",
   "expandAll": "すべて展開",
   "collapseAll": "すべて折りたたむ",
   "managedBy": "{{contract}}によって管理",

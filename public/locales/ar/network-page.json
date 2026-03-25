@@ -129,6 +129,8 @@
   "scShares": "أسهم العقود الذكية",
   "sharesIssuer": "مُصدر الأسهم",
   "contractIndex": "الفهرس",
+  "firstUseEpoch": "حقبة الاستخدام الأول",
+  "sharesAuctionEpoch": "حقبة المزاد",
   "expandAll": "توسيع الكل",
   "collapseAll": "طي الكل",
   "managedBy": "يُدار بواسطة {{contract}}",
