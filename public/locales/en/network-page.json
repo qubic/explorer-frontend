@@ -132,6 +132,8 @@
   "expandAll": "Expand All",
   "collapseAll": "Collapse All",
   "managedBy": "Managed by {{contract}}",
+  "issuedBy": "Issued by {{address}}",
+  "issuedByLabel": "Issued by",
   "unknownContract": "Unknown Contract",
   "resetFilters": "Reset Filters",
   "startTick": "Start Tick",
