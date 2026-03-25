@@ -408,13 +408,21 @@ export const decodeContractInputData = (params: {
     return createUnsupportedResult('missing-epoch')
   }
 
-  const decoded = decodeHistoricalTransactionInput({
-    registry: coreVersionedContractsRegistry,
-    destination: params.destinationHint ?? undefined,
-    inputType: params.inputType,
-    inputBytes: bytes,
-    epoch: params.epoch
-  })
+  let decoded: ReturnType<typeof decodeHistoricalTransactionInput>
+  try {
+    decoded = decodeHistoricalTransactionInput({
+      registry: coreVersionedContractsRegistry,
+      destination: params.destinationHint ?? undefined,
+      inputType: params.inputType,
+      inputBytes: bytes,
+      epoch: params.epoch
+    })
+  } catch (error) {
+    return createUnsupportedResult(
+      'decode-failed',
+      error instanceof Error ? error.message : String(error)
+    )
+  }
 
   if (!decoded.resolvedVersion || !decoded.entry) {
     return createUnsupportedResult('no-match')
