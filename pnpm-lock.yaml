@@ -15,10 +15,10 @@ importers:
         specifier: 0.1.6
         version: 0.1.6
       '@qubic.ts/contracts':
-        specifier: ^1.6.1
+        specifier: ^1.6.2
         version: 1.6.2
       '@qubic.ts/core':
-        specifier: ^1.6.1
+        specifier: ^1.6.2
         version: 1.6.2(typescript@5.5.3)
       '@react-spring/web':
         specifier: ^9.7.5
