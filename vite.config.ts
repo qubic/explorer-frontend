@@ -23,6 +23,9 @@ const defaultConfig: UserConfig = {
       '@app': '/src'
     }
   },
+  optimizeDeps: {
+    exclude: ['@qubic.ts/contracts/generator']
+  },
   build: {
     rollupOptions: {
       output: {

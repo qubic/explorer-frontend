@@ -132,6 +132,8 @@
   "expandAll": "Tümünü genişlet",
   "collapseAll": "Tümünü daralt",
   "managedBy": "{{contract}} tarafından yönetiliyor",
+  "issuedBy": "{{address}} tarafından yayınlandı",
+  "issuedByLabel": "Yayınlayan",
   "unknownContract": "Bilinmeyen sözleşme",
   "resetFilters": "Filtreleri sıfırla",
   "startTick": "Başlangıç tick",
