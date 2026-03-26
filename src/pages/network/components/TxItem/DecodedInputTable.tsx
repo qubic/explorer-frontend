@@ -12,6 +12,11 @@ type FlatRow = Readonly<{ key: string; value: string }>
 const MAX_FLATTEN_DEPTH = 20
 const MONOSPACE_VALUE_MIN_LENGTH = 24
 
+const isZeroByteArray = (value: readonly unknown[]): boolean =>
+  value.length > 0 &&
+  value.every((item) => Number.isInteger(item) && Number(item) >= 0 && Number(item) <= 255) &&
+  value.every((item) => Number(item) === 0)
+
 const toDisplayValue = (value: unknown): string => {
   if (value === null || value === undefined) return '--'
   if (typeof value === 'bigint') return value.toString()
@@ -48,6 +53,9 @@ const flattenDecodedValue = (
       return [{ key: path || 'value', value: '[Circular]' }]
     }
     seen.add(value)
+    if (isZeroByteArray(value)) {
+      return [{ key: path || 'value', value: `[all zeros: ${value.length} bytes]` }]
+    }
     return value.flatMap((item, index) =>
       flattenDecodedValue(item, path ? `${path}[${index}]` : `[${index}]`, depth + 1, seen)
     )

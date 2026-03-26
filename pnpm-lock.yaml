@@ -15,11 +15,11 @@ importers:
         specifier: 0.1.6
         version: 0.1.6
       '@qubic.ts/contracts':
-        specifier: ^1.3.1
-        version: 1.3.1
+        specifier: ^1.6.2
+        version: 1.6.2
       '@qubic.ts/core':
-        specifier: ^1.1.0
-        version: 1.1.0(typescript@5.5.3)
+        specifier: ^1.6.2
+        version: 1.6.2(typescript@5.5.3)
       '@react-spring/web':
         specifier: ^9.7.5
         version: 9.7.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -700,11 +700,11 @@ packages:
   '@qubic-lib/qubic-ts-library@0.1.6':
     resolution: {integrity: sha512-VbiJxFgmOpSKCgJkvPbUUFG/d8wcOYnh9pci1MXhINvUTD9i9twBKZv2SRc3v0fOTiasvaBeiz3HtUSy0oJfEA==}
 
-  '@qubic.ts/contracts@1.3.1':
-    resolution: {integrity: sha512-2rQ3W5oTDVNI8L+t4zQrvaTjcb+ql63eS/Ksd+Il/35NgXsl3MiF+43agF77bGdIRa5IpA0IITS/PCV3+8+m+A==}
+  '@qubic.ts/contracts@1.6.2':
+    resolution: {integrity: sha512-xrZK9Dw0x/vLfiLIRmfPpimuKaNmZOLOvnaseKuNHKij7Bgbg/ZOFZDmaowoxU90rA57uU0mg935zhS5lGdMEQ==}
 
-  '@qubic.ts/core@1.1.0':
-    resolution: {integrity: sha512-T/CS4eustTEdDYw0D+yZMr/APLFKKpzbliuz59cjMKJvW0sQvEABlvedCySRl1YvswcrwPqKC0nnMz8yKxLF/A==}
+  '@qubic.ts/core@1.6.2':
+    resolution: {integrity: sha512-5w5jBe+4pWXCHii+bxFZFYpwLHLitf6rwI4tdkvstO+SbIxDSyyzb+vxlYz1hJc3xCXida6T4IJDFFN67+rnmg==}
 
   '@react-aria/focus@3.18.1':
     resolution: {integrity: sha512-N0Cy61WCIv+57mbqC7hiZAsB+3rF5n4JKabxUmg/2RTJL6lq7hJ5N4gx75ymKxkN8GnVDwt4pKZah48Wopa5jw==}
@@ -4600,11 +4600,11 @@ snapshots:
       bignumber.js: 9.1.2
       net: 1.0.2
 
-  '@qubic.ts/contracts@1.3.1':
+  '@qubic.ts/contracts@1.6.2':
     dependencies:
       zod: 4.3.6
 
-  '@qubic.ts/core@1.1.0(typescript@5.5.3)':
+  '@qubic.ts/core@1.6.2(typescript@5.5.3)':
     dependencies:
       '@noble/hashes': 1.8.0
       '@qubic-labs/schnorrq': 1.0.2(typescript@5.5.3)
