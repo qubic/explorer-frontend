@@ -1,3 +1,22 @@
+# [1.35.0](https://github.com/qubic/explorer-frontend/compare/v1.34.0...v1.35.0) (2026-03-26)
+
+
+### Bug Fixes
+
+* **explorer:** improve decoded input readability for proposal payloads ([25d4df0](https://github.com/qubic/explorer-frontend/commit/25d4df0eaa3e43e51ac8d353794b646d0bbf9d43))
+* **explorer:** update contracts to 1.6.2 and harden tx input decode ([b28ee14](https://github.com/qubic/explorer-frontend/commit/b28ee149763f6b6e2a6eec568d1a6473b51479f1))
+* **explorer:** use contracts browser runtime and upgrade to qubic.ts 1.6.1 ([7e232f7](https://github.com/qubic/explorer-frontend/commit/7e232f75acc5f190f9345d84669a72a6b1cc8783))
+* **frontend:** bump contracts to 1.3.1 ([a8ffeff](https://github.com/qubic/explorer-frontend/commit/a8ffeff420faedcfa75f690d27551713c0f64399))
+* **frontend:** pass epoch into contract input decoder ([ac8f76b](https://github.com/qubic/explorer-frontend/commit/ac8f76b42596f541eee60fe531fe0c5215f5bda6))
+* handle contract input decode errors gracefully ([9219239](https://github.com/qubic/explorer-frontend/commit/9219239c6508a893f985252903ae78483c40f746))
+* remove duplicate tickNumber property in useDecodedContractInput call ([9587f28](https://github.com/qubic/explorer-frontend/commit/9587f28562bcd701a7c5356c213619d0be77c043))
+
+
+### Features
+
+* add issued-by tooltip and label for non-system-issued assets ([91ab1eb](https://github.com/qubic/explorer-frontend/commit/91ab1eb78b25ebff7b5299e0f8b89bdf43e9d28c))
+* **frontend:** use historical contract input decoding ([#438](https://github.com/qubic/explorer-frontend/issues/438)) ([cbb4547](https://github.com/qubic/explorer-frontend/commit/cbb454742bdae11d4af3e5185f01f8126fb1a993))
+
 # [1.35.0-rc.1](https://github.com/qubic/explorer-frontend/compare/v1.34.0...v1.35.0-rc.1) (2026-03-26)
 
 
