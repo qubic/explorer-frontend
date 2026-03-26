@@ -69,7 +69,6 @@ export default function TransactionDetails({
     showExtendedDetails,
     tickNumber,
     destination,
-    tickNumber,
     inputType,
     inputData
   })
