@@ -1,6 +1,8 @@
 import type { SmartContract, TransactionInputType } from '@app/store/apis/qubic-static'
 import { isSmartContractTx } from '@app/utils/qubic-ts'
 
+export const PLACE_BID_LABEL = 'Place Bid'
+
 export interface SharesAuctionBid {
   price: bigint
   quantity: number
@@ -9,14 +11,12 @@ export interface SharesAuctionBid {
 export const decodeSharesAuctionBid = (inputData: string): SharesAuctionBid | undefined => {
   try {
     const binaryString = atob(inputData)
-    const bytes = new Uint8Array(binaryString.length)
-    bytes.forEach((_, i) => {
-      bytes[i] = binaryString.charCodeAt(i)
-    })
+    const bytes = Uint8Array.from(binaryString, (c) => c.charCodeAt(0))
+    if (bytes.length < 10) return undefined
     const view = new DataView(bytes.buffer)
     return {
-      price: view.getBigInt64(0, true),
-      quantity: view.getInt16(8, true)
+      price: view.getBigUint64(0, true),
+      quantity: view.getUint16(8, true)
     }
   } catch {
     return undefined
@@ -45,15 +45,15 @@ export const getInputTypeLabel = (
   return transactionInputTypes.find((t) => t.id === inputType)?.label
 }
 
-export const isSharesAuctionBid = (
+export const getSharesAuctionBidContract = (
   destination: string,
   inputType: number,
   epoch?: number,
   smartContracts?: SmartContract[]
-): boolean => {
-  if (inputType !== 1 || epoch == null || !smartContracts) return false
+): SmartContract | undefined => {
+  if (inputType !== 1 || epoch == null || !smartContracts) return undefined
   const contract = smartContracts.find((sc) => sc.address === destination)
-  return !!contract && epoch === contract.sharesAuctionEpoch
+  return contract && epoch === contract.sharesAuctionEpoch ? contract : undefined
 }
 
 export const getTransactionTypeDisplay = (
@@ -63,8 +63,8 @@ export const getTransactionTypeDisplay = (
   protocolData?: TransactionInputType[],
   epoch?: number
 ): string => {
-  if (isSharesAuctionBid(destination, inputType, epoch, smartContracts)) {
-    return 'Place Bid'
+  if (getSharesAuctionBidContract(destination, inputType, epoch, smartContracts)) {
+    return PLACE_BID_LABEL
   }
   if (isSmartContractTx(destination, inputType)) {
     return getProcedureName(destination, inputType, smartContracts) || 'SC'

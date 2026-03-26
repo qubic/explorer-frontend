@@ -1,10 +1,16 @@
 import { useMemo } from 'react'
 
 import { useGetTickDataQuery } from '@app/store/apis/query-service'
+import { useGetSmartContractsQuery } from '@app/store/apis/qubic-static'
 import {
   decodeContractInputData,
   type DecodedContractInput
 } from '@app/utils/contract-input-decoder'
+import {
+  PLACE_BID_LABEL,
+  decodeSharesAuctionBid,
+  getSharesAuctionBidContract
+} from '@app/utils/qubic'
 import { isSmartContractTx } from '@app/utils/qubic-ts'
 
 type UseDecodedContractInputParams = Readonly<{
@@ -24,6 +30,8 @@ type UseDecodedContractInputResult = Readonly<{
 export const useDecodedContractInput = (
   params: UseDecodedContractInputParams
 ): UseDecodedContractInputResult => {
+  const { data: smartContracts } = useGetSmartContractsQuery()
+
   const isContractTransaction = useMemo(
     () => isSmartContractTx(params.destination, params.inputType),
     [params.destination, params.inputType]
@@ -43,9 +51,37 @@ export const useDecodedContractInput = (
     skip: !shouldDecodeInput
   })
 
+  const bidContract = useMemo(
+    () =>
+      getSharesAuctionBidContract(
+        params.destination,
+        params.inputType,
+        tickData?.epoch,
+        smartContracts
+      ),
+    [params.destination, params.inputType, tickData?.epoch, smartContracts]
+  )
+
   const decodedInput = useMemo(() => {
     if (!shouldDecodeInput) return null
     if (!tickData?.epoch) return null
+
+    if (bidContract && typeof params.inputData === 'string') {
+      const bid = decodeSharesAuctionBid(params.inputData)
+      if (bid) {
+        return {
+          status: 'decoded' as const,
+          contractName: bidContract.label ?? bidContract.name,
+          contractIndex: bidContract.contractIndex,
+          entryName: PLACE_BID_LABEL,
+          kind: 'procedure' as const,
+          inputType: params.inputType,
+          value: { price: bid.price.toString(), quantity: bid.quantity },
+          identityPaths: new Set<string>(),
+          decodeMode: 'typed' as const
+        }
+      }
+    }
 
     return decodeContractInputData({
       epoch: tickData.epoch,
@@ -53,7 +89,14 @@ export const useDecodedContractInput = (
       inputData: params.inputData,
       destinationHint: params.destination
     })
-  }, [shouldDecodeInput, tickData?.epoch, params.inputData, params.inputType, params.destination])
+  }, [
+    shouldDecodeInput,
+    tickData?.epoch,
+    bidContract,
+    params.inputData,
+    params.inputType,
+    params.destination
+  ])
 
   return {
     isContractTransaction,
