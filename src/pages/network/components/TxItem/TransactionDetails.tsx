@@ -67,6 +67,7 @@ export default function TransactionDetails({
   )
   const { isContractTransaction, shouldDecodeInput, decodedInput } = useDecodedContractInput({
     showExtendedDetails,
+    tickNumber,
     destination,
     inputType,
     inputData

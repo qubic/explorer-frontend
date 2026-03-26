@@ -132,6 +132,8 @@
   "expandAll": "すべて展開",
   "collapseAll": "すべて折りたたむ",
   "managedBy": "{{contract}}によって管理",
+  "issuedBy": "{{address}} が発行",
+  "issuedByLabel": "発行者",
   "unknownContract": "不明なコントラクト",
   "resetFilters": "フィルターをリセット",
   "startTick": "開始ティック",

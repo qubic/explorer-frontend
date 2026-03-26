@@ -1,5 +1,6 @@
 import { useMemo } from 'react'
 
+import { useGetTickDataQuery } from '@app/store/apis/query-service'
 import {
   decodeContractInputData,
   type DecodedContractInput
@@ -8,6 +9,7 @@ import { isSmartContractTx } from '@app/utils/qubic-ts'
 
 type UseDecodedContractInputParams = Readonly<{
   showExtendedDetails: boolean
+  tickNumber: number
   destination: string
   inputType: number
   inputData: string | Uint8Array | number[] | null | undefined
@@ -37,14 +39,21 @@ export const useDecodedContractInput = (
     [params.showExtendedDetails, isContractTransaction, params.inputData, params.inputType]
   )
 
+  const { data: tickData } = useGetTickDataQuery(params.tickNumber, {
+    skip: !shouldDecodeInput
+  })
+
   const decodedInput = useMemo(() => {
     if (!shouldDecodeInput) return null
+    if (!tickData?.epoch) return null
+
     return decodeContractInputData({
+      epoch: tickData.epoch,
       inputType: params.inputType,
       inputData: params.inputData,
       destinationHint: params.destination
     })
-  }, [shouldDecodeInput, params.inputData, params.inputType, params.destination])
+  }, [shouldDecodeInput, tickData?.epoch, params.inputData, params.inputType, params.destination])
 
   return {
     isContractTransaction,

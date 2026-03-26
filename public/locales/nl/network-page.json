@@ -132,6 +132,8 @@
   "expandAll": "Alles uitvouwen",
   "collapseAll": "Alles invouwen",
   "managedBy": "Beheerd door {{contract}}",
+  "issuedBy": "Uitgegeven door {{address}}",
+  "issuedByLabel": "Uitgegeven door",
   "unknownContract": "Onbekend contract",
   "resetFilters": "Filters resetten",
   "startTick": "Start tick",

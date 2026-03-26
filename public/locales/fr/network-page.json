@@ -132,6 +132,8 @@
   "expandAll": "Tout développer",
   "collapseAll": "Tout réduire",
   "managedBy": "Géré par {{contract}}",
+  "issuedBy": "Émis par {{address}}",
+  "issuedByLabel": "Émis par",
   "unknownContract": "Contrat inconnu",
   "resetFilters": "Réinitialiser les filtres",
   "startTick": "Tick de début",
