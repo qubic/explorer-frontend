@@ -132,6 +132,8 @@
   "expandAll": "Mở rộng tất cả",
   "collapseAll": "Thu gọn tất cả",
   "managedBy": "Được quản lý bởi {{contract}}",
+  "issuedBy": "Phát hành bởi {{address}}",
+  "issuedByLabel": "Phát hành bởi",
   "unknownContract": "Hợp đồng không xác định",
   "resetFilters": "Đặt lại bộ lọc",
   "startTick": "Tick bắt đầu",

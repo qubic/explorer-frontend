@@ -10,7 +10,8 @@ import type { Option } from '@app/components/ui/Select'
 import { useTailwindBreakpoint } from '@app/hooks'
 import { useGetAssetsIssuancesQuery } from '@app/store/apis/rpc-live'
 import { useGetAssetsRichListQuery } from '@app/store/apis/rpc-stats'
-import { HomeLink } from '../../components'
+import { isAssetsIssuerAddress } from '@app/utils/qubic-ts'
+import { AddressLink, HomeLink } from '../../components'
 import {
   AssetRichListEmptyRow,
   AssetRichListErrorRow,
@@ -179,6 +180,18 @@ function AssetsRichListPage() {
             options={pageSizeOptions}
           />
         </div>
+
+        {assetParam && issuerParam && isValidAsset && (
+          <div>
+            <p className="font-space text-base font-500 text-white">{assetParam}</p>
+            {!isAssetsIssuerAddress(issuerParam) && (
+              <div className="flex items-center gap-4 text-xs text-gray-50">
+                <span>{t('issuedByLabel')}</span>
+                <AddressLink value={issuerParam} ellipsis showTooltip className="text-xs" />
+              </div>
+            )}
+          </div>
+        )}
 
         <div className="w-full rounded-12 border-1 border-primary-60 bg-primary-70">
           <div className="overflow-x-scroll">

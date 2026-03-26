@@ -132,6 +132,8 @@
   "expandAll": "Развернуть все",
   "collapseAll": "Свернуть все",
   "managedBy": "Управляется {{contract}}",
+  "issuedBy": "Выпущено {{address}}",
+  "issuedByLabel": "Выпущено",
   "unknownContract": "Неизвестный контракт",
   "resetFilters": "Сбросить фильтры",
   "startTick": "Начальный тик",

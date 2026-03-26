@@ -2,6 +2,7 @@ import { animated, useSpring, useTransition } from '@react-spring/web'
 import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { Tooltip } from '@app/components/ui'
 import { ChevronToggleButton } from '@app/components/ui/buttons'
 import { useGetAddressOwnedAssetsQuery } from '@app/store/apis/rpc-live'
 import { useGetSmartContractsQuery } from '@app/store/apis/qubic-static'
@@ -196,12 +197,17 @@ export default function OwnedAssets({ addressId }: Props) {
                 {isAssetsIssuerAddress(asset.issuerIdentity) ? (
                   <p className="font-space text-base text-gray-50">{asset.assetName}</p>
                 ) : (
-                  <AddressLink
-                    label={asset.assetName}
-                    value={asset.issuerIdentity}
-                    className="text-base"
-                    showContractIcon={false}
-                  />
+                  <Tooltip
+                    tooltipId={`asset-issuer-${asset.assetName}-${asset.issuerIdentity}`}
+                    content={t('issuedBy', { address: asset.issuerIdentity })}
+                  >
+                    <AddressLink
+                      label={asset.assetName}
+                      value={asset.issuerIdentity}
+                      className="text-base"
+                      showContractIcon={false}
+                    />
+                  </Tooltip>
                 )}
               </animated.li>
             ))}
@@ -240,12 +246,17 @@ export default function OwnedAssets({ addressId }: Props) {
                       {isAssetsIssuerAddress(asset.issuerIdentity) ? (
                         <p className="font-space text-base text-gray-50">{asset.assetName}</p>
                       ) : (
-                        <AddressLink
-                          label={asset.assetName}
-                          value={asset.issuerIdentity}
-                          className="text-base"
-                          showContractIcon={false}
-                        />
+                        <Tooltip
+                          tooltipId={`asset-issuer-expanded-${asset.assetName}-${asset.issuerIdentity}`}
+                          content={t('issuedBy', { address: asset.issuerIdentity })}
+                        >
+                          <AddressLink
+                            label={asset.assetName}
+                            value={asset.issuerIdentity}
+                            className="text-base"
+                            showContractIcon={false}
+                          />
+                        </Tooltip>
                       )}
                     </li>
                   ))}
