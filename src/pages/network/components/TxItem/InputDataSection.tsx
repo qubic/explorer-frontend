@@ -10,6 +10,7 @@ import { clsxTwMerge, formatHex } from '@app/utils'
 import type { DecodedContractInput } from '@app/utils/contract-input-decoder'
 import SubCardItem from '../SubCardItem'
 import DecodedInputTable from './DecodedInputTable'
+import ProtocolInputViewer from './ProtocolInputViewer'
 import type { TxItemVariant } from './TxItem.types'
 
 // Global param name is safe: InputDataSection only renders when showExtendedDetails=true,
@@ -87,7 +88,11 @@ export default function InputDataSection({
 
   const decodedInputJson = useMemo(() => {
     if (!decodedInput || decodedInput.status !== 'decoded') return null
-    return JSON.stringify(decodedInput.value, null, 2)
+    return JSON.stringify(
+      decodedInput.value,
+      (_, v) => (typeof v === 'bigint' ? v.toString() : v),
+      2
+    )
   }, [decodedInput])
 
   const selectWidth = useMemo(() => {
@@ -156,6 +161,11 @@ export default function InputDataSection({
 
   if (!showExtendedDetails || !inputData || inputData.length === 0) return null
 
+  const isProtocolDefault =
+    viewMode === 'default' &&
+    decodedInput?.status === 'decoded' &&
+    decodedInput.contractName === 'Protocol'
+
   const getCopyText = (): string => {
     if (isDecodedView && decodedInputJson) return decodedInputJson
     if (viewMode === 'hex') return `0x${inputDataHex}`
@@ -166,7 +176,11 @@ export default function InputDataSection({
     if (isDecodedView && decodedInput) {
       if (decodedInput.status === 'decoded') {
         if (viewMode === 'default') {
-          return <DecodedInputTable decoded={decodedInput} />
+          return decodedInput.contractName === 'Protocol' ? (
+            <ProtocolInputViewer decoded={decodedInput} />
+          ) : (
+            <DecodedInputTable decoded={decodedInput} />
+          )
         }
         return <pre className="break-all font-space text-sm text-gray-50">{decodedInputJson}</pre>
       }
@@ -231,11 +245,14 @@ export default function InputDataSection({
             </div>
             <div
               ref={contentRef}
-              className={clsxTwMerge('overflow-hidden', !isExpanded && 'max-h-[9rem]')}
+              className={clsxTwMerge(
+                'overflow-hidden',
+                !isProtocolDefault && !isExpanded && 'max-h-[9rem]'
+              )}
             >
               {renderData()}
             </div>
-            {(isExpanded || isOverflowing) && (
+            {!isProtocolDefault && (isExpanded || isOverflowing) && (
               <button
                 type="button"
                 onClick={() => setIsExpanded((prev) => !prev)}
