@@ -5,12 +5,11 @@ import { Infocon } from '@app/assets/icons'
 import { Badge, PageSizeSelect, PaginationBar, Skeleton, Tooltip } from '@app/components/ui'
 import {
   useGetAddressName,
-  useGetSmartContractByIndex,
   usePaginationSearchParams,
   useValidatedPage,
   useValidatedPageSize
 } from '@app/hooks'
-import { EVENT_TYPES, getEventTypeLabel, type TransactionEvent } from '@app/store/apis/events'
+import { getEventTypeLabel, type TransactionEvent } from '@app/store/apis/events'
 import { formatDate, formatString } from '@app/utils'
 import AddressCell from '../AddressCell'
 import BetaBanner from '../BetaBanner'
@@ -49,13 +48,7 @@ const EventRow = memo(function EventRow({
   showTxId,
   highlightAddress
 }: EventRowProps) {
-  const contract = useGetSmartContractByIndex(
-    event.type === EVENT_TYPES.CONTRACT_RESERVE_DEDUCTION && !event.source
-      ? event.contractIndex
-      : undefined
-  )
-
-  const source = contract?.address ?? event.source
+  const { source } = event
 
   const sourceAddressName = useGetAddressName(source)
   const destinationAddressName = useGetAddressName(event.destination)
