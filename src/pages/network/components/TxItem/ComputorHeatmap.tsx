@@ -1,7 +1,9 @@
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Tooltip as ReactTooltip } from 'react-tooltip'
 
 import { ChevronDownIcon } from '@app/assets/icons'
+import { TOOLTIP_BASE_STYLE } from '@app/components/ui'
 import { clsxTwMerge } from '@app/utils'
 
 const GRID_SIZE = 26
@@ -125,10 +127,15 @@ export default function ComputorHeatmap({ values, isVote, dataLock }: Props) {
               key={i}
               className={clsxTwMerge('h-10 w-10 rounded-sm', value === 0 && 'bg-primary-60')}
               style={value > 0 ? { backgroundColor: heatmapColor(value, stats.max) } : undefined}
-              title={`${t('computor')} ${i}: ${value} ${valueLabel}`}
+              data-tooltip-id="computor-heatmap-tooltip"
+              data-tooltip-content={`${t('computor')} ${i}: ${value} ${valueLabel}`}
             />
           ))}
         </div>
+        <ReactTooltip
+          id="computor-heatmap-tooltip"
+          style={{ ...TOOLTIP_BASE_STYLE, padding: '5px 8px' }}
+        />
       </div>
 
       {/* Expandable value grid */}
