@@ -1,4 +1,5 @@
 import { useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 import {
   useGetAddressLabelsQuery,
   useGetExchangesQuery,
@@ -21,6 +22,7 @@ export type GetAddressNameResult = {
  * Note: Fetches all assets once and filters in memory for efficiency
  */
 export function useGetAddressName(address: string): GetAddressNameResult | undefined {
+  const { t } = useTranslation('network-page')
   const { data: smartContracts } = useGetSmartContractsQuery()
   const { data: exchanges } = useGetExchangesQuery()
   const { data: addressLabels } = useGetAddressLabelsQuery()
@@ -29,6 +31,8 @@ export function useGetAddressName(address: string): GetAddressNameResult | undef
   const { data: allAssetsIssuances } = useGetAssetsIssuancesQuery()
 
   return useMemo(() => {
+    if (address === '') return undefined
+
     // Check smart contracts first (highest priority)
     const smartContract = smartContracts?.find((sc) => sc.address === address)
     if (smartContract) {
@@ -56,10 +60,12 @@ export function useGetAddressName(address: string): GetAddressNameResult | undef
       )
       if (tokenIssuance) {
         // Try to find matching token data from static API to get website
-        const tokenData = tokens?.find((t) => t.name === tokenIssuance.data.name)
+        const tokenData = tokens?.find(
+          (tk) => tk.name === tokenIssuance.data.name && tk.issuer != null && tk.issuer === address
+        )
         return {
-          name: tokenIssuance.data.name,
-          i18nKey: 'token',
+          name: t('tokenIssuer', { name: tokenIssuance.data.name }),
+          i18nKey: 'tokenIssuer',
           website: tokenData?.website
         }
       }
@@ -75,5 +81,5 @@ export function useGetAddressName(address: string): GetAddressNameResult | undef
     }
 
     return undefined
-  }, [address, smartContracts, exchanges, addressLabels, tokens, allAssetsIssuances])
+  }, [address, smartContracts, exchanges, addressLabels, tokens, allAssetsIssuances, t])
 }

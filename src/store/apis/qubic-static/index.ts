@@ -3,6 +3,7 @@ export {
   useGetAddressLabelsQuery,
   useGetExchangesQuery,
   useGetExplorerTranslationsQuery,
+  useGetProtocolQuery,
   useGetSmartContractsQuery,
   useGetTokenCategoriesQuery,
   useGetTokensQuery

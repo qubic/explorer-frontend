@@ -19,8 +19,13 @@ export const Routes = {
   NETWORK: {
     ROOT: '/network',
     ADDRESS: (address: string) => `${Routes.NETWORK.ROOT}/address/${address}`,
+    EVENT: (tickNumber: string | number, logId: string | number) =>
+      `${Routes.NETWORK.ROOT}/events/${tickNumber}/${logId}`,
     TX: (txId: string) => `${Routes.NETWORK.ROOT}/tx/${txId}`,
     TICK: (tick: string | number) => `${Routes.NETWORK.ROOT}/tick/${tick}`,
+    BLOCKCHAIN: {
+      EVENTS: '/network/blockchain/events'
+    },
     WALLETS: {
       RICH_LIST: '/network/wallets/rich-list',
       EXCHANGES: '/network/wallets/exchanges'

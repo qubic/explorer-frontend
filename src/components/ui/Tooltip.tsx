@@ -1,6 +1,8 @@
 import { useId, useMemo } from 'react'
 import { Tooltip as ReactTooltip } from 'react-tooltip'
 
+import { TOOLTIP_BASE_STYLE } from './tooltip-styles'
+
 type Props = {
   tooltipId: string
   children: React.ReactNode
@@ -20,17 +22,13 @@ export default function Tooltip({ tooltipId, children, content }: Props) {
       <ReactTooltip
         id={tooltipIdWithId}
         style={{
-          backgroundColor: '#202E3C',
-          borderRadius: 10,
-          fontSize: 11,
-          maxWidth: '200px', // Set a fixed maximum width for tooltips
-          wordWrap: 'break-word', // Breaks long words when necessary
-          wordBreak: 'break-word', // Breaks word at any point if necessary
-          whiteSpace: 'normal', // Allows text to break to the next line
-          lineHeight: '1.5', // Adds spacing between lines
-          padding: '5px', // Adds padding inside the tooltip
-          boxSizing: 'border-box', // Ensures padding doesn't overflow the tooltip
-          zIndex: 9999 // Ensures tooltip appears above other elements
+          ...TOOLTIP_BASE_STYLE,
+          maxWidth: '200px',
+          wordWrap: 'break-word',
+          wordBreak: 'break-word',
+          whiteSpace: 'normal',
+          lineHeight: '1.5',
+          boxSizing: 'border-box'
         }}
         opacity={100}
       >

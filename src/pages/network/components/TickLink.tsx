@@ -10,11 +10,7 @@ type Props = Readonly<{
 
 export default function TickLink({ value, className }: Props) {
   return (
-    <Link
-      to={Routes.NETWORK.TICK(value)}
-      className={clsxTwMerge('font-space font-500', className)}
-      role="button"
-    >
+    <Link to={Routes.NETWORK.TICK(value)} className={clsxTwMerge('font-space font-500', className)}>
       {formatString(value)}
     </Link>
   )

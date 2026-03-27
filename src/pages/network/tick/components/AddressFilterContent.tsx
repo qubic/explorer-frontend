@@ -49,7 +49,7 @@ export default function AddressFilterContent({
         onChange={handleInputChange}
         onKeyDown={handleKeyDown}
         placeholder={placeholder || t('addressPlaceholder')}
-        className="w-full rounded border border-primary-60 bg-primary-70 px-10 py-8 font-space text-xs text-white placeholder:text-gray-50 focus:border-primary-30 focus:outline-none"
+        className="w-full rounded border border-primary-60 bg-primary-70 px-10 py-8 font-space text-base text-white placeholder:text-gray-50 focus:border-primary-30 focus:outline-none md:text-xs"
         autoComplete="off"
         spellCheck={false}
       />
