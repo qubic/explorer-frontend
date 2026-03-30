@@ -271,7 +271,7 @@ export interface RawGetEventsResponse {
     from: number
     size: number
   }
-  events: RawApiEvent[]
+  eventLogs: RawApiEvent[]
   validForTick?: number
 }
 

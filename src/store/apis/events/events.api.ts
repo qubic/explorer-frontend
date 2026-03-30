@@ -45,7 +45,7 @@ export interface GetEventsRequest {
 }
 
 function adaptEventsList(response: RawGetEventsResponse): TransactionEvent[] {
-  return (response?.events ?? []).flatMap((raw) => {
+  return (response?.eventLogs ?? []).flatMap((raw) => {
     try {
       return [adaptApiEvent(raw)]
     } catch {
@@ -113,7 +113,7 @@ export const eventsApi = createApi({
         }
 
         return {
-          url: '/getEvents',
+          url: '/getEventLogs',
           method: 'POST',
           body: {
             filters,
