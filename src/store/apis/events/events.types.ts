@@ -5,7 +5,7 @@
 export type TransactionEvent = {
   epoch: number
   tickNumber: number
-  timestamp: number // epoch milliseconds (converted from API's epoch seconds)
+  timestamp: number // epoch milliseconds
   contractIndex: number
   transactionHash: string
   logId: number
