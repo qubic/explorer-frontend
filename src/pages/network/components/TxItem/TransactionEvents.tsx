@@ -111,7 +111,19 @@ const EventRow = memo(function EventRow({
       <td className="whitespace-nowrap px-16 py-14 text-right font-space text-sm">
         {event.amount !== undefined ? (
           <>
-            <span className="font-500">{formatString(event.amount)}</span>{' '}
+            <span className="font-500">
+              {highlightAddress &&
+                event.amount > 0 &&
+                event.destination === highlightAddress &&
+                event.source !== highlightAddress &&
+                '+'}
+              {highlightAddress &&
+                event.amount > 0 &&
+                event.source === highlightAddress &&
+                event.destination !== highlightAddress &&
+                '-'}
+              {formatString(event.amount)}
+            </span>{' '}
             <span className="text-gray-50">{event.assetName ?? 'QUBIC'}</span>
           </>
         ) : (

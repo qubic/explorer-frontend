@@ -90,6 +90,16 @@ function TransactionRow({ tx, highlightTick, highlightAddress }: Props) {
         />
       </td>
       <td className="whitespace-nowrap px-8 py-12 text-right font-space text-xs xs:text-sm sm:px-16">
+        {highlightAddress &&
+          Number(amount) > 0 &&
+          destination === highlightAddress &&
+          source !== highlightAddress &&
+          '+'}
+        {highlightAddress &&
+          Number(amount) > 0 &&
+          source === highlightAddress &&
+          destination !== highlightAddress &&
+          '-'}
         {formatString(amount)} <span className="text-gray-50">QUBIC</span>
       </td>
     </tr>
