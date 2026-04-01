@@ -5,7 +5,7 @@ import { envConfig } from '@app/configs'
 import type { RawGetEventsResponse, TransactionEvent } from './events.types'
 import { adaptApiEvent } from './events.types'
 
-const BASE_URL = `${envConfig.EVENTS_API_URL}/query/v1`
+const BASE_URL = `${envConfig.QUBIC_RPC_URL}/query/v1`
 
 export interface PaginatedEvents {
   events: TransactionEvent[]
