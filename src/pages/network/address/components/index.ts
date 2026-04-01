@@ -1,6 +1,7 @@
 export { default as AddressDetails } from './AddressDetails'
 export { default as AddressEvents } from './AddressEvents'
 export { default as ContractOverview } from './ContractOverview'
+export { default as ContractReserve } from './ContractReserve'
 export { default as OwnedAssets } from './OwnedAssets'
 export { default as LatestTransactions } from './TransactionsOverview/LatestTransactions'
 export { default as TransactionsOverview } from './TransactionsOverview/TransactionsOverview'

@@ -28,7 +28,7 @@ export default function AddressCell({
     return (
       <div className="flex items-center gap-10">
         <Tooltip tooltipId={tooltipId} content={address}>
-          <span className={textClassName}>{formatEllipsis(address)}</span>
+          <span className={textClassName}>{addressName || formatEllipsis(address)}</span>
         </Tooltip>
         <CopyTextButton text={address} type={COPY_BUTTON_TYPES.ADDRESS} />
       </div>

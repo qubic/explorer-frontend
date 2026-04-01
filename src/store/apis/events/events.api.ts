@@ -35,6 +35,7 @@ export interface GetEventsRequest {
   destination?: string
   excludeSource?: string
   excludeDestination?: string
+  contractIndex?: number
   category?: number
   tickRange?: EventRange
   timestampRange?: EventRange
@@ -75,6 +76,7 @@ export const eventsApi = createApi({
         offset = 0,
         size = DEFAULT_PAGE_SIZE,
         logType,
+        contractIndex,
         category,
         should,
         source,
@@ -93,6 +95,7 @@ export const eventsApi = createApi({
           ...(transactionHash && { transactionHash }),
           ...(logId !== undefined && { logId: String(logId) }),
           ...(logType && logType.length > 0 && { logType: logType.join(',') }),
+          ...(contractIndex !== undefined && { contractIndex: String(contractIndex) }),
           ...(category !== undefined && { categories: String(category) }),
           ...(source && { source }),
           ...(destination && { destination }),

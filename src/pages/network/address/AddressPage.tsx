@@ -24,6 +24,7 @@ import {
   AddressDetails,
   AddressEvents,
   ContractOverview,
+  ContractReserve,
   OwnedAssets,
   TransactionsOverview
 } from './components'
@@ -88,12 +89,15 @@ function AddressPage() {
   const selectedTabIndex = useMemo(() => {
     if (tabParam === 'events') return 1
     if (tabParam === 'contract' && isSmartContract) return 2
+    if (tabParam === 'reserve' && isSmartContract) return 3
     return 0
   }, [tabParam, isSmartContract])
 
   // Normalize invalid tab params so URL always reflects the visible tab
   useEffect(() => {
-    const isValidTab = tabParam === 'events' || (tabParam === 'contract' && isSmartContract)
+    const isValidTab =
+      tabParam === 'events' ||
+      ((tabParam === 'reserve' || tabParam === 'contract') && isSmartContract)
     if (tabParam && !isValidTab) {
       setSearchParams(
         (prev) => {
@@ -113,6 +117,8 @@ function AddressPage() {
             prev.set('tab', 'events')
           } else if (index === 2) {
             prev.set('tab', 'contract')
+          } else if (index === 3) {
+            prev.set('tab', 'reserve')
           } else {
             prev.delete('tab')
           }
@@ -230,6 +236,7 @@ function AddressPage() {
           <Tabs.Tab>{t('transactions')}</Tabs.Tab>
           <Tabs.Tab>{t('events')}</Tabs.Tab>
           {isSmartContract && <Tabs.Tab>{t('contract')}</Tabs.Tab>}
+          {isSmartContract && <Tabs.Tab>{t('burnsAndDeductions')}</Tabs.Tab>}
         </Tabs.List>
         <Tabs.Panels>
           <Tabs.Panel>
@@ -245,6 +252,14 @@ function AddressPage() {
                 githubUrl={smartContractDetails.githubUrl}
                 proposalUrl={smartContractDetails.proposalUrl}
                 contractIndex={smartContractDetails.contractIndex}
+              />
+            </Tabs.Panel>
+          )}
+          {isSmartContract && smartContractDetails && (
+            <Tabs.Panel>
+              <ContractReserve
+                contractIndex={smartContractDetails.contractIndex}
+                addressId={addressId}
               />
             </Tabs.Panel>
           )}
