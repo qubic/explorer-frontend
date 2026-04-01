@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom'
 import { COPY_BUTTON_TYPES, CopyTextButton } from '@app/components/ui/buttons'
 import { Routes } from '@app/router'
 import type { DecodedContractInput } from '@app/utils/contract-input-decoder'
-import { formatString } from '@app/utils'
 
 const stripArrayIndices = (path: string): string => path.replace(/\[\d+\]/g, '')
 
@@ -48,9 +47,9 @@ const isZeroByteArray = (value: readonly unknown[]): boolean =>
 
 const toDisplayValue = (value: unknown): string => {
   if (value === null || value === undefined) return '--'
-  if (typeof value === 'bigint') return value.toLocaleString('en-US')
+  if (typeof value === 'bigint') return value.toString()
   if (typeof value === 'string') return value
-  if (typeof value === 'number') return formatString(value)
+  if (typeof value === 'number') return String(value)
   if (typeof value === 'boolean') return String(value)
   if (value instanceof Uint8Array) {
     const hex = Array.from(value)
