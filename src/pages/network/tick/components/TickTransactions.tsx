@@ -1,29 +1,26 @@
-import { memo, useCallback, useEffect, useMemo, useState } from 'react'
+import { memo, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { ChevronDownIcon } from '@app/assets/icons'
-import { InfiniteScroll, Skeleton } from '@app/components/ui'
-import { Button } from '@app/components/ui/buttons'
-import { useTransactionExpandCollapse } from '@app/hooks'
-import type { QueryServiceTransaction } from '@app/store/apis/query-service'
+import { PageSizeSelect, PaginationBar } from '@app/components/ui'
+import { usePaginationSearchParams, useValidatedPage, useValidatedPageSize } from '@app/hooks'
 import { useGetTransactionsForTickQuery } from '@app/store/apis/query-service'
-import { TxItem } from '../../components'
 import TickTransactionFiltersBar from './TickTransactionFiltersBar'
+import { TransactionRow, TransactionSkeletonRow } from '../../components'
 import type { TickTransactionFilters } from './tickFilterUtils'
 import {
   buildTickTransactionsRequest,
   extractErrorMessage,
-  parseFilterApiError
+  parseFilterApiError,
+  parseLastProcessedTickFromMessage
 } from './tickFilterUtils'
 
-const PAGE_SIZE = 10
-
-const TickTransactionsSkeleton = memo(() => (
-  <div className="grid gap-12">
-    {Array.from({ length: PAGE_SIZE / 2 }).map((_, index) => (
-      <Skeleton key={String(`${index}`)} className="h-[78px] sm:h-52" />
+const TickTransactionsSkeletonRows = memo(({ count }: { count: number }) => (
+  <>
+    {Array.from({ length: count }).map((_, index) => (
+      // eslint-disable-next-line react/no-array-index-key
+      <TransactionSkeletonRow key={`skeleton-${index}`} />
     ))}
-  </div>
+  </>
 ))
 
 type Props = Readonly<{
@@ -32,9 +29,10 @@ type Props = Readonly<{
 
 export default function TickTransactions({ tick }: Props) {
   const { t } = useTranslation('network-page')
-  const [displayTransactions, setDisplayTransactions] = useState<QueryServiceTransaction[]>([])
-  const [hasMore, setHasMore] = useState(true)
   const [activeFilters, setActiveFilters] = useState<TickTransactionFilters>({})
+  const { handlePageChange, handlePageSizeChange, resetPage } = usePaginationSearchParams()
+  const page = useValidatedPage()
+  const pageSize = useValidatedPageSize()
 
   // Build the API request with filters
   const request = useMemo(
@@ -51,6 +49,12 @@ export default function TickTransactions({ tick }: Props) {
   // Extract error message from RTK Query error
   const errorMessage = useMemo(() => {
     if (!tickTransactionsError) return null
+    const lastProcessedTick = parseLastProcessedTickFromMessage(tickTransactionsError)
+    if (lastProcessedTick !== null) {
+      return t('tickNotYetProcessedTransactions', {
+        lastProcessedTick: lastProcessedTick.toLocaleString()
+      })
+    }
     const errorStr = extractErrorMessage(tickTransactionsError)
     const parsed = parseFilterApiError(errorStr)
     if (parsed) {
@@ -59,105 +63,112 @@ export default function TickTransactions({ tick }: Props) {
     return errorStr
   }, [tickTransactionsError, t])
 
-  // Use shared expand/collapse hook with custom ID extractor
-  const { expandAll, expandedTxIds, handleExpandAllChange, handleTxToggle } =
-    useTransactionExpandCollapse({
-      transactions: displayTransactions,
-      getTransactionId: (tx: QueryServiceTransaction) => tx.hash,
-      resetDependency: `${tick}-${JSON.stringify(activeFilters)}`
-    })
+  const totalCount = transactions?.length ?? 0
+  const pageCount = Math.ceil(totalCount / pageSize)
 
-  const loadMoreTransactions = useCallback(() => {
-    if (transactions && displayTransactions.length < transactions.length) {
-      const nextTransactions = transactions.slice(
-        displayTransactions.length,
-        displayTransactions.length + PAGE_SIZE
-      )
-      setDisplayTransactions((prevTransactions) => [...prevTransactions, ...nextTransactions])
-      setHasMore(displayTransactions.length + PAGE_SIZE < transactions.length)
-    } else {
-      setHasMore(false)
-    }
-  }, [displayTransactions, transactions])
+  const paginatedTransactions = useMemo(() => {
+    if (!transactions) return []
+    const start = (page - 1) * pageSize
+    return transactions.slice(start, start + pageSize)
+  }, [transactions, page, pageSize])
 
-  useEffect(() => {
-    if (transactions) {
-      setDisplayTransactions(transactions.slice(0, PAGE_SIZE))
-      setHasMore(transactions.length > PAGE_SIZE)
-    }
-  }, [transactions])
-
-  const handleApplyFilters = useCallback((filters: TickTransactionFilters) => {
-    setActiveFilters(filters)
-  }, [])
+  const handleApplyFilters = useCallback(
+    (filters: TickTransactionFilters) => {
+      setActiveFilters(filters)
+      resetPage()
+    },
+    [resetPage]
+  )
 
   const handleClearFilters = useCallback(() => {
     setActiveFilters({})
-  }, [])
+    resetPage()
+  }, [resetPage])
 
-  const totalCount = transactions?.length ?? null
+  const renderTableContent = useCallback(() => {
+    if (isTickTransactionsLoading) {
+      return <TickTransactionsSkeletonRows count={pageSize} />
+    }
+
+    if (errorMessage) {
+      return (
+        <tr>
+          <td colSpan={8} className="px-16 py-32 text-center text-sm text-error-40">
+            {errorMessage}
+          </td>
+        </tr>
+      )
+    }
+
+    if (paginatedTransactions.length === 0) {
+      return (
+        <tr>
+          <td colSpan={8} className="px-16 py-32 text-center text-sm text-gray-50">
+            {t('noTransactions')}
+          </td>
+        </tr>
+      )
+    }
+
+    return paginatedTransactions.map((tx) => (
+      <TransactionRow key={tx.hash} tx={tx} highlightTick={tick} />
+    ))
+  }, [isTickTransactionsLoading, errorMessage, paginatedTransactions, pageSize, t, tick])
 
   return (
     <div className="flex flex-col gap-16">
-      <p className="font-space text-xl font-500">{t('transactions')}</p>
-
       <TickTransactionFiltersBar
         activeFilters={activeFilters}
         onApplyFilters={handleApplyFilters}
         onClearFilters={handleClearFilters}
       />
 
-      {(totalCount !== null || displayTransactions.length > 0) && (
-        <div className="flex flex-wrap items-center justify-between gap-8">
-          {totalCount !== null && totalCount > 0 ? (
-            <span className="text-sm text-gray-50">
-              {t('transactionsFound', {
-                count: totalCount.toLocaleString()
-              } as Record<string, string>)}
-            </span>
-          ) : null}
+      <div className="flex flex-wrap items-center justify-between gap-8">
+        {!isTickTransactionsLoading && totalCount > 0 ? (
+          <span className="text-sm text-gray-50">
+            {t('transactionsFound', {
+              count: totalCount.toLocaleString()
+            } as Record<string, string>)}
+          </span>
+        ) : (
+          <span />
+        )}
+        <PageSizeSelect pageSize={pageSize} onSelect={handlePageSizeChange} />
+      </div>
 
-          {displayTransactions.length > 0 && (
-            <Button
-              variant="link"
-              size="sm"
-              onClick={() => handleExpandAllChange(!expandAll)}
-              className="w-fit gap-6"
-            >
-              <ChevronDownIcon
-                className={`h-16 w-16 transition-transform duration-300 ${expandAll ? 'rotate-180' : 'rotate-0'}`}
-              />
-              {expandAll ? t('collapseAll') : t('expandAll')}
-            </Button>
-          )}
+      <div className="w-full rounded-12 border-1 border-primary-60 bg-primary-70">
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead className="border-b-1 border-primary-60 text-left font-space text-sm text-gray-50">
+              <tr>
+                <th className="whitespace-nowrap px-8 py-12 text-center font-400 sm:px-16">
+                  {t('status')}
+                </th>
+                <th className="whitespace-nowrap px-8 py-12 font-400 sm:px-16">{t('txID')}</th>
+                <th className="whitespace-nowrap px-8 py-12 font-400 sm:px-16">{t('txType')}</th>
+                <th className="whitespace-nowrap px-8 py-12 font-400 sm:px-16">{t('tick')}</th>
+                <th className="whitespace-nowrap px-8 py-12 font-400 sm:px-16">{t('timestamp')}</th>
+                <th className="whitespace-nowrap px-8 py-12 font-400 sm:px-16">{t('source')}</th>
+                <th className="whitespace-nowrap px-8 py-12 font-400 sm:px-16">
+                  {t('destination')}
+                </th>
+                <th className="whitespace-nowrap px-8 py-12 text-right font-400 sm:px-16">
+                  {t('amount')}
+                </th>
+              </tr>
+            </thead>
+            <tbody>{renderTableContent()}</tbody>
+          </table>
         </div>
-      )}
-
-      <InfiniteScroll
-        items={displayTransactions}
-        loadMore={loadMoreTransactions}
-        hasMore={hasMore}
-        isLoading={isTickTransactionsLoading}
-        loader={<TickTransactionsSkeleton />}
-        error={errorMessage}
-        replaceContentOnLoading
-        replaceContentOnError
-        endMessage={
-          <p className="py-32 text-center text-sm text-gray-50">
-            {displayTransactions.length === 0 ? t('noTransactions') : t('allTransactionsLoaded')}
-          </p>
-        }
-        renderItem={(tx: QueryServiceTransaction) => (
-          <TxItem
-            key={tx.hash}
-            tx={tx}
-            nonExecutedTxIds={tx.moneyFlew ? [] : [tx.hash]}
-            timestamp={tx.timestamp}
-            isExpanded={expandedTxIds.has(tx.hash)}
-            onToggle={handleTxToggle}
+        {pageCount > 1 && (
+          <PaginationBar
+            className="mx-auto w-fit gap-8 p-20"
+            pageCount={pageCount}
+            page={page}
+            onPageChange={handlePageChange}
           />
         )}
-      />
+      </div>
     </div>
   )
 }

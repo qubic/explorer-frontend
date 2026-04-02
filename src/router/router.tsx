@@ -5,13 +5,15 @@ import { Error404Page } from '@app/pages'
 import {
   AddressPageLazy,
   AssetsRichListPageLazy,
+  EventsPageLazy,
   ExchangesPageLazy,
   OverviewPage,
   RichListPageLazy,
   SmartContractsPageLazy,
   TickPageLazy,
   TokensPageLazy,
-  TxPageLazy
+  TxPageLazy,
+  EventDetailPageLazy
 } from '@app/pages/network'
 import { Routes } from './routes'
 
@@ -37,12 +39,20 @@ const router: ReturnType<typeof createBrowserRouter> = createBrowserRouter([
             element: <TickPageLazy />
           },
           {
+            path: Routes.NETWORK.EVENT(':tickNumber', ':logId'),
+            element: <EventDetailPageLazy />
+          },
+          {
             path: Routes.NETWORK.TX(':txId'),
             element: <TxPageLazy />
           },
           {
             path: Routes.NETWORK.ADDRESS(':addressId'),
             element: <AddressPageLazy />
+          },
+          {
+            path: Routes.NETWORK.BLOCKCHAIN.EVENTS,
+            element: <EventsPageLazy />
           },
           {
             path: Routes.NETWORK.WALLETS.RICH_LIST,
