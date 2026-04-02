@@ -76,7 +76,7 @@ function TxItem({
           setEntries(transfers)
         } catch (error) {
           // eslint-disable-next-line no-console
-          console.log(error)
+          console.error(error)
         }
       })()
     }
@@ -88,7 +88,7 @@ function TxItem({
           setAsset(assetTransfer)
         } catch (error) {
           // eslint-disable-next-line no-console
-          console.log(error)
+          console.error(error)
         }
       })()
     }

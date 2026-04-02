@@ -1,9 +1,9 @@
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 
 import { ChevronLeftIcon, ChevronRightIcon } from '@app/assets/icons'
-import { Skeleton } from '@app/components/ui'
+import { Alert, Skeleton } from '@app/components/ui'
 import { Routes } from '@app/router'
 import {
   useGetComputorListsForEpochQuery,
@@ -11,6 +11,7 @@ import {
 } from '@app/store/apis/query-service'
 import { formatDate, formatString } from '@app/utils'
 import { AddressLink, SubCardItem, TickStatus } from '../../components'
+import { parseLastProcessedTickFromMessage } from './tickFilterUtils'
 
 type Props = Readonly<{
   tick: number
@@ -19,6 +20,7 @@ type Props = Readonly<{
 export default function TickDetails({ tick }: Props) {
   const { t } = useTranslation('network-page')
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
 
   const {
     data: tickData,
@@ -33,10 +35,13 @@ export default function TickDetails({ tick }: Props) {
   const handleTickNavigation = useCallback(
     (direction: 'previous' | 'next') => () => {
       const newTick = Number(tick) + (direction === 'previous' ? -1 : 1)
-      navigate(Routes.NETWORK.TICK(newTick))
+      const tab = searchParams.get('tab')
+      navigate(`${Routes.NETWORK.TICK(newTick)}${tab ? `?tab=${tab}` : ''}`)
     },
-    [navigate, tick]
+    [navigate, tick, searchParams]
   )
+
+  const lastProcessedTick = parseLastProcessedTickFromMessage(tickDataError)
 
   const tickLeader = useMemo(() => {
     if (!computorLists?.length || !tickData) return ''
@@ -80,6 +85,13 @@ export default function TickDetails({ tick }: Props) {
           />
         </div>
       </div>
+      {lastProcessedTick !== null && (
+        <Alert variant="warning" className="mb-24">
+          {t('tickNotYetProcessedData', {
+            lastProcessedTick: lastProcessedTick.toLocaleString()
+          })}
+        </Alert>
+      )}
       {!tickDataError && (
         <div className="mb-24">
           <SubCardItem

@@ -85,6 +85,7 @@ export default function SearchBar() {
     if ('balance' in searchResult) return searchResult.balance.id === query
     if ('hash' in searchResult) return searchResult.hash === query
     if ('tickData' in searchResult) {
+      if (!searchResult.tickData) return false
       const queryNumber = parseInt(query.replace(/,/g, ''), 10)
       return searchResult.tickData.tickNumber === queryNumber
     }
@@ -282,6 +283,7 @@ export default function SearchBar() {
               <input
                 className="w-full bg-inherit py-12 text-base placeholder:font-space placeholder:text-base placeholder:text-gray-50 focus:outline-none sm:text-sm"
                 placeholder={t('searchPlaceholder')}
+                aria-label={t('searchPlaceholder')}
                 value={keyword}
                 // eslint-disable-next-line jsx-a11y/no-autofocus
                 autoFocus
@@ -345,15 +347,18 @@ export default function SearchBar() {
                   onClick={handleCloseCallback}
                 />
               )}
-              {shouldShowSearchResult && searchResult && 'tickData' in searchResult && (
-                <ResultItem
-                  type="tick"
-                  result={formatString(searchResult.tickData.tickNumber)}
-                  subInfo={formatDate(searchResult.tickData.timestamp)}
-                  link={Routes.NETWORK.TICK(searchResult.tickData.tickNumber)}
-                  onClick={handleCloseCallback}
-                />
-              )}
+              {shouldShowSearchResult &&
+                searchResult &&
+                'tickData' in searchResult &&
+                searchResult.tickData && (
+                  <ResultItem
+                    type="tick"
+                    result={formatString(searchResult.tickData.tickNumber)}
+                    subInfo={formatDate(searchResult.tickData.timestamp)}
+                    link={Routes.NETWORK.TICK(searchResult.tickData.tickNumber)}
+                    onClick={handleCloseCallback}
+                  />
+                )}
 
               {/* Entity search results (exchanges, smart contracts, tokens) */}
               {!debouncedSearchType && (entityExactMatch || entityPartialMatches.length > 0) && (

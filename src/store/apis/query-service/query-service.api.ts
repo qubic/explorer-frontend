@@ -1,5 +1,7 @@
-import { envConfig } from '@app/configs'
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+
+import { QUERY_CACHE_TIME } from '@app/constants'
+import { envConfig } from '@app/configs'
 import type {
   ComputorList,
   GetComputorListsForEpochResponse,
@@ -7,6 +9,7 @@ import type {
   GetTickDataResponse,
   GetTransactionsForIdentityRequest,
   GetTransactionsForTickRequest,
+  ProcessedTickInterval,
   QueryServiceResponse,
   QueryServiceTransaction,
   TickData
@@ -17,6 +20,7 @@ const BASE_URL = `${envConfig.QUBIC_RPC_URL}/query/v1`
 export const rpcQueryServiceApi = createApi({
   reducerPath: 'rpcQueryServiceApi',
   baseQuery: fetchBaseQuery({ baseUrl: BASE_URL }),
+  keepUnusedDataFor: QUERY_CACHE_TIME,
   endpoints: (builder) => ({
     getTransactionsForIdentity: builder.mutation<
       QueryServiceResponse,
@@ -62,6 +66,9 @@ export const rpcQueryServiceApi = createApi({
     }),
     getLastProcessedTick: builder.query<GetLastProcessedTickResponse, void>({
       query: () => '/getLastProcessedTick'
+    }),
+    getProcessedTickIntervals: builder.query<ProcessedTickInterval[], void>({
+      query: () => '/getProcessedTickIntervals'
     })
   })
 })
@@ -72,5 +79,6 @@ export const {
   useGetTransactionsForTickQuery,
   useGetTickDataQuery,
   useGetComputorListsForEpochQuery,
-  useGetLastProcessedTickQuery
+  useGetLastProcessedTickQuery,
+  useGetProcessedTickIntervalsQuery
 } = rpcQueryServiceApi

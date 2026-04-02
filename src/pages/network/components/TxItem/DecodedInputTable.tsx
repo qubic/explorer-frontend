@@ -7,10 +7,38 @@ import type { DecodedContractInput } from '@app/utils/contract-input-decoder'
 
 const stripArrayIndices = (path: string): string => path.replace(/\[\d+\]/g, '')
 
-type FlatRow = Readonly<{ key: string; value: string }>
+type ValueType = 'address' | 'numeric' | 'hex' | 'boolean' | 'text'
+
+type FlatRow = Readonly<{ key: string; value: string; valueType: ValueType }>
 
 const MAX_FLATTEN_DEPTH = 20
 const MONOSPACE_VALUE_MIN_LENGTH = 24
+const DECIMAL_STRING = /^-?\d+$/
+
+const formatNumericValue = (value: string): string => {
+  const isNegative = value.startsWith('-')
+  const digits = isNegative ? value.slice(1) : value
+  const parts: string[] = []
+  let remaining = digits
+  while (remaining.length > 3) {
+    parts.unshift(remaining.slice(-3))
+    remaining = remaining.slice(0, -3)
+  }
+  parts.unshift(remaining)
+  return `${isNegative ? '-' : ''}${parts.join(',')}`
+}
+
+const getValueType = (value: unknown, isAddress: boolean): ValueType => {
+  if (isAddress) return 'address'
+  if (typeof value === 'boolean') return 'boolean'
+  if (typeof value === 'bigint' || typeof value === 'number') return 'numeric'
+  if (typeof value === 'string') {
+    if (DECIMAL_STRING.test(value)) return 'numeric'
+    if (value.startsWith('0x')) return 'hex'
+  }
+  if (value instanceof Uint8Array) return 'hex'
+  return 'text'
+}
 
 const isZeroByteArray = (value: readonly unknown[]): boolean =>
   value.length > 0 &&
@@ -21,7 +49,8 @@ const toDisplayValue = (value: unknown): string => {
   if (value === null || value === undefined) return '--'
   if (typeof value === 'bigint') return value.toString()
   if (typeof value === 'string') return value
-  if (typeof value === 'number' || typeof value === 'boolean') return String(value)
+  if (typeof value === 'number') return String(value)
+  if (typeof value === 'boolean') return String(value)
   if (value instanceof Uint8Array) {
     const hex = Array.from(value)
       .map((byte) => byte.toString(16).padStart(2, '0'))
@@ -40,38 +69,49 @@ const toDisplayValue = (value: unknown): string => {
 
 const flattenDecodedValue = (
   value: unknown,
+  identityPaths: ReadonlySet<string>,
   path = '',
   depth = 0,
   seen: WeakSet<object> = new WeakSet()
 ): FlatRow[] => {
   if (depth > MAX_FLATTEN_DEPTH) {
-    return [{ key: path || 'value', value: '[Max depth exceeded]' }]
+    return [{ key: path || 'value', value: '[Max depth exceeded]', valueType: 'text' }]
   }
 
   if (Array.isArray(value)) {
     if (seen.has(value)) {
-      return [{ key: path || 'value', value: '[Circular]' }]
+      return [{ key: path || 'value', value: '[Circular]', valueType: 'text' }]
     }
     seen.add(value)
     if (isZeroByteArray(value)) {
-      return [{ key: path || 'value', value: `[all zeros: ${value.length} bytes]` }]
+      return [
+        { key: path || 'value', value: `[all zeros: ${value.length} bytes]`, valueType: 'text' }
+      ]
     }
     return value.flatMap((item, index) =>
-      flattenDecodedValue(item, path ? `${path}[${index}]` : `[${index}]`, depth + 1, seen)
+      flattenDecodedValue(
+        item,
+        identityPaths,
+        path ? `${path}[${index}]` : `[${index}]`,
+        depth + 1,
+        seen
+      )
     )
   }
 
   if (value && typeof value === 'object' && !(value instanceof Uint8Array)) {
     if (seen.has(value)) {
-      return [{ key: path || 'value', value: '[Circular]' }]
+      return [{ key: path || 'value', value: '[Circular]', valueType: 'text' }]
     }
     seen.add(value)
     return Object.entries(value as Record<string, unknown>).flatMap(([key, nested]) =>
-      flattenDecodedValue(nested, path ? `${path}.${key}` : key, depth + 1, seen)
+      flattenDecodedValue(nested, identityPaths, path ? `${path}.${key}` : key, depth + 1, seen)
     )
   }
 
-  return [{ key: path || 'value', value: toDisplayValue(value) }]
+  const isAddress = identityPaths.has(stripArrayIndices(path))
+  const valueType = getValueType(value, isAddress)
+  return [{ key: path || 'value', value: toDisplayValue(value), valueType }]
 }
 
 const humanizeSegment = (segment: string): string =>
@@ -89,10 +129,9 @@ const humanizePath = (path: string): string =>
     .map((segment) => humanizeSegment(segment))
     .join(' / ')
 
-const shouldUseMonospaceValue = (value: string, isAddress: boolean): boolean => {
+const shouldUseMonospaceValue = (value: string, valueType: ValueType): boolean => {
   if (value.length < MONOSPACE_VALUE_MIN_LENGTH) return false
-  if (value.startsWith('0x')) return true
-  if (isAddress) return true
+  if (valueType === 'hex' || valueType === 'address') return true
   if (/^[a-zA-Z0-9+/=]{24,}$/.test(value)) return true
   return false
 }
@@ -102,13 +141,17 @@ type Props = {
 }
 
 export default function DecodedInputTable({ decoded }: Props) {
-  const rows = useMemo(() => flattenDecodedValue(decoded.value), [decoded])
+  const rows = useMemo(
+    () => flattenDecodedValue(decoded.value, decoded.identityPaths),
+    [decoded.value, decoded.identityPaths]
+  )
 
   return (
     <div className="min-w-0 flex-1">
       <dl className="divide-y divide-gray-60 pl-10">
         {rows.map((row) => {
-          const isAddress = decoded.identityPaths.has(stripArrayIndices(row.key))
+          const displayValue =
+            row.valueType === 'numeric' ? formatNumericValue(row.value) : row.value
           return (
             <div
               key={`${row.key}:${row.value}`}
@@ -119,12 +162,12 @@ export default function DecodedInputTable({ decoded }: Props) {
               </dt>
               <dd
                 className={
-                  shouldUseMonospaceValue(row.value, isAddress)
+                  shouldUseMonospaceValue(displayValue, row.valueType)
                     ? 'break-all font-space text-sm text-white'
                     : 'break-words font-space text-sm text-white'
                 }
               >
-                {isAddress ? (
+                {row.valueType === 'address' ? (
                   <span className="flex items-center gap-8">
                     <Link
                       className="text-primary-30"
@@ -136,7 +179,7 @@ export default function DecodedInputTable({ decoded }: Props) {
                     <CopyTextButton text={row.value} type={COPY_BUTTON_TYPES.ADDRESS} />
                   </span>
                 ) : (
-                  row.value
+                  displayValue
                 )}
               </dd>
             </div>

@@ -11,6 +11,7 @@ export type SmartContract = {
   contractIndex: number
   address: string
   procedures: SmartContractProcedure[]
+  sharesAuctionEpoch?: number
   website?: string
   proposalUrl?: string
 }
@@ -39,6 +40,7 @@ export type GetAddressLabelsResponse = {
 
 export type Token = {
   name: string
+  issuer?: string
   website: string
 }
 
@@ -63,6 +65,15 @@ export type GetTokenCategoriesResponse = {
   defaultCategoryId: string
   defaultCategoryNameKey: string
   allCategoryNameKey: string
+}
+
+export type TransactionInputType = {
+  id: number
+  label: string
+}
+
+export type GetProtocolResponse = {
+  transaction_input_types: TransactionInputType[]
 }
 
 export type ExplorerTranslations = Record<string, string>
