@@ -8,6 +8,7 @@ export {
   formatAddressShort,
   formatAmountShort,
   parseFilterApiError,
+  parseLastProcessedTickFromMessage,
   validateAmountRange,
   validateInputTypeRange,
   validateSingleAddress as validateAddress

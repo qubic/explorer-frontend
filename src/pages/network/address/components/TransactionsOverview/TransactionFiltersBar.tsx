@@ -1,7 +1,12 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { FunnelIcon } from '@app/assets/icons'
+import {
+  useGetAddressLabelsQuery,
+  useGetExchangesQuery,
+  useGetSmartContractsQuery
+} from '@app/store/apis/qubic-static'
 import {
   ActiveFilterChip,
   AmountFilterContent,
@@ -10,7 +15,12 @@ import {
   RangeFilterContent,
   ResetFiltersButton
 } from '../../../components/filters'
-import { formatRangeLabel, useAmountPresetHandler, useClearFilterHandler } from '../../../hooks'
+import {
+  formatRangeLabel,
+  getAmountRangeLabel,
+  useAmountPresetHandler,
+  useClearFilterHandler
+} from '../../../hooks'
 import type {
   AddressFilter,
   TransactionDirection,
@@ -50,6 +60,20 @@ export default function TransactionFiltersBar({
   onClearFilters
 }: Props) {
   const { t } = useTranslation('network-page')
+
+  // Build address → name lookup map from static data (for filter labels)
+  const { data: smartContracts } = useGetSmartContractsQuery()
+  const { data: exchanges } = useGetExchangesQuery()
+  const { data: addressLabels } = useGetAddressLabelsQuery()
+  const addressNameMap = useMemo(() => {
+    const map = new Map<string, string>()
+    // Build in reverse priority order (last wins): labels → exchanges → SCs
+    addressLabels?.forEach((label) => map.set(label.address, label.label))
+    exchanges?.forEach((ex) => map.set(ex.address, ex.name))
+    smartContracts?.forEach((sc) => map.set(sc.address, sc.label || sc.name))
+    return map
+  }, [smartContracts, exchanges, addressLabels])
+
   const [openDropdown, setOpenDropdown] = useState<string | null>(null)
   const [isMobileModalOpen, setIsMobileModalOpen] = useState(false)
 
@@ -118,7 +142,7 @@ export default function TransactionFiltersBar({
 
       setValidationErrors((prev) => ({ ...prev, [dropdownKey]: null }))
 
-      const newFilters = {
+      const newFilters: TransactionFilters = {
         ...activeFilters,
         [filterKey]: start || end ? { start, end } : undefined
       }
@@ -228,43 +252,37 @@ export default function TransactionFiltersBar({
   const isInputTypeActive = !!(
     activeFilters.inputTypeRange?.start || activeFilters.inputTypeRange?.end
   )
-
   // Get display labels for active filters
+  const formatAddress = (address: string) =>
+    addressNameMap.get(address) || formatAddressShort(address)
+
   const getSourceLabel = () => {
     if (!isSourceActive) return t('source')
-    const mode = activeFilters.sourceFilter?.mode ?? 'include'
-    const modeLabel = t(mode)
+    const isExclude = activeFilters.sourceFilter?.mode === 'exclude'
+    const prefix = isExclude ? `${t('exclude')} ` : ''
     if (sourceAddresses.length === 1) {
-      return `${t('source')}: ${modeLabel} ${formatAddressShort(sourceAddresses[0])}`
+      return `${t('source')}: ${prefix}${formatAddress(sourceAddresses[0])}`
     }
-    return `${t('source')}: ${modeLabel} ${sourceAddresses.length}`
+    return `${t('source')}: ${prefix}${sourceAddresses.length}`
   }
 
   const getDestinationLabel = () => {
     if (!isDestinationActive) return t('destination')
-    const mode = activeFilters.destinationFilter?.mode ?? 'include'
-    const modeLabel = t(mode)
+    const isExclude = activeFilters.destinationFilter?.mode === 'exclude'
+    const prefix = isExclude ? `${t('exclude')} ` : ''
     if (destinationAddresses.length === 1) {
-      return `${t('destination')}: ${modeLabel} ${formatAddressShort(destinationAddresses[0])}`
+      return `${t('destination')}: ${prefix}${formatAddress(destinationAddresses[0])}`
     }
-    return `${t('destination')}: ${modeLabel} ${destinationAddresses.length}`
+    return `${t('destination')}: ${prefix}${destinationAddresses.length}`
   }
 
-  const getAmountLabel = () => {
-    if (!isAmountActive) return t('amount')
-    const { start, end, presetKey } = activeFilters.amountRange || {}
-
-    if (presetKey) {
-      const preset = AMOUNT_PRESETS.find((p) => p.labelKey === presetKey)
-      if (preset) return `${t('amount')}: ${t(preset.labelKey)}`
-    }
-
-    if (start && end)
-      return `${t('amount')}: ${formatAmountShort(start, t)} - ${formatAmountShort(end, t)}`
-    if (start) return `${t('amount')}: >= ${formatAmountShort(start, t)}`
-    if (end) return `${t('amount')}: <= ${formatAmountShort(end, t)}`
-    return t('amount')
-  }
+  const amountLabel = getAmountRangeLabel(
+    t('amount'),
+    activeFilters.amountRange,
+    AMOUNT_PRESETS,
+    t,
+    formatAmountShort
+  )
 
   const getDateLabel = () => {
     if (!isDateActive) return t('date')
@@ -318,9 +336,7 @@ export default function TransactionFiltersBar({
             {isDestinationActive && (
               <ActiveFilterChip label={getDestinationLabel()} onClear={clearDestinationFilter} />
             )}
-            {isAmountActive && (
-              <ActiveFilterChip label={getAmountLabel()} onClear={clearAmountFilter} />
-            )}
+            {isAmountActive && <ActiveFilterChip label={amountLabel} onClear={clearAmountFilter} />}
             {isDateActive && <ActiveFilterChip label={getDateLabel()} onClear={clearDateFilter} />}
             {isTickActive && <ActiveFilterChip label={getTickLabel()} onClear={clearTickFilter} />}
             {isInputTypeActive && (
@@ -411,7 +427,7 @@ export default function TransactionFiltersBar({
 
         {/* Amount Filter */}
         <FilterDropdown
-          label={getAmountLabel()}
+          label={amountLabel}
           isActive={isAmountActive}
           show={openDropdown === 'amount'}
           onToggle={() => handleToggle('amount')}

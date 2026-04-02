@@ -1,7 +1,7 @@
 {
   "name": "explorer-frontend",
   "private": true,
-  "version": "1.35.0",
+  "version": "1.36.0-rc.1",
   "type": "module",
   "engines": {
     "node": "^20.17.0",
@@ -25,9 +25,7 @@
     "@qubic.ts/core": "^1.6.2",
     "@react-spring/web": "^9.7.5",
     "@reduxjs/toolkit": "^2.2.6",
-    "@tailwindcss/aspect-ratio": "^0.4.2",
     "@tailwindcss/forms": "^0.5.7",
-    "@tailwindcss/typography": "^0.5.13",
     "axios": "^1.8.2",
     "clsx": "^2.1.1",
     "i18next": "^23.12.1",
@@ -42,7 +40,6 @@
     "react-router-dom": "^6.24.1",
     "react-syntax-highlighter": "^15.6.1",
     "react-tooltip": "^5.28.0",
-    "redux-logger": "^3.0.6",
     "tailwind-merge": "^2.4.0"
   },
   "devDependencies": {

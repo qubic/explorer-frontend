@@ -19,6 +19,7 @@ type Props<ValueType> = Readonly<{
   defaultValue?: Option<ValueType>
   className?: string
   size?: Size
+  textCenter?: boolean
 }>
 
 const sizeClasses = {
@@ -50,7 +51,8 @@ export default function Select<ValueType = string>({
   name = `select-${label}`,
   showLabel = false,
   className,
-  size = 'md'
+  size = 'md',
+  textCenter = false
 }: Props<ValueType>) {
   const [selected, setSelected] = useState<Option<ValueType>>(
     defaultValue || { label, value: '' as ValueType }
@@ -86,7 +88,8 @@ export default function Select<ValueType = string>({
         <div className={clsxTwMerge('relative w-full font-space', className)}>
           <ListboxButton
             className={clsxTwMerge(
-              'text-primary-800 relative w-full cursor-default rounded-md border border-primary-60 bg-primary-70 text-left shadow-sm hover:cursor-pointer hover:border-primary-50 focus:border-primary-50 focus:outline-none focus:ring-1 focus:ring-primary-50 active:ring-primary-50',
+              'text-primary-800 relative w-full cursor-default rounded-md border border-primary-60 bg-primary-70 shadow-sm hover:cursor-pointer hover:border-primary-50 focus:border-primary-50 focus:outline-none focus:ring-1 focus:ring-primary-50 active:ring-primary-50',
+              textCenter ? 'text-center' : 'text-left',
               sizeClasses[size].button
             )}
           >
@@ -105,7 +108,7 @@ export default function Select<ValueType = string>({
 
           <ListboxOptions
             transition
-            className="absolute z-10 mt-1 w-full overflow-auto rounded-md bg-primary-70 shadow-2xl ring-1 ring-black ring-opacity-5 drop-shadow-2xl scrollbar-thin scrollbar-thumb-rounded-full focus:outline-none"
+            className="absolute z-10 mt-1 max-h-[200px] w-full overflow-auto rounded-md bg-primary-70 shadow-2xl ring-1 ring-black ring-opacity-5 drop-shadow-2xl scrollbar-thin scrollbar-thumb-rounded-full focus:outline-none"
           >
             {options.map((option, index) => (
               <ListboxOption
@@ -114,6 +117,7 @@ export default function Select<ValueType = string>({
                 className={clsxTwMerge(
                   index === 0 && 'rounded-t-md',
                   'text-primary-800 group relative cursor-default select-none font-space data-[focus]:bg-primary-60 data-[selected]:bg-primary-60/50 data-[focus]:text-white hover:cursor-pointer',
+                  textCenter && 'text-center',
                   sizeClasses[size].options
                 )}
               >
