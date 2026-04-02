@@ -1,3 +1,17 @@
+## [1.36.1](https://github.com/qubic/explorer-frontend/compare/v1.36.0...v1.36.1) (2026-04-02)
+
+
+### Bug Fixes
+
+* scope events to page address when source or destination filter is set ([df28194](https://github.com/qubic/explorer-frontend/commit/df28194425e652c4f25982f8eeb7923160bf0d87))
+
+## [1.36.1-rc.1](https://github.com/qubic/explorer-frontend/compare/v1.36.0...v1.36.1-rc.1) (2026-04-02)
+
+
+### Bug Fixes
+
+* scope events to page address when source or destination filter is set ([df28194](https://github.com/qubic/explorer-frontend/commit/df28194425e652c4f25982f8eeb7923160bf0d87))
+
 # [1.36.0](https://github.com/qubic/explorer-frontend/compare/v1.35.0...v1.36.0) (2026-04-02)
 
 
