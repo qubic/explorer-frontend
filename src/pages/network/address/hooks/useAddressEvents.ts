@@ -83,9 +83,13 @@ export default function useAddressEvents(addressId: string): {
   const sourceResult = buildEventAddressFilter(effectiveSourceFilter)
   const destResult = buildEventAddressFilter(effectiveDestFilter)
 
-  // Use `should` (OR) to scope results to the page address when no explicit direction is set.
-  // When direction is set, implicit source/dest handles the scoping instead.
-  const useShouldFilter = !direction
+  const hasExplicitSource = !!sourceResult.include || !!sourceResult.exclude
+  const hasExplicitDest = !!destResult.include || !!destResult.exclude
+
+  // When a source or destination filter is explicitly set, we can't use `should` (OR)
+  // because it would return events outside the page address scope.
+  // Instead, fill the opposite field with the page address to keep results scoped.
+  const useShouldFilter = !direction && !hasExplicitSource && !hasExplicitDest
 
   const addressShould = useMemo<ShouldFilter[] | undefined>(
     () =>
@@ -104,10 +108,23 @@ export default function useAddressEvents(addressId: string): {
     return [...(addressShould ?? []), ...(amountShould ?? [])]
   }, [addressShould, amountShould])
 
-  // When direction is set, implicit source/dest scopes to the page address.
-  // When direction is undefined, `should` (OR) handles scoping instead.
-  const implicitSource = isOutgoing ? addressId : undefined
-  const implicitDest = isIncoming ? addressId : undefined
+  // Determine source/destination values for the API request:
+  // 1. Direction set → implicit source or dest is the page address
+  // 2. Explicit filter set → use it, and scope the opposite side to the page address
+  // 3. Neither → `should` (OR) handles scoping
+  const resolvedSource = useMemo(() => {
+    if (sourceResult.include) return sourceResult.include
+    if (isOutgoing) return addressId
+    if (hasExplicitDest) return addressId
+    return undefined
+  }, [sourceResult.include, isOutgoing, hasExplicitDest, addressId])
+
+  const resolvedDest = useMemo(() => {
+    if (destResult.include) return destResult.include
+    if (isIncoming) return addressId
+    if (hasExplicitSource) return addressId
+    return undefined
+  }, [destResult.include, isIncoming, hasExplicitSource, addressId])
 
   const { data, isFetching, isError, error } = useGetEventsQuery(
     {
@@ -118,9 +135,9 @@ export default function useAddressEvents(addressId: string): {
       offset,
       size: pageSize,
       logType: eventTypes.length > 0 ? eventTypes : undefined,
-      source: sourceResult.include ?? implicitSource,
+      source: resolvedSource,
       excludeSource: sourceResult.exclude,
-      destination: destResult.include ?? implicitDest,
+      destination: resolvedDest,
       excludeDestination: destResult.exclude,
       ...amountParams
     },
