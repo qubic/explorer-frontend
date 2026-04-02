@@ -29,7 +29,7 @@
   "assetTransferWarning": "此交易仅在源地址的交易列表中可见。在当前版本中尚不支持在目标地址的交易列表中显示它。",
   "average": "平均",
   "billionShort": "十亿",
-  "blockchain": "Blockchain",
+  "blockchain": "区块链",
   "burnedSupply": "燃烧供应量",
   "burnEvents": "销毁事件",
   "burns": "销毁",
