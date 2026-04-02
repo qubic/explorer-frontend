@@ -151,7 +151,7 @@ export default function EventsFilterBar({
       />
 
       {/* Desktop: Dropdown filters */}
-      <div className="hidden items-center gap-8 sm:flex">
+      <div className="hidden flex-wrap items-center gap-8 sm:flex">
         <FunnelIcon className="h-16 w-16 text-gray-50" />
         {showDirectionFilter && (
           <DirectionControl
