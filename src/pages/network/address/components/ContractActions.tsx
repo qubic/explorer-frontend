@@ -11,24 +11,33 @@ type Props = {
   code: string
   githubUrl: string
   proposalUrl?: string
+  showShareholders?: boolean
 }
 
-export default function ContractActions({ asset, code, githubUrl, proposalUrl }: Props) {
+export default function ContractActions({
+  asset,
+  code,
+  githubUrl,
+  proposalUrl,
+  showShareholders
+}: Props) {
   const { t } = useTranslation('network-page')
   return (
     <div className="flex gap-6 self-end">
-      <Tooltip content={t('checkContractShareholders')} tooltipId="check-shareholders">
-        <Button
-          className="h-[30px] w-fit"
-          size="xs"
-          variant="outlined"
-          color="secondary"
-          as={Link}
-          to={Routes.NETWORK.ASSETS.RICH_LIST(ASSETS_ISSUER_ADDRESS, asset)}
-        >
-          {t('shareholders')}
-        </Button>
-      </Tooltip>
+      {showShareholders && (
+        <Tooltip content={t('checkContractShareholders')} tooltipId="check-shareholders">
+          <Button
+            className="h-[30px] w-fit"
+            size="xs"
+            variant="outlined"
+            color="secondary"
+            as={Link}
+            to={Routes.NETWORK.ASSETS.RICH_LIST(ASSETS_ISSUER_ADDRESS, asset)}
+          >
+            {t('shareholders')}
+          </Button>
+        </Tooltip>
+      )}
       <a
         href={githubUrl}
         aria-label="Open GitHub code file"
