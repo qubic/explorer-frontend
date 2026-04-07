@@ -185,6 +185,7 @@
   "rank": "Ранг",
   "remaining": "Остаток",
   "remainingAmount": "Оставшаяся сумма",
+  "rawPayload": "Необработанные данные",
   "removeAddress": "Удалить адрес",
   "replyDigest": "Дайджест ответа",
   "resetFilters": "Сбросить фильтры",

@@ -185,6 +185,7 @@
   "rank": "Rang",
   "remaining": "Verbleibend",
   "remainingAmount": "Verbleibender Betrag",
+  "rawPayload": "Rohdaten",
   "removeAddress": "Adresse entfernen",
   "replyDigest": "Antwort-Digest",
   "resetFilters": "Filter zurücksetzen",
