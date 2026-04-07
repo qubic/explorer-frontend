@@ -83,6 +83,12 @@ function AddressPage() {
 
   const isSmartContract = !!smartContractDetails
 
+  const showShareholders = useMemo(() => {
+    const epoch = latestStats.data?.epoch
+    const auctionEpoch = smartContractDetails?.sharesAuctionEpoch
+    return epoch !== undefined && auctionEpoch !== undefined && epoch > auctionEpoch
+  }, [latestStats.data?.epoch, smartContractDetails?.sharesAuctionEpoch])
+
   const [searchParams, setSearchParams] = useSearchParams()
   const tabParam = searchParams.get('tab')
 
@@ -252,6 +258,7 @@ function AddressPage() {
                 githubUrl={smartContractDetails.githubUrl}
                 proposalUrl={smartContractDetails.proposalUrl}
                 contractIndex={smartContractDetails.contractIndex}
+                showShareholders={showShareholders}
               />
             </Tabs.Panel>
           )}

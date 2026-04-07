@@ -185,6 +185,7 @@
   "rank": "Rank",
   "remaining": "Remaining",
   "remainingAmount": "Remaining Amount",
+  "rawPayload": "Raw Payload",
   "removeAddress": "Remove address",
   "replyDigest": "Reply Digest",
   "resetFilters": "Reset Filters",
