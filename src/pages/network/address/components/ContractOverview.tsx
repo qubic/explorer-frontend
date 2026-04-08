@@ -16,9 +16,16 @@ type Props = {
   githubUrl: string
   proposalUrl?: string
   contractIndex?: number
+  showShareholders?: boolean
 }
 
-export default function ContractOverview({ asset, githubUrl, proposalUrl, contractIndex }: Props) {
+export default function ContractOverview({
+  asset,
+  githubUrl,
+  proposalUrl,
+  contractIndex,
+  showShareholders
+}: Props) {
   const { t } = useTranslation('network-page')
   const [code, setCode] = useState<string>('')
   const [error, setError] = useState<string | null>(null)
@@ -101,6 +108,7 @@ export default function ContractOverview({ asset, githubUrl, proposalUrl, contra
             code={code}
             githubUrl={githubUrl}
             proposalUrl={proposalUrl}
+            showShareholders={showShareholders}
           />
         </div>
 

@@ -30,6 +30,7 @@ export type TransactionEvent = {
   remainingAmount?: number
   value?: string
   contractMessageType?: number
+  rawPayload?: string
 }
 
 // Log type numeric codes (from core/src/logging.h)
@@ -263,6 +264,7 @@ export interface RawApiEvent {
   assetOwnershipManagingContractChange?: AssetOwnershipManagingContractChangeData
   assetPossessionManagingContractChange?: AssetPossessionManagingContractChangeData
   smartContractMessage?: SmartContractMessageData
+  rawPayload?: string
 }
 
 export interface RawGetEventsResponse {
@@ -388,6 +390,10 @@ export function adaptApiEvent(raw: RawApiEvent): TransactionEvent {
   if (raw.smartContractMessage) {
     base.contractIndex = Number(raw.smartContractMessage.contractIndex)
     base.contractMessageType = Number(raw.smartContractMessage.contractMessageType)
+  }
+
+  if (raw.rawPayload) {
+    base.rawPayload = raw.rawPayload
   }
 
   return base

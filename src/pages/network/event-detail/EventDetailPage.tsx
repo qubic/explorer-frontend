@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom'
 
 import { withHelmet } from '@app/components/hocs'
 import { Badge, Breadcrumbs } from '@app/components/ui'
+import { CopyTextButton } from '@app/components/ui/buttons'
 import { ErrorFallback } from '@app/components/ui/error-boundaries'
 import { PageLayout } from '@app/components/ui/layouts'
 import { LinearProgress } from '@app/components/ui/loaders'
@@ -156,7 +157,12 @@ function EventDetailPage() {
         <SubCardItem
           variant="secondary"
           title={t('logDigest')}
-          content={<p className="break-all font-space text-sm text-gray-50">{event.logDigest}</p>}
+          content={
+            <div className="flex min-w-0 flex-1 items-center gap-4">
+              <p className="break-all font-space text-sm text-gray-50">{event.logDigest}</p>
+              <CopyTextButton text={event.logDigest} />
+            </div>
+          }
         />
 
         {event.source && (
@@ -318,6 +324,18 @@ function EventDetailPage() {
             title={t('remainingAmount')}
             content={
               <p className="font-space text-sm">{formatString(event.remainingAmount)} QUBIC</p>
+            }
+          />
+        )}
+        {event.rawPayload && (
+          <SubCardItem
+            variant="secondary"
+            title={t('rawPayload')}
+            content={
+              <div className="flex min-w-0 flex-1 items-center gap-4">
+                <p className="break-all font-space text-sm text-gray-50">{event.rawPayload}</p>
+                <CopyTextButton text={event.rawPayload} />
+              </div>
             }
           />
         )}

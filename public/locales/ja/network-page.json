@@ -185,6 +185,7 @@
   "rank": "ランク",
   "remaining": "残額",
   "remainingAmount": "残額",
+  "rawPayload": "生データ",
   "removeAddress": "アドレスを削除",
   "replyDigest": "回答ダイジェスト",
   "resetFilters": "フィルターをリセット",

@@ -185,6 +185,7 @@
   "rank": "Rango",
   "remaining": "Restante",
   "remainingAmount": "Monto Restante",
+  "rawPayload": "Datos sin procesar",
   "removeAddress": "Eliminar dirección",
   "replyDigest": "Resumen de respuesta",
   "resetFilters": "Restablecer filtros",
