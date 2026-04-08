@@ -1,3 +1,15 @@
+# [1.37.0](https://github.com/qubic/explorer-frontend/compare/v1.36.1...v1.37.0) (2026-04-08)
+
+
+### Bug Fixes
+
+* hide shareholders button when current epoch <= sharesAuctionEpoch ([10724f4](https://github.com/qubic/explorer-frontend/commit/10724f4d359fc9eec3e912e6eca1a4a5a0ed7a9c))
+
+
+### Features
+
+* display rawPayload field and add copy buttons on event detail page ([d646cee](https://github.com/qubic/explorer-frontend/commit/d646cee1f4423dcce4e247107585bb079d968e2f))
+
 # [1.37.0-rc.1](https://github.com/qubic/explorer-frontend/compare/v1.36.1...v1.37.0-rc.1) (2026-04-07)
 
 
