@@ -1,3 +1,27 @@
+# [1.38.0](https://github.com/qubic/explorer-frontend/compare/v1.37.0...v1.38.0) (2026-04-21)
+
+
+### Bug Fixes
+
+* truncate virtual TX IDs and reduce events table padding ([27c80da](https://github.com/qubic/explorer-frontend/commit/27c80dae8797ffebcbdc6b286e6e39d48604badc))
+
+
+### Features
+
+* sync transaction filters to URL search params ([12164ff](https://github.com/qubic/explorer-frontend/commit/12164ff0899e1af0ff96f34baa788a23213e95a7))
+
+# [1.38.0-rc.1](https://github.com/qubic/explorer-frontend/compare/v1.37.0...v1.38.0-rc.1) (2026-04-21)
+
+
+### Bug Fixes
+
+* truncate virtual TX IDs and reduce events table padding ([27c80da](https://github.com/qubic/explorer-frontend/commit/27c80dae8797ffebcbdc6b286e6e39d48604badc))
+
+
+### Features
+
+* sync transaction filters to URL search params ([12164ff](https://github.com/qubic/explorer-frontend/commit/12164ff0899e1af0ff96f34baa788a23213e95a7))
+
 # [1.37.0](https://github.com/qubic/explorer-frontend/compare/v1.36.1...v1.37.0) (2026-04-08)
 
 
