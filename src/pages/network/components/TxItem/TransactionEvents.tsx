@@ -55,23 +55,23 @@ const EventRow = memo(function EventRow({
 
   return (
     <tr className="border-b-1 border-primary-60 last:border-b-0">
-      <td className="px-16 py-14">
+      <td className="px-10 py-14">
         <EventLink tickNumber={event.tickNumber} logId={event.logId} />
       </td>
       {showTickAndTimestamp && (
         <>
-          <td className="px-16 py-14">
+          <td className="px-10 py-14">
             {event.tickNumber > 0 && (
               <TickLink className="text-sm text-primary-30" value={event.tickNumber} />
             )}
           </td>
-          <td className="whitespace-nowrap px-16 py-14 font-space text-sm text-gray-50">
+          <td className="whitespace-nowrap px-10 py-14 font-space text-sm text-gray-50">
             {formatDate(String(event.timestamp), { shortDate: true })}
           </td>
         </>
       )}
       {showTxId && (
-        <td className="whitespace-nowrap px-16 py-14">
+        <td className="whitespace-nowrap px-10 py-14">
           {event.isVirtualTx ? (
             <VirtualTxLink value={event.transactionHash} />
           ) : (
@@ -85,12 +85,12 @@ const EventRow = memo(function EventRow({
           )}
         </td>
       )}
-      <td className="px-16 py-14">
+      <td className="px-10 py-14">
         <Badge color="primary" size="xs" className="text-gray-50">
           {getEventTypeLabel(event.type)}
         </Badge>
       </td>
-      <td className="px-16 py-14">
+      <td className="px-10 py-14">
         <AddressCell
           address={source}
           highlightAddress={highlightAddress}
@@ -99,7 +99,7 @@ const EventRow = memo(function EventRow({
           showDash
         />
       </td>
-      <td className="px-16 py-14">
+      <td className="px-10 py-14">
         <AddressCell
           address={event.destination}
           highlightAddress={highlightAddress}
@@ -108,7 +108,7 @@ const EventRow = memo(function EventRow({
           showDash
         />
       </td>
-      <td className="whitespace-nowrap px-16 py-14 text-right font-space text-sm">
+      <td className="whitespace-nowrap px-10 py-14 text-right font-space text-sm">
         {event.amount !== undefined ? (
           <>
             <span className="font-500">
@@ -232,20 +232,20 @@ export default function TransactionEvents({
           <table className="w-full" aria-label={header || t('events')}>
             <thead className="border-b-1 border-primary-60 text-left font-space text-sm text-gray-50">
               <tr>
-                <th className="whitespace-nowrap px-16 py-12 font-400">{t('id')}</th>
+                <th className="whitespace-nowrap px-10 py-12 font-400">{t('id')}</th>
                 {showTickAndTimestamp && (
                   <>
-                    <th className="whitespace-nowrap px-16 py-12 font-400">{t('tick')}</th>
-                    <th className="whitespace-nowrap px-16 py-12 font-400">{t('timestamp')}</th>
+                    <th className="whitespace-nowrap px-10 py-12 font-400">{t('tick')}</th>
+                    <th className="whitespace-nowrap px-10 py-12 font-400">{t('timestamp')}</th>
                   </>
                 )}
                 {showTxId && (
-                  <th className="whitespace-nowrap px-16 py-12 font-400">{t('txID')}</th>
+                  <th className="whitespace-nowrap px-10 py-12 font-400">{t('txID')}</th>
                 )}
-                <th className="whitespace-nowrap px-16 py-12 font-400">{t('eventType')}</th>
-                <th className="whitespace-nowrap px-16 py-12 font-400">{t('source')}</th>
-                <th className="whitespace-nowrap px-16 py-12 font-400">{t('destination')}</th>
-                <th className="whitespace-nowrap px-16 py-12 text-right font-400">{t('amount')}</th>
+                <th className="whitespace-nowrap px-10 py-12 font-400">{t('eventType')}</th>
+                <th className="whitespace-nowrap px-10 py-12 font-400">{t('source')}</th>
+                <th className="whitespace-nowrap px-10 py-12 font-400">{t('destination')}</th>
+                <th className="whitespace-nowrap px-10 py-12 text-right font-400">{t('amount')}</th>
               </tr>
             </thead>
             <tbody>
@@ -256,7 +256,7 @@ export default function TransactionEvents({
                     className="border-b-1 border-primary-60 last:border-b-0"
                   >
                     {skeletonCells.map(({ id, className }) => (
-                      <td key={id} className="px-16 py-14">
+                      <td key={id} className="px-10 py-14">
                         <Skeleton className={className} />
                       </td>
                     ))}
