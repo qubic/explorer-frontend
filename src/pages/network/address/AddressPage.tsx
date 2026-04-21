@@ -20,6 +20,7 @@ import { useGetSmartContractsQuery } from '@app/store/apis/qubic-static'
 import { clsxTwMerge, formatEllipsis, formatString, isValidQubicAddress } from '@app/utils'
 import { useGetAddressName } from '@app/hooks'
 import { HomeLink } from '../components'
+import { clearFilterParams } from '../utils/txFilterParams'
 import {
   AddressDetails,
   AddressEvents,
@@ -99,12 +100,14 @@ function AddressPage() {
     return 0
   }, [tabParam, isSmartContract])
 
-  // Normalize invalid tab params so URL always reflects the visible tab
+  // Normalize invalid tab params (e.g. ?tab=contract on a non-smart-contract address)
   useEffect(() => {
+    if (!tabParam) return
     const isValidTab =
+      tabParam === 'transactions' ||
       tabParam === 'events' ||
       ((tabParam === 'reserve' || tabParam === 'contract') && isSmartContract)
-    if (tabParam && !isValidTab) {
+    if (!isValidTab) {
       setSearchParams(
         (prev) => {
           prev.delete('tab')
@@ -117,17 +120,17 @@ function AddressPage() {
 
   const handleTabChange = useCallback(
     (index: number) => {
+      const tabMap: Record<number, string> = {
+        0: 'transactions',
+        1: 'events',
+        2: 'contract',
+        3: 'reserve'
+      }
       setSearchParams(
         (prev) => {
-          if (index === 1) {
-            prev.set('tab', 'events')
-          } else if (index === 2) {
-            prev.set('tab', 'contract')
-          } else if (index === 3) {
-            prev.set('tab', 'reserve')
-          } else {
-            prev.delete('tab')
-          }
+          // Clear all filter params when switching tabs
+          clearFilterParams(prev)
+          prev.set('tab', tabMap[index] ?? 'transactions')
           return prev
         },
         { replace: true }
