@@ -1,12 +1,15 @@
-import { memo, useCallback, useMemo, useState } from 'react'
+import { memo, useCallback, useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useSearchParams } from 'react-router-dom'
 
 import { Infocon } from '@app/assets/icons'
 import { PageSizeSelect, PaginationBar, Tooltip } from '@app/components/ui'
-import type { Option } from '@app/components/ui/Select'
-import { DEFAULT_PAGE_SIZE } from '@app/constants'
+import { usePaginationSearchParams, useValidatedPage, useValidatedPageSize } from '@app/hooks'
 import useLatestTransactions, { MAX_TRANSACTION_RESULTS } from '../../hooks/useLatestTransactions'
+import type { TransactionFilters } from '../../hooks/useLatestTransactions'
 import { TransactionRow, TransactionSkeletonRow } from '../../../components'
+import { parseTransactionFilters, txFiltersToParams } from '../../../utils/txFilterParams'
+import { updateSearchParams } from '../../../utils/filterUtils'
 import { parseFilterApiError } from './filterUtils'
 import TransactionFiltersBar from './TransactionFiltersBar'
 
@@ -27,11 +30,26 @@ type Props = {
 
 export default function LatestTransactions({ addressId }: Props) {
   const { t } = useTranslation('network-page')
-  const [page, setPage] = useState(1)
-  const [pageSize, setPageSize] = useState(DEFAULT_PAGE_SIZE)
+  const [searchParams, setSearchParams] = useSearchParams()
+  const { handlePageChange, handlePageSizeChange } = usePaginationSearchParams()
+  const page = useValidatedPage()
+  const pageSize = useValidatedPageSize()
 
-  const { transactions, totalCount, isLoading, error, applyFilters, clearFilters, activeFilters } =
-    useLatestTransactions(addressId, page, pageSize)
+  // Read filters from URL search params (source of truth)
+  // Stabilize reference: only produce a new object when the serialized filter values actually change
+  // (useLatestTransactions uses useEffect with activeFilters as a dep, so reference stability matters)
+  const filtersJson = useMemo(
+    () => JSON.stringify(parseTransactionFilters(searchParams)),
+    [searchParams]
+  )
+  const activeFilters: TransactionFilters = useMemo(() => JSON.parse(filtersJson), [filtersJson])
+
+  const { transactions, totalCount, isLoading, error } = useLatestTransactions(
+    addressId,
+    page,
+    pageSize,
+    activeFilters
+  )
 
   // Parse API error to show localized message
   const errorMessage = useMemo(() => {
@@ -45,27 +63,25 @@ export default function LatestTransactions({ addressId }: Props) {
 
   const pageCount = totalCount !== null ? Math.ceil(totalCount / pageSize) : 0
 
-  const handlePageChange = useCallback((value: number) => {
-    setPage(value)
-  }, [])
-
-  const handlePageSizeChange = useCallback((option: Option) => {
-    setPageSize(parseInt(option.value, 10))
-    setPage(1)
-  }, [])
+  // Clamp page to valid range when it exceeds pageCount (e.g. manually edited URL)
+  useEffect(() => {
+    if (pageCount > 0 && page > pageCount) {
+      handlePageChange(pageCount)
+    }
+  }, [page, pageCount, handlePageChange])
 
   const handleApplyFilters = useCallback(
-    (filters: Parameters<typeof applyFilters>[0]) => {
-      applyFilters(filters)
-      setPage(1)
+    (filters: TransactionFilters) => {
+      setSearchParams((prev) => updateSearchParams(prev, txFiltersToParams(filters)), {
+        replace: true
+      })
     },
-    [applyFilters]
+    [setSearchParams]
   )
 
   const handleClearFilters = useCallback(() => {
-    clearFilters()
-    setPage(1)
-  }, [clearFilters])
+    setSearchParams((prev) => updateSearchParams(prev, txFiltersToParams({})), { replace: true })
+  }, [setSearchParams])
 
   const renderTableContent = useCallback(() => {
     if (isLoading) {
