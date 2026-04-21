@@ -1,9 +1,12 @@
-import { memo, useCallback, useMemo, useState } from 'react'
+import { memo, useCallback, useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useSearchParams } from 'react-router-dom'
 
 import { PageSizeSelect, PaginationBar } from '@app/components/ui'
 import { usePaginationSearchParams, useValidatedPage, useValidatedPageSize } from '@app/hooks'
 import { useGetTransactionsForTickQuery } from '@app/store/apis/query-service'
+import { parseTickTransactionFilters, tickTxFiltersToParams } from '../../utils/txFilterParams'
+import { updateSearchParams } from '../../utils/filterUtils'
 import TickTransactionFiltersBar from './TickTransactionFiltersBar'
 import { TransactionRow, TransactionSkeletonRow } from '../../components'
 import type { TickTransactionFilters } from './tickFilterUtils'
@@ -29,10 +32,14 @@ type Props = Readonly<{
 
 export default function TickTransactions({ tick }: Props) {
   const { t } = useTranslation('network-page')
-  const [activeFilters, setActiveFilters] = useState<TickTransactionFilters>({})
-  const { handlePageChange, handlePageSizeChange, resetPage } = usePaginationSearchParams()
+  const [searchParams, setSearchParams] = useSearchParams()
+  const { handlePageChange, handlePageSizeChange } = usePaginationSearchParams()
   const page = useValidatedPage()
   const pageSize = useValidatedPageSize()
+
+  // Read filters from URL search params (source of truth)
+  // No reference stabilization needed: RTK Query caches by serialized args, not by reference
+  const activeFilters = useMemo(() => parseTickTransactionFilters(searchParams), [searchParams])
 
   // Build the API request with filters
   const request = useMemo(
@@ -66,6 +73,13 @@ export default function TickTransactions({ tick }: Props) {
   const totalCount = transactions?.length ?? 0
   const pageCount = Math.ceil(totalCount / pageSize)
 
+  // Clamp page to valid range when it exceeds pageCount (e.g. manually edited URL)
+  useEffect(() => {
+    if (pageCount > 0 && page > pageCount) {
+      handlePageChange(pageCount)
+    }
+  }, [page, pageCount, handlePageChange])
+
   const paginatedTransactions = useMemo(() => {
     if (!transactions) return []
     const start = (page - 1) * pageSize
@@ -74,16 +88,18 @@ export default function TickTransactions({ tick }: Props) {
 
   const handleApplyFilters = useCallback(
     (filters: TickTransactionFilters) => {
-      setActiveFilters(filters)
-      resetPage()
+      setSearchParams((prev) => updateSearchParams(prev, tickTxFiltersToParams(filters)), {
+        replace: true
+      })
     },
-    [resetPage]
+    [setSearchParams]
   )
 
   const handleClearFilters = useCallback(() => {
-    setActiveFilters({})
-    resetPage()
-  }, [resetPage])
+    setSearchParams((prev) => updateSearchParams(prev, tickTxFiltersToParams({})), {
+      replace: true
+    })
+  }, [setSearchParams])
 
   const renderTableContent = useCallback(() => {
     if (isTickTransactionsLoading) {

@@ -27,20 +27,17 @@ export interface UseLatestTransactionsResult {
   totalCount: number | null
   isLoading: boolean
   error: string | null
-  applyFilters: (filters: TransactionFilters) => void
-  clearFilters: () => void
-  activeFilters: TransactionFilters
 }
 
 export default function useLatestTransactions(
   addressId: string,
   page: number,
-  pageSize: number
+  pageSize: number,
+  activeFilters: TransactionFilters
 ): UseLatestTransactionsResult {
   const [transactions, setTransactions] = useState<QueryServiceTransaction[]>([])
   const [totalCount, setTotalCount] = useState<number | null>(null)
   const [isLoading, setIsLoading] = useState(false)
-  const [activeFilters, setActiveFilters] = useState<TransactionFilters>({})
   const cancellationRef = useRef(false)
 
   const [getTransactionsForIdentity, { error }] = useGetTransactionsForIdentityMutation()
@@ -143,14 +140,6 @@ export default function useLatestTransactions(
     [getTransactionsForIdentity, addressId]
   )
 
-  const applyFilters = useCallback((filters: TransactionFilters) => {
-    setActiveFilters(filters)
-  }, [])
-
-  const clearFilters = useCallback(() => {
-    setActiveFilters({})
-  }, [])
-
   // Fetch the requested page whenever page, pageSize, filters, or addressId change
   useEffect(() => {
     cancellationRef.current = false
@@ -184,9 +173,6 @@ export default function useLatestTransactions(
     transactions,
     totalCount,
     isLoading,
-    error: extractErrorMessage(error),
-    applyFilters,
-    clearFilters,
-    activeFilters
+    error: extractErrorMessage(error)
   }
 }

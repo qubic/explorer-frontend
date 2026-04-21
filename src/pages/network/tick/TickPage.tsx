@@ -7,7 +7,10 @@ import { Breadcrumbs, Tabs } from '@app/components/ui'
 import { PageLayout } from '@app/components/ui/layouts'
 import { formatString } from '@app/utils'
 import { HomeLink } from '../components'
+import { clearFilterParams } from '../utils/txFilterParams'
 import { TickDetails, TickEvents, TickTransactions } from './components'
+
+const TAB_VALUES = ['transactions', 'events'] as const
 
 function TickPage() {
   const { t } = useTranslation('network-page')
@@ -22,7 +25,15 @@ function TickPage() {
 
   const handleTabChange = useCallback(
     (index: number) => {
-      setSearchParams(index === 1 ? { tab: 'events' } : {}, { replace: true })
+      setSearchParams(
+        (prev) => {
+          // Clear all filter params when switching tabs
+          clearFilterParams(prev)
+          prev.set('tab', TAB_VALUES[index] ?? 'transactions')
+          return prev
+        },
+        { replace: true }
+      )
     },
     [setSearchParams]
   )
