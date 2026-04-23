@@ -264,5 +264,22 @@
   "votes": "投票",
   "waitingForTickDesc": "このトランザクションはティック{{targetTick}}に予定されています。ネットワークがそのティックに到達すると利用可能になります。",
   "waitingForTickTitle": "ティックの処理を待機中",
-  "wallets": "ウォレット"
+  "wallets": "ウォレット",
+  "csvExport": "CSVエクスポート",
+  "csvExportCaptchaDisclaimer": "リクエストされた情報はこのページからダウンロードできます。続行する前に、以下のキャプチャを完了してロボットでないことを確認してください。",
+  "csvExportDataAvailability": "エポック207からデータ利用可能（2026年4月1日 12:00 UTCまたはティック{{tick}}から）",
+  "csvExportError": "データのエクスポートに失敗しました。もう一度お試しください。",
+  "csvExportLimit": "選択した範囲内の最も古い{{count}}件のレコードがエクスポートされます",
+  "csvExportNoData": "選択した条件のデータが見つかりませんでした",
+  "csvExportPageTitle": "データダウンロード（CSVエクスポート）",
+  "csvExportTitle": "CSVエクスポート",
+  "dateRange": "日付範囲",
+  "download": "ダウンロード",
+  "downloadPageData": "ページデータをダウンロード",
+  "exportType": "エクスポートするデータ",
+  "more": "その他",
+  "qubicTransfers": "QUBIC送金",
+  "rangeType": "範囲タイプ",
+  "tickRange": "ティック範囲",
+  "tokenTransfers": "トークン送金"
 }

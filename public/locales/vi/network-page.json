@@ -264,5 +264,22 @@
   "votes": "phiếu bầu",
   "waitingForTickDesc": "Giao dịch này được lên lịch cho tick {{targetTick}}. Nó sẽ khả dụng khi mạng đạt đến tick đó.",
   "waitingForTickTitle": "Đang chờ tick được xử lý",
-  "wallets": "Ví"
+  "wallets": "Ví",
+  "csvExport": "Xuất CSV",
+  "csvExportCaptchaDisclaimer": "Thông tin bạn yêu cầu có thể được tải xuống từ trang này. Trước khi tiếp tục, vui lòng xác minh rằng bạn không phải là robot bằng cách hoàn thành captcha bên dưới.",
+  "csvExportDataAvailability": "Dữ liệu có sẵn từ Epoch 207 (từ ngày 1 tháng 4 năm 2026, 12:00 UTC hoặc tick {{tick}})",
+  "csvExportError": "Xuất dữ liệu thất bại. Vui lòng thử lại.",
+  "csvExportLimit": "{{count}} bản ghi sớm nhất trong phạm vi đã chọn sẽ được xuất",
+  "csvExportNoData": "Không tìm thấy dữ liệu cho tiêu chí đã chọn",
+  "csvExportPageTitle": "Tải dữ liệu (Xuất CSV)",
+  "csvExportTitle": "Xuất CSV",
+  "dateRange": "Khoảng ngày",
+  "download": "Tải xuống",
+  "downloadPageData": "Tải dữ liệu trang",
+  "exportType": "Dữ liệu cần xuất",
+  "more": "Thêm",
+  "qubicTransfers": "Chuyển QUBIC",
+  "rangeType": "Loại phạm vi",
+  "tickRange": "Khoảng tick",
+  "tokenTransfers": "Chuyển token"
 }
