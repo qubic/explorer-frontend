@@ -42,5 +42,15 @@ export const NAVIGATION_MENU_ITEMS: NavigationMenuItem[] = [
         href: Routes.NETWORK.ASSETS.RICH_LIST()
       }
     ]
+  },
+  {
+    i18nKey: 'more',
+    className: 'ltr:left-auto ltr:right-0 rtl:right-auto rtl:left-0',
+    items: [
+      {
+        i18nKey: 'csvExport',
+        href: Routes.NETWORK.TOOLS.CSV_EXPORT
+      }
+    ]
   }
 ]

@@ -264,5 +264,22 @@
   "votes": "oylar",
   "waitingForTickDesc": "Bu işlem {{targetTick}} tick'i için planlanmıştır. Ağ o tick'e ulaştığında kullanılabilir olacaktır.",
   "waitingForTickTitle": "Tick'in işlenmesi bekleniyor",
-  "wallets": "Cüzdanlar"
+  "wallets": "Cüzdanlar",
+  "csvExport": "CSV Dışa Aktarma",
+  "csvExportCaptchaDisclaimer": "İstediğiniz bilgiler bu sayfadan indirilebilir. Devam etmeden önce lütfen aşağıdaki doğrulamayı tamamlayarak robot olmadığınızı doğrulayın.",
+  "csvExportDataAvailability": "Veriler Dönem 207'den itibaren mevcuttur (1 Nisan 2026, 12:00 UTC veya tick {{tick}}'den itibaren)",
+  "csvExportError": "Veri dışa aktarma başarısız oldu. Lütfen tekrar deneyin.",
+  "csvExportLimit": "Seçilen aralıktaki en eski {{count}} kayıt dışa aktarılacaktır",
+  "csvExportNoData": "Seçilen kriterler için veri bulunamadı",
+  "csvExportPageTitle": "Verileri İndir (CSV Dışa Aktarma)",
+  "csvExportTitle": "CSV Dışa Aktarma",
+  "dateRange": "Tarih aralığı",
+  "download": "İndir",
+  "downloadPageData": "Sayfa verilerini indir",
+  "exportType": "Dışa aktarılacak veriler",
+  "more": "Daha fazla",
+  "qubicTransfers": "QUBIC Transferleri",
+  "rangeType": "Aralık türü",
+  "tickRange": "Tick aralığı",
+  "tokenTransfers": "Token Transferleri"
 }

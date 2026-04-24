@@ -264,5 +264,22 @@
   "votes": "Stimmen",
   "waitingForTickDesc": "Diese Transaktion ist für Tick {{targetTick}} geplant. Sie wird verfügbar sein, sobald das Netzwerk diesen Tick erreicht.",
   "waitingForTickTitle": "Warten auf Verarbeitung des Ticks",
-  "wallets": "Wallets"
+  "wallets": "Wallets",
+  "csvExport": "CSV-Export",
+  "csvExportCaptchaDisclaimer": "Die angeforderten Informationen können von dieser Seite heruntergeladen werden. Bitte bestätigen Sie vor dem Fortfahren, dass Sie kein Roboter sind, indem Sie das Captcha unten ausfüllen.",
+  "csvExportDataAvailability": "Daten verfügbar ab Epoche 207 (ab 1. Apr. 2026, 12:00 UTC oder Tick {{tick}})",
+  "csvExportError": "Datenexport fehlgeschlagen. Bitte versuchen Sie es erneut.",
+  "csvExportLimit": "Die frühesten {{count}} Datensätze innerhalb des ausgewählten Bereichs werden exportiert",
+  "csvExportNoData": "Keine Daten für die ausgewählten Kriterien gefunden",
+  "csvExportPageTitle": "Daten herunterladen (CSV-Export)",
+  "csvExportTitle": "CSV-Export",
+  "dateRange": "Datumsbereich",
+  "download": "Herunterladen",
+  "downloadPageData": "Seitendaten herunterladen",
+  "exportType": "Zu exportierende Daten",
+  "more": "Mehr",
+  "qubicTransfers": "QUBIC-Überweisungen",
+  "rangeType": "Bereichstyp",
+  "tickRange": "Tick-Bereich",
+  "tokenTransfers": "Token-Überweisungen"
 }

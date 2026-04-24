@@ -264,5 +264,22 @@
   "votes": "أصوات",
   "waitingForTickDesc": "هذه المعاملة مجدولة للتيك {{targetTick}}. ستكون متاحة بمجرد وصول الشبكة إلى ذلك التيك.",
   "waitingForTickTitle": "في انتظار معالجة التيك",
-  "wallets": "المحافظ"
+  "wallets": "المحافظ",
+  "csvExport": "تصدير CSV",
+  "csvExportCaptchaDisclaimer": "يمكن تنزيل المعلومات المطلوبة من هذه الصفحة. قبل المتابعة، يرجى التحقق من أنك لست روبوتًا عن طريق إكمال اختبار التحقق أدناه.",
+  "csvExportDataAvailability": "البيانات متاحة من الحقبة 207 (من 1 أبريل 2026، 12:00 بالتوقيت العالمي أو التك {{tick}})",
+  "csvExportError": "فشل تصدير البيانات. يرجى المحاولة مرة أخرى.",
+  "csvExportLimit": "سيتم تصدير أقدم {{count}} سجل ضمن النطاق المحدد",
+  "csvExportNoData": "لم يتم العثور على بيانات للمعايير المحددة",
+  "csvExportPageTitle": "تنزيل البيانات (تصدير CSV)",
+  "csvExportTitle": "تصدير CSV",
+  "dateRange": "نطاق التاريخ",
+  "download": "تنزيل",
+  "downloadPageData": "تنزيل بيانات الصفحة",
+  "exportType": "البيانات المراد تصديرها",
+  "more": "المزيد",
+  "qubicTransfers": "تحويلات QUBIC",
+  "rangeType": "نوع النطاق",
+  "tickRange": "نطاق التك",
+  "tokenTransfers": "تحويلات الرموز"
 }

@@ -264,5 +264,22 @@
   "votes": "投票",
   "waitingForTickDesc": "此交易已安排在刻度 {{targetTick}}。当网络到达该刻度时将可用。",
   "waitingForTickTitle": "等待刻度处理完成",
-  "wallets": "钱包"
+  "wallets": "钱包",
+  "csvExport": "CSV导出",
+  "csvExportCaptchaDisclaimer": "您请求的信息可以从此页面下载。在继续之前，请完成下方的验证码以验证您不是机器人。",
+  "csvExportDataAvailability": "数据从第207纪元开始可用（从2026年4月1日 12:00 UTC或tick {{tick}}起）",
+  "csvExportError": "数据导出失败。请重试。",
+  "csvExportLimit": "将导出所选范围内最早的{{count}}条记录",
+  "csvExportNoData": "未找到符合所选条件的数据",
+  "csvExportPageTitle": "下载数据（CSV导出）",
+  "csvExportTitle": "CSV导出",
+  "dateRange": "日期范围",
+  "download": "下载",
+  "downloadPageData": "下载页面数据",
+  "exportType": "要导出的数据",
+  "more": "更多",
+  "qubicTransfers": "QUBIC转账",
+  "rangeType": "范围类型",
+  "tickRange": "Tick范围",
+  "tokenTransfers": "代币转账"
 }

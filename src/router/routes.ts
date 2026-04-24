@@ -30,6 +30,9 @@ export const Routes = {
       RICH_LIST: '/network/wallets/rich-list',
       EXCHANGES: '/network/wallets/exchanges'
     },
+    TOOLS: {
+      CSV_EXPORT: '/network/tools/csv-export'
+    },
     ASSETS: {
       TOKENS: '/network/assets/tokens',
       SMART_CONTRACTS: '/network/assets/smart-contracts',

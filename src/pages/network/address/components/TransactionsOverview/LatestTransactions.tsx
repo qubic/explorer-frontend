@@ -1,13 +1,16 @@
 import { memo, useCallback, useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useSearchParams } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 
-import { Infocon } from '@app/assets/icons'
+import { ArrowDownTrayIcon, Infocon } from '@app/assets/icons'
 import { PageSizeSelect, PaginationBar, Tooltip } from '@app/components/ui'
 import { usePaginationSearchParams, useValidatedPage, useValidatedPageSize } from '@app/hooks'
+import { Routes } from '@app/router'
+import { useGetProtocolQuery } from '@app/store/apis/qubic-static'
 import useLatestTransactions, { MAX_TRANSACTION_RESULTS } from '../../hooks/useLatestTransactions'
 import type { TransactionFilters } from '../../hooks/useLatestTransactions'
 import { TransactionRow, TransactionSkeletonRow } from '../../../components'
+import { buildCsvFilename, downloadCsv, transactionsToCsv } from '../../../tools/csvUtils'
 import { parseTransactionFilters, txFiltersToParams } from '../../../utils/txFilterParams'
 import { updateSearchParams } from '../../../utils/filterUtils'
 import { parseFilterApiError } from './filterUtils'
@@ -44,6 +47,8 @@ export default function LatestTransactions({ addressId }: Props) {
   )
   const activeFilters: TransactionFilters = useMemo(() => JSON.parse(filtersJson), [filtersJson])
 
+  const { data: protocolData } = useGetProtocolQuery()
+
   const { transactions, totalCount, isLoading, error } = useLatestTransactions(
     addressId,
     page,
@@ -78,6 +83,12 @@ export default function LatestTransactions({ addressId }: Props) {
     },
     [setSearchParams]
   )
+
+  const handleDownloadPageData = useCallback(() => {
+    if (transactions.length === 0) return
+    const csv = transactionsToCsv(transactions, protocolData)
+    downloadCsv(csv, buildCsvFilename(`transactions_page${page}`, addressId))
+  }, [transactions, protocolData, addressId, page])
 
   const handleClearFilters = useCallback(() => {
     setSearchParams((prev) => updateSearchParams(prev, txFiltersToParams({})), { replace: true })
@@ -153,7 +164,18 @@ export default function LatestTransactions({ addressId }: Props) {
         ) : (
           <span />
         )}
-        <PageSizeSelect pageSize={pageSize} onSelect={handlePageSizeChange} />
+        <div className="flex items-center gap-8">
+          {transactions.length > 0 && (
+            <button
+              type="button"
+              onClick={handleDownloadPageData}
+              className="flex items-center gap-4 font-space text-xs text-primary-30 hover:text-primary-40"
+            >
+              [ {t('downloadPageData')} <ArrowDownTrayIcon className="h-14 w-14" /> ]
+            </button>
+          )}
+          <PageSizeSelect pageSize={pageSize} onSelect={handlePageSizeChange} />
+        </div>
       </div>
 
       <div className="w-full rounded-12 border-1 border-primary-60 bg-primary-70">
@@ -189,6 +211,17 @@ export default function LatestTransactions({ addressId }: Props) {
           />
         )}
       </div>
+
+      {totalCount !== null && totalCount > 0 && (
+        <div className="flex justify-end">
+          <Link
+            to={`${Routes.NETWORK.TOOLS.CSV_EXPORT}?address=${addressId}`}
+            className="flex items-center gap-6 font-space text-xs text-primary-30 hover:text-primary-40"
+          >
+            [ {t('csvExportPageTitle')} <ArrowDownTrayIcon className="h-14 w-14" /> ]
+          </Link>
+        </div>
+      )}
     </div>
   )
 }
