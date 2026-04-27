@@ -31,6 +31,31 @@ export type TransactionEvent = {
   value?: string
   contractMessageType?: number
   rawPayload?: string
+  // Oracle event fields
+  queryingEntity?: string
+  queryId?: string
+  interfaceIndex?: number
+  queryType?: number
+  queryStatus?: number
+  subscriptionId?: string
+  periodMillis?: number
+  firstQueryTimestamp?: string
+}
+
+// Oracle query type values (from core: ORACLE_QUERY_TYPE_*)
+export const ORACLE_QUERY_TYPE_LABELS: Record<number, string> = {
+  0: 'CONTRACT_QUERY',
+  1: 'CONTRACT_SUBSCRIPTION',
+  2: 'USER_QUERY'
+}
+
+// Oracle query status values (from core: ORACLE_QUERY_STATUS_*)
+export const ORACLE_QUERY_STATUS_LABELS: Record<number, string> = {
+  1: 'PENDING',
+  2: 'COMMITTED',
+  3: 'SUCCESS',
+  4: 'TIMEOUT',
+  5: 'UNRESOLVABLE'
 }
 
 // Log type numeric codes (from core/src/logging.h)
@@ -50,11 +75,11 @@ export const EVENT_TYPES = {
   ASSET_POSSESSION_MANAGING_CONTRACT_CHANGE: 12,
   CONTRACT_RESERVE_DEDUCTION: 13,
   ORACLE_QUERY_STATUS_CHANGE: 14,
+  ORACLE_SUBSCRIBER_MESSAGE: 15,
   CUSTOM_MESSAGE: 255
 } as const
 
 // Event types supported by the events API for filtering.
-// ORACLE_QUERY_STATUS_CHANGE (14) is excluded — not yet supported by the events API.
 export const EVENT_TYPE_FILTER_OPTIONS = [
   EVENT_TYPES.QU_TRANSFER,
   EVENT_TYPES.ASSET_ISSUANCE,
@@ -70,6 +95,8 @@ export const EVENT_TYPE_FILTER_OPTIONS = [
   EVENT_TYPES.ASSET_OWNERSHIP_MANAGING_CONTRACT_CHANGE,
   EVENT_TYPES.ASSET_POSSESSION_MANAGING_CONTRACT_CHANGE,
   EVENT_TYPES.CONTRACT_RESERVE_DEDUCTION,
+  EVENT_TYPES.ORACLE_QUERY_STATUS_CHANGE,
+  EVENT_TYPES.ORACLE_SUBSCRIBER_MESSAGE,
   EVENT_TYPES.CUSTOM_MESSAGE
 ] as const
 
@@ -91,6 +118,7 @@ export const EVENT_TYPE_LABELS: Record<number, string> = {
     'ASSET_POSSESSION_MANAGING_CONTRACT_CHANGE',
   [EVENT_TYPES.CONTRACT_RESERVE_DEDUCTION]: 'CONTRACT_RESERVE_DEDUCTION',
   [EVENT_TYPES.ORACLE_QUERY_STATUS_CHANGE]: 'ORACLE_QUERY_STATUS_CHANGE',
+  [EVENT_TYPES.ORACLE_SUBSCRIBER_MESSAGE]: 'ORACLE_SUBSCRIBER_MESSAGE',
   [EVENT_TYPES.CUSTOM_MESSAGE]: 'CUSTOM_MESSAGE'
 }
 
@@ -243,6 +271,22 @@ interface SmartContractMessageData {
   contractMessageType: string
 }
 
+interface OracleQueryStatusChangeData {
+  queryingEntity: string
+  queryId: string
+  interfaceIndex: string
+  queryType: string
+  queryStatus: string
+}
+
+interface OracleSubscriberLogMessageData {
+  subscriptionId: string
+  interfaceIndex: string
+  contractIndex: string
+  periodMillis: string
+  firstQueryTimestamp: string
+}
+
 export interface RawApiEvent {
   epoch: number
   tickNumber: number
@@ -264,6 +308,8 @@ export interface RawApiEvent {
   assetOwnershipManagingContractChange?: AssetOwnershipManagingContractChangeData
   assetPossessionManagingContractChange?: AssetPossessionManagingContractChangeData
   smartContractMessage?: SmartContractMessageData
+  oracleQueryStatusChange?: OracleQueryStatusChangeData
+  oracleSubscriberLogMessage?: OracleSubscriberLogMessageData
   rawPayload?: string
 }
 
@@ -385,6 +431,20 @@ export function adaptApiEvent(raw: RawApiEvent): TransactionEvent {
     base.remainingAmount = Number(raw.contractReserveDeduction.remainingAmount)
   } else if (raw.customMessage) {
     base.value = raw.customMessage.value
+  } else if (raw.oracleQueryStatusChange) {
+    const d = raw.oracleQueryStatusChange
+    base.queryingEntity = d.queryingEntity
+    base.queryId = d.queryId
+    base.interfaceIndex = Number(d.interfaceIndex)
+    base.queryType = Number(d.queryType)
+    base.queryStatus = Number(d.queryStatus)
+  } else if (raw.oracleSubscriberLogMessage) {
+    const d = raw.oracleSubscriberLogMessage
+    base.subscriptionId = d.subscriptionId
+    base.interfaceIndex = Number(d.interfaceIndex)
+    base.contractIndex = Number(d.contractIndex)
+    base.periodMillis = Number(d.periodMillis)
+    base.firstQueryTimestamp = d.firstQueryTimestamp
   }
 
   if (raw.smartContractMessage) {

@@ -281,5 +281,12 @@
   "qubicTransfers": "Transferts QUBIC",
   "rangeType": "Type de plage",
   "tickRange": "Plage de ticks",
-  "tokenTransfers": "Transferts de jetons"
+  "tokenTransfers": "Transferts de jetons",
+  "queryType": "Type de requête",
+  "queryStatus": "Statut de la requête",
+  "interfaceIndex": "Index d'interface",
+  "subscriptionId": "ID d'abonnement",
+  "periodMillis": "Période (ms)",
+  "firstQueryTimestamp": "Date de première requête",
+  "queryingEntity": "Entité requêtante"
 }

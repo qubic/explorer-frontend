@@ -281,5 +281,12 @@
   "qubicTransfers": "Переводы QUBIC",
   "rangeType": "Тип диапазона",
   "tickRange": "Диапазон тиков",
-  "tokenTransfers": "Переводы токенов"
+  "tokenTransfers": "Переводы токенов",
+  "queryType": "Тип запроса",
+  "queryStatus": "Статус запроса",
+  "interfaceIndex": "Индекс интерфейса",
+  "subscriptionId": "ID подписки",
+  "periodMillis": "Период (мс)",
+  "firstQueryTimestamp": "Дата первого запроса",
+  "queryingEntity": "Запрашивающая сущность"
 }

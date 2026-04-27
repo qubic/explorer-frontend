@@ -281,5 +281,12 @@
   "qubicTransfers": "QUBIC转账",
   "rangeType": "范围类型",
   "tickRange": "Tick范围",
-  "tokenTransfers": "代币转账"
+  "tokenTransfers": "代币转账",
+  "queryType": "查询类型",
+  "queryStatus": "查询状态",
+  "interfaceIndex": "接口索引",
+  "subscriptionId": "订阅ID",
+  "periodMillis": "周期（毫秒）",
+  "firstQueryTimestamp": "首次查询日期",
+  "queryingEntity": "查询实体"
 }

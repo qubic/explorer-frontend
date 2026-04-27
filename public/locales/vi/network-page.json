@@ -281,5 +281,12 @@
   "qubicTransfers": "Chuyển QUBIC",
   "rangeType": "Loại phạm vi",
   "tickRange": "Khoảng tick",
-  "tokenTransfers": "Chuyển token"
+  "tokenTransfers": "Chuyển token",
+  "queryType": "Loại truy vấn",
+  "queryStatus": "Trạng thái truy vấn",
+  "interfaceIndex": "Chỉ mục giao diện",
+  "subscriptionId": "ID đăng ký",
+  "periodMillis": "Chu kỳ (ms)",
+  "firstQueryTimestamp": "Ngày truy vấn đầu tiên",
+  "queryingEntity": "Thực thể truy vấn"
 }

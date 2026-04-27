@@ -281,5 +281,12 @@
   "qubicTransfers": "QUBIC-overdrachten",
   "rangeType": "Bereiktype",
   "tickRange": "Tick-bereik",
-  "tokenTransfers": "Token-overdrachten"
+  "tokenTransfers": "Token-overdrachten",
+  "queryType": "Querytype",
+  "queryStatus": "Querystatus",
+  "interfaceIndex": "Interface-index",
+  "subscriptionId": "Abonnement-ID",
+  "periodMillis": "Periode (ms)",
+  "firstQueryTimestamp": "Datum eerste query",
+  "queryingEntity": "Query-uitvoerende entiteit"
 }
