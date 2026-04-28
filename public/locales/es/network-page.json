@@ -281,5 +281,12 @@
   "qubicTransfers": "Transferencias QUBIC",
   "rangeType": "Tipo de rango",
   "tickRange": "Rango de ticks",
-  "tokenTransfers": "Transferencias de tokens"
+  "tokenTransfers": "Transferencias de tokens",
+  "queryType": "Tipo de consulta",
+  "queryStatus": "Estado de consulta",
+  "interfaceIndex": "Índice de interfaz",
+  "subscriptionId": "ID de suscripción",
+  "periodMillis": "Período (ms)",
+  "firstQueryTimestamp": "Fecha de primera consulta",
+  "queryingEntity": "Entidad consultante"
 }

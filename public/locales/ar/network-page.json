@@ -281,5 +281,12 @@
   "qubicTransfers": "تحويلات QUBIC",
   "rangeType": "نوع النطاق",
   "tickRange": "نطاق التك",
-  "tokenTransfers": "تحويلات الرموز"
+  "tokenTransfers": "تحويلات الرموز",
+  "queryType": "نوع الاستعلام",
+  "queryStatus": "حالة الاستعلام",
+  "interfaceIndex": "فهرس الواجهة",
+  "subscriptionId": "معرف الاشتراك",
+  "periodMillis": "الفترة (مللي ثانية)",
+  "firstQueryTimestamp": "تاريخ أول استعلام",
+  "queryingEntity": "الكيان المُستعلِم"
 }

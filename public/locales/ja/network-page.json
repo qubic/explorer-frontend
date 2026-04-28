@@ -281,5 +281,12 @@
   "qubicTransfers": "QUBIC送金",
   "rangeType": "範囲タイプ",
   "tickRange": "ティック範囲",
-  "tokenTransfers": "トークン送金"
+  "tokenTransfers": "トークン送金",
+  "queryType": "クエリタイプ",
+  "queryStatus": "クエリステータス",
+  "interfaceIndex": "インターフェースインデックス",
+  "subscriptionId": "サブスクリプションID",
+  "periodMillis": "期間（ミリ秒）",
+  "firstQueryTimestamp": "最初のクエリ日時",
+  "queryingEntity": "クエリ実行エンティティ"
 }

@@ -281,5 +281,12 @@
   "qubicTransfers": "QUBIC Transferleri",
   "rangeType": "Aralık türü",
   "tickRange": "Tick aralığı",
-  "tokenTransfers": "Token Transferleri"
+  "tokenTransfers": "Token Transferleri",
+  "queryType": "Sorgu türü",
+  "queryStatus": "Sorgu durumu",
+  "interfaceIndex": "Arayüz dizini",
+  "subscriptionId": "Abonelik kimliği",
+  "periodMillis": "Süre (ms)",
+  "firstQueryTimestamp": "İlk sorgu tarihi",
+  "queryingEntity": "Sorgulayan varlık"
 }
