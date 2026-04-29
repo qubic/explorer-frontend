@@ -7,19 +7,19 @@ import type { SmartContract, TransactionInputType } from '@app/store/apis/qubic-
 import { getEpochForTick, isSendManyTx, isSimpleTransfer } from '@app/utils'
 import { getTransactionTypeDisplay } from '@app/utils/qubic'
 
-/** Formats epoch ms (string or number) or ISO string to DD.MM.YYYY  HH:mm:ss */
+/** Formats epoch ms (string or number) or ISO string to YYYY-MM-DD HH:MM:SS */
 function formatCsvTimestamp(value: string | number): string {
   // Numeric epoch-ms strings need to be coerced to a number; new Date(numericString) returns Invalid Date.
   const parsed = typeof value === 'string' && /^\d+$/.test(value) ? Number(value) : value
   const date = new Date(parsed)
   if (Number.isNaN(date.getTime())) return ''
-  const dd = String(date.getDate()).padStart(2, '0')
-  const mm = String(date.getMonth() + 1).padStart(2, '0')
   const yyyy = date.getFullYear()
+  const mm = String(date.getMonth() + 1).padStart(2, '0')
+  const dd = String(date.getDate()).padStart(2, '0')
   const hh = String(date.getHours()).padStart(2, '0')
   const min = String(date.getMinutes()).padStart(2, '0')
   const ss = String(date.getSeconds()).padStart(2, '0')
-  return `${dd}.${mm}.${yyyy}  ${hh}:${min}:${ss}`
+  return `${yyyy}-${mm}-${dd} ${hh}:${min}:${ss}`
 }
 
 function escapeCsvField(value: string): string {
