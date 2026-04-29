@@ -1,9 +1,13 @@
 import { useCallback, useState } from 'react'
 
-import { useGetTransactionsForIdentityMutation } from '@app/store/apis/query-service/query-service.api'
+import {
+  useGetProcessedTickIntervalsQuery,
+  useGetTransactionsForIdentityMutation
+} from '@app/store/apis/query-service/query-service.api'
 import { useFetchEventsMutation } from '@app/store/apis/events'
 import type { EventRange, ShouldFilter } from '@app/store/apis/events'
-import { useGetProtocolQuery } from '@app/store/apis/qubic-static'
+import { useGetProtocolQuery, useGetSmartContractsQuery } from '@app/store/apis/qubic-static'
+import { extractErrorMessage } from '../utils/filterUtils'
 import { buildCsvFilename, downloadCsv, eventsToCsv, transactionsToCsv } from './csvUtils'
 
 export type ExportType = 'transactions' | 'qubicTransfers' | 'tokenTransfers'
@@ -21,6 +25,7 @@ export interface CsvExportParams {
 
 export const CSV_PAGE_SIZE = 1000
 export const EVENTS_DATA_START_TICK = 48_160_000
+export const EVENTS_DATA_START_DATE = '2026-04-01'
 
 function buildTimestampRange(
   startDate: string | undefined,
@@ -50,6 +55,8 @@ export default function useCsvExport() {
   const [getTransactionsForIdentity] = useGetTransactionsForIdentityMutation()
   const [getEvents] = useFetchEventsMutation()
   const { data: protocolData } = useGetProtocolQuery()
+  const { data: smartContracts } = useGetSmartContractsQuery()
+  const { data: tickIntervals } = useGetProcessedTickIntervalsQuery()
 
   const download = useCallback(
     async (params: CsvExportParams) => {
@@ -80,7 +87,7 @@ export default function useCsvExport() {
             return
           }
 
-          const csv = transactionsToCsv(transactions, protocolData)
+          const csv = transactionsToCsv(transactions, protocolData, smartContracts, tickIntervals)
           downloadCsv(csv, buildCsvFilename('transactions', address))
         } else {
           // QUBIC Transfers (logType 0) or Token Transfers (logType 3)
@@ -106,14 +113,15 @@ export default function useCsvExport() {
           downloadCsv(csv, buildCsvFilename(typeLabel, address))
         }
       } catch (err) {
-        setError('csvExportError')
+        const serverMessage = extractErrorMessage(err)
+        setError(serverMessage || 'csvExportError')
         // eslint-disable-next-line no-console
         console.error('CSV export failed:', err)
       } finally {
         setIsLoading(false)
       }
     },
-    [getTransactionsForIdentity, getEvents, protocolData]
+    [getTransactionsForIdentity, getEvents, protocolData, smartContracts, tickIntervals]
   )
 
   const reset = useCallback(() => {
