@@ -269,7 +269,7 @@
   "csvExportCaptchaDisclaimer": "La información solicitada se puede descargar desde esta página. Antes de continuar, verifique que no es un robot completando el captcha a continuación.",
   "csvExportDataAvailability": "Datos disponibles desde la Época 207 (desde el 1 de abril de 2026, 12:00 UTC o tick {{tick}})",
   "csvExportError": "Error al exportar datos. Por favor, inténtelo de nuevo.",
-  "csvExportLimit": "Se exportarán los {{count}} registros más antiguos dentro del rango seleccionado",
+  "csvExportLimit": "Se exportarán los {{count}} registros más recientes dentro del rango seleccionado",
   "csvExportNoData": "No se encontraron datos para los criterios seleccionados",
   "csvExportPageTitle": "Descargar datos (exportar CSV)",
   "csvExportTitle": "Exportar CSV",
@@ -288,5 +288,7 @@
   "subscriptionId": "ID de suscripción",
   "periodMillis": "Período (ms)",
   "firstQueryTimestamp": "Fecha de primera consulta",
-  "queryingEntity": "Entidad consultante"
+  "queryingEntity": "Entidad consultante",
+  "dateInFuture": "La fecha no puede ser futura",
+  "dateBeforeAvailability": "La fecha es anterior a la disponibilidad de los datos ({{date}})"
 }

@@ -269,7 +269,7 @@
   "csvExportCaptchaDisclaimer": "您请求的信息可以从此页面下载。在继续之前，请完成下方的验证码以验证您不是机器人。",
   "csvExportDataAvailability": "数据从第207纪元开始可用（从2026年4月1日 12:00 UTC或tick {{tick}}起）",
   "csvExportError": "数据导出失败。请重试。",
-  "csvExportLimit": "将导出所选范围内最早的{{count}}条记录",
+  "csvExportLimit": "将导出所选范围内最新的{{count}}条记录",
   "csvExportNoData": "未找到符合所选条件的数据",
   "csvExportPageTitle": "下载数据（CSV导出）",
   "csvExportTitle": "CSV导出",
@@ -288,5 +288,7 @@
   "subscriptionId": "订阅ID",
   "periodMillis": "周期（毫秒）",
   "firstQueryTimestamp": "首次查询日期",
-  "queryingEntity": "查询实体"
+  "queryingEntity": "查询实体",
+  "dateInFuture": "日期不能在未来",
+  "dateBeforeAvailability": "日期早于数据可用日期（{{date}}）"
 }

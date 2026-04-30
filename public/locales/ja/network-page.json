@@ -269,7 +269,7 @@
   "csvExportCaptchaDisclaimer": "リクエストされた情報はこのページからダウンロードできます。続行する前に、以下のキャプチャを完了してロボットでないことを確認してください。",
   "csvExportDataAvailability": "エポック207からデータ利用可能（2026年4月1日 12:00 UTCまたはティック{{tick}}から）",
   "csvExportError": "データのエクスポートに失敗しました。もう一度お試しください。",
-  "csvExportLimit": "選択した範囲内の最も古い{{count}}件のレコードがエクスポートされます",
+  "csvExportLimit": "選択した範囲内の最新の{{count}}件のレコードがエクスポートされます",
   "csvExportNoData": "選択した条件のデータが見つかりませんでした",
   "csvExportPageTitle": "データダウンロード（CSVエクスポート）",
   "csvExportTitle": "CSVエクスポート",
@@ -288,5 +288,7 @@
   "subscriptionId": "サブスクリプションID",
   "periodMillis": "期間（ミリ秒）",
   "firstQueryTimestamp": "最初のクエリ日時",
-  "queryingEntity": "クエリ実行エンティティ"
+  "queryingEntity": "クエリ実行エンティティ",
+  "dateInFuture": "日付は未来にできません",
+  "dateBeforeAvailability": "日付がデータ利用可能日（{{date}}）より前です"
 }

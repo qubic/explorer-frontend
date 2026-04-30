@@ -6,7 +6,8 @@ import { ArrowDownTrayIcon, Infocon } from '@app/assets/icons'
 import { PageSizeSelect, PaginationBar, Tooltip } from '@app/components/ui'
 import { usePaginationSearchParams, useValidatedPage, useValidatedPageSize } from '@app/hooks'
 import { Routes } from '@app/router'
-import { useGetProtocolQuery } from '@app/store/apis/qubic-static'
+import { useGetProcessedTickIntervalsQuery } from '@app/store/apis/query-service'
+import { useGetProtocolQuery, useGetSmartContractsQuery } from '@app/store/apis/qubic-static'
 import useLatestTransactions, { MAX_TRANSACTION_RESULTS } from '../../hooks/useLatestTransactions'
 import type { TransactionFilters } from '../../hooks/useLatestTransactions'
 import { TransactionRow, TransactionSkeletonRow } from '../../../components'
@@ -48,6 +49,8 @@ export default function LatestTransactions({ addressId }: Props) {
   const activeFilters: TransactionFilters = useMemo(() => JSON.parse(filtersJson), [filtersJson])
 
   const { data: protocolData } = useGetProtocolQuery()
+  const { data: smartContracts } = useGetSmartContractsQuery()
+  const { data: tickIntervals } = useGetProcessedTickIntervalsQuery()
 
   const { transactions, totalCount, isLoading, error } = useLatestTransactions(
     addressId,
@@ -86,9 +89,9 @@ export default function LatestTransactions({ addressId }: Props) {
 
   const handleDownloadPageData = useCallback(() => {
     if (transactions.length === 0) return
-    const csv = transactionsToCsv(transactions, protocolData)
+    const csv = transactionsToCsv(transactions, protocolData, smartContracts, tickIntervals)
     downloadCsv(csv, buildCsvFilename(`transactions_page${page}`, addressId))
-  }, [transactions, protocolData, addressId, page])
+  }, [transactions, protocolData, smartContracts, tickIntervals, addressId, page])
 
   const handleClearFilters = useCallback(() => {
     setSearchParams((prev) => updateSearchParams(prev, txFiltersToParams({})), { replace: true })

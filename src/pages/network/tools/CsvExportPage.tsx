@@ -8,10 +8,14 @@ import type { Option } from '@app/components/ui/Select'
 import { Button } from '@app/components/ui/buttons'
 import { PageLayout } from '@app/components/ui/layouts'
 import { envConfig } from '@app/configs'
-import { isValidAddressFormat } from '@app/utils'
+import { isValidAddressFormat, isValidQubicAddress } from '@app/utils'
 import { HomeLink } from '../components'
 import BetaBanner from '../components/BetaBanner'
-import useCsvExport, { CSV_PAGE_SIZE, EVENTS_DATA_START_TICK } from './useCsvExport'
+import useCsvExport, {
+  CSV_PAGE_SIZE,
+  EVENTS_DATA_START_DATE,
+  EVENTS_DATA_START_TICK
+} from './useCsvExport'
 import type { ExportType, RangeType } from './useCsvExport'
 
 declare global {
@@ -91,16 +95,31 @@ function CsvExportPage() {
 
   const isEventsExport = exportType === 'qubicTransfers' || exportType === 'tokenTransfers'
 
+  const [isValidatingAddress, setIsValidatingAddress] = useState(false)
+
   const validateAddress = useCallback(
-    (value: string) => {
-      if (!value.trim()) {
+    async (value: string) => {
+      const trimmed = value.trim()
+      if (!trimmed) {
         setAddressError(null)
         return
       }
-      if (!isValidAddressFormat(value.trim())) {
+      if (!isValidAddressFormat(trimmed)) {
         setAddressError(t('invalidAddressFormat'))
-      } else {
-        setAddressError(null)
+        return
+      }
+      setIsValidatingAddress(true)
+      try {
+        const isValid = await isValidQubicAddress(trimmed)
+        // Re-check that the field hasn't changed since validation started
+        setAddress((current) => {
+          if (current.trim() === trimmed) {
+            setAddressError(isValid ? null : t('invalidAddressError'))
+          }
+          return current
+        })
+      } finally {
+        setIsValidatingAddress(false)
       }
     },
     [t]
@@ -133,10 +152,6 @@ function CsvExportPage() {
     setEndDate(undefined)
     setStartTick('')
     setEndTick('')
-    setCaptchaToken(null)
-    if (widgetIdRef.current && window.turnstile) {
-      window.turnstile.reset(widgetIdRef.current)
-    }
     reset()
   }, [reset])
 
@@ -158,11 +173,31 @@ function CsvExportPage() {
   const hasRequiredRange =
     rangeType === 'date' ? !!(startDate && endDate) : !!(startTick && endTick)
 
+  const today = new Date().toISOString().slice(0, 10)
+  const minDate = isEventsExport ? EVENTS_DATA_START_DATE : undefined
+  const isDateRangeInvalid = rangeType === 'date' && !!startDate && !!endDate && startDate > endDate
+  const isTickRangeInvalid =
+    rangeType === 'tick' && !!startTick && !!endTick && Number(startTick) > Number(endTick)
+  const isDateInFuture =
+    rangeType === 'date' && ((!!startDate && startDate > today) || (!!endDate && endDate > today))
+  const isDateBeforeAvailability =
+    rangeType === 'date' &&
+    !!minDate &&
+    ((!!startDate && startDate < minDate) || (!!endDate && endDate < minDate))
+  let rangeError: string | null = null
+  if (isDateInFuture) rangeError = t('dateInFuture')
+  else if (isDateBeforeAvailability && minDate)
+    rangeError = t('dateBeforeAvailability', { date: minDate } as Record<string, string>)
+  else if (isDateRangeInvalid) rangeError = t('invalidDateRange')
+  else if (isTickRangeInvalid) rangeError = t('invalidTickRange')
+
   const canDownload =
     exportType &&
     address.trim() &&
     !addressError &&
+    !isValidatingAddress &&
     hasRequiredRange &&
+    !rangeError &&
     !isLoading &&
     (!captchaEnabled || captchaToken)
 
@@ -244,8 +279,14 @@ function CsvExportPage() {
                 id="csv-export-start-date"
                 type="date"
                 value={startDate ?? ''}
+                min={minDate}
+                max={today}
                 onChange={(e) => setStartDate(e.target.value || undefined)}
-                className="w-full rounded bg-primary-60 px-10 py-6 text-sm text-white focus:outline-none focus:ring-1 focus:ring-primary-30 [&::-webkit-calendar-picker-indicator]:invert"
+                className={`w-full cursor-pointer rounded bg-primary-60 px-10 py-6 text-sm focus:outline-none focus:ring-1 focus:ring-primary-30 [&::-webkit-calendar-picker-indicator]:invert ${
+                  startDate
+                    ? 'text-white [&::-webkit-calendar-picker-indicator]:opacity-100'
+                    : 'text-gray-50 [&::-webkit-calendar-picker-indicator]:opacity-50'
+                }`}
               />
             </div>
             <div>
@@ -256,8 +297,14 @@ function CsvExportPage() {
                 id="csv-export-end-date"
                 type="date"
                 value={endDate ?? ''}
+                min={minDate}
+                max={today}
                 onChange={(e) => setEndDate(e.target.value || undefined)}
-                className="w-full rounded bg-primary-60 px-10 py-6 text-sm text-white focus:outline-none focus:ring-1 focus:ring-primary-30 [&::-webkit-calendar-picker-indicator]:invert"
+                className={`w-full cursor-pointer rounded bg-primary-60 px-10 py-6 text-sm focus:outline-none focus:ring-1 focus:ring-primary-30 [&::-webkit-calendar-picker-indicator]:invert ${
+                  endDate
+                    ? 'text-white [&::-webkit-calendar-picker-indicator]:opacity-100'
+                    : 'text-gray-50 [&::-webkit-calendar-picker-indicator]:opacity-50'
+                }`}
               />
             </div>
           </div>
@@ -294,8 +341,15 @@ function CsvExportPage() {
           </div>
         )}
 
+        {/* Range Error */}
+        {rangeError && <p className="text-xs text-error-40">{rangeError}</p>}
+
         {/* Error Message */}
-        {error && <p className="text-sm text-error-40">{t(error)}</p>}
+        {error && (
+          <p className="break-words text-sm text-error-40">
+            {error === 'csvExportNoData' || error === 'csvExportError' ? t(error) : error}
+          </p>
+        )}
 
         {/* Limit Note */}
         <div className="flex items-center gap-6 text-xs text-gray-50">

@@ -269,7 +269,7 @@
   "csvExportCaptchaDisclaimer": "يمكن تنزيل المعلومات المطلوبة من هذه الصفحة. قبل المتابعة، يرجى التحقق من أنك لست روبوتًا عن طريق إكمال اختبار التحقق أدناه.",
   "csvExportDataAvailability": "البيانات متاحة من الحقبة 207 (من 1 أبريل 2026، 12:00 بالتوقيت العالمي أو التك {{tick}})",
   "csvExportError": "فشل تصدير البيانات. يرجى المحاولة مرة أخرى.",
-  "csvExportLimit": "سيتم تصدير أقدم {{count}} سجل ضمن النطاق المحدد",
+  "csvExportLimit": "سيتم تصدير أحدث {{count}} سجل ضمن النطاق المحدد",
   "csvExportNoData": "لم يتم العثور على بيانات للمعايير المحددة",
   "csvExportPageTitle": "تنزيل البيانات (تصدير CSV)",
   "csvExportTitle": "تصدير CSV",
@@ -288,5 +288,7 @@
   "subscriptionId": "معرف الاشتراك",
   "periodMillis": "الفترة (مللي ثانية)",
   "firstQueryTimestamp": "تاريخ أول استعلام",
-  "queryingEntity": "الكيان المُستعلِم"
+  "queryingEntity": "الكيان المُستعلِم",
+  "dateInFuture": "لا يمكن أن يكون التاريخ في المستقبل",
+  "dateBeforeAvailability": "التاريخ قبل توفر البيانات ({{date}})"
 }

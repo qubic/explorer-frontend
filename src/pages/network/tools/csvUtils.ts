@@ -1,19 +1,25 @@
-import type { QueryServiceTransaction } from '@app/store/apis/query-service/query-service.types'
+import type {
+  ProcessedTickInterval,
+  QueryServiceTransaction
+} from '@app/store/apis/query-service/query-service.types'
 import type { TransactionEvent } from '@app/store/apis/events'
-import type { TransactionInputType } from '@app/store/apis/qubic-static'
-import { isSendManyTx, isSimpleTransfer } from '@app/utils'
+import type { SmartContract, TransactionInputType } from '@app/store/apis/qubic-static'
+import { getEpochForTick, isSendManyTx, isSimpleTransfer } from '@app/utils'
+import { getTransactionTypeDisplay } from '@app/utils/qubic'
 
-/** Formats a date string or epoch ms to DD.MM.YYYY  HH:mm:ss */
+/** Formats epoch ms (string or number) or ISO string to YYYY-MM-DD HH:MM:SS */
 function formatCsvTimestamp(value: string | number): string {
-  const date = typeof value === 'number' ? new Date(value) : new Date(value)
+  // Numeric epoch-ms strings need to be coerced to a number; new Date(numericString) returns Invalid Date.
+  const parsed = typeof value === 'string' && /^\d+$/.test(value) ? Number(value) : value
+  const date = new Date(parsed)
   if (Number.isNaN(date.getTime())) return ''
-  const dd = String(date.getDate()).padStart(2, '0')
-  const mm = String(date.getMonth() + 1).padStart(2, '0')
   const yyyy = date.getFullYear()
+  const mm = String(date.getMonth() + 1).padStart(2, '0')
+  const dd = String(date.getDate()).padStart(2, '0')
   const hh = String(date.getHours()).padStart(2, '0')
   const min = String(date.getMinutes()).padStart(2, '0')
   const ss = String(date.getSeconds()).padStart(2, '0')
-  return `${dd}.${mm}.${yyyy}  ${hh}:${min}:${ss}`
+  return `${yyyy}-${mm}-${dd} ${hh}:${min}:${ss}`
 }
 
 function escapeCsvField(value: string): string {
@@ -39,14 +45,11 @@ function getTxStatusLabel(
   return moneyFlew ? 'Successful transfer' : 'Transfer failed'
 }
 
-function getInputTypeDescription(inputType: number, protocolData?: TransactionInputType[]): string {
-  if (!protocolData) return String(inputType)
-  return protocolData.find((t) => t.id === inputType)?.label ?? String(inputType)
-}
-
 export function transactionsToCsv(
   transactions: QueryServiceTransaction[],
-  protocolData?: TransactionInputType[]
+  protocolData?: TransactionInputType[],
+  smartContracts?: SmartContract[],
+  tickIntervals?: ProcessedTickInterval[]
 ): string {
   const header = toCsvRow([
     'Timestamp',
@@ -60,8 +63,25 @@ export function transactionsToCsv(
     'Status'
   ])
 
-  const rows = transactions.map((tx) =>
-    toCsvRow([
+  // Set of SC addresses that have a sharesAuctionEpoch — only these need epoch lookup
+  const sharesAuctionAddresses = new Set(
+    (smartContracts ?? []).filter((sc) => sc.sharesAuctionEpoch != null).map((sc) => sc.address)
+  )
+  // Lazy memoized epoch lookup — only invoked when needed and cached per tick
+  const epochCache = new Map<number, number | undefined>()
+  const lookupEpoch = (tickNumber: number): number | undefined => {
+    if (!tickIntervals) return undefined
+    if (epochCache.has(tickNumber)) return epochCache.get(tickNumber)
+    const epoch = getEpochForTick(tickIntervals, tickNumber)
+    epochCache.set(tickNumber, epoch)
+    return epoch
+  }
+
+  const rows = transactions.map((tx) => {
+    // Only compute epoch when both conditions for "Place Bid" detection are met
+    const needsEpoch = tx.inputType === 1 && sharesAuctionAddresses.has(tx.destination)
+    const epoch = needsEpoch ? lookupEpoch(tx.tickNumber) : undefined
+    return toCsvRow([
       formatCsvTimestamp(tx.timestamp),
       String(tx.tickNumber),
       tx.hash,
@@ -69,10 +89,10 @@ export function transactionsToCsv(
       tx.destination,
       tx.amount,
       String(tx.inputType),
-      getInputTypeDescription(tx.inputType, protocolData),
+      getTransactionTypeDisplay(tx.destination, tx.inputType, smartContracts, protocolData, epoch),
       getTxStatusLabel(tx.inputType, Number(tx.amount), tx.moneyFlew, tx.destination)
     ])
-  )
+  })
 
   return [header, ...rows].join('\n')
 }

@@ -269,7 +269,7 @@
   "csvExportCaptchaDisclaimer": "De gevraagde informatie kan van deze pagina worden gedownload. Controleer voordat u verdergaat of u geen robot bent door de captcha hieronder in te vullen.",
   "csvExportDataAvailability": "Gegevens beschikbaar vanaf Epoch 207 (vanaf 1 apr. 2026, 12:00 UTC of tick {{tick}})",
   "csvExportError": "Gegevensexport mislukt. Probeer het opnieuw.",
-  "csvExportLimit": "De oudste {{count}} records binnen het geselecteerde bereik worden geëxporteerd",
+  "csvExportLimit": "De nieuwste {{count}} records binnen het geselecteerde bereik worden geëxporteerd",
   "csvExportNoData": "Geen gegevens gevonden voor de geselecteerde criteria",
   "csvExportPageTitle": "Gegevens downloaden (CSV-export)",
   "csvExportTitle": "CSV-export",
@@ -288,5 +288,7 @@
   "subscriptionId": "Abonnement-ID",
   "periodMillis": "Periode (ms)",
   "firstQueryTimestamp": "Datum eerste query",
-  "queryingEntity": "Query-uitvoerende entiteit"
+  "queryingEntity": "Query-uitvoerende entiteit",
+  "dateInFuture": "Datum kan niet in de toekomst liggen",
+  "dateBeforeAvailability": "Datum ligt vóór de gegevensbeschikbaarheid ({{date}})"
 }

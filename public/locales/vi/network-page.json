@@ -269,7 +269,7 @@
   "csvExportCaptchaDisclaimer": "Thông tin bạn yêu cầu có thể được tải xuống từ trang này. Trước khi tiếp tục, vui lòng xác minh rằng bạn không phải là robot bằng cách hoàn thành captcha bên dưới.",
   "csvExportDataAvailability": "Dữ liệu có sẵn từ Epoch 207 (từ ngày 1 tháng 4 năm 2026, 12:00 UTC hoặc tick {{tick}})",
   "csvExportError": "Xuất dữ liệu thất bại. Vui lòng thử lại.",
-  "csvExportLimit": "{{count}} bản ghi sớm nhất trong phạm vi đã chọn sẽ được xuất",
+  "csvExportLimit": "{{count}} bản ghi mới nhất trong phạm vi đã chọn sẽ được xuất",
   "csvExportNoData": "Không tìm thấy dữ liệu cho tiêu chí đã chọn",
   "csvExportPageTitle": "Tải dữ liệu (Xuất CSV)",
   "csvExportTitle": "Xuất CSV",
@@ -288,5 +288,7 @@
   "subscriptionId": "ID đăng ký",
   "periodMillis": "Chu kỳ (ms)",
   "firstQueryTimestamp": "Ngày truy vấn đầu tiên",
-  "queryingEntity": "Thực thể truy vấn"
+  "queryingEntity": "Thực thể truy vấn",
+  "dateInFuture": "Ngày không thể ở tương lai",
+  "dateBeforeAvailability": "Ngày trước khi có dữ liệu ({{date}})"
 }

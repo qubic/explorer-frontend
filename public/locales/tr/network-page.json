@@ -269,7 +269,7 @@
   "csvExportCaptchaDisclaimer": "İstediğiniz bilgiler bu sayfadan indirilebilir. Devam etmeden önce lütfen aşağıdaki doğrulamayı tamamlayarak robot olmadığınızı doğrulayın.",
   "csvExportDataAvailability": "Veriler Dönem 207'den itibaren mevcuttur (1 Nisan 2026, 12:00 UTC veya tick {{tick}}'den itibaren)",
   "csvExportError": "Veri dışa aktarma başarısız oldu. Lütfen tekrar deneyin.",
-  "csvExportLimit": "Seçilen aralıktaki en eski {{count}} kayıt dışa aktarılacaktır",
+  "csvExportLimit": "Seçilen aralıktaki en son {{count}} kayıt dışa aktarılacaktır",
   "csvExportNoData": "Seçilen kriterler için veri bulunamadı",
   "csvExportPageTitle": "Verileri İndir (CSV Dışa Aktarma)",
   "csvExportTitle": "CSV Dışa Aktarma",
@@ -288,5 +288,7 @@
   "subscriptionId": "Abonelik kimliği",
   "periodMillis": "Süre (ms)",
   "firstQueryTimestamp": "İlk sorgu tarihi",
-  "queryingEntity": "Sorgulayan varlık"
+  "queryingEntity": "Sorgulayan varlık",
+  "dateInFuture": "Tarih gelecekte olamaz",
+  "dateBeforeAvailability": "Tarih veri kullanılabilirliğinden önce ({{date}})"
 }
