@@ -45,8 +45,19 @@ function getTxStatusLabel(
   return moneyFlew ? 'Successful transfer' : 'Transfer failed'
 }
 
+function getDirection(source: string, destination: string, address: string): string {
+  const addr = address.toUpperCase()
+  const isSource = source.toUpperCase() === addr
+  const isDest = destination.toUpperCase() === addr
+  if (isSource && isDest) return 'SELF'
+  if (isSource) return 'OUT'
+  if (isDest) return 'IN'
+  return ''
+}
+
 export function transactionsToCsv(
   transactions: QueryServiceTransaction[],
+  address: string,
   protocolData?: TransactionInputType[],
   smartContracts?: SmartContract[],
   tickIntervals?: ProcessedTickInterval[]
@@ -55,6 +66,7 @@ export function transactionsToCsv(
     'Timestamp',
     'Tick',
     'TX ID',
+    'Direction',
     'Source',
     'Destination',
     'Amount',
@@ -85,6 +97,7 @@ export function transactionsToCsv(
       formatCsvTimestamp(tx.timestamp),
       String(tx.tickNumber),
       tx.hash,
+      getDirection(tx.source, tx.destination, address),
       tx.source,
       tx.destination,
       tx.amount,
@@ -97,11 +110,12 @@ export function transactionsToCsv(
   return [header, ...rows].join('\n')
 }
 
-export function eventsToCsv(events: TransactionEvent[]): string {
+export function eventsToCsv(events: TransactionEvent[], address: string): string {
   const header = toCsvRow([
     'Timestamp',
     'Tick',
     'TX ID',
+    'Direction',
     'Source',
     'Destination',
     'Amount',
@@ -113,6 +127,7 @@ export function eventsToCsv(events: TransactionEvent[]): string {
       formatCsvTimestamp(event.timestamp),
       String(event.tickNumber),
       event.transactionHash,
+      getDirection(event.source, event.destination, address),
       event.source,
       event.destination,
       event.amount !== undefined ? String(event.amount) : '',
