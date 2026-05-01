@@ -203,7 +203,7 @@ export function parseVirtualTxId(txId: string): ParsedVirtualTxId | null {
   const tickNumber = Number(txId.slice(lastUnderscore + 1))
   if (!Number.isFinite(tickNumber) || tickNumber <= 0) return null
 
-  const category = CATEGORY_BY_PREFIX.get(prefix)
+  const category = CATEGORY_BY_PREFIX.get(prefix.toUpperCase())
   if (category === undefined) return null
 
   return { tickNumber, category }

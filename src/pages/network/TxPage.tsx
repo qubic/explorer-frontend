@@ -1,6 +1,6 @@
-import { useCallback, useMemo } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 
 import { withHelmet } from '@app/components/hocs'
 import { Breadcrumbs } from '@app/components/ui'
@@ -8,6 +8,7 @@ import { ErrorFallback } from '@app/components/ui/error-boundaries'
 import { PageLayout } from '@app/components/ui/layouts'
 import { LinearProgress } from '@app/components/ui/loaders'
 import { usePageAutoCorrect, useValidatedPage, useValidatedPageSize } from '@app/hooks'
+import { Routes } from '@app/router'
 import {
   useGetEventsQuery,
   type ParsedVirtualTxId,
@@ -252,7 +253,18 @@ function RegularTxContent({ txId }: { txId: string }) {
 
 function TxPage() {
   const { txId = '' } = useParams()
+  const navigate = useNavigate()
+  const location = useLocation()
   const virtualTx = useMemo(() => parseVirtualTxId(txId), [txId])
+
+  useEffect(() => {
+    if (virtualTx && txId !== txId.toUpperCase()) {
+      navigate(
+        { pathname: Routes.NETWORK.TX(txId.toUpperCase()), search: location.search },
+        { replace: true }
+      )
+    }
+  }, [txId, virtualTx, navigate, location.search])
 
   if (virtualTx) {
     return <VirtualTxContent txId={txId} virtualTx={virtualTx} />
