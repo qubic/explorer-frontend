@@ -258,7 +258,10 @@ function TxPage() {
     return <VirtualTxContent txId={txId} virtualTx={virtualTx} />
   }
 
-  return <RegularTxContent txId={txId} />
+  // key={txId} forces a full remount when navigating between regular
+  // transactions so useTickWatcher refs/state cannot leak from the previous
+  // tx and leave the page showing stale data when the new tx 404s.
+  return <RegularTxContent key={txId} txId={txId} />
 }
 
 const TxPageWithHelmet = withHelmet(TxPage, {
