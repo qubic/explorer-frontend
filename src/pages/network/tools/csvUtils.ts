@@ -23,10 +23,12 @@ function formatCsvTimestamp(value: string | number): string {
 }
 
 function escapeCsvField(value: string): string {
-  if (value.includes(',') || value.includes('"') || value.includes('\n')) {
-    return `"${value.replace(/"/g, '""')}"`
+  // Prefix-guard against spreadsheet formula injection (=, +, -, @, tab, CR).
+  const guarded = /^[=+\-@\t\r]/.test(value) ? `'${value}` : value
+  if (guarded.includes(',') || guarded.includes('"') || guarded.includes('\n')) {
+    return `"${guarded.replace(/"/g, '""')}"`
   }
-  return value
+  return guarded
 }
 
 function toCsvRow(fields: string[]): string {
