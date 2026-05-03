@@ -87,7 +87,13 @@ export default function useCsvExport() {
             return
           }
 
-          const csv = transactionsToCsv(transactions, protocolData, smartContracts, tickIntervals)
+          const csv = transactionsToCsv(
+            transactions,
+            address,
+            protocolData,
+            smartContracts,
+            tickIntervals
+          )
           downloadCsv(csv, buildCsvFilename('transactions', address))
         } else {
           // QUBIC Transfers (logType 0) or Token Transfers (logType 3)
@@ -108,7 +114,7 @@ export default function useCsvExport() {
             return
           }
 
-          const csv = eventsToCsv(result.events)
+          const csv = eventsToCsv(result.events, address)
           const typeLabel = exportType === 'qubicTransfers' ? 'qubic_transfers' : 'token_transfers'
           downloadCsv(csv, buildCsvFilename(typeLabel, address))
         }

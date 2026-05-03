@@ -89,7 +89,13 @@ export default function LatestTransactions({ addressId }: Props) {
 
   const handleDownloadPageData = useCallback(() => {
     if (transactions.length === 0) return
-    const csv = transactionsToCsv(transactions, protocolData, smartContracts, tickIntervals)
+    const csv = transactionsToCsv(
+      transactions,
+      addressId,
+      protocolData,
+      smartContracts,
+      tickIntervals
+    )
     downloadCsv(csv, buildCsvFilename(`transactions_page${page}`, addressId))
   }, [transactions, protocolData, smartContracts, tickIntervals, addressId, page])
 
