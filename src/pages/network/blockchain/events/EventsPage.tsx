@@ -17,6 +17,7 @@ function EventsPage() {
     events,
     total,
     eventTypes,
+    category,
     tickStart,
     tickEnd,
     dateRange,
@@ -35,6 +36,7 @@ function EventsPage() {
     tickStart,
     tickEnd,
     eventTypes,
+    category,
     dateRange,
     sourceFilter,
     destinationFilter,
@@ -57,6 +59,7 @@ function EventsPage() {
         <EventsFilterBar
           filters={filters}
           eventTypes={eventTypes}
+          category={category}
           tickStart={tickStart}
           tickEnd={tickEnd}
           dateRange={dateRange}
@@ -64,6 +67,7 @@ function EventsPage() {
           destinationFilter={destinationFilter}
           amountFilter={amountFilter}
           idPrefix="events"
+          showCategoryFilter
         />
 
         <TransactionEvents

@@ -3,6 +3,7 @@ import { useSearchParams } from 'react-router-dom'
 
 import {
   usePageAutoCorrect,
+  useSanitizedCategory,
   useSanitizedDateRange,
   useSanitizedEventTypes,
   useValidatedPage,
@@ -30,6 +31,7 @@ export default function useEventsPage(): {
   events: TransactionEvent[]
   total: number
   eventTypes: number[]
+  category: number | undefined
   tickStart: string | undefined
   tickEnd: string | undefined
   dateRange: DateRangeValue | undefined
@@ -54,6 +56,7 @@ export default function useEventsPage(): {
   const offset = (page - 1) * pageSize
 
   const eventTypes = useSanitizedEventTypes()
+  const category = useSanitizedCategory()
 
   const amountFilter = parseAmountFilter(searchParams)
 
@@ -74,6 +77,7 @@ export default function useEventsPage(): {
     offset,
     size: pageSize,
     logType: eventTypes.length > 0 ? eventTypes : undefined,
+    category,
     source: sourceResult.include,
     excludeSource: sourceResult.exclude,
     destination: destResult.include,
@@ -90,6 +94,7 @@ export default function useEventsPage(): {
     events: data?.events ?? [],
     total,
     eventTypes,
+    category,
     tickStart,
     tickEnd,
     dateRange,

@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { FunnelIcon } from '@app/assets/icons'
-import { getEventTypeLabel } from '@app/store/apis/events'
+import { getCategoryLabel, getEventTypeLabel } from '@app/store/apis/events'
 import type {
   AddressFilter,
   TransactionDirection
@@ -16,6 +16,7 @@ import type { DateRangeValue, EventAmountFilter } from '../../utils/eventFilterU
 import { getAddressFilterLabel, getDateRangeLabel } from '../../utils/eventFilterUtils'
 import { formatAmountForDisplay } from '../../utils/filterUtils'
 import ActiveFilterChip from './ActiveFilterChip'
+import CategorySelect from './CategorySelect'
 import EventAmountFilterContent from './EventAmountFilterContent'
 import EventsMobileFiltersModal, { type EventsFilters } from './EventsMobileFiltersModal'
 import EventTypeChips from './EventTypeChips'
@@ -27,6 +28,7 @@ import ResetFiltersButton from './ResetFiltersButton'
 type Props = {
   filters: EventFiltersResult
   eventTypes: number[]
+  category?: number
   direction?: TransactionDirection | undefined
   tickStart?: string
   tickEnd?: string
@@ -38,6 +40,7 @@ type Props = {
   showTickFilter?: boolean
   showDateFilter?: boolean
   showDirectionFilter?: boolean
+  showCategoryFilter?: boolean
   addressId?: string
 }
 
@@ -50,6 +53,7 @@ function getEventTypesLabel(eventTypes: number[], fallback: string): string {
 export default function EventsFilterBar({
   filters,
   eventTypes,
+  category,
   direction,
   tickStart,
   tickEnd,
@@ -61,6 +65,7 @@ export default function EventsFilterBar({
   showTickFilter = true,
   showDateFilter = true,
   showDirectionFilter = false,
+  showCategoryFilter = false,
   addressId
 }: Props) {
   const { t } = useTranslation('network-page')
@@ -75,6 +80,8 @@ export default function EventsFilterBar({
       )
     : ''
   const eventTypeLabel = getEventTypesLabel(eventTypes, t('eventType'))
+  const categoryLabel =
+    category !== undefined ? `${t('category')}: ${getCategoryLabel(category)}` : t('category')
   const dateLabel = showDateFilter ? getDateRangeLabel(dateRange, t) : ''
   const sourceLabel = getAddressFilterLabel('source', sourceFilter, t)
   const destLabel = getAddressFilterLabel('destination', destinationFilter, t)
@@ -95,6 +102,7 @@ export default function EventsFilterBar({
     sourceFilter,
     destinationFilter,
     amountFilter: filters.localAmountFilter,
+    ...(showCategoryFilter && { category }),
     ...(showTickFilter && {
       tickRange: tickStart || tickEnd ? { start: tickStart, end: tickEnd } : undefined
     }),
@@ -115,6 +123,12 @@ export default function EventsFilterBar({
               <ActiveFilterChip
                 label={`${t('eventType')}: ${eventTypes.map(getEventTypeLabel).join(', ')}`}
                 onClear={filters.handleClearEventType}
+              />
+            )}
+            {showCategoryFilter && filters.isCategoryActive && category !== undefined && (
+              <ActiveFilterChip
+                label={`${t('category')}: ${getCategoryLabel(category)}`}
+                onClear={filters.handleClearCategory}
               />
             )}
             {filters.isSourceActive && (
@@ -147,6 +161,7 @@ export default function EventsFilterBar({
         showTickFilter={showTickFilter}
         showDateFilter={showDateFilter}
         showDirectionFilter={showDirectionFilter}
+        showCategoryFilter={showCategoryFilter}
         addressId={addressId}
       />
 
@@ -173,6 +188,23 @@ export default function EventsFilterBar({
             className="p-8"
           />
         </FilterDropdown>
+        {showCategoryFilter && (
+          <FilterDropdown
+            label={categoryLabel}
+            isActive={filters.isCategoryActive}
+            show={openDropdown === 'category'}
+            onToggle={() => handleToggleDropdown('category')}
+            onClear={filters.isCategoryActive ? filters.handleClearCategory : undefined}
+          >
+            <CategorySelect
+              value={category}
+              onChange={(next) => {
+                filters.handleCategoryChange(next)
+                setOpenDropdown(null)
+              }}
+            />
+          </FilterDropdown>
+        )}
         <FilterDropdown
           label={sourceLabel}
           isActive={filters.isSourceActive}

@@ -164,6 +164,19 @@ const SYSTEM_TX_CATEGORIES: Record<number, string> = {
   6: 'SC_NOTIFICATION_TX'
 }
 
+export const CATEGORY_FILTER_OPTIONS = [1, 2, 3, 4, 5, 6] as const
+
+export function getCategoryLabel(category: number): string {
+  return SYSTEM_TX_CATEGORIES[category] ?? `UNKNOWN(${category})`
+}
+
+export function parseCategoryParam(raw: string | null): number | undefined {
+  if (raw === null || raw === '') return undefined
+  const parsed = Number(raw)
+  if (!Number.isInteger(parsed)) return undefined
+  return (CATEGORY_FILTER_OPTIONS as readonly number[]).includes(parsed) ? parsed : undefined
+}
+
 const VIRTUAL_TX_CATEGORIES = new Set([2, 3, 4, 5])
 
 export function isVirtualTxCategory(categories: number[]): boolean {

@@ -19,6 +19,7 @@ import type {
 } from '../../utils/eventFilterUtils'
 import { applyEventDirectionSync } from '../../utils/eventFilterUtils'
 import { validateAmountRange } from '../../utils/filterUtils'
+import CategorySelect from './CategorySelect'
 import EventAmountFilterContent from './EventAmountFilterContent'
 import EventTypeChips from './EventTypeChips'
 import MobileFiltersModalWrapper from './MobileFiltersModalWrapper'
@@ -28,6 +29,7 @@ import RangeFilterContent from './RangeFilterContent'
 export type EventsFilters = {
   tickRange?: TickRangeValue
   eventTypes?: number[]
+  category?: number
   dateRange?: DateRangeValue
   sourceFilter?: AddressFilter
   destinationFilter?: AddressFilter
@@ -44,6 +46,7 @@ type Props = {
   showTickFilter?: boolean
   showDateFilter?: boolean
   showDirectionFilter?: boolean
+  showCategoryFilter?: boolean
   addressId?: string
 }
 
@@ -56,6 +59,7 @@ export default function EventsMobileFiltersModal({
   showTickFilter = true,
   showDateFilter = true,
   showDirectionFilter = false,
+  showCategoryFilter = false,
   addressId
 }: Props) {
   const { t } = useTranslation('network-page')
@@ -66,6 +70,7 @@ export default function EventsMobileFiltersModal({
     activeFilters.tickRange
   )
   const [localEventTypes, setLocalEventTypes] = useState<number[]>(activeFilters.eventTypes ?? [])
+  const [localCategory, setLocalCategory] = useState<number | undefined>(activeFilters.category)
   const [localDateRange, setLocalDateRange] = useState<DateRangeValue | undefined>(
     activeFilters.dateRange
   )
@@ -112,6 +117,7 @@ export default function EventsMobileFiltersModal({
     if (isOpen) {
       setLocalTickRange(activeFilters.tickRange)
       setLocalEventTypes(activeFilters.eventTypes ?? [])
+      setLocalCategory(activeFilters.category)
       setLocalDateRange(activeFilters.dateRange)
       setLocalSourceFilter(activeFilters.sourceFilter)
       setLocalDestFilter(activeFilters.destinationFilter)
@@ -123,6 +129,7 @@ export default function EventsMobileFiltersModal({
     isOpen,
     activeFilters.tickRange,
     activeFilters.eventTypes,
+    activeFilters.category,
     activeFilters.dateRange,
     activeFilters.sourceFilter,
     activeFilters.destinationFilter,
@@ -161,6 +168,7 @@ export default function EventsMobileFiltersModal({
     onApplyFilters({
       tickRange: localTickRange,
       eventTypes: localEventTypes,
+      category: localCategory,
       dateRange: localDateRange,
       sourceFilter: localSourceFilter,
       destinationFilter: localDestFilter,
@@ -172,6 +180,7 @@ export default function EventsMobileFiltersModal({
   }, [
     localTickRange,
     localEventTypes,
+    localCategory,
     localDateRange,
     localSourceFilter,
     localDestFilter,
@@ -204,6 +213,12 @@ export default function EventsMobileFiltersModal({
       <MobileFilterSection id={`${idPrefix}-mobile-event-type-filter`} label={t('eventType')}>
         <EventTypeChips selectedTypes={localEventTypes} onToggle={handleToggleEventType} />
       </MobileFilterSection>
+
+      {showCategoryFilter && (
+        <MobileFilterSection id={`${idPrefix}-mobile-category-filter`} label={t('category')}>
+          <CategorySelect value={localCategory} onChange={setLocalCategory} />
+        </MobileFilterSection>
+      )}
 
       <MobileFilterSection id={`${idPrefix}-mobile-source-filter`} label={t('source')}>
         <MultiAddressFilterContent

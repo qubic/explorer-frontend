@@ -24,6 +24,7 @@ type EventFilterOptions = {
   tickStart?: string
   tickEnd?: string
   eventTypes: number[]
+  category?: number
   direction?: TransactionDirection | undefined
   dateRange?: DateRangeValue
   sourceFilter: AddressFilter | undefined
@@ -40,6 +41,7 @@ export default function useEventFilters({
   tickStart,
   tickEnd,
   eventTypes,
+  category,
   direction,
   dateRange,
   sourceFilter,
@@ -83,6 +85,7 @@ export default function useEventFilters({
 
   const isTickActive = supportsTick && (tickStart !== undefined || tickEnd !== undefined)
   const isEventTypeActive = eventTypes.length > 0
+  const isCategoryActive = category !== undefined
   const isDateActive = supportsDate && dateRange !== undefined
   const isSourceActive = sourceFilter !== undefined
   const isDestActive = destinationFilter !== undefined
@@ -91,6 +94,7 @@ export default function useEventFilters({
   const hasActiveFilters =
     isTickActive ||
     isEventTypeActive ||
+    isCategoryActive ||
     isDateActive ||
     isSourceActive ||
     isDestActive ||
@@ -162,6 +166,21 @@ export default function useEventFilters({
 
   const handleClearEventType = useCallback(() => {
     setSearchParams((prev) => updateSearchParams(prev, { eventType: undefined }))
+  }, [setSearchParams])
+
+  // --- Category ---
+
+  const handleCategoryChange = useCallback(
+    (next: number | undefined) => {
+      setSearchParams((prev) =>
+        updateSearchParams(prev, { category: next !== undefined ? String(next) : undefined })
+      )
+    },
+    [setSearchParams]
+  )
+
+  const handleClearCategory = useCallback(() => {
+    setSearchParams((prev) => updateSearchParams(prev, { category: undefined }))
   }, [setSearchParams])
 
   // --- Direction ---
@@ -340,6 +359,7 @@ export default function useEventFilters({
   const handleClearAll = useCallback(() => {
     const updates: Record<string, undefined> = {
       eventType: undefined,
+      category: undefined,
       direction: undefined,
       source: undefined,
       sourceMode: undefined,
@@ -379,6 +399,7 @@ export default function useEventFilters({
     (filters: {
       tickRange?: TickRangeValue
       eventTypes?: number[]
+      category?: number
       dateRange?: DateRangeValue
       sourceFilter?: AddressFilter
       destinationFilter?: AddressFilter
@@ -405,6 +426,7 @@ export default function useEventFilters({
           filters.eventTypes && filters.eventTypes.length > 0
             ? filters.eventTypes.join(',')
             : undefined,
+        category: filters.category !== undefined ? String(filters.category) : undefined,
         direction: filters.direction,
         source: srcAddresses.length > 0 ? srcAddresses.join(',') : undefined,
         sourceMode: srcAddresses.length > 0 ? filters.sourceFilter?.mode ?? 'include' : undefined,
@@ -456,6 +478,7 @@ export default function useEventFilters({
     localDestFilter,
     isTickActive,
     isEventTypeActive,
+    isCategoryActive,
     isDateActive,
     isSourceActive,
     isDestActive,
@@ -465,6 +488,8 @@ export default function useEventFilters({
     handleClearTick,
     handleToggleEventType,
     handleClearEventType,
+    handleCategoryChange,
+    handleClearCategory,
     handleDirectionChange,
     handleDateRangeChange,
     handleDateRangeApply,
