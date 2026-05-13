@@ -8,6 +8,7 @@ import { ErrorBoundary } from '@app/components/ui/error-boundaries'
 import { LinearProgress } from '@app/components/ui/loaders'
 import { useAppDispatch, useAppSelector } from '@app/hooks/redux'
 import { Routes } from '@app/router'
+import { parseVirtualTxId } from '@app/store/apis/events'
 import { getSearch, resetSearch, SearchType, selectSearch } from '@app/store/searchSlice'
 import { formatDate, formatString, isValidQubicAddress } from '@app/utils'
 import EntityResultItem from './EntityResultItem'
@@ -78,6 +79,11 @@ export default function SearchBar() {
     [entityExactMatch, entityPartialMatches]
   )
 
+  const virtualTxKeyword = useMemo(() => {
+    const trimmed = debouncedKeyword.trim()
+    return parseVirtualTxId(trimmed) ? trimmed : null
+  }, [debouncedKeyword])
+
   const searchResultMatchesQuery = useMemo(() => {
     if (!searchResult) return false
     const query = debouncedKeyword.trim()
@@ -125,6 +131,14 @@ export default function SearchBar() {
         event.preventDefault()
         const type = evaluateSearchType(keyword)
         const trimmedKeyword = keyword.trim()
+
+        // Parse the live keyword (not `virtualTxKeyword`) so Enter works
+        // before the debounce settles.
+        if (parseVirtualTxId(trimmedKeyword)) {
+          navigate(Routes.NETWORK.TX(trimmedKeyword))
+          handleCloseCallback()
+          return
+        }
 
         // Handle tick/address/tx searches
         if (type === 'address') {
@@ -304,31 +318,41 @@ export default function SearchBar() {
           </div>
 
           {/* Show "no results" for Redux search errors or entity search with no matches */}
-          {((error && !entityExactMatch && entityPartialMatches.length === 0) ||
-            (debouncedKeyword &&
-              debouncedSearchType === SearchType.ADDRESS &&
-              isAddressValid === false) ||
-            (debouncedKeyword &&
-              !debouncedSearchType &&
-              !entitySearchLoading &&
-              !entityExactMatch &&
-              entityPartialMatches.length === 0)) && (
-            <div className="mx-auto flex max-w-[800px] flex-col items-center gap-8 py-32">
-              <MagnifyIcon className="h-32 w-32 text-gray-50" />
-              <p className="font-space text-base font-500">{t('noResultsFound')}</p>
-              <p className="text-sm text-gray-50">
-                {t('noResultsFoundFor', { keyword: debouncedKeyword })}
-              </p>
-            </div>
-          )}
+          {!virtualTxKeyword &&
+            ((error && !entityExactMatch && entityPartialMatches.length === 0) ||
+              (debouncedKeyword &&
+                debouncedSearchType === SearchType.ADDRESS &&
+                isAddressValid === false) ||
+              (debouncedKeyword &&
+                !debouncedSearchType &&
+                !entitySearchLoading &&
+                !entityExactMatch &&
+                entityPartialMatches.length === 0)) && (
+              <div className="mx-auto flex max-w-[800px] flex-col items-center gap-8 py-32">
+                <MagnifyIcon className="h-32 w-32 text-gray-50" />
+                <p className="font-space text-base font-500">{t('noResultsFound')}</p>
+                <p className="text-sm text-gray-50">
+                  {t('noResultsFoundFor', { keyword: debouncedKeyword })}
+                </p>
+              </div>
+            )}
 
           {(shouldShowSearchResult ||
             entityExactMatch ||
+            virtualTxKeyword ||
             (entityPartialMatches.length > 0 && !debouncedSearchType)) && (
             <div className="mx-auto max-h-[320px] max-w-[800px] overflow-y-scroll pb-20 scrollbar scrollbar-track-transparent scrollbar-thumb-primary-60 scrollbar-thumb-rounded-full scrollbar-w-4">
               <p className="px-12 pb-8 pt-12 font-space text-12 text-gray-50">
                 {tNetwork('matchingEntities')}
               </p>
+              {virtualTxKeyword && (
+                <ResultItem
+                  type="transaction"
+                  result={virtualTxKeyword}
+                  link={Routes.NETWORK.TX(virtualTxKeyword)}
+                  onClick={handleCloseCallback}
+                />
+              )}
               {shouldShowSearchResult && searchResult && 'balance' in searchResult && (
                 <ResultItem
                   type="address"

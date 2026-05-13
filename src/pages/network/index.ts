@@ -18,3 +18,5 @@ export const SmartContractsPageLazy = lazy(
 export const AssetsRichListPageLazy = lazy(() => import('./assets/rich-list/AssetsRichListPage'))
 
 export const EventDetailPageLazy = lazy(() => import('./event-detail/EventDetailPage'))
+// tools
+export const CsvExportPageLazy = lazy(() => import('./tools/CsvExportPage'))

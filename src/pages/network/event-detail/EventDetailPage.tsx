@@ -12,7 +12,9 @@ import { useGetAddressName, useGetSmartContractByIndex } from '@app/hooks'
 import {
   useGetEventsQuery,
   getEventTypeLabel,
-  getLastProcessedTickFromEventsError
+  getLastProcessedTickFromEventsError,
+  ORACLE_QUERY_STATUS_LABELS,
+  ORACLE_QUERY_TYPE_LABELS
 } from '@app/store/apis/events'
 import { formatDate, formatString } from '@app/utils'
 import { AddressLink, HomeLink, SubCardItem, TickLink, TxLink, VirtualTxLink } from '../components'
@@ -39,6 +41,7 @@ function EventDetailPage() {
 
   const ownerAddressName = useGetAddressName(event?.owner ?? '')
   const possessorAddressName = useGetAddressName(event?.possessor ?? '')
+  const queryingEntityName = useGetAddressName(event?.queryingEntity ?? '')
 
   const contract = useGetSmartContractByIndex(
     event?.contractIndex && event.contractIndex > 0 ? event.contractIndex : undefined
@@ -324,6 +327,94 @@ function EventDetailPage() {
             title={t('remainingAmount')}
             content={
               <p className="font-space text-sm">{formatString(event.remainingAmount)} QUBIC</p>
+            }
+          />
+        )}
+        {event.queryingEntity && (
+          <SubCardItem
+            variant="secondary"
+            title={t('queryingEntity')}
+            content={
+              <AddressLink
+                value={event.queryingEntity}
+                label={queryingEntityName?.name}
+                copy
+                showTooltip={!!queryingEntityName?.name}
+              />
+            }
+          />
+        )}
+        {event.queryId !== undefined && (
+          <SubCardItem
+            variant="secondary"
+            title={t('queryId')}
+            content={
+              <div className="flex min-w-0 flex-1 items-center gap-4">
+                <p className="break-all font-space text-sm">{event.queryId}</p>
+                <CopyTextButton text={event.queryId} />
+              </div>
+            }
+          />
+        )}
+        {event.queryType !== undefined && (
+          <SubCardItem
+            variant="secondary"
+            title={t('queryType')}
+            content={
+              <p className="font-space text-sm">
+                {event.queryType}
+                <span className="text-gray-50">
+                  {' '}
+                  ({ORACLE_QUERY_TYPE_LABELS[event.queryType] ?? 'UNKNOWN'})
+                </span>
+              </p>
+            }
+          />
+        )}
+        {event.queryStatus !== undefined && (
+          <SubCardItem
+            variant="secondary"
+            title={t('queryStatus')}
+            content={
+              <p className="font-space text-sm">
+                {event.queryStatus}
+                <span className="text-gray-50">
+                  {' '}
+                  ({ORACLE_QUERY_STATUS_LABELS[event.queryStatus] ?? 'UNKNOWN'})
+                </span>
+              </p>
+            }
+          />
+        )}
+        {event.interfaceIndex !== undefined && (
+          <SubCardItem
+            variant="secondary"
+            title={t('interfaceIndex')}
+            content={<p className="font-space text-sm">{event.interfaceIndex}</p>}
+          />
+        )}
+        {event.subscriptionId !== undefined && (
+          <SubCardItem
+            variant="secondary"
+            title={t('subscriptionId')}
+            content={<p className="break-all font-space text-sm">{event.subscriptionId}</p>}
+          />
+        )}
+        {event.periodMillis !== undefined && (
+          <SubCardItem
+            variant="secondary"
+            title={t('periodMillis')}
+            content={<p className="font-space text-sm">{formatString(event.periodMillis)}</p>}
+          />
+        )}
+        {event.firstQueryTimestamp && (
+          <SubCardItem
+            variant="secondary"
+            title={t('firstQueryTimestamp')}
+            content={
+              <p className="font-space text-sm">
+                {formatDate(event.firstQueryTimestamp) || event.firstQueryTimestamp}
+              </p>
             }
           />
         )}
