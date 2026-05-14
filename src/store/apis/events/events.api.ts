@@ -68,6 +68,37 @@ export const eventsApi = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: BASE_URL }),
   keepUnusedDataFor: QUERY_CACHE_TIME,
   endpoints: (builder) => ({
+    fetchEvents: builder.mutation<PaginatedEvents, GetEventsRequest>({
+      query: ({
+        offset = 0,
+        size = DEFAULT_PAGE_SIZE,
+        logType,
+        should,
+        tickRange,
+        timestampRange
+      }) => {
+        const filters: Record<string, string> = {
+          ...(logType && logType.length > 0 && { logType: logType.join(',') })
+        }
+
+        const ranges: Record<string, EventRange> = {
+          ...(tickRange && { tickNumber: tickRange }),
+          ...(timestampRange && { timestamp: timestampRange })
+        }
+
+        return {
+          url: '/getEventLogs',
+          method: 'POST',
+          body: {
+            filters,
+            ...(Object.keys(ranges).length > 0 && { ranges }),
+            ...(should && { should }),
+            pagination: { offset, size }
+          }
+        }
+      },
+      transformResponse: adaptPaginatedEvents
+    }),
     getEvents: builder.query<PaginatedEvents, GetEventsRequest>({
       query: ({
         tickNumber,
@@ -132,4 +163,4 @@ export const eventsApi = createApi({
   })
 })
 
-export const { useGetEventsQuery } = eventsApi
+export const { useGetEventsQuery, useFetchEventsMutation } = eventsApi

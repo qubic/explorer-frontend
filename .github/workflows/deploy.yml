@@ -57,6 +57,7 @@ jobs:
               github.ref == 'refs/heads/staging' && secrets.STATIC_API_URL_STAGING ||
               secrets.STATIC_API_URL_DEV
             }}
+          VITE_TURNSTILE_SITE_KEY: ${{ secrets.TURNSTILE_SITE_KEY }}
         run: pnpm run build
 
       - name: 📤 Deploy to the corresponding environment

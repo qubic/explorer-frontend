@@ -13,7 +13,8 @@ import {
   TickPageLazy,
   TokensPageLazy,
   TxPageLazy,
-  EventDetailPageLazy
+  EventDetailPageLazy,
+  CsvExportPageLazy
 } from '@app/pages/network'
 import { Routes } from './routes'
 
@@ -73,6 +74,10 @@ const router: ReturnType<typeof createBrowserRouter> = createBrowserRouter([
           {
             path: Routes.NETWORK.ASSETS.RICH_LIST(),
             element: <AssetsRichListPageLazy />
+          },
+          {
+            path: Routes.NETWORK.TOOLS.CSV_EXPORT,
+            element: <CsvExportPageLazy />
           }
         ]
       }

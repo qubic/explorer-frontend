@@ -35,8 +35,8 @@ export default function TickDetails({ tick }: Props) {
   const handleTickNavigation = useCallback(
     (direction: 'previous' | 'next') => () => {
       const newTick = Number(tick) + (direction === 'previous' ? -1 : 1)
-      const tab = searchParams.get('tab')
-      navigate(`${Routes.NETWORK.TICK(newTick)}${tab ? `?tab=${tab}` : ''}`)
+      const queryString = searchParams.toString()
+      navigate(`${Routes.NETWORK.TICK(newTick)}${queryString ? `?${queryString}` : ''}`)
     },
     [navigate, tick, searchParams]
   )
