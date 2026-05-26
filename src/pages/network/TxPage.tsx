@@ -153,10 +153,9 @@ function RegularTxContent({ txId }: { txId: string }) {
     total,
     isLoading: isEventsLoading,
     hasError: hasEventsError,
-    lastProcessedTick: eventsLastProcessedTick
+    lastProcessedTick: eventsLastProcessedTick,
+    validForTick: eventsValidForTick
   } = useTransactionEvents(txId)
-
-  const eventsErrorMessage = getEventsErrorMessage(hasEventsError, eventsLastProcessedTick, t)
 
   const {
     data: tx,
@@ -167,6 +166,20 @@ function RegularTxContent({ txId }: { txId: string }) {
   } = useGetTransactionByHashQuery(txId, {
     skip: !txId
   })
+
+  const isEventsProcessorBehind =
+    !hasEventsError &&
+    !isEventsLoading &&
+    total === 0 &&
+    tx !== undefined &&
+    eventsValidForTick !== null &&
+    eventsValidForTick < tx.tickNumber
+
+  const eventsErrorMessage = isEventsProcessorBehind
+    ? t('tickNotYetProcessedEvents', {
+        lastProcessedTick: (eventsValidForTick as number).toLocaleString()
+      })
+    : getEventsErrorMessage(hasEventsError, eventsLastProcessedTick, t)
 
   const isLoading = isFetching
   const isInvalidFormat =
