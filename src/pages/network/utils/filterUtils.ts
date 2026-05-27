@@ -110,6 +110,13 @@ export function parseFilterApiError(error: string | null): ParsedApiError | null
   return null
 }
 
+export function getProcessorLagMessage(
+  lastProcessedTick: number,
+  t: (key: string, params?: Record<string, string>) => string
+): string {
+  return t('tickNotYetProcessedEvents', { lastProcessedTick: lastProcessedTick.toLocaleString() })
+}
+
 /**
  * Builds an error message for events that failed to load.
  * Returns a tick-specific message when lastProcessedTick is available,
@@ -122,7 +129,7 @@ export function getEventsErrorMessage(
 ): string | null {
   if (!hasError) return null
   return lastProcessedTick !== null
-    ? t('tickNotYetProcessedEvents', { lastProcessedTick: lastProcessedTick.toLocaleString() })
+    ? getProcessorLagMessage(lastProcessedTick, t)
     : t('eventsLoadFailed')
 }
 
