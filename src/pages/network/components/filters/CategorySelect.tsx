@@ -28,7 +28,7 @@ export default function CategorySelect({ value, onChange, className }: Props) {
         )}
         onClick={() => onChange(undefined)}
       >
-        {t('none')}
+        {t('all')}
       </button>
       {CATEGORY_FILTER_OPTIONS.map((category) => (
         <button

@@ -14,6 +14,7 @@ import MultiAddressFilterContent from '../../address/components/TransactionsOver
 import { scrollToValidationError } from '../../hooks'
 import type {
   DateRangeValue,
+  EpochRangeValue,
   EventAmountFilter,
   TickRangeValue
 } from '../../utils/eventFilterUtils'
@@ -28,6 +29,7 @@ import RangeFilterContent from './RangeFilterContent'
 
 export type EventsFilters = {
   tickRange?: TickRangeValue
+  epochRange?: EpochRangeValue
   eventTypes?: number[]
   category?: number
   dateRange?: DateRangeValue
@@ -44,6 +46,7 @@ type Props = {
   onApplyFilters: (filters: EventsFilters) => void
   idPrefix: string
   showTickFilter?: boolean
+  showEpochFilter?: boolean
   showDateFilter?: boolean
   showDirectionFilter?: boolean
   showCategoryFilter?: boolean
@@ -57,6 +60,7 @@ export default function EventsMobileFiltersModal({
   onApplyFilters,
   idPrefix,
   showTickFilter = true,
+  showEpochFilter = false,
   showDateFilter = true,
   showDirectionFilter = false,
   showCategoryFilter = false,
@@ -68,6 +72,9 @@ export default function EventsMobileFiltersModal({
 
   const [localTickRange, setLocalTickRange] = useState<TickRangeValue | undefined>(
     activeFilters.tickRange
+  )
+  const [localEpochRange, setLocalEpochRange] = useState<EpochRangeValue | undefined>(
+    activeFilters.epochRange
   )
   const [localEventTypes, setLocalEventTypes] = useState<number[]>(activeFilters.eventTypes ?? [])
   const [localCategory, setLocalCategory] = useState<number | undefined>(activeFilters.category)
@@ -116,6 +123,7 @@ export default function EventsMobileFiltersModal({
   useEffect(() => {
     if (isOpen) {
       setLocalTickRange(activeFilters.tickRange)
+      setLocalEpochRange(activeFilters.epochRange)
       setLocalEventTypes(activeFilters.eventTypes ?? [])
       setLocalCategory(activeFilters.category)
       setLocalDateRange(activeFilters.dateRange)
@@ -128,6 +136,7 @@ export default function EventsMobileFiltersModal({
   }, [
     isOpen,
     activeFilters.tickRange,
+    activeFilters.epochRange,
     activeFilters.eventTypes,
     activeFilters.category,
     activeFilters.dateRange,
@@ -167,6 +176,7 @@ export default function EventsMobileFiltersModal({
 
     onApplyFilters({
       tickRange: localTickRange,
+      epochRange: localEpochRange,
       eventTypes: localEventTypes,
       category: localCategory,
       dateRange: localDateRange,
@@ -179,6 +189,7 @@ export default function EventsMobileFiltersModal({
     setValidationErrors({})
   }, [
     localTickRange,
+    localEpochRange,
     localEventTypes,
     localCategory,
     localDateRange,
@@ -213,12 +224,6 @@ export default function EventsMobileFiltersModal({
       <MobileFilterSection id={`${idPrefix}-mobile-event-type-filter`} label={t('eventType')}>
         <EventTypeChips selectedTypes={localEventTypes} onToggle={handleToggleEventType} />
       </MobileFilterSection>
-
-      {showCategoryFilter && (
-        <MobileFilterSection id={`${idPrefix}-mobile-category-filter`} label={t('category')}>
-          <CategorySelect value={localCategory} onChange={setLocalCategory} />
-        </MobileFilterSection>
-      )}
 
       <MobileFilterSection id={`${idPrefix}-mobile-source-filter`} label={t('source')}>
         <MultiAddressFilterContent
@@ -280,6 +285,28 @@ export default function EventsMobileFiltersModal({
             layout="horizontal"
             formatDisplay={false}
           />
+        </MobileFilterSection>
+      )}
+
+      {showEpochFilter && (
+        <MobileFilterSection id={`${idPrefix}-mobile-epoch-filter`} label={t('epoch')}>
+          <RangeFilterContent
+            idPrefix={`${idPrefix}-mobile-epoch-range`}
+            value={localEpochRange}
+            onChange={setLocalEpochRange}
+            onApply={() => {}}
+            startLabel={t('startEpoch')}
+            endLabel={t('endEpoch')}
+            showApplyButton={false}
+            layout="horizontal"
+            formatDisplay={false}
+          />
+        </MobileFilterSection>
+      )}
+
+      {showCategoryFilter && (
+        <MobileFilterSection id={`${idPrefix}-mobile-category-filter`} label={t('category')}>
+          <CategorySelect value={localCategory} onChange={setLocalCategory} />
         </MobileFilterSection>
       )}
     </MobileFiltersModalWrapper>

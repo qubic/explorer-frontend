@@ -18,12 +18,14 @@ import type { AddressFilter } from '../../address/components/TransactionsOvervie
 import {
   type EventAmountFilter,
   buildAmountFilter,
+  buildEpochFilter,
   buildEventAddressFilter,
   buildTickFilter,
   buildTimestampRange,
   type DateRangeValue,
   parseAddressFilter,
   parseAmountFilter,
+  parseEpochRange,
   parseTickRange
 } from '../../utils/eventFilterUtils'
 
@@ -34,6 +36,8 @@ export default function useEventsPage(): {
   category: number | undefined
   tickStart: string | undefined
   tickEnd: string | undefined
+  epochStart: string | undefined
+  epochEnd: string | undefined
   dateRange: DateRangeValue | undefined
   sourceFilter: AddressFilter | undefined
   destinationFilter: AddressFilter | undefined
@@ -46,6 +50,7 @@ export default function useEventsPage(): {
   const [searchParams] = useSearchParams()
 
   const { start: tickStart, end: tickEnd } = parseTickRange(searchParams)
+  const { start: epochStart, end: epochEnd } = parseEpochRange(searchParams)
 
   const dateRange = useSanitizedDateRange()
   const sourceFilter = parseAddressFilter(searchParams, 'source', 'sourceMode')
@@ -61,6 +66,7 @@ export default function useEventsPage(): {
   const amountFilter = parseAmountFilter(searchParams)
 
   const { tickNumber, tickRange } = buildTickFilter(tickStart, tickEnd)
+  const { epoch, epochRange } = buildEpochFilter(epochStart, epochEnd)
 
   const timestampRange = buildTimestampRange(dateRange)
   const sourceResult = buildEventAddressFilter(sourceFilter)
@@ -73,6 +79,8 @@ export default function useEventsPage(): {
   const { data, isFetching, isError, error } = useGetEventsQuery({
     tickNumber,
     tickRange,
+    epoch,
+    epochRange,
     timestampRange,
     offset,
     size: pageSize,
@@ -97,6 +105,8 @@ export default function useEventsPage(): {
     category,
     tickStart,
     tickEnd,
+    epochStart,
+    epochEnd,
     dateRange,
     sourceFilter,
     destinationFilter,

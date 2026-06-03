@@ -27,6 +27,7 @@ export type EventAmountFilter = {
 export const ASSET_TYPE_OPTIONS: AmountAssetType[] = ['any', 'qubic', 'other']
 
 export type TickRangeValue = { start?: string; end?: string }
+export type EpochRangeValue = { start?: string; end?: string }
 export type DateRangeValue = { start?: string; end?: string; presetDays?: number }
 
 export function toTickRangeValue(
@@ -34,6 +35,13 @@ export function toTickRangeValue(
   tickEnd: string | undefined
 ): TickRangeValue | undefined {
   return tickStart || tickEnd ? { start: tickStart, end: tickEnd } : undefined
+}
+
+export function toEpochRangeValue(
+  epochStart: string | undefined,
+  epochEnd: string | undefined
+): EpochRangeValue | undefined {
+  return epochStart || epochEnd ? { start: epochStart, end: epochEnd } : undefined
 }
 
 // ============================================================================
@@ -60,6 +68,13 @@ export function parseTickRange(searchParams: URLSearchParams): TickRangeValue {
   return {
     start: searchParams.get('tickStart') || undefined,
     end: searchParams.get('tickEnd') || undefined
+  }
+}
+
+export function parseEpochRange(searchParams: URLSearchParams): EpochRangeValue {
+  return {
+    start: searchParams.get('epochStart') || undefined,
+    end: searchParams.get('epochEnd') || undefined
   }
 }
 
@@ -135,6 +150,22 @@ export function buildTickFilter(
     tickRange: {
       ...(tickStart && { gte: tickStart }),
       ...(tickEnd && { lte: tickEnd })
+    }
+  }
+}
+
+export function buildEpochFilter(
+  epochStart: string | undefined,
+  epochEnd: string | undefined
+): { epoch?: number; epochRange?: EventRange } {
+  if (!epochStart && !epochEnd) return {}
+  if (epochStart && epochEnd && epochStart === epochEnd) {
+    return { epoch: Number(epochStart) }
+  }
+  return {
+    epochRange: {
+      ...(epochStart && { gte: epochStart }),
+      ...(epochEnd && { lte: epochEnd })
     }
   }
 }

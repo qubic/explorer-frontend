@@ -32,12 +32,15 @@ type Props = {
   direction?: TransactionDirection | undefined
   tickStart?: string
   tickEnd?: string
+  epochStart?: string
+  epochEnd?: string
   dateRange?: DateRangeValue
   sourceFilter?: AddressFilter
   destinationFilter?: AddressFilter
   amountFilter?: EventAmountFilter
   idPrefix: string
   showTickFilter?: boolean
+  showEpochFilter?: boolean
   showDateFilter?: boolean
   showDirectionFilter?: boolean
   showCategoryFilter?: boolean
@@ -57,12 +60,15 @@ export default function EventsFilterBar({
   direction,
   tickStart,
   tickEnd,
+  epochStart,
+  epochEnd,
   dateRange,
   sourceFilter,
   destinationFilter,
   amountFilter,
   idPrefix,
   showTickFilter = true,
+  showEpochFilter = false,
   showDateFilter = true,
   showDirectionFilter = false,
   showCategoryFilter = false,
@@ -76,6 +82,13 @@ export default function EventsFilterBar({
     ? formatRangeLabel(
         t('tick'),
         tickStart || tickEnd ? { start: tickStart, end: tickEnd } : undefined,
+        formatAmountForDisplay
+      )
+    : ''
+  const epochLabel = showEpochFilter
+    ? formatRangeLabel(
+        t('epoch'),
+        epochStart || epochEnd ? { start: epochStart, end: epochEnd } : undefined,
         formatAmountForDisplay
       )
     : ''
@@ -105,6 +118,9 @@ export default function EventsFilterBar({
     ...(showCategoryFilter && { category }),
     ...(showTickFilter && {
       tickRange: tickStart || tickEnd ? { start: tickStart, end: tickEnd } : undefined
+    }),
+    ...(showEpochFilter && {
+      epochRange: epochStart || epochEnd ? { start: epochStart, end: epochEnd } : undefined
     }),
     ...(showDateFilter && { dateRange })
   }
@@ -146,6 +162,9 @@ export default function EventsFilterBar({
             {showTickFilter && filters.isTickActive && (
               <ActiveFilterChip label={tickLabel} onClear={filters.handleClearTick} />
             )}
+            {showEpochFilter && filters.isEpochActive && (
+              <ActiveFilterChip label={epochLabel} onClear={filters.handleClearEpoch} />
+            )}
             <ResetFiltersButton onClick={filters.handleClearAll} />
           </div>
         )}
@@ -159,6 +178,7 @@ export default function EventsFilterBar({
         onApplyFilters={filters.handleMobileApplyFilters}
         idPrefix={idPrefix}
         showTickFilter={showTickFilter}
+        showEpochFilter={showEpochFilter}
         showDateFilter={showDateFilter}
         showDirectionFilter={showDirectionFilter}
         showCategoryFilter={showCategoryFilter}
@@ -188,23 +208,6 @@ export default function EventsFilterBar({
             className="p-8"
           />
         </FilterDropdown>
-        {showCategoryFilter && (
-          <FilterDropdown
-            label={categoryLabel}
-            isActive={filters.isCategoryActive}
-            show={openDropdown === 'category'}
-            onToggle={() => handleToggleDropdown('category')}
-            onClear={filters.isCategoryActive ? filters.handleClearCategory : undefined}
-          >
-            <CategorySelect
-              value={category}
-              onChange={(next) => {
-                filters.handleCategoryChange(next)
-                setOpenDropdown(null)
-              }}
-            />
-          </FilterDropdown>
-        )}
         <FilterDropdown
           label={sourceLabel}
           isActive={filters.isSourceActive}
@@ -284,6 +287,45 @@ export default function EventsFilterBar({
               endLabel={t('endTick')}
               error={filters.tickRangeError ? t(filters.tickRangeError) : null}
               formatDisplay={false}
+            />
+          </FilterDropdown>
+        )}
+        {showEpochFilter && (
+          <FilterDropdown
+            label={epochLabel}
+            isActive={filters.isEpochActive}
+            show={openDropdown === 'epoch'}
+            onToggle={() => handleToggleDropdown('epoch')}
+            onClear={filters.isEpochActive ? filters.handleClearEpoch : undefined}
+          >
+            <RangeFilterContent
+              idPrefix={`${idPrefix}-epoch-range`}
+              value={filters.epochRange}
+              onChange={filters.handleEpochRangeChange}
+              onApply={() => {
+                if (filters.handleEpochRangeApply()) setOpenDropdown(null)
+              }}
+              startLabel={t('startEpoch')}
+              endLabel={t('endEpoch')}
+              error={filters.epochRangeError ? t(filters.epochRangeError) : null}
+              formatDisplay={false}
+            />
+          </FilterDropdown>
+        )}
+        {showCategoryFilter && (
+          <FilterDropdown
+            label={categoryLabel}
+            isActive={filters.isCategoryActive}
+            show={openDropdown === 'category'}
+            onToggle={() => handleToggleDropdown('category')}
+            onClear={filters.isCategoryActive ? filters.handleClearCategory : undefined}
+          >
+            <CategorySelect
+              value={category}
+              onChange={(next) => {
+                filters.handleCategoryChange(next)
+                setOpenDropdown(null)
+              }}
             />
           </FilterDropdown>
         )}

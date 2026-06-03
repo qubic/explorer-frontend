@@ -10,12 +10,19 @@ import {
   DIRECTION,
   isOnlyPageAddress,
   validateDateRange,
+  validateEpochRange,
   validateTickRange
 } from '../address/components/TransactionsOverview/filterUtils'
-import type { DateRangeValue, EventAmountFilter, TickRangeValue } from '../utils/eventFilterUtils'
+import type {
+  DateRangeValue,
+  EpochRangeValue,
+  EventAmountFilter,
+  TickRangeValue
+} from '../utils/eventFilterUtils'
 import {
   amountFilterToParams,
   applyEventDirectionSync,
+  toEpochRangeValue,
   toTickRangeValue
 } from '../utils/eventFilterUtils'
 import { updateSearchParams, validateAmountRange } from '../utils/filterUtils'
@@ -23,6 +30,8 @@ import { updateSearchParams, validateAmountRange } from '../utils/filterUtils'
 type EventFilterOptions = {
   tickStart?: string
   tickEnd?: string
+  epochStart?: string
+  epochEnd?: string
   eventTypes: number[]
   category?: number
   direction?: TransactionDirection | undefined
@@ -31,6 +40,7 @@ type EventFilterOptions = {
   destinationFilter: AddressFilter | undefined
   amountFilter?: EventAmountFilter
   supportsTick?: boolean
+  supportsEpoch?: boolean
   supportsDate?: boolean
   addressId?: string
 }
@@ -40,6 +50,8 @@ export type EventFiltersResult = ReturnType<typeof useEventFilters>
 export default function useEventFilters({
   tickStart,
   tickEnd,
+  epochStart,
+  epochEnd,
   eventTypes,
   category,
   direction,
@@ -48,6 +60,7 @@ export default function useEventFilters({
   destinationFilter,
   amountFilter,
   supportsTick = true,
+  supportsEpoch = false,
   supportsDate = true,
   addressId
 }: EventFilterOptions) {
@@ -58,6 +71,12 @@ export default function useEventFilters({
     toTickRangeValue(tickStart, tickEnd)
   )
   const [tickRangeError, setTickRangeError] = useState<string | null>(null)
+
+  // Local state for epoch range inputs
+  const [epochRange, setEpochRange] = useState<EpochRangeValue | undefined>(
+    toEpochRangeValue(epochStart, epochEnd)
+  )
+  const [epochRangeError, setEpochRangeError] = useState<string | null>(null)
 
   // Local state for date range
   const [localDateRange, setLocalDateRange] = useState<DateRangeValue | undefined>(dateRange)
@@ -84,6 +103,7 @@ export default function useEventFilters({
   )
 
   const isTickActive = supportsTick && (tickStart !== undefined || tickEnd !== undefined)
+  const isEpochActive = supportsEpoch && (epochStart !== undefined || epochEnd !== undefined)
   const isEventTypeActive = eventTypes.length > 0
   const isCategoryActive = category !== undefined
   const isDateActive = supportsDate && dateRange !== undefined
@@ -93,6 +113,7 @@ export default function useEventFilters({
     amountFilter !== undefined && (amountFilter.min !== undefined || amountFilter.max !== undefined)
   const hasActiveFilters =
     isTickActive ||
+    isEpochActive ||
     isEventTypeActive ||
     isCategoryActive ||
     isDateActive ||
@@ -129,6 +150,37 @@ export default function useEventFilters({
     )
     setTickRange(undefined)
     setTickRangeError(null)
+  }, [setSearchParams])
+
+  // --- Epoch Range ---
+
+  const handleEpochRangeChange = useCallback((value: EpochRangeValue | undefined) => {
+    setEpochRange(value)
+    setEpochRangeError(null)
+  }, [])
+
+  const handleEpochRangeApply = useCallback((): boolean => {
+    const error = validateEpochRange(epochRange?.start, epochRange?.end)
+    if (error) {
+      setEpochRangeError(error)
+      return false
+    }
+    setEpochRangeError(null)
+    setSearchParams((prev) =>
+      updateSearchParams(prev, {
+        epochStart: epochRange?.start || undefined,
+        epochEnd: epochRange?.end || undefined
+      })
+    )
+    return true
+  }, [epochRange, setSearchParams])
+
+  const handleClearEpoch = useCallback(() => {
+    setSearchParams((prev) =>
+      updateSearchParams(prev, { epochStart: undefined, epochEnd: undefined })
+    )
+    setEpochRange(undefined)
+    setEpochRangeError(null)
   }, [setSearchParams])
 
   // --- Event Type ---
@@ -373,6 +425,10 @@ export default function useEventFilters({
       updates.tickStart = undefined
       updates.tickEnd = undefined
     }
+    if (supportsEpoch) {
+      updates.epochStart = undefined
+      updates.epochEnd = undefined
+    }
     if (supportsDate) {
       updates.dateStart = undefined
       updates.dateEnd = undefined
@@ -383,6 +439,10 @@ export default function useEventFilters({
       setTickRange(undefined)
       setTickRangeError(null)
     }
+    if (supportsEpoch) {
+      setEpochRange(undefined)
+      setEpochRangeError(null)
+    }
     if (supportsDate) {
       setLocalDateRange(undefined)
       setDateRangeError(null)
@@ -391,13 +451,14 @@ export default function useEventFilters({
     setLocalDestFilter(undefined)
     setLocalAmountFilter(undefined)
     setAmountFilterError(null)
-  }, [setSearchParams, supportsTick, supportsDate])
+  }, [setSearchParams, supportsTick, supportsEpoch, supportsDate])
 
   // --- Mobile ---
 
   const handleMobileApplyFilters = useCallback(
     (filters: {
       tickRange?: TickRangeValue
+      epochRange?: EpochRangeValue
       eventTypes?: number[]
       category?: number
       dateRange?: DateRangeValue
@@ -415,6 +476,11 @@ export default function useEventFilters({
       const tickValid = !validateTickRange(filters.tickRange?.start, filters.tickRange?.end)
       const validTickStart = tickValid ? filters.tickRange?.start || undefined : undefined
       const validTickEnd = tickValid ? filters.tickRange?.end || undefined : undefined
+
+      // Validate epoch range — skip invalid values
+      const epochValid = !validateEpochRange(filters.epochRange?.start, filters.epochRange?.end)
+      const validEpochStart = epochValid ? filters.epochRange?.start || undefined : undefined
+      const validEpochEnd = epochValid ? filters.epochRange?.end || undefined : undefined
 
       // Validate date range — skip invalid values, presets bypass validation
       const dateIsPreset = filters.dateRange?.presetDays !== undefined
@@ -440,6 +506,10 @@ export default function useEventFilters({
         updates.tickStart = validTickStart
         updates.tickEnd = validTickEnd
       }
+      if (supportsEpoch) {
+        updates.epochStart = validEpochStart
+        updates.epochEnd = validEpochEnd
+      }
       if (supportsDate) {
         updates.dateStart =
           dateValid && !dateIsPreset ? filters.dateRange?.start || undefined : undefined
@@ -457,6 +527,10 @@ export default function useEventFilters({
         setTickRange(tickValid ? filters.tickRange : undefined)
         setTickRangeError(null)
       }
+      if (supportsEpoch) {
+        setEpochRange(epochValid ? filters.epochRange : undefined)
+        setEpochRangeError(null)
+      }
       if (supportsDate) {
         setLocalDateRange(dateValid ? filters.dateRange : undefined)
         setDateRangeError(null)
@@ -466,17 +540,20 @@ export default function useEventFilters({
       setLocalAmountFilter(filters.amountFilter)
       setAmountFilterError(null)
     },
-    [setSearchParams, supportsTick, supportsDate]
+    [setSearchParams, supportsTick, supportsEpoch, supportsDate]
   )
 
   return {
     tickRange,
     tickRangeError,
+    epochRange,
+    epochRangeError,
     localDateRange,
     dateRangeError,
     localSourceFilter,
     localDestFilter,
     isTickActive,
+    isEpochActive,
     isEventTypeActive,
     isCategoryActive,
     isDateActive,
@@ -486,6 +563,9 @@ export default function useEventFilters({
     handleTickRangeChange,
     handleTickRangeApply,
     handleClearTick,
+    handleEpochRangeChange,
+    handleEpochRangeApply,
+    handleClearEpoch,
     handleToggleEventType,
     handleClearEventType,
     handleCategoryChange,

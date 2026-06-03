@@ -178,6 +178,27 @@ export function validateTickRange(
 }
 
 /**
+ * Validates an epoch range filter. Epoch is uint32 like tick.
+ * Returns translation key directly for simpler error handling in components.
+ */
+export function validateEpochRange(
+  start: string | undefined,
+  end: string | undefined
+): string | null {
+  if (start) {
+    const startNum = Number(start)
+    if (startNum > MAX_UINT32) return 'startEpochTooLarge'
+  }
+  if (end) {
+    const endNum = Number(end)
+    if (endNum > MAX_UINT32) return 'endEpochTooLarge'
+  }
+
+  const rangeError = validateNumericRange(start, end)
+  return rangeError ? 'invalidEpochRange' : null
+}
+
+/**
  * Validates a date range filter.
  * Returns an error message key or null if valid.
  */
