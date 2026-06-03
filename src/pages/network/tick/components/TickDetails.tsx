@@ -4,6 +4,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom'
 
 import { ChevronLeftIcon, ChevronRightIcon } from '@app/assets/icons'
 import { Alert, Skeleton } from '@app/components/ui'
+import { useGetEpochForTick } from '@app/hooks'
 import { Routes } from '@app/router'
 import {
   useGetComputorListsForEpochQuery,
@@ -27,6 +28,9 @@ export default function TickDetails({ tick }: Props) {
     isFetching: isTickDataLoading,
     error: tickDataError
   } = useGetTickDataQuery(tick, { skip: !tick })
+
+  const { epoch: derivedEpoch, isLoading: isEpochLoading } = useGetEpochForTick(tick)
+  const epoch = tickData?.epoch ?? derivedEpoch
 
   const { data: computorLists } = useGetComputorListsForEpochQuery(tickData?.epoch ?? 0, {
     skip: !tick || !tickData?.epoch
@@ -98,10 +102,10 @@ export default function TickDetails({ tick }: Props) {
             title={t('epoch')}
             variant="secondary"
             content={
-              isTickDataLoading ? (
+              isTickDataLoading || (epoch === undefined && isEpochLoading) ? (
                 <Skeleton className="h-16 w-64 rounded-8" />
               ) : (
-                <p className="font-space text-sm text-gray-50">{tickData?.epoch}</p>
+                <p className="font-space text-sm text-gray-50">{epoch ?? '-'}</p>
               )
             }
           />
@@ -112,7 +116,9 @@ export default function TickDetails({ tick }: Props) {
               isTickDataLoading ? (
                 <Skeleton className="h-40 rounded-8 sm:h-20" />
               ) : (
-                <p className="break-all font-space text-sm text-gray-50">{tickData?.signature}</p>
+                <p className="break-all font-space text-sm text-gray-50">
+                  {tickData?.signature || '-'}
+                </p>
               )
             }
           />
@@ -123,7 +129,10 @@ export default function TickDetails({ tick }: Props) {
               isTickDataLoading ? (
                 <Skeleton className="h-40 rounded-8 sm:h-20" />
               ) : (
-                tickLeader && <AddressLink value={tickLeader} copy />
+                <>
+                  {tickLeader && <AddressLink value={tickLeader} copy />}
+                  {!tickLeader && <p className="font-space text-sm text-gray-50">-</p>}
+                </>
               )
             }
           />
