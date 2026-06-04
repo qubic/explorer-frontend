@@ -32,9 +32,10 @@ export default function TickDetails({ tick }: Props) {
   const { epoch: derivedEpoch, isLoading: isEpochLoading } = useGetEpochForTick(tick)
   const epoch = tickData?.epoch ?? derivedEpoch
 
-  const { data: computorLists } = useGetComputorListsForEpochQuery(tickData?.epoch ?? 0, {
-    skip: !tick || !tickData?.epoch
-  })
+  const { data: computorLists, isFetching: isComputorListsLoading } =
+    useGetComputorListsForEpochQuery(epoch ?? 0, {
+      skip: !tick || !epoch
+    })
 
   const handleTickNavigation = useCallback(
     (direction: 'previous' | 'next') => () => {
@@ -105,7 +106,7 @@ export default function TickDetails({ tick }: Props) {
               isTickDataLoading || (epoch === undefined && isEpochLoading) ? (
                 <Skeleton className="h-16 w-64 rounded-8" />
               ) : (
-                <p className="font-space text-sm text-gray-50">{epoch ?? '-'}</p>
+                <p className="font-space text-sm text-gray-50">{epoch || '-'}</p>
               )
             }
           />
@@ -126,7 +127,7 @@ export default function TickDetails({ tick }: Props) {
             title={t('tickLeader')}
             variant="secondary"
             content={
-              isTickDataLoading ? (
+              isTickDataLoading || isComputorListsLoading ? (
                 <Skeleton className="h-40 rounded-8 sm:h-20" />
               ) : (
                 <>
