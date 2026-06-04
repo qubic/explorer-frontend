@@ -3,6 +3,7 @@ import { useSearchParams } from 'react-router-dom'
 
 import {
   usePageAutoCorrect,
+  useSanitizedDateRange,
   useSanitizedEventTypes,
   useValidatedPage,
   useValidatedPageSize
@@ -22,7 +23,6 @@ import {
   type DateRangeValue,
   parseAddressFilter,
   parseAmountFilter,
-  parseDateRange,
   parseTickRange
 } from '../../utils/eventFilterUtils'
 
@@ -45,7 +45,7 @@ export default function useEventsPage(): {
 
   const { start: tickStart, end: tickEnd } = parseTickRange(searchParams)
 
-  const dateRange = parseDateRange(searchParams)
+  const dateRange = useSanitizedDateRange()
   const sourceFilter = parseAddressFilter(searchParams, 'source', 'sourceMode')
   const destinationFilter = parseAddressFilter(searchParams, 'destination', 'destMode')
 

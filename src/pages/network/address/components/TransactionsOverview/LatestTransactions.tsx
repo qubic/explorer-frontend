@@ -4,7 +4,12 @@ import { Link, useSearchParams } from 'react-router-dom'
 
 import { ArrowDownTrayIcon, Infocon } from '@app/assets/icons'
 import { PageSizeSelect, PaginationBar, Tooltip } from '@app/components/ui'
-import { usePaginationSearchParams, useValidatedPage, useValidatedPageSize } from '@app/hooks'
+import {
+  useSanitizedDateRange,
+  usePaginationSearchParams,
+  useValidatedPage,
+  useValidatedPageSize
+} from '@app/hooks'
 import { Routes } from '@app/router'
 import { useGetProcessedTickIntervalsQuery } from '@app/store/apis/query-service'
 import { useGetProtocolQuery, useGetSmartContractsQuery } from '@app/store/apis/qubic-static'
@@ -38,6 +43,10 @@ export default function LatestTransactions({ addressId }: Props) {
   const { handlePageChange, handlePageSizeChange } = usePaginationSearchParams()
   const page = useValidatedPage()
   const pageSize = useValidatedPageSize()
+
+  // Strip invalid date range params from the URL so the filter chip and the
+  // API call stay in sync with what's actually applied.
+  useSanitizedDateRange()
 
   // Read filters from URL search params (source of truth)
   // Stabilize reference: only produce a new object when the serialized filter values actually change

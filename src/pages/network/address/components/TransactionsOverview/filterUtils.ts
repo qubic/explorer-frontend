@@ -197,21 +197,16 @@ export function validateDateRange(
 // ADDRESS PAGE DATE UTILITIES
 // ============================================================================
 
-// Calculate start date from preset days
+// Calculate start date from preset days. Returns a UTC ISO string so the same
+// instant in time is sent to the backend regardless of the user's timezone.
+// Time-of-day is preserved (not snapped to midnight) so "Last hour" and
+// "Last 24 hours" yield different ranges. Floored to whole seconds so the
+// value is stable within a second — otherwise each render produces a new
+// millisecond-precision string and the API query refetches in a loop.
 export function getStartDateFromDays(days: number | undefined): string | undefined {
   if (!days) return undefined
-  const now = new Date()
-  const start = new Date(now.getTime() - days * 24 * 60 * 60 * 1000)
-  // Keep the actual time for presets (don't reset to midnight)
-  // This ensures "Last hour" and "Last 24 hours" are always different
-  // Format to datetime-local format with seconds: YYYY-MM-DDTHH:mm:ss
-  const year = start.getFullYear()
-  const month = String(start.getMonth() + 1).padStart(2, '0')
-  const day = String(start.getDate()).padStart(2, '0')
-  const hours = String(start.getHours()).padStart(2, '0')
-  const minutes = String(start.getMinutes()).padStart(2, '0')
-  const seconds = String(start.getSeconds()).padStart(2, '0')
-  return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`
+  const seconds = Math.floor((Date.now() - days * 24 * 60 * 60 * 1000) / 1000)
+  return new Date(seconds * 1000).toISOString()
 }
 
 // ============================================================================
