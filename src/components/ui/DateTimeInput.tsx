@@ -28,6 +28,9 @@ function isoToLocalParts(iso: string | undefined): { datePart: string; timePart:
 
 function localPartsToIso(datePart: string, timePart: string): string | undefined {
   if (!datePart || !timePart) return undefined
+  // No "Z" on purpose: the parts come from inputs displayed in local time, so we
+  // parse them as local and let toISOString() convert to UTC. Adding "Z" would
+  // parse as UTC and break the round-trip with isoToLocalParts.
   const d = new Date(`${datePart}T${timePart}`)
   if (Number.isNaN(d.getTime())) return undefined
   return d.toISOString()

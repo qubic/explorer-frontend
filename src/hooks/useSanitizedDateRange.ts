@@ -17,18 +17,21 @@ export function useSanitizedDateRange(): DateRangeValue | undefined {
   const dateRange = useMemo(() => parseDateRange(searchParams), [searchParams])
 
   useEffect(() => {
-    const hasInvalidPreset = presetRaw !== null && dateRange?.presetDays === undefined
-    const hasInvalidStart = startRaw !== null && dateRange?.start === undefined
-    const hasInvalidEnd = endRaw !== null && dateRange?.end === undefined
+    // A param needs removing if it's in the URL but didn't survive parseDateRange —
+    // either because it was malformed, or because a valid preset shadowed the custom
+    // start/end pair (preset wins, so the URL should reflect that).
+    const shouldRemovePreset = presetRaw !== null && dateRange?.presetDays === undefined
+    const shouldRemoveStart = startRaw !== null && dateRange?.start === undefined
+    const shouldRemoveEnd = endRaw !== null && dateRange?.end === undefined
 
-    if (!hasInvalidPreset && !hasInvalidStart && !hasInvalidEnd) return
+    if (!shouldRemovePreset && !shouldRemoveStart && !shouldRemoveEnd) return
 
     setSearchParams(
       (prev) => {
         const next = new URLSearchParams(prev)
-        if (hasInvalidPreset) next.delete('datePresetDays')
-        if (hasInvalidStart) next.delete('dateStart')
-        if (hasInvalidEnd) next.delete('dateEnd')
+        if (shouldRemovePreset) next.delete('datePresetDays')
+        if (shouldRemoveStart) next.delete('dateStart')
+        if (shouldRemoveEnd) next.delete('dateEnd')
         return next
       },
       { replace: true }
