@@ -63,16 +63,26 @@ export function parseTickRange(searchParams: URLSearchParams): TickRangeValue {
   }
 }
 
+function isValidDateString(value: string | null): value is string {
+  return value !== null && !Number.isNaN(new Date(value).getTime())
+}
+
 export function parseDateRange(searchParams: URLSearchParams): DateRangeValue | undefined {
   const presetRaw = searchParams.get('datePresetDays')
   if (presetRaw) {
-    const presetDays = parseFloat(presetRaw)
-    if (Number.isFinite(presetDays) && presetDays > 0) {
+    // Number() rejects partial-numeric strings like "7abc" (parseFloat would
+    // return 7 and silently match the 7-day preset).
+    const presetDays = Number(presetRaw)
+    // Only accept values that match a known preset — silently ignore others
+    // so a manually-edited URL doesn't apply an arbitrary range invisibly.
+    if (DATE_PRESETS.some((p) => p.days === presetDays)) {
       return { presetDays }
     }
   }
-  const start = searchParams.get('dateStart') || undefined
-  const end = searchParams.get('dateEnd') || undefined
+  const startRaw = searchParams.get('dateStart')
+  const endRaw = searchParams.get('dateEnd')
+  const start = isValidDateString(startRaw) ? startRaw : undefined
+  const end = isValidDateString(endRaw) ? endRaw : undefined
   if (start || end) return { start, end }
   return undefined
 }
