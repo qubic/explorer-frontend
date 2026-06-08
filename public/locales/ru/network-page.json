@@ -35,6 +35,7 @@
   "burnEvents": "События сжигания",
   "burns": "Сжигания",
   "burnsAndDeductions": "Сжигания и вычеты",
+  "category": "Категория",
   "checkContractProposal": "Посмотреть предложение контракта",
   "checkContractShareholders": "Посмотреть акционеров контракта",
   "checkSourceCode": "Посмотреть исходный код",
