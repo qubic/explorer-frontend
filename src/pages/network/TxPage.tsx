@@ -20,7 +20,7 @@ import { formatDate, formatEllipsis } from '@app/utils'
 import { CardItem, HomeLink, SubCardItem, TickLink, TxItem, WaitingForTick } from './components'
 import TransactionEvents from './components/TxItem/TransactionEvents'
 import { useTickWatcher, useTransactionEvents } from './hooks'
-import { getEventsErrorMessage } from './utils/filterUtils'
+import { getEventsErrorMessage, getProcessorLagMessage } from './utils/filterUtils'
 
 const VIRTUAL_TX_TYPE_LABELS: Record<number, string> = {
   2: 'Smart Contract Begin Epoch',
@@ -61,6 +61,7 @@ function VirtualTxContent({ txId, virtualTx }: { txId: string; virtualTx: Parsed
   )
 
   const lastProcessedTick = isError ? getLastProcessedTickFromEventsError(error) : null
+  const validForTick = data?.validForTick
 
   if (isFetching && events.length === 0) return <LinearProgress />
   if (isError) {
@@ -68,14 +69,15 @@ function VirtualTxContent({ txId, virtualTx }: { txId: string; virtualTx: Parsed
       <ErrorFallback
         message={
           lastProcessedTick !== null
-            ? t('tickNotYetProcessedEvents', {
-                lastProcessedTick: lastProcessedTick.toLocaleString()
-              })
+            ? getProcessorLagMessage(lastProcessedTick, t)
             : t('virtualTransactionNotFound')
         }
         hideErrorHeader
       />
     )
+  }
+  if (total === 0 && validForTick !== undefined && validForTick < virtualTx.tickNumber) {
+    return <ErrorFallback message={getProcessorLagMessage(validForTick, t)} hideErrorHeader />
   }
 
   return (
@@ -153,10 +155,9 @@ function RegularTxContent({ txId }: { txId: string }) {
     total,
     isLoading: isEventsLoading,
     hasError: hasEventsError,
-    lastProcessedTick: eventsLastProcessedTick
+    lastProcessedTick: eventsLastProcessedTick,
+    validForTick: eventsValidForTick
   } = useTransactionEvents(txId)
-
-  const eventsErrorMessage = getEventsErrorMessage(hasEventsError, eventsLastProcessedTick, t)
 
   const {
     data: tx,
@@ -167,6 +168,19 @@ function RegularTxContent({ txId }: { txId: string }) {
   } = useGetTransactionByHashQuery(txId, {
     skip: !txId
   })
+
+  const isEventsProcessorBehind =
+    !hasEventsError &&
+    !isEventsLoading &&
+    total === 0 &&
+    tx !== undefined &&
+    eventsValidForTick !== null &&
+    eventsValidForTick < tx.tickNumber
+
+  const eventsErrorMessage =
+    isEventsProcessorBehind && eventsValidForTick !== null
+      ? getProcessorLagMessage(eventsValidForTick, t)
+      : getEventsErrorMessage(hasEventsError, eventsLastProcessedTick, t)
 
   const isLoading = isFetching
   const isInvalidFormat =
