@@ -13,6 +13,7 @@ import {
   useGetEventsQuery,
   type ParsedVirtualTxId,
   parseVirtualTxId,
+  getCategoryLabel,
   getLastProcessedTickFromEventsError
 } from '@app/store/apis/events'
 import { useGetTransactionByHashQuery } from '@app/store/apis/query-service'
@@ -21,13 +22,6 @@ import { CardItem, HomeLink, SubCardItem, TickLink, TxItem, WaitingForTick } fro
 import TransactionEvents from './components/TxItem/TransactionEvents'
 import { useTickWatcher, useTransactionEvents } from './hooks'
 import { getEventsErrorMessage, getProcessorLagMessage } from './utils/filterUtils'
-
-const VIRTUAL_TX_TYPE_LABELS: Record<number, string> = {
-  2: 'Smart Contract Begin Epoch',
-  3: 'Smart Contract Begin Tick',
-  4: 'Smart Contract End Tick',
-  5: 'Smart Contract End Epoch'
-}
 
 function VirtualTxContent({ txId, virtualTx }: { txId: string; virtualTx: ParsedVirtualTxId }) {
   const { t } = useTranslation('network-page')
@@ -47,7 +41,7 @@ function VirtualTxContent({ txId, virtualTx }: { txId: string; virtualTx: Parsed
   usePageAutoCorrect(!!data, total, pageSize)
 
   const events = data?.events ?? []
-  const txTypeLabel = VIRTUAL_TX_TYPE_LABELS[virtualTx.category] ?? `Category ${virtualTx.category}`
+  const txTypeLabel = getCategoryLabel(virtualTx.category)
 
   const firstEvent = data?.events?.[0]
   const firstEventTimestamp = firstEvent?.timestamp

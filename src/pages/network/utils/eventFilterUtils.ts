@@ -27,6 +27,7 @@ export type EventAmountFilter = {
 export const ASSET_TYPE_OPTIONS: AmountAssetType[] = ['any', 'qubic', 'other']
 
 export type TickRangeValue = { start?: string; end?: string }
+export type EpochRangeValue = { start?: string; end?: string }
 export type DateRangeValue = { start?: string; end?: string; presetDays?: number }
 
 export function toTickRangeValue(
@@ -34,6 +35,13 @@ export function toTickRangeValue(
   tickEnd: string | undefined
 ): TickRangeValue | undefined {
   return tickStart || tickEnd ? { start: tickStart, end: tickEnd } : undefined
+}
+
+export function toEpochRangeValue(
+  epochStart: string | undefined,
+  epochEnd: string | undefined
+): EpochRangeValue | undefined {
+  return epochStart || epochEnd ? { start: epochStart, end: epochEnd } : undefined
 }
 
 // ============================================================================
@@ -63,6 +71,13 @@ export function parseTickRange(searchParams: URLSearchParams): TickRangeValue {
   }
 }
 
+export function parseEpochRange(searchParams: URLSearchParams): EpochRangeValue {
+  return {
+    start: searchParams.get('epochStart') || undefined,
+    end: searchParams.get('epochEnd') || undefined
+  }
+}
+
 function isValidDateString(value: string | null): value is string {
   return value !== null && !Number.isNaN(new Date(value).getTime())
 }
@@ -87,13 +102,26 @@ export function parseDateRange(searchParams: URLSearchParams): DateRangeValue | 
   return undefined
 }
 
+// Use BigInt so leading zeros normalize ("100" === "0100") and large uint64
+// values don't lose precision the way Number would.
+export function normalizeAmountBound(value: string | undefined): string | undefined {
+  if (!value) return undefined
+  try {
+    return String(BigInt(value))
+  } catch {
+    return undefined
+  }
+}
+
 export function amountFilterToParams(
   filter: EventAmountFilter | undefined
 ): Record<string, string | undefined> {
+  const minNorm = normalizeAmountBound(filter?.min)
+  const maxNorm = normalizeAmountBound(filter?.max)
   return {
-    amountMin: filter?.min ?? undefined,
-    amountMax: filter?.max ?? undefined,
-    amountAsset: filter?.min || filter?.max ? filter?.assetType ?? 'any' : undefined
+    amountMin: minNorm,
+    amountMax: maxNorm,
+    amountAsset: minNorm || maxNorm ? filter?.assetType ?? 'any' : undefined
   }
 }
 
@@ -123,18 +151,46 @@ export function buildEventAddressFilter(filter: AddressFilter | undefined): {
   return filter.mode === MODE.EXCLUDE ? { exclude: commaSeparated } : { include: commaSeparated }
 }
 
+// Normalize a numeric range bound to its canonical string form so "213" and
+// "0213" compare equal and the URL/backend don't see leading zeros.
+export function normalizeRangeBound(value: string | undefined): string | undefined {
+  if (!value) return undefined
+  const n = Number(value)
+  return Number.isFinite(n) ? String(n) : undefined
+}
+
 export function buildTickFilter(
   tickStart: string | undefined,
   tickEnd: string | undefined
 ): { tickNumber?: number; tickRange?: EventRange } {
-  if (!tickStart && !tickEnd) return {}
-  if (tickStart && tickEnd && tickStart === tickEnd) {
-    return { tickNumber: Number(tickStart) }
+  const start = normalizeRangeBound(tickStart)
+  const end = normalizeRangeBound(tickEnd)
+  if (start === undefined && end === undefined) return {}
+  if (start !== undefined && end !== undefined && start === end) {
+    return { tickNumber: Number(start) }
   }
   return {
     tickRange: {
-      ...(tickStart && { gte: tickStart }),
-      ...(tickEnd && { lte: tickEnd })
+      ...(start !== undefined && { gte: start }),
+      ...(end !== undefined && { lte: end })
+    }
+  }
+}
+
+export function buildEpochFilter(
+  epochStart: string | undefined,
+  epochEnd: string | undefined
+): { epoch?: number; epochRange?: EventRange } {
+  const start = normalizeRangeBound(epochStart)
+  const end = normalizeRangeBound(epochEnd)
+  if (start === undefined && end === undefined) return {}
+  if (start !== undefined && end !== undefined && start === end) {
+    return { epoch: Number(start) }
+  }
+  return {
+    epochRange: {
+      ...(start !== undefined && { gte: start }),
+      ...(end !== undefined && { lte: end })
     }
   }
 }
@@ -173,25 +229,30 @@ export type AmountApiParams = {
 export function buildAmountFilter(filter: EventAmountFilter | undefined): AmountApiParams {
   if (!filter) return {}
   const { assetType, min, max } = filter
-  if (!min && !max) return {}
+  const minNorm = normalizeAmountBound(min)
+  const maxNorm = normalizeAmountBound(max)
+  if (minNorm === undefined && maxNorm === undefined) return {}
 
-  const isExact = min && max && min === max
+  const exactValue =
+    minNorm !== undefined && maxNorm !== undefined && minNorm === maxNorm ? minNorm : undefined
   const range: EventRange = {
-    ...(min && { gte: min }),
-    ...(max && { lte: max })
+    ...(minNorm !== undefined && { gte: minNorm }),
+    ...(maxNorm !== undefined && { lte: maxNorm })
   }
 
   if (assetType === 'qubic') {
-    return isExact ? { amount: min } : { amountRange: range }
+    return exactValue !== undefined ? { amount: exactValue } : { amountRange: range }
   }
 
   if (assetType === 'other') {
-    return isExact ? { numberOfShares: min } : { numberOfSharesRange: range }
+    return exactValue !== undefined
+      ? { numberOfShares: exactValue }
+      : { numberOfSharesRange: range }
   }
 
   // "any" — OR logic via should: both fields in a single entry
-  return isExact
-    ? { amountShould: [{ terms: { amount: min, numberOfShares: min } }] }
+  return exactValue !== undefined
+    ? { amountShould: [{ terms: { amount: exactValue, numberOfShares: exactValue } }] }
     : { amountShould: [{ ranges: { amount: range, numberOfShares: range } }] }
 }
 

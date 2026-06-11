@@ -17,8 +17,11 @@ function EventsPage() {
     events,
     total,
     eventTypes,
+    category,
     tickStart,
     tickEnd,
+    epochStart,
+    epochEnd,
     dateRange,
     sourceFilter,
     destinationFilter,
@@ -34,11 +37,15 @@ function EventsPage() {
   const filters = useEventFilters({
     tickStart,
     tickEnd,
+    epochStart,
+    epochEnd,
     eventTypes,
+    category,
     dateRange,
     sourceFilter,
     destinationFilter,
-    amountFilter
+    amountFilter,
+    supportsEpoch: true
   })
 
   return (
@@ -57,13 +64,18 @@ function EventsPage() {
         <EventsFilterBar
           filters={filters}
           eventTypes={eventTypes}
+          category={category}
           tickStart={tickStart}
           tickEnd={tickEnd}
+          epochStart={epochStart}
+          epochEnd={epochEnd}
           dateRange={dateRange}
           sourceFilter={sourceFilter}
           destinationFilter={destinationFilter}
           amountFilter={amountFilter}
           idPrefix="events"
+          showCategoryFilter
+          showEpochFilter
         />
 
         <TransactionEvents

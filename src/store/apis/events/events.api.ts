@@ -37,7 +37,9 @@ export interface GetEventsRequest {
   excludeDestination?: string
   contractIndex?: number
   category?: number
+  epoch?: number
   tickRange?: EventRange
+  epochRange?: EventRange
   timestampRange?: EventRange
   amountRange?: EventRange
   numberOfSharesRange?: EventRange
@@ -109,12 +111,14 @@ export const eventsApi = createApi({
         logType,
         contractIndex,
         category,
+        epoch,
         should,
         source,
         destination,
         excludeSource,
         excludeDestination,
         tickRange,
+        epochRange,
         timestampRange,
         amountRange,
         numberOfSharesRange,
@@ -128,6 +132,7 @@ export const eventsApi = createApi({
           ...(logType && logType.length > 0 && { logType: logType.join(',') }),
           ...(contractIndex !== undefined && { contractIndex: String(contractIndex) }),
           ...(category !== undefined && { categories: String(category) }),
+          ...(epoch !== undefined && { epoch: String(epoch) }),
           ...(source && { source }),
           ...(destination && { destination }),
           ...(amount !== undefined && { amount }),
@@ -141,6 +146,7 @@ export const eventsApi = createApi({
 
         const ranges: Record<string, EventRange> = {
           ...(tickRange && { tickNumber: tickRange }),
+          ...(epochRange && { epoch: epochRange }),
           ...(timestampRange && { timestamp: timestampRange }),
           ...(amountRange && { amount: amountRange }),
           ...(numberOfSharesRange && { numberOfShares: numberOfSharesRange })
