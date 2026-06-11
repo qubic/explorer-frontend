@@ -11,6 +11,7 @@ export default function useTransactionEvents(txId: string): {
   isLoading: boolean
   hasError: boolean
   lastProcessedTick: number | null
+  validForTick: number | null
 } {
   const page = useValidatedPage()
   const pageSize = useValidatedPageSize()
@@ -30,6 +31,7 @@ export default function useTransactionEvents(txId: string): {
     total,
     isLoading: isFetching,
     hasError: isError,
-    lastProcessedTick: isError ? getLastProcessedTickFromEventsError(error) : null
+    lastProcessedTick: isError ? getLastProcessedTickFromEventsError(error) : null,
+    validForTick: data?.validForTick ?? null
   }
 }

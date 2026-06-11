@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { FunnelIcon } from '@app/assets/icons'
-import { getEventTypeLabel } from '@app/store/apis/events'
+import { getCategoryLabel, getEventTypeLabel } from '@app/store/apis/events'
 import type {
   AddressFilter,
   TransactionDirection
@@ -16,6 +16,7 @@ import type { DateRangeValue, EventAmountFilter } from '../../utils/eventFilterU
 import { getAddressFilterLabel, getDateRangeLabel } from '../../utils/eventFilterUtils'
 import { formatAmountForDisplay } from '../../utils/filterUtils'
 import ActiveFilterChip from './ActiveFilterChip'
+import CategorySelect from './CategorySelect'
 import EventAmountFilterContent from './EventAmountFilterContent'
 import EventsMobileFiltersModal, { type EventsFilters } from './EventsMobileFiltersModal'
 import EventTypeChips from './EventTypeChips'
@@ -27,17 +28,22 @@ import ResetFiltersButton from './ResetFiltersButton'
 type Props = {
   filters: EventFiltersResult
   eventTypes: number[]
+  category?: number
   direction?: TransactionDirection | undefined
   tickStart?: string
   tickEnd?: string
+  epochStart?: string
+  epochEnd?: string
   dateRange?: DateRangeValue
   sourceFilter?: AddressFilter
   destinationFilter?: AddressFilter
   amountFilter?: EventAmountFilter
   idPrefix: string
   showTickFilter?: boolean
+  showEpochFilter?: boolean
   showDateFilter?: boolean
   showDirectionFilter?: boolean
+  showCategoryFilter?: boolean
   addressId?: string
 }
 
@@ -50,17 +56,22 @@ function getEventTypesLabel(eventTypes: number[], fallback: string): string {
 export default function EventsFilterBar({
   filters,
   eventTypes,
+  category,
   direction,
   tickStart,
   tickEnd,
+  epochStart,
+  epochEnd,
   dateRange,
   sourceFilter,
   destinationFilter,
   amountFilter,
   idPrefix,
   showTickFilter = true,
+  showEpochFilter = false,
   showDateFilter = true,
   showDirectionFilter = false,
+  showCategoryFilter = false,
   addressId
 }: Props) {
   const { t } = useTranslation('network-page')
@@ -74,7 +85,16 @@ export default function EventsFilterBar({
         formatAmountForDisplay
       )
     : ''
+  const epochLabel = showEpochFilter
+    ? formatRangeLabel(
+        t('epoch'),
+        epochStart || epochEnd ? { start: epochStart, end: epochEnd } : undefined,
+        formatAmountForDisplay
+      )
+    : ''
   const eventTypeLabel = getEventTypesLabel(eventTypes, t('eventType'))
+  const categoryLabel =
+    category !== undefined ? `${t('category')}: ${getCategoryLabel(category)}` : t('category')
   const dateLabel = showDateFilter ? getDateRangeLabel(dateRange, t) : ''
   const sourceLabel = getAddressFilterLabel('source', sourceFilter, t)
   const destLabel = getAddressFilterLabel('destination', destinationFilter, t)
@@ -95,8 +115,12 @@ export default function EventsFilterBar({
     sourceFilter,
     destinationFilter,
     amountFilter: filters.localAmountFilter,
+    ...(showCategoryFilter && { category }),
     ...(showTickFilter && {
       tickRange: tickStart || tickEnd ? { start: tickStart, end: tickEnd } : undefined
+    }),
+    ...(showEpochFilter && {
+      epochRange: epochStart || epochEnd ? { start: epochStart, end: epochEnd } : undefined
     }),
     ...(showDateFilter && { dateRange })
   }
@@ -117,6 +141,12 @@ export default function EventsFilterBar({
                 onClear={filters.handleClearEventType}
               />
             )}
+            {showCategoryFilter && filters.isCategoryActive && category !== undefined && (
+              <ActiveFilterChip
+                label={`${t('category')}: ${getCategoryLabel(category)}`}
+                onClear={filters.handleClearCategory}
+              />
+            )}
             {filters.isSourceActive && (
               <ActiveFilterChip label={sourceLabel} onClear={filters.handleClearSource} />
             )}
@@ -132,6 +162,9 @@ export default function EventsFilterBar({
             {showTickFilter && filters.isTickActive && (
               <ActiveFilterChip label={tickLabel} onClear={filters.handleClearTick} />
             )}
+            {showEpochFilter && filters.isEpochActive && (
+              <ActiveFilterChip label={epochLabel} onClear={filters.handleClearEpoch} />
+            )}
             <ResetFiltersButton onClick={filters.handleClearAll} />
           </div>
         )}
@@ -145,8 +178,10 @@ export default function EventsFilterBar({
         onApplyFilters={filters.handleMobileApplyFilters}
         idPrefix={idPrefix}
         showTickFilter={showTickFilter}
+        showEpochFilter={showEpochFilter}
         showDateFilter={showDateFilter}
         showDirectionFilter={showDirectionFilter}
+        showCategoryFilter={showCategoryFilter}
         addressId={addressId}
       />
 
@@ -252,6 +287,45 @@ export default function EventsFilterBar({
               endLabel={t('endTick')}
               error={filters.tickRangeError ? t(filters.tickRangeError) : null}
               formatDisplay={false}
+            />
+          </FilterDropdown>
+        )}
+        {showEpochFilter && (
+          <FilterDropdown
+            label={epochLabel}
+            isActive={filters.isEpochActive}
+            show={openDropdown === 'epoch'}
+            onToggle={() => handleToggleDropdown('epoch')}
+            onClear={filters.isEpochActive ? filters.handleClearEpoch : undefined}
+          >
+            <RangeFilterContent
+              idPrefix={`${idPrefix}-epoch-range`}
+              value={filters.epochRange}
+              onChange={filters.handleEpochRangeChange}
+              onApply={() => {
+                if (filters.handleEpochRangeApply()) setOpenDropdown(null)
+              }}
+              startLabel={t('startEpoch')}
+              endLabel={t('endEpoch')}
+              error={filters.epochRangeError ? t(filters.epochRangeError) : null}
+              formatDisplay={false}
+            />
+          </FilterDropdown>
+        )}
+        {showCategoryFilter && (
+          <FilterDropdown
+            label={categoryLabel}
+            isActive={filters.isCategoryActive}
+            show={openDropdown === 'category'}
+            onToggle={() => handleToggleDropdown('category')}
+            onClear={filters.isCategoryActive ? filters.handleClearCategory : undefined}
+          >
+            <CategorySelect
+              value={category}
+              onChange={(next) => {
+                filters.handleCategoryChange(next)
+                setOpenDropdown(null)
+              }}
             />
           </FilterDropdown>
         )}

@@ -4,7 +4,13 @@ import type {
   TransactionFilters
 } from '../address/components/TransactionsOverview/filterUtils'
 import type { TickTransactionFilters } from '../tick/components/tickFilterUtils'
-import { parseAddressFilter, parseDateRange, parseTickRange } from './eventFilterUtils'
+import {
+  normalizeAmountBound,
+  normalizeRangeBound,
+  parseAddressFilter,
+  parseDateRange,
+  parseTickRange
+} from './eventFilterUtils'
 
 // ============================================================================
 // FILTER PARAM CLEARING (for tab switches)
@@ -143,15 +149,15 @@ export function txFiltersToParams(filters: TransactionFilters): Record<string, s
         ? 'exclude'
         : undefined,
     // Amount
-    amountMin: filters.amountRange?.start ?? undefined,
-    amountMax: filters.amountRange?.end ?? undefined,
+    amountMin: normalizeAmountBound(filters.amountRange?.start),
+    amountMax: normalizeAmountBound(filters.amountRange?.end),
     amountPreset: filters.amountRange?.presetKey ?? undefined,
     // Input type
-    inputTypeMin: filters.inputTypeRange?.start ?? undefined,
-    inputTypeMax: filters.inputTypeRange?.end ?? undefined,
+    inputTypeMin: normalizeRangeBound(filters.inputTypeRange?.start),
+    inputTypeMax: normalizeRangeBound(filters.inputTypeRange?.end),
     // Tick range
-    tickStart: filters.tickNumberRange?.start ?? undefined,
-    tickEnd: filters.tickNumberRange?.end ?? undefined,
+    tickStart: normalizeRangeBound(filters.tickNumberRange?.start),
+    tickEnd: normalizeRangeBound(filters.tickNumberRange?.end),
     // Date range
     dateStart: filters.dateRange?.start ?? undefined,
     dateEnd: filters.dateRange?.end ?? undefined,
@@ -170,10 +176,10 @@ export function tickTxFiltersToParams(
   return {
     source: filters.source?.trim() || undefined,
     destination: filters.destination?.trim() || undefined,
-    amountMin: filters.amountRange?.start ?? undefined,
-    amountMax: filters.amountRange?.end ?? undefined,
+    amountMin: normalizeAmountBound(filters.amountRange?.start),
+    amountMax: normalizeAmountBound(filters.amountRange?.end),
     amountPreset: filters.amountRange?.presetKey ?? undefined,
-    inputTypeMin: filters.inputTypeRange?.start ?? undefined,
-    inputTypeMax: filters.inputTypeRange?.end ?? undefined
+    inputTypeMin: normalizeRangeBound(filters.inputTypeRange?.start),
+    inputTypeMax: normalizeRangeBound(filters.inputTypeRange?.end)
   }
 }

@@ -13,6 +13,7 @@ import {
   useGetEventsQuery,
   type ParsedVirtualTxId,
   parseVirtualTxId,
+  getCategoryLabel,
   getLastProcessedTickFromEventsError
 } from '@app/store/apis/events'
 import { useGetTransactionByHashQuery } from '@app/store/apis/query-service'
@@ -20,14 +21,7 @@ import { formatDate, formatEllipsis } from '@app/utils'
 import { CardItem, HomeLink, SubCardItem, TickLink, TxItem, WaitingForTick } from './components'
 import TransactionEvents from './components/TxItem/TransactionEvents'
 import { useTickWatcher, useTransactionEvents } from './hooks'
-import { getEventsErrorMessage } from './utils/filterUtils'
-
-const VIRTUAL_TX_TYPE_LABELS: Record<number, string> = {
-  2: 'Smart Contract Begin Epoch',
-  3: 'Smart Contract Begin Tick',
-  4: 'Smart Contract End Tick',
-  5: 'Smart Contract End Epoch'
-}
+import { getEventsErrorMessage, getProcessorLagMessage } from './utils/filterUtils'
 
 function VirtualTxContent({ txId, virtualTx }: { txId: string; virtualTx: ParsedVirtualTxId }) {
   const { t } = useTranslation('network-page')
@@ -47,7 +41,7 @@ function VirtualTxContent({ txId, virtualTx }: { txId: string; virtualTx: Parsed
   usePageAutoCorrect(!!data, total, pageSize)
 
   const events = data?.events ?? []
-  const txTypeLabel = VIRTUAL_TX_TYPE_LABELS[virtualTx.category] ?? `Category ${virtualTx.category}`
+  const txTypeLabel = getCategoryLabel(virtualTx.category)
 
   const firstEvent = data?.events?.[0]
   const firstEventTimestamp = firstEvent?.timestamp
@@ -61,6 +55,7 @@ function VirtualTxContent({ txId, virtualTx }: { txId: string; virtualTx: Parsed
   )
 
   const lastProcessedTick = isError ? getLastProcessedTickFromEventsError(error) : null
+  const validForTick = data?.validForTick
 
   if (isFetching && events.length === 0) return <LinearProgress />
   if (isError) {
@@ -68,14 +63,15 @@ function VirtualTxContent({ txId, virtualTx }: { txId: string; virtualTx: Parsed
       <ErrorFallback
         message={
           lastProcessedTick !== null
-            ? t('tickNotYetProcessedEvents', {
-                lastProcessedTick: lastProcessedTick.toLocaleString()
-              })
+            ? getProcessorLagMessage(lastProcessedTick, t)
             : t('virtualTransactionNotFound')
         }
         hideErrorHeader
       />
     )
+  }
+  if (total === 0 && validForTick !== undefined && validForTick < virtualTx.tickNumber) {
+    return <ErrorFallback message={getProcessorLagMessage(validForTick, t)} hideErrorHeader />
   }
 
   return (
@@ -153,10 +149,9 @@ function RegularTxContent({ txId }: { txId: string }) {
     total,
     isLoading: isEventsLoading,
     hasError: hasEventsError,
-    lastProcessedTick: eventsLastProcessedTick
+    lastProcessedTick: eventsLastProcessedTick,
+    validForTick: eventsValidForTick
   } = useTransactionEvents(txId)
-
-  const eventsErrorMessage = getEventsErrorMessage(hasEventsError, eventsLastProcessedTick, t)
 
   const {
     data: tx,
@@ -167,6 +162,19 @@ function RegularTxContent({ txId }: { txId: string }) {
   } = useGetTransactionByHashQuery(txId, {
     skip: !txId
   })
+
+  const isEventsProcessorBehind =
+    !hasEventsError &&
+    !isEventsLoading &&
+    total === 0 &&
+    tx !== undefined &&
+    eventsValidForTick !== null &&
+    eventsValidForTick < tx.tickNumber
+
+  const eventsErrorMessage =
+    isEventsProcessorBehind && eventsValidForTick !== null
+      ? getProcessorLagMessage(eventsValidForTick, t)
+      : getEventsErrorMessage(hasEventsError, eventsLastProcessedTick, t)
 
   const isLoading = isFetching
   const isInvalidFormat =
