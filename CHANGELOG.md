@@ -1,3 +1,39 @@
+# [1.40.0](https://github.com/qubic/explorer-frontend/compare/v1.39.0...v1.40.0) (2026-06-11)
+
+
+### Bug Fixes
+
+* **date-filter:** make URL portable across timezones and sanitize inv… ([#479](https://github.com/qubic/explorer-frontend/issues/479)) ([1c8c386](https://github.com/qubic/explorer-frontend/commit/1c8c386d4f03ddd79d7581ed7f0d455bcc46a44a))
+* **events:** normalize tick/epoch/amount filter bounds ([953343f](https://github.com/qubic/explorer-frontend/commit/953343fe611d70f81ba3b82a0de20341ee0064ea))
+* **events:** show processor-lag message when events return silent empty ([#476](https://github.com/qubic/explorer-frontend/issues/476)) ([27a5b48](https://github.com/qubic/explorer-frontend/commit/27a5b489aec72b9ff82da9302309cfb8857c3da9))
+* **filters:** normalize numeric filter bounds in URL params ([21c88ac](https://github.com/qubic/explorer-frontend/commit/21c88ac690091e7a2f07c53b5dc02ac2a45e2b04))
+* **tick-page:** show epoch and placeholders for empty ticks ([#478](https://github.com/qubic/explorer-frontend/issues/478)) ([2b61244](https://github.com/qubic/explorer-frontend/commit/2b612443e3f58de06a104da7786712ec6d775df2))
+
+
+### Features
+
+* add category filter to blockchain events page ([4dc60e2](https://github.com/qubic/explorer-frontend/commit/4dc60e24f25f5254b822226b537b0397b326e3dc))
+* **events:** epoch filter, dividend category, SC_INITIALIZE_TX virtual tx, UI polish ([dcebebd](https://github.com/qubic/explorer-frontend/commit/dcebebde3bc06a4ce0aa15873f10ca69b360db7e))
+* **network-page:** translate "category" key in all locales ([3e83ef6](https://github.com/qubic/explorer-frontend/commit/3e83ef6df73ff0b5db0f1e359799b2eb11c20bfa))
+
+# [1.40.0-rc.1](https://github.com/qubic/explorer-frontend/compare/v1.39.0...v1.40.0-rc.1) (2026-06-11)
+
+
+### Bug Fixes
+
+* **date-filter:** make URL portable across timezones and sanitize inv… ([#479](https://github.com/qubic/explorer-frontend/issues/479)) ([1c8c386](https://github.com/qubic/explorer-frontend/commit/1c8c386d4f03ddd79d7581ed7f0d455bcc46a44a))
+* **events:** normalize tick/epoch/amount filter bounds ([953343f](https://github.com/qubic/explorer-frontend/commit/953343fe611d70f81ba3b82a0de20341ee0064ea))
+* **events:** show processor-lag message when events return silent empty ([#476](https://github.com/qubic/explorer-frontend/issues/476)) ([27a5b48](https://github.com/qubic/explorer-frontend/commit/27a5b489aec72b9ff82da9302309cfb8857c3da9))
+* **filters:** normalize numeric filter bounds in URL params ([21c88ac](https://github.com/qubic/explorer-frontend/commit/21c88ac690091e7a2f07c53b5dc02ac2a45e2b04))
+* **tick-page:** show epoch and placeholders for empty ticks ([#478](https://github.com/qubic/explorer-frontend/issues/478)) ([2b61244](https://github.com/qubic/explorer-frontend/commit/2b612443e3f58de06a104da7786712ec6d775df2))
+
+
+### Features
+
+* add category filter to blockchain events page ([4dc60e2](https://github.com/qubic/explorer-frontend/commit/4dc60e24f25f5254b822226b537b0397b326e3dc))
+* **events:** epoch filter, dividend category, SC_INITIALIZE_TX virtual tx, UI polish ([dcebebd](https://github.com/qubic/explorer-frontend/commit/dcebebde3bc06a4ce0aa15873f10ca69b360db7e))
+* **network-page:** translate "category" key in all locales ([3e83ef6](https://github.com/qubic/explorer-frontend/commit/3e83ef6df73ff0b5db0f1e359799b2eb11c20bfa))
+
 # [1.39.0](https://github.com/qubic/explorer-frontend/compare/v1.38.0...v1.39.0) (2026-05-14)
 
 
