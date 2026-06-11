@@ -18,6 +18,7 @@ import {
 } from '@app/store/apis/events'
 import { formatDate, formatString } from '@app/utils'
 import { AddressLink, HomeLink, SubCardItem, TickLink, TxLink, VirtualTxLink } from '../components'
+import { getProcessorLagMessage } from '../utils/filterUtils'
 
 function EventDetailPage() {
   const { t } = useTranslation('network-page')
@@ -59,6 +60,7 @@ function EventDetailPage() {
   )
 
   const lastProcessedTick = isError ? getLastProcessedTickFromEventsError(error) : null
+  const validForTick = data?.validForTick
 
   if (isFetching) return <LinearProgress />
   if (isError) {
@@ -66,16 +68,19 @@ function EventDetailPage() {
       <ErrorFallback
         message={
           lastProcessedTick !== null
-            ? t('tickNotYetProcessedEvents', {
-                lastProcessedTick: lastProcessedTick.toLocaleString()
-              })
+            ? getProcessorLagMessage(lastProcessedTick, t)
             : t('eventsLoadFailed')
         }
         hideErrorHeader
       />
     )
   }
-  if (!event) return <ErrorFallback message={t('eventNotFound')} hideErrorHeader />
+  if (!event) {
+    if (validForTick !== undefined && validForTick < tickNumber) {
+      return <ErrorFallback message={getProcessorLagMessage(validForTick, t)} hideErrorHeader />
+    }
+    return <ErrorFallback message={t('eventNotFound')} hideErrorHeader />
+  }
 
   return (
     <PageLayout>

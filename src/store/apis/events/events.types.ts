@@ -154,17 +154,33 @@ export function parseEventTypesParam(raw: string | null): number[] {
   ].slice(0, MAX_EVENT_TYPE_SELECTIONS)
 }
 
-// Event category codes (from sysTransactionMap)
-const SYSTEM_TX_CATEGORIES: Record<number, string> = {
-  1: 'SC_INITIALIZE_TX',
-  2: 'SC_BEGIN_EPOCH_TX',
-  3: 'SC_BEGIN_TICK_TX',
-  4: 'SC_END_TICK_TX',
-  5: 'SC_END_EPOCH_TX',
-  6: 'SC_NOTIFICATION_TX'
+// Event category codes (from sysTransactionMap + CategoryInDividendSection).
+// `prefix` is the identifier used in virtual tx IDs (e.g. `SC_INITIALIZE_TX_<tick>`).
+// `label` is the user-facing display name.
+const CATEGORIES: Record<number, { prefix: string; label: string }> = {
+  1: { prefix: 'SC_INITIALIZE_TX', label: 'Smart Contract Initialize' },
+  2: { prefix: 'SC_BEGIN_EPOCH_TX', label: 'Smart Contract Begin Epoch' },
+  3: { prefix: 'SC_BEGIN_TICK_TX', label: 'Smart Contract Begin Tick' },
+  4: { prefix: 'SC_END_TICK_TX', label: 'Smart Contract End Tick' },
+  5: { prefix: 'SC_END_EPOCH_TX', label: 'Smart Contract End Epoch' },
+  6: { prefix: 'SC_NOTIFICATION_TX', label: 'Smart Contract Notification' },
+  7: { prefix: 'IN_DIVIDEND_SECTION', label: 'In Dividend Section' }
 }
 
-const VIRTUAL_TX_CATEGORIES = new Set([2, 3, 4, 5])
+export const CATEGORY_FILTER_OPTIONS = [1, 2, 3, 4, 5] as const
+
+export function getCategoryLabel(category: number): string {
+  return CATEGORIES[category]?.label ?? `UNKNOWN(${category})`
+}
+
+export function parseCategoryParam(raw: string | null): number | undefined {
+  if (raw === null || raw === '') return undefined
+  const parsed = Number(raw)
+  if (!Number.isInteger(parsed)) return undefined
+  return (CATEGORY_FILTER_OPTIONS as readonly number[]).includes(parsed) ? parsed : undefined
+}
+
+const VIRTUAL_TX_CATEGORIES = new Set([1, 2, 3, 4, 5])
 
 export function isVirtualTxCategory(categories: number[]): boolean {
   return categories.some((c) => VIRTUAL_TX_CATEGORIES.has(c))
@@ -178,16 +194,16 @@ export function getVirtualTxId(categories: number[], tickNumber: number): string
   const virtualCategory = getVirtualCategory(categories)
   const prefix =
     virtualCategory != null
-      ? SYSTEM_TX_CATEGORIES[virtualCategory] ?? `CATEGORY_${virtualCategory}`
+      ? CATEGORIES[virtualCategory]?.prefix ?? `CATEGORY_${virtualCategory}`
       : 'UNKNOWN'
   return `${prefix}_${tickNumber}`
 }
 
 // Reverse lookup: prefix → category number
 const CATEGORY_BY_PREFIX = new Map(
-  Object.entries(SYSTEM_TX_CATEGORIES)
+  Object.entries(CATEGORIES)
     .filter(([key]) => VIRTUAL_TX_CATEGORIES.has(Number(key)))
-    .map(([key, label]) => [label, Number(key)])
+    .map(([key, { prefix }]) => [prefix, Number(key)])
 )
 
 export interface ParsedVirtualTxId {

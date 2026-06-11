@@ -4,7 +4,7 @@ import BetaBanner from '../../components/BetaBanner'
 import { EventsFilterBar } from '../../components/filters'
 import TransactionEvents from '../../components/TxItem/TransactionEvents'
 import { useEventFilters } from '../../hooks'
-import { getEventsErrorMessage } from '../../utils/filterUtils'
+import { getEventsErrorMessage, getProcessorLagMessage } from '../../utils/filterUtils'
 import { useTickEvents } from '../hooks'
 
 type Props = Readonly<{
@@ -22,10 +22,17 @@ export default function TickEvents({ tick }: Props) {
     amountFilter,
     isLoading,
     hasError,
-    lastProcessedTick
+    lastProcessedTick,
+    validForTick
   } = useTickEvents(tick)
 
-  const errorMessage = getEventsErrorMessage(hasError, lastProcessedTick, t)
+  const isEventsProcessorBehind =
+    !hasError && !isLoading && total === 0 && validForTick !== null && validForTick < tick
+
+  const errorMessage =
+    isEventsProcessorBehind && validForTick !== null
+      ? getProcessorLagMessage(validForTick, t)
+      : getEventsErrorMessage(hasError, lastProcessedTick, t)
 
   const filters = useEventFilters({
     eventTypes,

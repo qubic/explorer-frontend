@@ -6,30 +6,53 @@ const TIME_INPUT_WIDTH = 'w-[110px]'
 type Props = {
   id: string
   label: string
+  // ISO 8601 UTC string (e.g. "2026-06-04T15:00:00.000Z"). Stored in this format
+  // in the URL so the same value yields the same instant across timezones; the
+  // inputs display the user's local representation of that instant.
   value: string | undefined
   defaultTime: string
   onChange: (datetime: string | undefined) => void
 }
 
+const pad = (n: number) => String(n).padStart(2, '0')
+
+function isoToLocalParts(iso: string | undefined): { datePart: string; timePart: string } {
+  if (!iso) return { datePart: '', timePart: '' }
+  const d = new Date(iso)
+  if (Number.isNaN(d.getTime())) return { datePart: '', timePart: '' }
+  return {
+    datePart: `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`,
+    timePart: `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`
+  }
+}
+
+function localPartsToIso(datePart: string, timePart: string): string | undefined {
+  if (!datePart || !timePart) return undefined
+  // No "Z" on purpose: the parts come from inputs displayed in local time, so we
+  // parse them as local and let toISOString() convert to UTC. Adding "Z" would
+  // parse as UTC and break the round-trip with isoToLocalParts.
+  const d = new Date(`${datePart}T${timePart}`)
+  if (Number.isNaN(d.getTime())) return undefined
+  return d.toISOString()
+}
+
 export default function DateTimeInput({ id, label, value, defaultTime, onChange }: Props) {
-  const datePart = value?.split('T')[0] || ''
-  const timePart = value?.split('T')[1] || defaultTime
+  const { datePart, timePart } = isoToLocalParts(value)
+  const displayTime = timePart || defaultTime
 
   const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newDatePart = e.target.value
-    if (newDatePart) {
-      const existingTime = value?.split('T')[1] || defaultTime
-      onChange(`${newDatePart}T${existingTime}`)
+    const newDate = e.target.value
+    if (newDate) {
+      onChange(localPartsToIso(newDate, timePart || defaultTime))
     } else {
       onChange(undefined)
     }
   }
 
   const handleTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newTimePart = e.target.value
-    const currentDatePart = value?.split('T')[0]
-    if (currentDatePart && newTimePart) {
-      onChange(`${currentDatePart}T${newTimePart}`)
+    const newTime = e.target.value
+    if (datePart && newTime) {
+      onChange(localPartsToIso(datePart, newTime))
     }
   }
 
@@ -55,7 +78,7 @@ export default function DateTimeInput({ id, label, value, defaultTime, onChange 
           id={`${id}-time`}
           type="time"
           step="1"
-          value={timePart}
+          value={displayTime}
           onChange={handleTimeChange}
           disabled={!value}
           className={clsxTwMerge(
