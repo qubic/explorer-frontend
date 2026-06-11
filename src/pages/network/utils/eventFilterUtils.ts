@@ -138,18 +138,28 @@ export function buildEventAddressFilter(filter: AddressFilter | undefined): {
   return filter.mode === MODE.EXCLUDE ? { exclude: commaSeparated } : { include: commaSeparated }
 }
 
+// Normalize a numeric range bound so "213" and "0213" compare equal and the
+// backend doesn't receive leading zeros it might choke on.
+function normalizeRangeBound(value: string | undefined): number | undefined {
+  if (!value) return undefined
+  const n = Number(value)
+  return Number.isFinite(n) ? n : undefined
+}
+
 export function buildTickFilter(
   tickStart: string | undefined,
   tickEnd: string | undefined
 ): { tickNumber?: number; tickRange?: EventRange } {
-  if (!tickStart && !tickEnd) return {}
-  if (tickStart && tickEnd && tickStart === tickEnd) {
-    return { tickNumber: Number(tickStart) }
+  const startNum = normalizeRangeBound(tickStart)
+  const endNum = normalizeRangeBound(tickEnd)
+  if (startNum === undefined && endNum === undefined) return {}
+  if (startNum !== undefined && endNum !== undefined && startNum === endNum) {
+    return { tickNumber: startNum }
   }
   return {
     tickRange: {
-      ...(tickStart && { gte: tickStart }),
-      ...(tickEnd && { lte: tickEnd })
+      ...(startNum !== undefined && { gte: String(startNum) }),
+      ...(endNum !== undefined && { lte: String(endNum) })
     }
   }
 }
@@ -158,14 +168,16 @@ export function buildEpochFilter(
   epochStart: string | undefined,
   epochEnd: string | undefined
 ): { epoch?: number; epochRange?: EventRange } {
-  if (!epochStart && !epochEnd) return {}
-  if (epochStart && epochEnd && epochStart === epochEnd) {
-    return { epoch: Number(epochStart) }
+  const startNum = normalizeRangeBound(epochStart)
+  const endNum = normalizeRangeBound(epochEnd)
+  if (startNum === undefined && endNum === undefined) return {}
+  if (startNum !== undefined && endNum !== undefined && startNum === endNum) {
+    return { epoch: startNum }
   }
   return {
     epochRange: {
-      ...(epochStart && { gte: epochStart }),
-      ...(epochEnd && { lte: epochEnd })
+      ...(startNum !== undefined && { gte: String(startNum) }),
+      ...(endNum !== undefined && { lte: String(endNum) })
     }
   }
 }
@@ -194,6 +206,17 @@ export type AmountApiParams = {
   amountShould?: ShouldFilter[]
 }
 
+// Use BigInt so leading zeros normalize ("100" === "0100") and large uint64
+// values don't lose precision the way Number would.
+function normalizeAmountBound(value: string | undefined): string | undefined {
+  if (!value) return undefined
+  try {
+    return String(BigInt(value))
+  } catch {
+    return undefined
+  }
+}
+
 /**
  * Converts an EventAmountFilter into API request params.
  * - QUBIC: uses `amount` filter (exact) or `amountRange` (range)
@@ -204,25 +227,30 @@ export type AmountApiParams = {
 export function buildAmountFilter(filter: EventAmountFilter | undefined): AmountApiParams {
   if (!filter) return {}
   const { assetType, min, max } = filter
-  if (!min && !max) return {}
+  const minNorm = normalizeAmountBound(min)
+  const maxNorm = normalizeAmountBound(max)
+  if (minNorm === undefined && maxNorm === undefined) return {}
 
-  const isExact = min && max && min === max
+  const exactValue =
+    minNorm !== undefined && maxNorm !== undefined && minNorm === maxNorm ? minNorm : undefined
   const range: EventRange = {
-    ...(min && { gte: min }),
-    ...(max && { lte: max })
+    ...(minNorm !== undefined && { gte: minNorm }),
+    ...(maxNorm !== undefined && { lte: maxNorm })
   }
 
   if (assetType === 'qubic') {
-    return isExact ? { amount: min } : { amountRange: range }
+    return exactValue !== undefined ? { amount: exactValue } : { amountRange: range }
   }
 
   if (assetType === 'other') {
-    return isExact ? { numberOfShares: min } : { numberOfSharesRange: range }
+    return exactValue !== undefined
+      ? { numberOfShares: exactValue }
+      : { numberOfSharesRange: range }
   }
 
   // "any" — OR logic via should: both fields in a single entry
-  return isExact
-    ? { amountShould: [{ terms: { amount: min, numberOfShares: min } }] }
+  return exactValue !== undefined
+    ? { amountShould: [{ terms: { amount: exactValue, numberOfShares: exactValue } }] }
     : { amountShould: [{ ranges: { amount: range, numberOfShares: range } }] }
 }
 
