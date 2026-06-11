@@ -22,6 +22,7 @@ import type {
 import {
   amountFilterToParams,
   applyEventDirectionSync,
+  normalizeRangeBound,
   toEpochRangeValue,
   toTickRangeValue
 } from '../utils/eventFilterUtils'
@@ -137,8 +138,8 @@ export default function useEventFilters({
     setTickRangeError(null)
     setSearchParams((prev) =>
       updateSearchParams(prev, {
-        tickStart: tickRange?.start || undefined,
-        tickEnd: tickRange?.end || undefined
+        tickStart: normalizeRangeBound(tickRange?.start),
+        tickEnd: normalizeRangeBound(tickRange?.end)
       })
     )
     return true
@@ -168,8 +169,8 @@ export default function useEventFilters({
     setEpochRangeError(null)
     setSearchParams((prev) =>
       updateSearchParams(prev, {
-        epochStart: epochRange?.start || undefined,
-        epochEnd: epochRange?.end || undefined
+        epochStart: normalizeRangeBound(epochRange?.start),
+        epochEnd: normalizeRangeBound(epochRange?.end)
       })
     )
     return true
@@ -472,15 +473,17 @@ export default function useEventFilters({
       const dstAddresses =
         filters.destinationFilter?.addresses.filter((addr) => addr.trim() !== '') ?? []
 
-      // Validate tick range — skip invalid values
+      // Validate tick range — skip invalid values, normalize leading zeros
       const tickValid = !validateTickRange(filters.tickRange?.start, filters.tickRange?.end)
-      const validTickStart = tickValid ? filters.tickRange?.start || undefined : undefined
-      const validTickEnd = tickValid ? filters.tickRange?.end || undefined : undefined
+      const validTickStart = tickValid ? normalizeRangeBound(filters.tickRange?.start) : undefined
+      const validTickEnd = tickValid ? normalizeRangeBound(filters.tickRange?.end) : undefined
 
-      // Validate epoch range — skip invalid values
+      // Validate epoch range — skip invalid values, normalize leading zeros
       const epochValid = !validateEpochRange(filters.epochRange?.start, filters.epochRange?.end)
-      const validEpochStart = epochValid ? filters.epochRange?.start || undefined : undefined
-      const validEpochEnd = epochValid ? filters.epochRange?.end || undefined : undefined
+      const validEpochStart = epochValid
+        ? normalizeRangeBound(filters.epochRange?.start)
+        : undefined
+      const validEpochEnd = epochValid ? normalizeRangeBound(filters.epochRange?.end) : undefined
 
       // Validate date range — skip invalid values, presets bypass validation
       const dateIsPreset = filters.dateRange?.presetDays !== undefined

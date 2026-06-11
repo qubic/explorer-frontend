@@ -102,13 +102,26 @@ export function parseDateRange(searchParams: URLSearchParams): DateRangeValue | 
   return undefined
 }
 
+// Use BigInt so leading zeros normalize ("100" === "0100") and large uint64
+// values don't lose precision the way Number would.
+export function normalizeAmountBound(value: string | undefined): string | undefined {
+  if (!value) return undefined
+  try {
+    return String(BigInt(value))
+  } catch {
+    return undefined
+  }
+}
+
 export function amountFilterToParams(
   filter: EventAmountFilter | undefined
 ): Record<string, string | undefined> {
+  const minNorm = normalizeAmountBound(filter?.min)
+  const maxNorm = normalizeAmountBound(filter?.max)
   return {
-    amountMin: filter?.min ?? undefined,
-    amountMax: filter?.max ?? undefined,
-    amountAsset: filter?.min || filter?.max ? filter?.assetType ?? 'any' : undefined
+    amountMin: minNorm,
+    amountMax: maxNorm,
+    amountAsset: minNorm || maxNorm ? filter?.assetType ?? 'any' : undefined
   }
 }
 
@@ -138,28 +151,28 @@ export function buildEventAddressFilter(filter: AddressFilter | undefined): {
   return filter.mode === MODE.EXCLUDE ? { exclude: commaSeparated } : { include: commaSeparated }
 }
 
-// Normalize a numeric range bound so "213" and "0213" compare equal and the
-// backend doesn't receive leading zeros it might choke on.
-function normalizeRangeBound(value: string | undefined): number | undefined {
+// Normalize a numeric range bound to its canonical string form so "213" and
+// "0213" compare equal and the URL/backend don't see leading zeros.
+export function normalizeRangeBound(value: string | undefined): string | undefined {
   if (!value) return undefined
   const n = Number(value)
-  return Number.isFinite(n) ? n : undefined
+  return Number.isFinite(n) ? String(n) : undefined
 }
 
 export function buildTickFilter(
   tickStart: string | undefined,
   tickEnd: string | undefined
 ): { tickNumber?: number; tickRange?: EventRange } {
-  const startNum = normalizeRangeBound(tickStart)
-  const endNum = normalizeRangeBound(tickEnd)
-  if (startNum === undefined && endNum === undefined) return {}
-  if (startNum !== undefined && endNum !== undefined && startNum === endNum) {
-    return { tickNumber: startNum }
+  const start = normalizeRangeBound(tickStart)
+  const end = normalizeRangeBound(tickEnd)
+  if (start === undefined && end === undefined) return {}
+  if (start !== undefined && end !== undefined && start === end) {
+    return { tickNumber: Number(start) }
   }
   return {
     tickRange: {
-      ...(startNum !== undefined && { gte: String(startNum) }),
-      ...(endNum !== undefined && { lte: String(endNum) })
+      ...(start !== undefined && { gte: start }),
+      ...(end !== undefined && { lte: end })
     }
   }
 }
@@ -168,16 +181,16 @@ export function buildEpochFilter(
   epochStart: string | undefined,
   epochEnd: string | undefined
 ): { epoch?: number; epochRange?: EventRange } {
-  const startNum = normalizeRangeBound(epochStart)
-  const endNum = normalizeRangeBound(epochEnd)
-  if (startNum === undefined && endNum === undefined) return {}
-  if (startNum !== undefined && endNum !== undefined && startNum === endNum) {
-    return { epoch: startNum }
+  const start = normalizeRangeBound(epochStart)
+  const end = normalizeRangeBound(epochEnd)
+  if (start === undefined && end === undefined) return {}
+  if (start !== undefined && end !== undefined && start === end) {
+    return { epoch: Number(start) }
   }
   return {
     epochRange: {
-      ...(startNum !== undefined && { gte: String(startNum) }),
-      ...(endNum !== undefined && { lte: String(endNum) })
+      ...(start !== undefined && { gte: start }),
+      ...(end !== undefined && { lte: end })
     }
   }
 }
@@ -204,17 +217,6 @@ export type AmountApiParams = {
   amountRange?: EventRange
   numberOfSharesRange?: EventRange
   amountShould?: ShouldFilter[]
-}
-
-// Use BigInt so leading zeros normalize ("100" === "0100") and large uint64
-// values don't lose precision the way Number would.
-function normalizeAmountBound(value: string | undefined): string | undefined {
-  if (!value) return undefined
-  try {
-    return String(BigInt(value))
-  } catch {
-    return undefined
-  }
 }
 
 /**
