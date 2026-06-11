@@ -1,3 +1,37 @@
+# [1.39.0](https://github.com/qubic/explorer-frontend/compare/v1.38.0...v1.39.0) (2026-05-14)
+
+
+### Bug Fixes
+
+* **csv-export:** guard against spreadsheet formula injection ([07a6858](https://github.com/qubic/explorer-frontend/commit/07a68585de4d6afa2bea7342f170aeeb9d351ec0))
+* preserve transaction filters when navigating between ticks ([19191a2](https://github.com/qubic/explorer-frontend/commit/19191a2ab135280691cc24c7308ba3fc80295d12))
+* **tx-page:** reset state when navigating between transactions ([75a6d45](https://github.com/qubic/explorer-frontend/commit/75a6d453bc8b8024c7bf3ba86faf3b0c7c516deb))
+
+
+### Features
+
+* add CSV export page with data download for transactions and transfers ([21d5921](https://github.com/qubic/explorer-frontend/commit/21d5921795c7db543eeb751dc9bc5fbb254a4b6b))
+* add support for log types 14 and 15 in events ([03b83a3](https://github.com/qubic/explorer-frontend/commit/03b83a3342d712d70aaa21200dc1de6ac3b20dc7))
+* **csv-export:** add Direction column (IN/OUT/SELF) ([5afebf4](https://github.com/qubic/explorer-frontend/commit/5afebf432ed335cae419e5c24605fd529a2421c5))
+* support virtual transaction IDs in search and tx page ([df73677](https://github.com/qubic/explorer-frontend/commit/df736771d33df6b1e5cc90aef25097641c7bcfe7))
+
+# [1.39.0-rc.1](https://github.com/qubic/explorer-frontend/compare/v1.38.0...v1.39.0-rc.1) (2026-05-13)
+
+
+### Bug Fixes
+
+* **csv-export:** guard against spreadsheet formula injection ([07a6858](https://github.com/qubic/explorer-frontend/commit/07a68585de4d6afa2bea7342f170aeeb9d351ec0))
+* preserve transaction filters when navigating between ticks ([19191a2](https://github.com/qubic/explorer-frontend/commit/19191a2ab135280691cc24c7308ba3fc80295d12))
+* **tx-page:** reset state when navigating between transactions ([75a6d45](https://github.com/qubic/explorer-frontend/commit/75a6d453bc8b8024c7bf3ba86faf3b0c7c516deb))
+
+
+### Features
+
+* add CSV export page with data download for transactions and transfers ([21d5921](https://github.com/qubic/explorer-frontend/commit/21d5921795c7db543eeb751dc9bc5fbb254a4b6b))
+* add support for log types 14 and 15 in events ([03b83a3](https://github.com/qubic/explorer-frontend/commit/03b83a3342d712d70aaa21200dc1de6ac3b20dc7))
+* **csv-export:** add Direction column (IN/OUT/SELF) ([5afebf4](https://github.com/qubic/explorer-frontend/commit/5afebf432ed335cae419e5c24605fd529a2421c5))
+* support virtual transaction IDs in search and tx page ([df73677](https://github.com/qubic/explorer-frontend/commit/df736771d33df6b1e5cc90aef25097641c7bcfe7))
+
 # [1.38.0](https://github.com/qubic/explorer-frontend/compare/v1.37.0...v1.38.0) (2026-04-21)
 
 
