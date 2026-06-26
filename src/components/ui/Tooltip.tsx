@@ -7,9 +7,10 @@ type Props = {
   tooltipId: string
   children: React.ReactNode
   content: string
+  maxWidth?: string
 }
 
-export default function Tooltip({ tooltipId, children, content }: Props) {
+export default function Tooltip({ tooltipId, children, content, maxWidth = '200px' }: Props) {
   const id = useId()
 
   const tooltipIdWithId = useMemo(() => `${tooltipId}-${id}-tooltip`, [tooltipId, id])
@@ -23,7 +24,7 @@ export default function Tooltip({ tooltipId, children, content }: Props) {
         id={tooltipIdWithId}
         style={{
           ...TOOLTIP_BASE_STYLE,
-          maxWidth: '200px',
+          maxWidth,
           wordWrap: 'break-word',
           wordBreak: 'break-word',
           whiteSpace: 'normal',
