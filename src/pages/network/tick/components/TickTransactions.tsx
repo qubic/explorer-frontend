@@ -94,6 +94,11 @@ export default function TickTransactions({ tick }: Props) {
     onChainTransactionsCount > 0 &&
     totalCount < onChainTransactionsCount
 
+  // Render the count line whenever there are transactions to show, or when every
+  // transaction was pruned (totalCount === 0 but the tick had transactions on chain),
+  // so the pruned notice still appears in that all-pruned case.
+  const showTransactionsCount = (!isTickTransactionsLoading && totalCount > 0) || showPrunedNotice
+
   // Clamp page to valid range when it exceeds pageCount (e.g. manually edited URL)
   useEffect(() => {
     if (pageCount > 0 && page > pageCount) {
@@ -161,7 +166,7 @@ export default function TickTransactions({ tick }: Props) {
       />
 
       <div className="flex flex-wrap items-center justify-between gap-8">
-        {!isTickTransactionsLoading && totalCount > 0 ? (
+        {showTransactionsCount ? (
           <span className="flex items-center text-sm text-gray-50">
             {t('transactionsFound', {
               count: totalCount.toLocaleString()
