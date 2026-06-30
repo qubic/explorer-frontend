@@ -1,5 +1,6 @@
 export * from './redux'
 export { default as useBodyScrollLock } from './useBodyScrollLock'
+export { default as useFirstPageAnchor } from './useFirstPageAnchor'
 export { default as useTailwindBreakpoint } from './useTailwindBreakpoint'
 export { useGetAddressName } from './useGetAddressName'
 export type { GetAddressNameResult } from './useGetAddressName'

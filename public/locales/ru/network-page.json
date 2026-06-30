@@ -297,5 +297,17 @@
   "firstQueryTimestamp": "Дата первого запроса",
   "queryingEntity": "Запрашивающая сущность",
   "dateInFuture": "Дата не может быть в будущем",
-  "dateBeforeAvailability": "Дата раньше доступности данных ({{date}})"
+  "dateBeforeAvailability": "Дата раньше доступности данных ({{date}})",
+  "rewards": "Награды",
+  "totalDistributionAllTime": "Общее распределение за всё время",
+  "totalAmount": "Общая сумма",
+  "amountPerShare": "Сумма за акцию",
+  "transferCount": "Переводы",
+  "noRewards": "Нет наград",
+  "rewardsLoadFailed": "Не удалось загрузить награды",
+  "backToRewards": "Назад к наградам",
+  "transfers": "Переводы",
+  "noTransfers": "Нет переводов",
+  "rewardsPaidOnTicks": "Награды выплачены на {{count}} тиках",
+  "rewardsPaidOnOneTick": "Награды выплачены на 1 тике"
 }

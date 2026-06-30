@@ -297,5 +297,17 @@
   "firstQueryTimestamp": "Date de première requête",
   "queryingEntity": "Entité requêtante",
   "dateInFuture": "La date ne peut pas être dans le futur",
-  "dateBeforeAvailability": "La date est antérieure à la disponibilité des données ({{date}})"
+  "dateBeforeAvailability": "La date est antérieure à la disponibilité des données ({{date}})",
+  "rewards": "Récompenses",
+  "totalDistributionAllTime": "Distribution totale depuis le début",
+  "totalAmount": "Montant total",
+  "amountPerShare": "Montant par action",
+  "transferCount": "Transferts",
+  "noRewards": "Aucune récompense",
+  "rewardsLoadFailed": "Échec du chargement des récompenses",
+  "backToRewards": "Retour aux récompenses",
+  "transfers": "Transferts",
+  "noTransfers": "Aucun transfert",
+  "rewardsPaidOnTicks": "Récompenses versées sur {{count}} ticks",
+  "rewardsPaidOnOneTick": "Récompenses versées sur 1 tick"
 }

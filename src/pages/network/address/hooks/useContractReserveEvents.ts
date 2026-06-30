@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 
+import { useFirstPageAnchor } from '@app/hooks'
 import { EVENT_TYPES, type TransactionEvent, useGetEventsQuery } from '@app/store/apis/events'
 
 const PAGE_SIZE = 25
@@ -15,6 +16,7 @@ interface InfiniteEventResult {
   isLoading: boolean
   hasError: boolean
   loadMore: () => void
+  validForTick: number | undefined
 }
 
 function useInfiniteEvents(contractIndex: number, logTypes: number[]): InfiniteEventResult {
@@ -49,6 +51,8 @@ function useInfiniteEvents(contractIndex: number, logTypes: number[]): InfiniteE
     })
   }, [data?.events, offset])
 
+  const validForTick = useFirstPageAnchor(data?.validForTick, offset, contractIndex)
+
   // Use page size sentinel to detect end of results
   const hasMore =
     !!data?.events && data.events.length >= PAGE_SIZE && accumulated.length < MAX_TOTAL
@@ -65,7 +69,8 @@ function useInfiniteEvents(contractIndex: number, logTypes: number[]): InfiniteE
     hasMore,
     isLoading: isFetching,
     hasError: isError && accumulated.length === 0,
-    loadMore
+    loadMore,
+    validForTick
   }
 }
 
