@@ -68,10 +68,12 @@ export default function ContractRewardsDetail({
   const { t } = useTranslation('network-page')
   const [, setSearchParams] = useSearchParams()
 
-  const page = useValidatedPage()
+  // The detail owns its own `detailPage` param for transfers pagination, separate from
+  // the list's `page`, so paginating transfers doesn't disturb the rewards list.
+  const page = useValidatedPage(true, 'detailPage')
   const pageSize = useValidatedPageSize()
   const offset = (page - 1) * pageSize
-  const { handlePageChange, handlePageSizeChange } = usePaginationSearchParams()
+  const { handlePageChange, handlePageSizeChange } = usePaginationSearchParams('detailPage')
 
   const { data, isFetching, isError } = useGetEventsQuery({
     tickNumber,
@@ -86,24 +88,25 @@ export default function ContractRewardsDetail({
   const total = data?.total ?? 0
   const pageCount = Math.ceil(total / pageSize)
 
-  usePageAutoCorrect(!!data, total, pageSize)
+  usePageAutoCorrect(!!data, total, pageSize, 'detailPage')
 
   const handleBack = useCallback(() => {
     setSearchParams(
       (prev) => {
         prev.delete('tick')
-        prev.delete('page')
+        // Drop only the detail's transfers page; `page` is preserved so the list
+        // reopens where the user left it.
+        prev.delete('detailPage')
         return prev
       },
       { replace: false }
     )
   }, [setSearchParams])
 
-  // Snapshot the distribution so the header doesn't blank out when the user
-  // paginates the transfers — paginating writes ?page=, the parent's
-  // useContractRewards picks up that param and re-fetches the rewards list at
-  // the new page, and `distribution` (looked up via `distributions.find(...)`)
-  // becomes undefined because the selected tick isn't in that page.
+  // Snapshot the distribution so the header stays stable if `distribution` ever
+  // goes undefined — e.g. a deep-link lands on a tick that isn't in the list's
+  // current page (`distributions.find(...)` misses), or the list refetches.
+  // Falls back to the transfers' epoch when no snapshot is available.
   const [snapshotDistribution, setSnapshotDistribution] = useState(distribution)
   useEffect(() => {
     if (distribution !== undefined) {

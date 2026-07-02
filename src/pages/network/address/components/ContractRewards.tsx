@@ -171,7 +171,7 @@ export default function ContractRewards({ smartContractAddress }: Props) {
     isLoading,
     hasError,
     validForTick
-  } = useContractRewards(smartContractAddress, selectedTick === undefined)
+  } = useContractRewards(smartContractAddress)
 
   const selectedDistribution = useMemo(
     () =>
@@ -191,7 +191,9 @@ export default function ContractRewards({ smartContractAddress }: Props) {
       setSearchParams(
         (prev) => {
           prev.set('tick', String(tickNumber))
-          prev.delete('page')
+          // Reset the detail's transfers pagination, but keep `page` so returning
+          // to the list lands on the same rewards page the user came from.
+          prev.delete('detailPage')
           return prev
         },
         { replace: false }

@@ -18,13 +18,7 @@ interface ContractRewardsResult {
   validForTick: number | undefined
 }
 
-export default function useContractRewards(
-  smartContractAddress: string,
-  // While a tick detail is open, the detail view owns the `page` param for its
-  // transfers pagination. Skip this hook's page auto-correct then, or it would
-  // clamp `page` against the rewards-list total and snap the detail back to page 1.
-  autoCorrectPage = true
-): ContractRewardsResult {
+export default function useContractRewards(smartContractAddress: string): ContractRewardsResult {
   const page = useValidatedPage()
   const pageSize = useValidatedPageSize()
   const offset = (page - 1) * pageSize
@@ -60,7 +54,7 @@ export default function useContractRewards(
 
   const total = data?.total ?? 0
 
-  usePageAutoCorrect(!!data && autoCorrectPage, total, pageSize)
+  usePageAutoCorrect(!!data, total, pageSize)
 
   return {
     distributions: data?.distributions ?? [],
