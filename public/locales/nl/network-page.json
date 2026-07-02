@@ -243,6 +243,7 @@
   "tickStatus": "Tick-status",
   "ticksThisEpoch": "Ticks in deze epoche (Leeg)",
   "ticksThisEpochTooltip": "Totaal aantal verwerkte ticks in deze epoch en het aantal lege ticks tussen haakjes",
+  "tickTransactionsPruned": "Deze tick bevat {{total}} transacties. Sommige waren lege transacties zonder waarde die na een bewaarperiode niet meer worden vermeld; een eventueel effect ervan blijft in het netwerk weerspiegeld.",
   "timestamp": "Tijdstempel",
   "token": "Token",
   "tokenIssuer": "{{name}} Uitgever",

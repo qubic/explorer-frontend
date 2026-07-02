@@ -243,6 +243,7 @@
   "tickStatus": "Statut du tick",
   "ticksThisEpoch": "Ticks cette époque (Vides)",
   "ticksThisEpochTooltip": "Nombre total de ticks traités pendant cet epoch et le nombre de ticks vides entre parenthèses",
+  "tickTransactionsPruned": "Ce tick contient {{total}} transactions. Certaines étaient des transactions vides, sans valeur, qui ne sont plus répertoriées après une période de conservation ; tout effet qu'elles ont eu reste pris en compte dans le réseau.",
   "timestamp": "Horodatage",
   "token": "Jeton",
   "tokenIssuer": "{{name}} Émetteur",
