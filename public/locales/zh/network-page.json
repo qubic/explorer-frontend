@@ -297,5 +297,17 @@
   "firstQueryTimestamp": "首次查询日期",
   "queryingEntity": "查询实体",
   "dateInFuture": "日期不能在未来",
-  "dateBeforeAvailability": "日期早于数据可用日期（{{date}}）"
+  "dateBeforeAvailability": "日期早于数据可用日期（{{date}}）",
+  "rewards": "奖励",
+  "totalDistributionAllTime": "全部时间总分发",
+  "totalAmount": "总金额",
+  "amountPerShare": "每股金额",
+  "transferCount": "转账次数",
+  "noRewards": "无奖励",
+  "rewardsLoadFailed": "加载奖励失败",
+  "backToRewards": "返回奖励",
+  "transfers": "转账",
+  "noTransfers": "无转账",
+  "rewardsPaidOnTicks": "在 {{count}} 个 tick 上支付了奖励",
+  "rewardsPaidOnOneTick": "在 1 个 tick 上支付了奖励"
 }
