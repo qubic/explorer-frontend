@@ -3,6 +3,7 @@ import { useSearchParams } from 'react-router-dom'
 
 import {
   usePageAutoCorrect,
+  useSanitizedCategory,
   useSanitizedDateRange,
   useSanitizedEventTypes,
   useValidatedPage,
@@ -22,12 +23,14 @@ import { DIRECTION } from '../components/TransactionsOverview/filterUtils'
 import {
   type EventAmountFilter,
   buildAmountFilter,
+  buildEpochFilter,
   buildEventAddressFilter,
   buildTickFilter,
   buildTimestampRange,
   type DateRangeValue,
   parseAddressFilter,
   parseAmountFilter,
+  parseEpochRange,
   parseTickRange
 } from '../../utils/eventFilterUtils'
 
@@ -35,9 +38,12 @@ export default function useAddressEvents(addressId: string): {
   events: TransactionEvent[]
   total: number
   eventTypes: number[]
+  category: number | undefined
   direction: TransactionDirection | undefined
   tickStart: string | undefined
   tickEnd: string | undefined
+  epochStart: string | undefined
+  epochEnd: string | undefined
   dateRange: DateRangeValue | undefined
   sourceFilter: AddressFilter | undefined
   destinationFilter: AddressFilter | undefined
@@ -50,6 +56,7 @@ export default function useAddressEvents(addressId: string): {
   const [searchParams] = useSearchParams()
 
   const { start: tickStart, end: tickEnd } = parseTickRange(searchParams)
+  const { start: epochStart, end: epochEnd } = parseEpochRange(searchParams)
 
   const dateRange = useSanitizedDateRange()
   const sourceFilter = parseAddressFilter(searchParams, 'source', 'sourceMode')
@@ -60,6 +67,7 @@ export default function useAddressEvents(addressId: string): {
   const offset = (page - 1) * pageSize
 
   const eventTypes = useSanitizedEventTypes()
+  const category = useSanitizedCategory()
 
   const directionRaw = searchParams.get('direction')
   const direction: TransactionDirection | undefined =
@@ -70,6 +78,7 @@ export default function useAddressEvents(addressId: string): {
   const amountFilter = parseAmountFilter(searchParams)
 
   const { tickNumber, tickRange } = buildTickFilter(tickStart, tickEnd)
+  const { epoch, epochRange } = buildEpochFilter(epochStart, epochEnd)
 
   const timestampRange = buildTimestampRange(dateRange)
 
@@ -131,10 +140,13 @@ export default function useAddressEvents(addressId: string): {
       should,
       tickNumber,
       tickRange,
+      epoch,
+      epochRange,
       timestampRange,
       offset,
       size: pageSize,
       logType: eventTypes.length > 0 ? eventTypes : undefined,
+      category,
       source: resolvedSource,
       excludeSource: sourceResult.exclude,
       destination: resolvedDest,
@@ -152,9 +164,12 @@ export default function useAddressEvents(addressId: string): {
     events: data?.events ?? [],
     total,
     eventTypes,
+    category,
     direction,
     tickStart,
     tickEnd,
+    epochStart,
+    epochEnd,
     dateRange,
     sourceFilter,
     destinationFilter,
