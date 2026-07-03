@@ -297,5 +297,17 @@
   "firstQueryTimestamp": "Erstes Abfragedatum",
   "queryingEntity": "Anfragende Entität",
   "dateInFuture": "Datum darf nicht in der Zukunft liegen",
-  "dateBeforeAvailability": "Datum liegt vor der Datenverfügbarkeit ({{date}})"
+  "dateBeforeAvailability": "Datum liegt vor der Datenverfügbarkeit ({{date}})",
+  "rewards": "Belohnungen",
+  "totalDistributionAllTime": "Gesamtausschüttung aller Zeiten",
+  "totalAmount": "Gesamtbetrag",
+  "amountPerShare": "Betrag pro Anteil",
+  "transferCount": "Übertragungen",
+  "noRewards": "Keine Belohnungen",
+  "rewardsLoadFailed": "Fehler beim Laden der Belohnungen",
+  "backToRewards": "Zurück zu den Belohnungen",
+  "transfers": "Übertragungen",
+  "noTransfers": "Keine Übertragungen",
+  "rewardsPaidOnTicks": "Belohnungen ausgezahlt in {{count}} Ticks",
+  "rewardsPaidOnOneTick": "Belohnungen ausgezahlt in 1 Tick"
 }

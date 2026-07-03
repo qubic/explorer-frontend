@@ -297,5 +297,17 @@
   "firstQueryTimestamp": "最初のクエリ日時",
   "queryingEntity": "クエリ実行エンティティ",
   "dateInFuture": "日付は未来にできません",
-  "dateBeforeAvailability": "日付がデータ利用可能日（{{date}}）より前です"
+  "dateBeforeAvailability": "日付がデータ利用可能日（{{date}}）より前です",
+  "rewards": "報酬",
+  "totalDistributionAllTime": "全期間の合計分配",
+  "totalAmount": "合計金額",
+  "amountPerShare": "シェアあたりの金額",
+  "transferCount": "転送数",
+  "noRewards": "報酬なし",
+  "rewardsLoadFailed": "報酬の読み込みに失敗しました",
+  "backToRewards": "報酬一覧へ戻る",
+  "transfers": "転送",
+  "noTransfers": "転送がありません",
+  "rewardsPaidOnTicks": "{{count}} 個のティックで報酬が支払われました",
+  "rewardsPaidOnOneTick": "1 個のティックで報酬が支払われました"
 }
