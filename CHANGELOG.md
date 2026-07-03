@@ -1,3 +1,10 @@
+# [1.41.0](https://github.com/qubic/explorer-frontend/compare/v1.40.0...v1.41.0) (2026-07-03)
+
+
+### Features
+
+* **rewards:** add smart contract rewards tab to address page ([#486](https://github.com/qubic/explorer-frontend/issues/486)) ([c78fe46](https://github.com/qubic/explorer-frontend/commit/c78fe46203f080ae933d4c21006adfbecaf60b61))
+
 # [1.40.0](https://github.com/qubic/explorer-frontend/compare/v1.39.0...v1.40.0) (2026-06-11)
 
 
