@@ -298,5 +298,17 @@
   "firstQueryTimestamp": "Ngày truy vấn đầu tiên",
   "queryingEntity": "Thực thể truy vấn",
   "dateInFuture": "Ngày không thể ở tương lai",
-  "dateBeforeAvailability": "Ngày trước khi có dữ liệu ({{date}})"
+  "dateBeforeAvailability": "Ngày trước khi có dữ liệu ({{date}})",
+  "rewards": "Phần thưởng",
+  "totalDistributionAllTime": "Tổng phân phối mọi thời điểm",
+  "totalAmount": "Tổng số tiền",
+  "amountPerShare": "Số tiền mỗi cổ phần",
+  "transferCount": "Số chuyển khoản",
+  "noRewards": "Không có phần thưởng",
+  "rewardsLoadFailed": "Tải phần thưởng không thành công",
+  "backToRewards": "Quay lại phần thưởng",
+  "transfers": "Chuyển khoản",
+  "noTransfers": "Không có chuyển khoản",
+  "rewardsPaidOnTicks": "Phần thưởng được trả ở {{count}} tick",
+  "rewardsPaidOnOneTick": "Phần thưởng được trả ở 1 tick"
 }

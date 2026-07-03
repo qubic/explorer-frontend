@@ -298,5 +298,17 @@
   "firstQueryTimestamp": "İlk sorgu tarihi",
   "queryingEntity": "Sorgulayan varlık",
   "dateInFuture": "Tarih gelecekte olamaz",
-  "dateBeforeAvailability": "Tarih veri kullanılabilirliğinden önce ({{date}})"
+  "dateBeforeAvailability": "Tarih veri kullanılabilirliğinden önce ({{date}})",
+  "rewards": "Ödüller",
+  "totalDistributionAllTime": "Tüm zamanların toplam dağıtımı",
+  "totalAmount": "Toplam miktar",
+  "amountPerShare": "Pay başına miktar",
+  "transferCount": "Transferler",
+  "noRewards": "Ödül yok",
+  "rewardsLoadFailed": "Ödüller yüklenemedi",
+  "backToRewards": "Ödüllere dön",
+  "transfers": "Transferler",
+  "noTransfers": "Transfer yok",
+  "rewardsPaidOnTicks": "{{count}} tikte ödüller ödendi",
+  "rewardsPaidOnOneTick": "1 tikte ödüller ödendi"
 }

@@ -298,5 +298,17 @@
   "firstQueryTimestamp": "تاريخ أول استعلام",
   "queryingEntity": "الكيان المُستعلِم",
   "dateInFuture": "لا يمكن أن يكون التاريخ في المستقبل",
-  "dateBeforeAvailability": "التاريخ قبل توفر البيانات ({{date}})"
+  "dateBeforeAvailability": "التاريخ قبل توفر البيانات ({{date}})",
+  "rewards": "المكافآت",
+  "totalDistributionAllTime": "إجمالي التوزيع طوال الوقت",
+  "totalAmount": "المبلغ الإجمالي",
+  "amountPerShare": "المبلغ لكل سهم",
+  "transferCount": "التحويلات",
+  "noRewards": "لا توجد مكافآت",
+  "rewardsLoadFailed": "فشل تحميل المكافآت",
+  "backToRewards": "العودة إلى المكافآت",
+  "transfers": "التحويلات",
+  "noTransfers": "لا توجد تحويلات",
+  "rewardsPaidOnTicks": "تم دفع المكافآت في {{count}} تيك",
+  "rewardsPaidOnOneTick": "تم دفع المكافآت في تيك واحد"
 }

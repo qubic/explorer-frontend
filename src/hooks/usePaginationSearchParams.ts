@@ -6,17 +6,17 @@ import { useSearchParams } from 'react-router-dom'
  * Replaces the copy-pasted handlePageChange / handlePageSizeChange callbacks
  * used across multiple pages.
  */
-export function usePaginationSearchParams() {
+export function usePaginationSearchParams(pageParam = 'page') {
   const [, setSearchParams] = useSearchParams()
 
   const handlePageChange = useCallback(
     (value: number) => {
       setSearchParams((prev) => ({
         ...Object.fromEntries(prev.entries()),
-        page: value.toString()
+        [pageParam]: value.toString()
       }))
     },
-    [setSearchParams]
+    [pageParam, setSearchParams]
   )
 
   const handlePageSizeChange = useCallback(
@@ -24,18 +24,18 @@ export function usePaginationSearchParams() {
       setSearchParams((prev) => ({
         ...Object.fromEntries(prev.entries()),
         pageSize: option.value,
-        page: '1'
+        [pageParam]: '1'
       }))
     },
-    [setSearchParams]
+    [pageParam, setSearchParams]
   )
 
   const resetPage = useCallback(() => {
     setSearchParams((prev) => ({
       ...Object.fromEntries(prev.entries()),
-      page: '1'
+      [pageParam]: '1'
     }))
-  }, [setSearchParams])
+  }, [pageParam, setSearchParams])
 
   return { handlePageChange, handlePageSizeChange, resetPage }
 }

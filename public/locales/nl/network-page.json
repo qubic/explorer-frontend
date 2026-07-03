@@ -298,5 +298,17 @@
   "firstQueryTimestamp": "Datum eerste query",
   "queryingEntity": "Query-uitvoerende entiteit",
   "dateInFuture": "Datum kan niet in de toekomst liggen",
-  "dateBeforeAvailability": "Datum ligt vóór de gegevensbeschikbaarheid ({{date}})"
+  "dateBeforeAvailability": "Datum ligt vóór de gegevensbeschikbaarheid ({{date}})",
+  "rewards": "Beloningen",
+  "totalDistributionAllTime": "Totale distributie aller tijden",
+  "totalAmount": "Totaalbedrag",
+  "amountPerShare": "Bedrag per aandeel",
+  "transferCount": "Overdrachten",
+  "noRewards": "Geen beloningen",
+  "rewardsLoadFailed": "Beloningen laden mislukt",
+  "backToRewards": "Terug naar beloningen",
+  "transfers": "Overdrachten",
+  "noTransfers": "Geen overdrachten",
+  "rewardsPaidOnTicks": "Beloningen uitbetaald op {{count}} ticks",
+  "rewardsPaidOnOneTick": "Beloningen uitbetaald op 1 tick"
 }

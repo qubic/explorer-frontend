@@ -298,5 +298,17 @@
   "firstQueryTimestamp": "Fecha de primera consulta",
   "queryingEntity": "Entidad consultante",
   "dateInFuture": "La fecha no puede ser futura",
-  "dateBeforeAvailability": "La fecha es anterior a la disponibilidad de los datos ({{date}})"
+  "dateBeforeAvailability": "La fecha es anterior a la disponibilidad de los datos ({{date}})",
+  "rewards": "Recompensas",
+  "totalDistributionAllTime": "Distribución total histórica",
+  "totalAmount": "Cantidad total",
+  "amountPerShare": "Cantidad por acción",
+  "transferCount": "Transferencias",
+  "noRewards": "Sin recompensas",
+  "rewardsLoadFailed": "Error al cargar las recompensas",
+  "backToRewards": "Volver a recompensas",
+  "transfers": "Transferencias",
+  "noTransfers": "Sin transferencias",
+  "rewardsPaidOnTicks": "Recompensas pagadas en {{count}} ticks",
+  "rewardsPaidOnOneTick": "Recompensas pagadas en 1 tick"
 }

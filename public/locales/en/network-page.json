@@ -298,5 +298,17 @@
   "firstQueryTimestamp": "First Query Date",
   "queryingEntity": "Querying Entity",
   "dateInFuture": "Date cannot be in the future",
-  "dateBeforeAvailability": "Date is before data availability ({{date}})"
+  "dateBeforeAvailability": "Date is before data availability ({{date}})",
+  "rewards": "Rewards",
+  "totalDistributionAllTime": "Total Distribution All Time",
+  "totalAmount": "Total Amount",
+  "amountPerShare": "Amount per Share",
+  "transferCount": "Transfers",
+  "noRewards": "No Rewards",
+  "rewardsLoadFailed": "Failed to load rewards",
+  "backToRewards": "Back to Rewards",
+  "transfers": "Transfers",
+  "noTransfers": "No Transfers",
+  "rewardsPaidOnTicks": "Rewards paid on {{count}} ticks",
+  "rewardsPaidOnOneTick": "Rewards paid on 1 tick"
 }

@@ -26,6 +26,7 @@ import {
   AddressEvents,
   ContractOverview,
   ContractReserve,
+  ContractRewards,
   OwnedAssets,
   TransactionsOverview
 } from './components'
@@ -96,17 +97,21 @@ function AddressPage() {
   const selectedTabIndex = useMemo(() => {
     if (tabParam === 'events') return 1
     if (tabParam === 'contract' && isSmartContract) return 2
-    if (tabParam === 'reserve' && isSmartContract) return 3
+    if (tabParam === 'rewards' && isSmartContract) return 3
+    if (tabParam === 'reserve' && isSmartContract) return 4
     return 0
   }, [tabParam, isSmartContract])
 
-  // Normalize invalid tab params (e.g. ?tab=contract on a non-smart-contract address)
+  // Normalize invalid tab params (e.g. ?tab=contract on a non-smart-contract address).
+  // Wait for smartContracts to load before deciding — otherwise a refresh on a SC-only
+  // tab would strip the param before isSmartContract resolves to true.
   useEffect(() => {
-    if (!tabParam) return
+    if (!tabParam || smartContracts === undefined) return
     const isValidTab =
       tabParam === 'transactions' ||
       tabParam === 'events' ||
-      ((tabParam === 'reserve' || tabParam === 'contract') && isSmartContract)
+      ((tabParam === 'reserve' || tabParam === 'contract' || tabParam === 'rewards') &&
+        isSmartContract)
     if (!isValidTab) {
       setSearchParams(
         (prev) => {
@@ -116,7 +121,7 @@ function AddressPage() {
         { replace: true }
       )
     }
-  }, [tabParam, isSmartContract, setSearchParams])
+  }, [tabParam, isSmartContract, smartContracts, setSearchParams])
 
   const handleTabChange = useCallback(
     (index: number) => {
@@ -124,13 +129,19 @@ function AddressPage() {
         0: 'transactions',
         1: 'events',
         2: 'contract',
-        3: 'reserve'
+        3: 'rewards',
+        4: 'reserve'
       }
+      // Tabs that read ?pageSize=. Others (contract, reserve) use infinite scroll
+      // or no pagination — drop the param when leaving for them.
+      const PAGINATED_TABS = new Set(['transactions', 'events', 'rewards'])
       setSearchParams(
         (prev) => {
           // Clear all filter params when switching tabs
           clearFilterParams(prev)
-          prev.set('tab', tabMap[index] ?? 'transactions')
+          const nextTab = tabMap[index] ?? 'transactions'
+          prev.set('tab', nextTab)
+          if (!PAGINATED_TABS.has(nextTab)) prev.delete('pageSize')
           return prev
         },
         { replace: true }
@@ -245,6 +256,7 @@ function AddressPage() {
           <Tabs.Tab>{t('transactions')}</Tabs.Tab>
           <Tabs.Tab>{t('events')}</Tabs.Tab>
           {isSmartContract && <Tabs.Tab>{t('contract')}</Tabs.Tab>}
+          {isSmartContract && <Tabs.Tab>{t('rewards')}</Tabs.Tab>}
           {isSmartContract && <Tabs.Tab>{t('burnsAndDeductions')}</Tabs.Tab>}
         </Tabs.List>
         <Tabs.Panels>
@@ -263,6 +275,11 @@ function AddressPage() {
                 contractIndex={smartContractDetails.contractIndex}
                 showShareholders={showShareholders}
               />
+            </Tabs.Panel>
+          )}
+          {isSmartContract && smartContractDetails && (
+            <Tabs.Panel>
+              <ContractRewards smartContractAddress={addressId} />
             </Tabs.Panel>
           )}
           {isSmartContract && smartContractDetails && (

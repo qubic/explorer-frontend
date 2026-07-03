@@ -57,6 +57,7 @@ type BurnTableProps = Readonly<{
   hasError: boolean
   loadMore: () => void
   addressId: string
+  validForTick: number | undefined
 }>
 
 const BurnTable = memo(function BurnTable({
@@ -66,7 +67,8 @@ const BurnTable = memo(function BurnTable({
   isLoading,
   hasError,
   loadMore,
-  addressId
+  addressId,
+  validForTick
 }: BurnTableProps) {
   const { t } = useTranslation('network-page')
   const observer = useRef<IntersectionObserver | null>(null)
@@ -95,6 +97,11 @@ const BurnTable = memo(function BurnTable({
     <CardItem className="relative flex flex-col overflow-hidden">
       <div className="border-b border-primary-60 p-16">
         <p className="font-space text-16 font-500">{title}</p>
+        {validForTick !== undefined && (
+          <p className="mt-4 font-space text-xs text-gray-50">
+            {t('eventsValidForTickShort', { tick: validForTick.toLocaleString() })}
+          </p>
+        )}
       </div>
       {isLoading && events.length === 0 && (
         <div className="p-16">
@@ -173,6 +180,7 @@ type DeductionTableProps = Readonly<{
   isLoading: boolean
   hasError: boolean
   loadMore: () => void
+  validForTick: number | undefined
 }>
 
 const DeductionTable = memo(function DeductionTable({
@@ -181,7 +189,8 @@ const DeductionTable = memo(function DeductionTable({
   hasMore,
   isLoading,
   hasError,
-  loadMore
+  loadMore,
+  validForTick
 }: DeductionTableProps) {
   const { t } = useTranslation('network-page')
   const observer = useRef<IntersectionObserver | null>(null)
@@ -210,6 +219,11 @@ const DeductionTable = memo(function DeductionTable({
     <CardItem className="relative flex flex-col overflow-hidden">
       <div className="border-b border-primary-60 p-16">
         <p className="font-space text-16 font-500">{title}</p>
+        {validForTick !== undefined && (
+          <p className="mt-4 font-space text-xs text-gray-50">
+            {t('eventsValidForTickShort', { tick: validForTick.toLocaleString() })}
+          </p>
+        )}
       </div>
       {isLoading && events.length === 0 && (
         <div className="p-16">
@@ -300,6 +314,7 @@ export default function ContractReserve({ contractIndex, addressId }: Props) {
         hasError={burns.hasError}
         loadMore={burns.loadMore}
         addressId={addressId}
+        validForTick={burns.validForTick}
       />
       <DeductionTable
         events={deductions.events}
@@ -308,6 +323,7 @@ export default function ContractReserve({ contractIndex, addressId }: Props) {
         isLoading={deductions.isLoading}
         hasError={deductions.hasError}
         loadMore={deductions.loadMore}
+        validForTick={deductions.validForTick}
       />
     </div>
   )
