@@ -243,6 +243,7 @@
   "tickStatus": "Tick-Status",
   "ticksThisEpoch": "Ticks in dieser Epoche (Leer)",
   "ticksThisEpochTooltip": "Gesamtzahl der in dieser Epoche verarbeiteten Ticks und die Anzahl leerer Ticks in Klammern",
+  "tickTransactionsPruned": "Dieser Tick enthält {{total}} Transaktionen. Einige waren leere Transaktionen ohne Wert, die nach einer Aufbewahrungsfrist nicht mehr aufgeführt werden; etwaige Auswirkungen sind jedoch weiterhin im Netzwerk berücksichtigt.",
   "timestamp": "Zeitstempel",
   "token": "Token",
   "tokenIssuer": "{{name}} Emittent",

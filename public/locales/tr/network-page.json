@@ -243,6 +243,7 @@
   "tickStatus": "Tik durumu",
   "ticksThisEpoch": "Bu çağdaki tikler (Boş)",
   "ticksThisEpochTooltip": "Bu epoch içinde işlenen toplam tick sayısı ve boş tick sayısı parantez içinde",
+  "tickTransactionsPruned": "Bu tick {{total}} işlem içeriyor. Bazıları, saklama süresinin ardından artık listelenmeyen boş, sıfır değerli işlemlerdi; ancak varsa etkileri ağa yansımış olarak kalır.",
   "timestamp": "Zaman damgası",
   "token": "Jeton",
   "tokenIssuer": "{{name}} Yayımlayan",

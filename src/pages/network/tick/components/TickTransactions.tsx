@@ -2,9 +2,10 @@ import { memo, useCallback, useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router-dom'
 
-import { PageSizeSelect, PaginationBar } from '@app/components/ui'
+import { Infocon } from '@app/assets/icons'
+import { PageSizeSelect, PaginationBar, Tooltip } from '@app/components/ui'
 import { usePaginationSearchParams, useValidatedPage, useValidatedPageSize } from '@app/hooks'
-import { useGetTransactionsForTickQuery } from '@app/store/apis/query-service'
+import { useGetTickDataQuery, useGetTransactionsForTickQuery } from '@app/store/apis/query-service'
 import { parseTickTransactionFilters, tickTxFiltersToParams } from '../../utils/txFilterParams'
 import { updateSearchParams } from '../../utils/filterUtils'
 import TickTransactionFiltersBar from './TickTransactionFiltersBar'
@@ -13,6 +14,7 @@ import type { TickTransactionFilters } from './tickFilterUtils'
 import {
   buildTickTransactionsRequest,
   extractErrorMessage,
+  hasActiveFilters,
   parseFilterApiError,
   parseLastProcessedTickFromMessage
 } from './tickFilterUtils'
@@ -53,6 +55,14 @@ export default function TickTransactions({ tick }: Props) {
     error: tickTransactionsError
   } = useGetTransactionsForTickQuery(request, { skip: !tick })
 
+  // Shares RTK Query cache with TickDetails (same args), so this triggers no extra request.
+  // The tick's on-chain transaction hash count is the source of truth for the total, while
+  // getTransactionsForTick can return fewer rows because ephemeral transactions are pruned.
+  const { data: tickData, isFetching: isTickDataLoading } = useGetTickDataQuery(tick, {
+    skip: !tick
+  })
+  const onChainTransactionsCount = tickData?.transactionHashes?.length ?? 0
+
   // Extract error message from RTK Query error
   const errorMessage = useMemo(() => {
     if (!tickTransactionsError) return null
@@ -72,6 +82,22 @@ export default function TickTransactions({ tick }: Props) {
 
   const totalCount = transactions?.length ?? 0
   const pageCount = Math.ceil(totalCount / pageSize)
+
+  // Show a notice when fewer transactions are available than the tick actually contains.
+  // Only meaningful with no active filters, where a lower count means data was pruned
+  // (with filters, a lower count is the expected result of filtering).
+  const showPrunedNotice =
+    !isTickTransactionsLoading &&
+    !isTickDataLoading &&
+    !errorMessage &&
+    !hasActiveFilters(activeFilters) &&
+    onChainTransactionsCount > 0 &&
+    totalCount < onChainTransactionsCount
+
+  // Render the count line whenever there are transactions to show, or when every
+  // transaction was pruned (totalCount === 0 but the tick had transactions on chain),
+  // so the pruned notice still appears in that all-pruned case.
+  const showTransactionsCount = (!isTickTransactionsLoading && totalCount > 0) || showPrunedNotice
 
   // Clamp page to valid range when it exceeds pageCount (e.g. manually edited URL)
   useEffect(() => {
@@ -140,11 +166,22 @@ export default function TickTransactions({ tick }: Props) {
       />
 
       <div className="flex flex-wrap items-center justify-between gap-8">
-        {!isTickTransactionsLoading && totalCount > 0 ? (
-          <span className="text-sm text-gray-50">
+        {showTransactionsCount ? (
+          <span className="flex items-center text-sm text-gray-50">
             {t('transactionsFound', {
               count: totalCount.toLocaleString()
             } as Record<string, string>)}
+            {showPrunedNotice && (
+              <Tooltip
+                tooltipId="tick-transactions-pruned-info"
+                maxWidth="320px"
+                content={t('tickTransactionsPruned', {
+                  total: onChainTransactionsCount.toLocaleString()
+                } as Record<string, string>)}
+              >
+                <Infocon className="ml-6 size-16 shrink-0 cursor-help text-gray-50" />
+              </Tooltip>
+            )}
           </span>
         ) : (
           <span />

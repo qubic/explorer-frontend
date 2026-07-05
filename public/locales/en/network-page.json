@@ -243,6 +243,7 @@
   "tickStatus": "Tick Status",
   "ticksThisEpoch": "Ticks This Epoch (Empty)",
   "ticksThisEpochTooltip": "Total number of ticks processed this epoch and empty ticks count in parentheses",
+  "tickTransactionsPruned": "This tick contains {{total}} transactions. Some were empty, zero-value transactions that are no longer listed after a retention period; any effect they had is still reflected in the network.",
   "timestamp": "Timestamp",
   "token": "Token",
   "tokenIssuer": "{{name}} Issuer",

@@ -243,6 +243,7 @@
   "tickStatus": "刻度状态",
   "ticksThisEpoch": "当前纪元刻度（空）",
   "ticksThisEpochTooltip": "此紀元中處理的刻度總數和空刻度數量（括號中顯示）",
+  "tickTransactionsPruned": "此 tick 包含 {{total}} 笔交易。其中部分为零值的空交易，超过保留期后将不再在列表中显示，但它们产生的任何影响仍会保留在网络中。",
   "timestamp": "时间戳",
   "token": "代币",
   "tokenIssuer": "{{name}} 发行人",

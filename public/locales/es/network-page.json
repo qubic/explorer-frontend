@@ -243,6 +243,7 @@
   "tickStatus": "Estado del tick",
   "ticksThisEpoch": "Ticks en la época actual (Vacíos)",
   "ticksThisEpochTooltip": "Número total de ticks procesados en este epoch y la cantidad de ticks vacíos entre paréntesis",
+  "tickTransactionsPruned": "Este tick contiene {{total}} transacciones. Algunas eran transacciones vacías, sin valor, que ya no se muestran tras un período de retención; cualquier efecto que hayan tenido sigue reflejado en la red.",
   "timestamp": "Fecha",
   "token": "Token",
   "tokenIssuer": "{{name}} Emisor",

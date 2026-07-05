@@ -243,6 +243,7 @@
   "tickStatus": "Trạng thái tick",
   "ticksThisEpoch": "Các tick trong epoch này (Trống)",
   "ticksThisEpochTooltip": "Tổng số tick đã xử lý trong epoch này và số tick trống trong ngoặc",
+  "tickTransactionsPruned": "Tick này chứa {{total}} giao dịch. Một số là giao dịch trống, không có giá trị, không còn được liệt kê sau thời gian lưu giữ; tuy nhiên mọi tác động của chúng (nếu có) vẫn được phản ánh trong mạng lưới.",
   "timestamp": "Dấu thời gian",
   "token": "Token",
   "tokenIssuer": "{{name}} Người phát hành",

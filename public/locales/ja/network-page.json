@@ -243,6 +243,7 @@
   "tickStatus": "ティックステータス",
   "ticksThisEpoch": "このエポックのティック（空）",
   "ticksThisEpochTooltip": "このエポックで処理された刻み数と空刻みの数（カッコ内に表示）",
+  "tickTransactionsPruned": "このティックには {{total}} 件のトランザクションがあります。一部は値のない空のトランザクションで、保持期間の経過後は一覧に表示されなくなりますが、それらの影響（ある場合）はネットワークに引き続き反映されています。",
   "timestamp": "タイムスタンプ",
   "token": "トークン",
   "tokenIssuer": "{{name}} 発行者",
