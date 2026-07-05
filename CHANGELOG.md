@@ -1,3 +1,10 @@
+# [1.42.0-rc.1](https://github.com/qubic/explorer-frontend/compare/v1.41.0...v1.42.0-rc.1) (2026-07-05)
+
+
+### Features
+
+* **tick:** show notice when tick transactions are pruned ([#485](https://github.com/qubic/explorer-frontend/issues/485)) ([1368ba7](https://github.com/qubic/explorer-frontend/commit/1368ba72a0bf80e53176c60d3834bd93f5884aaf))
+
 # [1.41.0](https://github.com/qubic/explorer-frontend/compare/v1.40.0...v1.41.0) (2026-07-03)
 
 
