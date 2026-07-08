@@ -100,57 +100,46 @@ export default function FilterDropdown({
   }
 
   const handleToggle = disabled ? () => {} : onToggle
-  const canClear = Boolean(isActive && onClear)
 
   return (
     <div ref={wrapperRef} className="relative">
       <DropdownMenu show={show} onToggle={handleToggle}>
-        <DropdownMenu.Trigger
-          className={clsxTwMerge(
-            'flex shrink-0 items-center rounded border text-xs transition-colors',
-            disabled &&
-              (isActive
-                ? 'cursor-not-allowed border-primary-30 bg-primary-60 text-primary-30 opacity-60'
-                : 'cursor-not-allowed opacity-40'),
-            !disabled &&
-              (isActive
-                ? 'border-primary-30 bg-primary-60 text-primary-30'
-                : 'border-primary-60 text-gray-50 hover:border-primary-50 hover:text-white')
-          )}
-          as={
-            <button
-              ref={triggerRef}
-              type="button"
-              disabled={disabled}
-              aria-haspopup="menu"
-              aria-expanded={show}
-              className="flex items-center gap-4 px-8 py-6 sm:gap-6 sm:px-10"
+        <DropdownMenu.Trigger className="flex items-center gap-4">
+          <button
+            ref={triggerRef}
+            type="button"
+            className={clsxTwMerge(
+              'flex shrink-0 items-center gap-4 rounded border px-8 py-6 text-xs transition-colors sm:gap-6 sm:px-10',
+              disabled &&
+                (isActive
+                  ? 'cursor-not-allowed border-primary-30 bg-primary-60 text-primary-30 opacity-60'
+                  : 'cursor-not-allowed opacity-40'),
+              !disabled &&
+                (isActive
+                  ? 'border-primary-30 bg-primary-60 text-primary-30'
+                  : 'border-primary-60 text-gray-50 hover:border-primary-50 hover:text-white')
+            )}
+          >
+            <span
+              className={clsxTwMerge(!allowFullWidth && 'max-w-[120px] truncate sm:max-w-[200px]')}
             >
-              <span
-                className={clsxTwMerge(
-                  !allowFullWidth && 'max-w-[120px] truncate sm:max-w-[200px]'
-                )}
+              {label}
+            </span>
+            {isActive && onClear ? (
+              <button
+                type="button"
+                onClick={handleClearClick}
+                className="flex items-center justify-center rounded-full p-2 hover:bg-primary-50"
+                aria-label="Clear filter"
               >
-                {label}
-              </span>
-              {!canClear && (
-                <ChevronDownIcon
-                  className={clsxTwMerge('h-12 w-12 transition-transform', show && 'rotate-180')}
-                />
-              )}
-            </button>
-          }
-        >
-          {canClear && (
-            <button
-              type="button"
-              onClick={handleClearClick}
-              className="flex items-center justify-center rounded-full p-2 hover:bg-primary-50 ltr:mr-8 sm:ltr:mr-10 rtl:ml-8 sm:rtl:ml-10"
-              aria-label="Clear filter"
-            >
-              <XmarkIcon className="h-10 w-10" />
-            </button>
-          )}
+                <XmarkIcon className="h-10 w-10" />
+              </button>
+            ) : (
+              <ChevronDownIcon
+                className={clsxTwMerge('h-12 w-12 transition-transform', show && 'rotate-180')}
+              />
+            )}
+          </button>
         </DropdownMenu.Trigger>
         <DropdownMenu.Content
           className={clsxTwMerge(
