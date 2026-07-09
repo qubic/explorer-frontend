@@ -18,7 +18,7 @@ interface DropdownMenuTriggerPropsBase {
 
 interface DropdownMenuTriggerWithAs extends DropdownMenuTriggerPropsBase {
   as: ReactElement<React.HTMLProps<HTMLButtonElement>>
-  children?: never
+  children?: ReactNode
 }
 
 interface DropdownMenuTriggerWithChildren extends DropdownMenuTriggerPropsBase {
@@ -88,17 +88,11 @@ function DropdownMenu({ className, children, show, onToggle }: DropdownMenuProps
 
 const ClonedComponent = <T extends HTMLElement>({
   as,
-  onToggle,
-  className
+  onToggle
 }: {
   as: ReactElement<React.HTMLProps<T>>
   onToggle?: () => void
-  className?: string
-}) =>
-  React.cloneElement(as, {
-    onClick: onToggle,
-    className: clsxTwMerge(as.props.className, className)
-  })
+}) => React.cloneElement(as, { onClick: onToggle })
 
 DropdownMenu.Trigger = forwardRef<HTMLElement, DropdownMenuTriggerProps>(
   function DropdownMenuTrigger(
@@ -107,8 +101,9 @@ DropdownMenu.Trigger = forwardRef<HTMLElement, DropdownMenuTriggerProps>(
   ) {
     if (as) {
       return (
-        <div ref={ref as React.Ref<HTMLDivElement>}>
-          <ClonedComponent as={as} onToggle={onToggle} className={className} />
+        <div ref={ref as React.Ref<HTMLDivElement>} className={className}>
+          <ClonedComponent as={as} onToggle={onToggle} />
+          {children}
         </div>
       )
     }
