@@ -16,22 +16,37 @@ on:
       - main
       - testnet
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  # Do not cancel an in-progress deploy; let it finish to avoid partial uploads.
+  cancel-in-progress: false
+
+# Secure default: no permissions unless a job opts in below.
+permissions: {}
+
 jobs:
   release-and-deploy:
+    name: Release and deploy
     runs-on: ubuntu-latest
+    permissions:
+      contents: write # semantic-release pushes the release commit + tag
+      issues: write # semantic-release comments on released issues
+      pull-requests: write # semantic-release comments on released PRs
     # Only run on push events OR on merged pull requests (not closed-without-merge)
     if: github.event_name == 'push' || github.event.pull_request.merged == true
     steps:
+      # persist-credentials is intentionally left enabled (the default) so that
+      # semantic-release can push the release commit + tag via GITHUB_TOKEN.
       - name: 🛎️ Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4 # zizmor: ignore[artipacked]
         with:
           fetch-depth: 0 # Fetch full commit history
 
       - name: ⚙️ Setup pnpm
-        uses: pnpm/action-setup@v4.0.0
+        uses: pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2 # v4.0.0
 
       - name: 🔧 Set up Node.js 20.x
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version-file: .nvmrc
           cache: 'pnpm'
@@ -61,7 +76,7 @@ jobs:
         run: pnpm run build
 
       - name: 📤 Deploy to the corresponding environment
-        uses: SamKirkland/FTP-Deploy-Action@4.3.3
+        uses: SamKirkland/FTP-Deploy-Action@cfcb39fa3cdf2ff98ac1a7fbfa539d20526d474d # 4.3.3
         with:
           server: ${{ secrets.FTP_SERVER }}
           username: |
