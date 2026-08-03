@@ -1,15 +1,11 @@
 name: 🚀 Release and Deploy
 
 on:
+  # Only `push` — a merged PR already produces a push to the target branch, so
+  # merges still deploy exactly once. Closing a PR *without* merging changes no
+  # ref, so it produces no push and (correctly) does not deploy. Listening to
+  # `pull_request: closed` as well would deploy every merge twice.
   push:
-    branches:
-      - dev
-      - staging
-      - main
-      - testnet
-  pull_request:
-    types:
-      - closed
     branches:
       - dev
       - staging
@@ -32,8 +28,6 @@ jobs:
       contents: write # semantic-release pushes the release commit + tag
       issues: write # semantic-release comments on released issues
       pull-requests: write # semantic-release comments on released PRs
-    # Only run on push events OR on merged pull requests (not closed-without-merge)
-    if: github.event_name == 'push' || github.event.pull_request.merged == true
     steps:
       # persist-credentials is intentionally left enabled (the default) so that
       # semantic-release can push the release commit + tag via GITHUB_TOKEN.
