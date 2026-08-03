@@ -29,12 +29,13 @@ jobs:
       issues: write # semantic-release comments on released issues
       pull-requests: write # semantic-release comments on released PRs
     steps:
-      # persist-credentials is intentionally left enabled (the default) so that
-      # semantic-release can push the release commit + tag via GITHUB_TOKEN.
       - name: 🛎️ Checkout repository
-        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4 # zizmor: ignore[artipacked]
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
           fetch-depth: 0 # Fetch full commit history
+          # Kept enabled so semantic-release can push the release commit + tag
+          # via GITHUB_TOKEN.
+          persist-credentials: true # zizmor: ignore[artipacked]
 
       - name: ⚙️ Setup pnpm
         uses: pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2 # v4.0.0
