@@ -11,13 +11,17 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event.number }}
   cancel-in-progress: true
 
+# Read-only by default; the job elevates only what it needs.
+permissions:
+  contents: read
+
 jobs:
   main:
     name: Validate PR title
     runs-on: ubuntu-latest
     permissions:
-      pull-requests: read
+      pull-requests: read # read PR metadata (title) to validate it
     steps:
-      - uses: amannn/action-semantic-pull-request@v5.2.0
+      - uses: amannn/action-semantic-pull-request@c3cd5d1ea3580753008872425915e343e351ab54 # v5.2.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
