@@ -7,11 +7,7 @@ type Props = {
 }
 
 function TransactionsOverview({ addressId }: Props) {
-  return (
-    <div className="rounded-lg border border-primary-60 px-16 py-20">
-      <LatestTransactions addressId={addressId} />
-    </div>
-  )
+  return <LatestTransactions addressId={addressId} />
 }
 
 const MemoizedTransactionsOverview = memo(TransactionsOverview)
