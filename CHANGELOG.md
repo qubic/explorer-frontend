@@ -1,3 +1,17 @@
+# [1.42.0](https://github.com/qubic/explorer-frontend/compare/v1.41.0...v1.42.0) (2026-07-13)
+
+
+### Bug Fixes
+
+* **filters:** avoid nested <button> in FilterDropdown trigger ([5b43aa2](https://github.com/qubic/explorer-frontend/commit/5b43aa2b3c5d9f49016b751cc0a8a164410163ab))
+* **filters:** avoid nested <button> in FilterDropdown trigger ([23f03f1](https://github.com/qubic/explorer-frontend/commit/23f03f1a8a1a5b8e99d178f5b2e937ab7a8effeb))
+
+
+### Features
+
+* **address:** add category and epoch filters to events tab ([1d85506](https://github.com/qubic/explorer-frontend/commit/1d855062ab0f17582d59855c0043c56ca52f7d40))
+* **tick:** show notice when tick transactions are pruned ([#485](https://github.com/qubic/explorer-frontend/issues/485)) ([1368ba7](https://github.com/qubic/explorer-frontend/commit/1368ba72a0bf80e53176c60d3834bd93f5884aaf))
+
 # [1.42.0-rc.2](https://github.com/qubic/explorer-frontend/compare/v1.42.0-rc.1...v1.42.0-rc.2) (2026-07-13)
 
 

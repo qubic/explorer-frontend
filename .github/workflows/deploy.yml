@@ -1,37 +1,50 @@
 name: 🚀 Release and Deploy
 
 on:
+  # Only `push` — a merged PR already produces a push to the target branch, so
+  # merges still deploy exactly once. Closing a PR *without* merging changes no
+  # ref, so it produces no push and (correctly) does not deploy. Listening to
+  # `pull_request: closed` as well would deploy every merge twice.
   push:
     branches:
       - dev
       - staging
       - main
       - testnet
-  pull_request:
-    types:
-      - closed
-    branches:
-      - dev
-      - staging
-      - main
-      - testnet
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  # Do not cancel an in-progress deploy; let it finish to avoid partial uploads.
+  cancel-in-progress: false
+
+# Secure default: no permissions unless a job opts in below.
+permissions: {}
 
 jobs:
-  release-and-deploy:
+  build:
+    name: Release and build
     runs-on: ubuntu-latest
-    # Only run on push events OR on merged pull requests (not closed-without-merge)
-    if: github.event_name == 'push' || github.event.pull_request.merged == true
+    permissions:
+      contents: write # semantic-release pushes the release commit + tag
+      issues: write # semantic-release comments on released issues
+      pull-requests: write # semantic-release comments on released PRs
     steps:
+      # Checkout over SSH using the release deploy key. `main` is protected by a
+      # ruleset that requires PRs, but the deploy key is on the ruleset bypass
+      # list — so semantic-release can push the release commit + tag directly.
+      # persist-credentials stays enabled so that SSH push works.
       - name: 🛎️ Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
-          fetch-depth: 0 # Fetch full commit history
+          fetch-depth: 0 # Fetch full commit history (semantic-release needs it)
+          ssh-key: ${{ secrets.RELEASE_SSH_KEY }}
+          persist-credentials: true # zizmor: ignore[artipacked]
 
       - name: ⚙️ Setup pnpm
-        uses: pnpm/action-setup@v4.0.0
+        uses: pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2 # v4.0.0
 
       - name: 🔧 Set up Node.js 20.x
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version-file: .nvmrc
           cache: 'pnpm'
@@ -60,8 +73,31 @@ jobs:
           VITE_TURNSTILE_SITE_KEY: ${{ secrets.TURNSTILE_SITE_KEY }}
         run: pnpm run build
 
+      - name: 📦 Upload build artifact
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: dist
+          path: dist/
+          retention-days: 1
+
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    needs: build
+    # Gate production only: `main` uses the protected `production` environment
+    # (required reviewers + prevent self-review), so a prod deploy waits for a
+    # manual approval. Other branches use their own ungated environments.
+    environment:
+      name: ${{ github.ref == 'refs/heads/main' && 'production' || github.ref_name }}
+    steps:
+      - name: 📥 Download build artifact
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: dist
+          path: dist/
+
       - name: 📤 Deploy to the corresponding environment
-        uses: SamKirkland/FTP-Deploy-Action@4.3.3
+        uses: SamKirkland/FTP-Deploy-Action@cfcb39fa3cdf2ff98ac1a7fbfa539d20526d474d # 4.3.3
         with:
           server: ${{ secrets.FTP_SERVER }}
           username: |
