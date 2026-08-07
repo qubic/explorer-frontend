@@ -28,6 +28,11 @@ jobs:
       contents: write # semantic-release pushes the release commit + tag
       issues: write # semantic-release comments on released issues
       pull-requests: write # semantic-release comments on released PRs
+    env:
+      HUSKY: 0 # don't install/run git hooks in CI; semantic-release's own
+      # commit ([skip ci] changelog body) would otherwise trip the commit-msg
+      # commitlint hook on body-max-line-length. Real commits are still linted
+      # by the separate commitlint workflow.
     steps:
       # Checkout over SSH using the release deploy key. `main` is protected by a
       # ruleset that requires PRs, but the deploy key is on the ruleset bypass
