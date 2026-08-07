@@ -5,13 +5,14 @@ on:
   # merges still deploy exactly once. Closing a PR *without* merging changes no
   # ref, so it produces no push and (correctly) does not deploy.
   #
-  # Versioning/releases are handled separately by release-please.yml (main +
-  # staging). This workflow only builds and deploys.
+  # `main` is intentionally NOT here: production is deployed by
+  # release-please.yml only when a stable release is cut, so an intermediate
+  # (e.g. rc) version can never be shipped to prod. This workflow deploys the
+  # non-production environments only.
   push:
     branches:
       - dev
       - staging
-      - main
       - testnet
 
 concurrency:

@@ -31,6 +31,8 @@ jobs:
     permissions:
       contents: write # create the release branch, tag and GitHub Release
       pull-requests: write # open/update the release PR
+    outputs:
+      release_created: ${{ steps.release.outputs.release_created }}
     steps:
       - name: 🔑 Generate GitHub App token
         id: app-token
@@ -71,3 +73,54 @@ jobs:
           pr_number=$(echo "$PRS_JSON" | jq -r '.[0].number')
           echo "Auto-merging staging rc release PR #${pr_number}"
           gh pr merge "$pr_number" --repo "$TARGET_REPO" --merge
+
+  # Production deploy. Runs ONLY when a stable release was actually cut on main
+  # (release_created == true). The promotion merge into main only opens the
+  # release PR (release_created=false) and therefore does NOT deploy — so a
+  # prerelease (rc) version can never reach production. Prod is deployed solely
+  # when the stable release PR is merged. The `production` environment gates it
+  # with a required, non-self reviewer.
+  deploy-prod:
+    name: Deploy to production
+    needs: release-please
+    if: github.ref_name == 'main' && needs.release-please.outputs.release_created == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    environment:
+      name: production
+    steps:
+      - name: 🛎️ Checkout repository
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false # this job only builds + deploys, never pushes
+
+      - name: ⚙️ Setup pnpm
+        uses: pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2 # v4.0.0
+
+      - name: 🔧 Set up Node.js 20.x
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version-file: .nvmrc
+          cache: 'pnpm'
+          registry-url: 'https://npm.pkg.github.com'
+
+      - name: 📦 Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: 🏗️ Build app
+        env:
+          VITE_NETWORK: mainnet
+          VITE_QLI_API_URL: ${{ secrets.QLI_API_URL }}
+          VITE_QUBIC_RPC_URL: ${{ secrets.QUBIC_RPC_URL }}
+          VITE_STATIC_API_URL: ${{ secrets.STATIC_API_URL }}
+        run: pnpm run build
+
+      - name: 📤 Deploy to production
+        uses: SamKirkland/FTP-Deploy-Action@cfcb39fa3cdf2ff98ac1a7fbfa539d20526d474d # 4.3.3
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME_PROD }}
+          password: ${{ secrets.FTP_PASSWORD_PROD }}
+          local-dir: dist/
+          protocol: ftps
