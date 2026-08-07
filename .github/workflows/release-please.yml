@@ -92,6 +92,8 @@ jobs:
     steps:
       - name: 🛎️ Checkout repository
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false # this job only builds + deploys, never pushes
 
       - name: ⚙️ Setup pnpm
         uses: pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2 # v4.0.0
