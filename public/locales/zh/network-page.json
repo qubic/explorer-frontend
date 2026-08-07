@@ -274,7 +274,6 @@
   "waitingForTickTitle": "等待刻度处理完成",
   "wallets": "钱包",
   "csvExport": "CSV导出",
-  "csvExportCaptchaDisclaimer": "您请求的信息可以从此页面下载。在继续之前，请完成下方的验证码以验证您不是机器人。",
   "csvExportDataAvailability": "数据从第207纪元开始可用（从2026年4月1日 12:00 UTC或tick {{tick}}起）",
   "csvExportError": "数据导出失败。请重试。",
   "csvExportLimit": "将导出所选范围内最新的{{count}}条记录",

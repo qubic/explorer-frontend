@@ -86,7 +86,7 @@ Tabs.List = function TabsList({
       <div
         aria-label="Tabs"
         role="tablist"
-        className={clsxTwMerge('flex space-x-2', variant === 'buttons' && 'gap-6')}
+        className={clsxTwMerge('flex flex-wrap', variant === 'buttons' ? 'gap-8' : 'space-x-2')}
       >
         {Children.map(children, (child, index) =>
           isValidElement<TabComponentProps>(child)
