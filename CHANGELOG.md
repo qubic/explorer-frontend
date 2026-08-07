@@ -1,3 +1,14 @@
+## [1.42.1-rc.1](https://github.com/qubic/explorer-frontend/compare/v1.42.0...v1.42.1-rc.1) (2026-08-07)
+
+
+### Bug Fixes
+
+* **ci:** disable husky hooks in release job to unblock semantic-release ([34abdb1](https://github.com/qubic/explorer-frontend/commit/34abdb1fb9654009e4a831161815e7c504f60918))
+* **csv-export:** remove captcha blocking downloads ([8506589](https://github.com/qubic/explorer-frontend/commit/85065892cf35eb71206074806d1864c06b8dbf7b))
+* deploy once per merge by dropping redundant pull_request trigger ([9d8be7b](https://github.com/qubic/explorer-frontend/commit/9d8be7bf8fe42e6eb520ebb462f3275e006f121c))
+* prevent tab row from overflowing viewport on mobile ([8490852](https://github.com/qubic/explorer-frontend/commit/8490852141c1ab70cbca1acfa7f43a54f165c592))
+* remove outer frame from transactions list ([e01dc99](https://github.com/qubic/explorer-frontend/commit/e01dc99c39af6e38d2136a7ad74ea26bd1f115ea))
+
 # [1.42.0](https://github.com/qubic/explorer-frontend/compare/v1.41.0...v1.42.0) (2026-07-13)
 
 
