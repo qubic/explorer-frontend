@@ -274,7 +274,6 @@
   "waitingForTickTitle": "Wachten op verwerking van de tick",
   "wallets": "Portefeuilles",
   "csvExport": "CSV-export",
-  "csvExportCaptchaDisclaimer": "De gevraagde informatie kan van deze pagina worden gedownload. Controleer voordat u verdergaat of u geen robot bent door de captcha hieronder in te vullen.",
   "csvExportDataAvailability": "Gegevens beschikbaar vanaf Epoch 207 (vanaf 1 apr. 2026, 12:00 UTC of tick {{tick}})",
   "csvExportError": "Gegevensexport mislukt. Probeer het opnieuw.",
   "csvExportLimit": "De nieuwste {{count}} records binnen het geselecteerde bereik worden geëxporteerd",

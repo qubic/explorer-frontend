@@ -274,7 +274,6 @@
   "waitingForTickTitle": "Warten auf Verarbeitung des Ticks",
   "wallets": "Wallets",
   "csvExport": "CSV-Export",
-  "csvExportCaptchaDisclaimer": "Die angeforderten Informationen können von dieser Seite heruntergeladen werden. Bitte bestätigen Sie vor dem Fortfahren, dass Sie kein Roboter sind, indem Sie das Captcha unten ausfüllen.",
   "csvExportDataAvailability": "Daten verfügbar ab Epoche 207 (ab 1. Apr. 2026, 12:00 UTC oder Tick {{tick}})",
   "csvExportError": "Datenexport fehlgeschlagen. Bitte versuchen Sie es erneut.",
   "csvExportLimit": "Die neuesten {{count}} Datensätze innerhalb des ausgewählten Bereichs werden exportiert",

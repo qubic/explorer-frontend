@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router-dom'
 
@@ -7,7 +7,6 @@ import { Breadcrumbs, Select } from '@app/components/ui'
 import type { Option } from '@app/components/ui/Select'
 import { Button } from '@app/components/ui/buttons'
 import { PageLayout } from '@app/components/ui/layouts'
-import { envConfig } from '@app/configs'
 import { isValidAddressFormat, isValidQubicAddress } from '@app/utils'
 import { HomeLink } from '../components'
 import BetaBanner from '../components/BetaBanner'
@@ -17,22 +16,6 @@ import useCsvExport, {
   EVENTS_DATA_START_TICK
 } from './useCsvExport'
 import type { ExportType, RangeType } from './useCsvExport'
-
-declare global {
-  interface Window {
-    turnstile?: {
-      render: (
-        container: HTMLElement,
-        options: {
-          sitekey: string
-          callback: (token: string) => void
-          'expired-callback': () => void
-        }
-      ) => string
-      reset: (widgetId: string) => void
-    }
-  }
-}
 
 function CsvExportPage() {
   const { t } = useTranslation('network-page')
@@ -59,39 +42,6 @@ function CsvExportPage() {
   const [endDate, setEndDate] = useState<string | undefined>()
   const [startTick, setStartTick] = useState('')
   const [endTick, setEndTick] = useState('')
-
-  const [captchaToken, setCaptchaToken] = useState<string | null>(null)
-  const turnstileRef = useRef<HTMLDivElement>(null)
-  const widgetIdRef = useRef<string | null>(null)
-  const turnstileSiteKey = envConfig.TURNSTILE_SITE_KEY
-  const captchaEnabled = !!turnstileSiteKey
-
-  useEffect(() => {
-    if (!captchaEnabled || !turnstileRef.current || widgetIdRef.current) return () => {}
-
-    const renderWidget = () => {
-      if (window.turnstile && turnstileRef.current && !widgetIdRef.current) {
-        widgetIdRef.current = window.turnstile.render(turnstileRef.current, {
-          sitekey: turnstileSiteKey,
-          callback: (token: string) => setCaptchaToken(token),
-          'expired-callback': () => setCaptchaToken(null)
-        })
-      }
-    }
-
-    if (window.turnstile) {
-      renderWidget()
-      return () => {}
-    }
-
-    const interval = setInterval(() => {
-      if (window.turnstile) {
-        clearInterval(interval)
-        renderWidget()
-      }
-    }, 100)
-    return () => clearInterval(interval)
-  }, [captchaEnabled, turnstileSiteKey])
 
   const isEventsExport = exportType === 'qubicTransfers' || exportType === 'tokenTransfers'
 
@@ -192,14 +142,12 @@ function CsvExportPage() {
   else if (isTickRangeInvalid) rangeError = t('invalidTickRange')
 
   const canDownload =
-    exportType &&
-    address.trim() &&
+    !!address.trim() &&
     !addressError &&
     !isValidatingAddress &&
     hasRequiredRange &&
     !rangeError &&
-    !isLoading &&
-    (!captchaEnabled || captchaToken)
+    !isLoading
 
   return (
     <PageLayout>
@@ -363,14 +311,6 @@ function CsvExportPage() {
             >)}
           </p>
         </div>
-
-        {/* Captcha */}
-        {captchaEnabled && (
-          <div className="flex flex-col gap-12">
-            <p className="text-xs text-gray-50">{t('csvExportCaptchaDisclaimer')}</p>
-            <div ref={turnstileRef} />
-          </div>
-        )}
 
         {/* Action Buttons */}
         <div className="flex gap-12">

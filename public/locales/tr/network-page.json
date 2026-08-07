@@ -274,7 +274,6 @@
   "waitingForTickTitle": "Tick'in işlenmesi bekleniyor",
   "wallets": "Cüzdanlar",
   "csvExport": "CSV Dışa Aktarma",
-  "csvExportCaptchaDisclaimer": "İstediğiniz bilgiler bu sayfadan indirilebilir. Devam etmeden önce lütfen aşağıdaki doğrulamayı tamamlayarak robot olmadığınızı doğrulayın.",
   "csvExportDataAvailability": "Veriler Dönem 207'den itibaren mevcuttur (1 Nisan 2026, 12:00 UTC veya tick {{tick}}'den itibaren)",
   "csvExportError": "Veri dışa aktarma başarısız oldu. Lütfen tekrar deneyin.",
   "csvExportLimit": "Seçilen aralıktaki en son {{count}} kayıt dışa aktarılacaktır",
