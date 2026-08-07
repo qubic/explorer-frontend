@@ -274,7 +274,6 @@
   "waitingForTickTitle": "En attente du traitement du tick",
   "wallets": "Portefeuilles",
   "csvExport": "Export CSV",
-  "csvExportCaptchaDisclaimer": "Les informations demandées peuvent être téléchargées depuis cette page. Avant de continuer, veuillez vérifier que vous n'êtes pas un robot en complétant le captcha ci-dessous.",
   "csvExportDataAvailability": "Données disponibles à partir de l'Époque 207 (à partir du 1er avril 2026, 12:00 UTC ou tick {{tick}})",
   "csvExportError": "Échec de l'exportation des données. Veuillez réessayer.",
   "csvExportLimit": "Les {{count}} enregistrements les plus récents dans la plage sélectionnée seront exportés",

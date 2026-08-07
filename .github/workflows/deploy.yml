@@ -28,6 +28,11 @@ jobs:
       contents: write # semantic-release pushes the release commit + tag
       issues: write # semantic-release comments on released issues
       pull-requests: write # semantic-release comments on released PRs
+    env:
+      HUSKY: 0 # don't install/run git hooks in CI; semantic-release's own
+      # commit ([skip ci] changelog body) would otherwise trip the commit-msg
+      # commitlint hook on body-max-line-length. Real commits are still linted
+      # by the separate commitlint workflow.
     steps:
       # Checkout over SSH using the release deploy key. `main` is protected by a
       # ruleset that requires PRs, but the deploy key is on the ruleset bypass
@@ -70,7 +75,6 @@ jobs:
               github.ref == 'refs/heads/staging' && secrets.STATIC_API_URL_STAGING ||
               secrets.STATIC_API_URL_DEV
             }}
-          VITE_TURNSTILE_SITE_KEY: ${{ secrets.TURNSTILE_SITE_KEY }}
         run: pnpm run build
 
       - name: 📦 Upload build artifact
