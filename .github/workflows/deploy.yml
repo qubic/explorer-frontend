@@ -1,10 +1,12 @@
-name: 🚀 Release and Deploy
+name: 🚀 Deploy
 
 on:
   # Only `push` — a merged PR already produces a push to the target branch, so
   # merges still deploy exactly once. Closing a PR *without* merging changes no
-  # ref, so it produces no push and (correctly) does not deploy. Listening to
-  # `pull_request: closed` as well would deploy every merge twice.
+  # ref, so it produces no push and (correctly) does not deploy.
+  #
+  # Versioning/releases are handled separately by release-please.yml (main +
+  # staging). This workflow only builds and deploys.
   push:
     branches:
       - dev
@@ -22,28 +24,13 @@ permissions: {}
 
 jobs:
   build:
-    name: Release and build
+    name: Build
     runs-on: ubuntu-latest
     permissions:
-      contents: write # semantic-release pushes the release commit + tag
-      issues: write # semantic-release comments on released issues
-      pull-requests: write # semantic-release comments on released PRs
-    env:
-      HUSKY: 0 # don't install/run git hooks in CI; semantic-release's own
-      # commit ([skip ci] changelog body) would otherwise trip the commit-msg
-      # commitlint hook on body-max-line-length. Real commits are still linted
-      # by the separate commitlint workflow.
+      contents: read # just checkout + build; no pushes here anymore
     steps:
-      # Checkout over SSH using the release deploy key. `main` is protected by a
-      # ruleset that requires PRs, but the deploy key is on the ruleset bypass
-      # list — so semantic-release can push the release commit + tag directly.
-      # persist-credentials stays enabled so that SSH push works.
       - name: 🛎️ Checkout repository
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
-        with:
-          fetch-depth: 0 # Fetch full commit history (semantic-release needs it)
-          ssh-key: ${{ secrets.RELEASE_SSH_KEY }}
-          persist-credentials: true # zizmor: ignore[artipacked]
 
       - name: ⚙️ Setup pnpm
         uses: pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2 # v4.0.0
@@ -57,12 +44,6 @@ jobs:
 
       - name: 📦 Install dependencies
         run: pnpm install --frozen-lockfile
-
-      - name: 🔖 Run Semantic Release
-        run: pnpm run release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/staging'
 
       - name: 🏗️ Build app
         env:
