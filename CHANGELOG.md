@@ -168,6 +168,15 @@
 
 * display rawPayload field and add copy buttons on event detail page ([d646cee](https://github.com/qubic/explorer-frontend/commit/d646cee1f4423dcce4e247107585bb079d968e2f))
 
+## [1.43.0-rc.1](https://github.com/qubic/explorer-frontend/compare/v1.43.0-rc...v1.43.0-rc.1) (2026-08-07)
+
+
+### Bug Fixes
+
+* **ci:** deploy production only when a stable release is cut ([7e33371](https://github.com/qubic/explorer-frontend/commit/7e33371b2d1714d6e0a51f71176e0d4019283c0b))
+* **ci:** disable credential persistence in the prod deploy checkout ([d43c5b1](https://github.com/qubic/explorer-frontend/commit/d43c5b163c2a9b2aeb51b684ecb407b26d5354ee))
+* **ci:** disable credential persistence in the prod deploy checkout ([b799207](https://github.com/qubic/explorer-frontend/commit/b7992075b290670134b195f0800b46c8169b7152))
+
 ## [1.43.0-rc](https://github.com/qubic/explorer-frontend/compare/v1.42.0...v1.43.0-rc) (2026-08-07)
 
 
