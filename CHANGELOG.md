@@ -168,6 +168,29 @@
 
 * display rawPayload field and add copy buttons on event detail page ([d646cee](https://github.com/qubic/explorer-frontend/commit/d646cee1f4423dcce4e247107585bb079d968e2f))
 
+## [1.43.0](https://github.com/qubic/explorer-frontend/compare/v1.42.0...v1.43.0) (2026-08-08)
+
+
+### Features
+
+* **ci:** migrate release automation to release-please ([c585a86](https://github.com/qubic/explorer-frontend/commit/c585a86022f3e425e9b492f7907a06316e6e68f2))
+* **ci:** migrate release automation to release-please ([7c7c57a](https://github.com/qubic/explorer-frontend/commit/7c7c57a5a90479c2399a6b07262ca0e87b6204ae))
+
+
+### Bug Fixes
+
+* **ci:** deploy production only when a stable release is cut ([7e33371](https://github.com/qubic/explorer-frontend/commit/7e33371b2d1714d6e0a51f71176e0d4019283c0b))
+* **ci:** disable credential persistence in the prod deploy checkout ([d43c5b1](https://github.com/qubic/explorer-frontend/commit/d43c5b163c2a9b2aeb51b684ecb407b26d5354ee))
+* **ci:** disable credential persistence in the prod deploy checkout ([b799207](https://github.com/qubic/explorer-frontend/commit/b7992075b290670134b195f0800b46c8169b7152))
+* **ci:** disable husky hooks in release job to unblock semantic-release ([34abdb1](https://github.com/qubic/explorer-frontend/commit/34abdb1fb9654009e4a831161815e7c504f60918))
+* **csv-export:** remove captcha blocking downloads ([8506589](https://github.com/qubic/explorer-frontend/commit/85065892cf35eb71206074806d1864c06b8dbf7b))
+* deploy once per merge by dropping redundant pull_request trigger ([9d8be7b](https://github.com/qubic/explorer-frontend/commit/9d8be7bf8fe42e6eb520ebb462f3275e006f121c))
+* prevent tab row from overflowing viewport on mobile ([d518133](https://github.com/qubic/explorer-frontend/commit/d518133f86645d3c5b24801bacbf981527a3eeb3))
+* prevent tab row from overflowing viewport on mobile ([8490852](https://github.com/qubic/explorer-frontend/commit/8490852141c1ab70cbca1acfa7f43a54f165c592))
+* remove captcha blocking downloads ([74ee06c](https://github.com/qubic/explorer-frontend/commit/74ee06cea684f90b77fcf223c9650e734ffecde5))
+* remove outer frame from transactions list ([701083f](https://github.com/qubic/explorer-frontend/commit/701083fa53b920b8f6a439c8f60dd172a0ba235a))
+* remove outer frame from transactions list ([e01dc99](https://github.com/qubic/explorer-frontend/commit/e01dc99c39af6e38d2136a7ad74ea26bd1f115ea))
+
 ## [1.43.0-rc.1](https://github.com/qubic/explorer-frontend/compare/v1.43.0-rc...v1.43.0-rc.1) (2026-08-07)
 
 
