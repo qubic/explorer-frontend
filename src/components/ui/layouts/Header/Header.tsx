@@ -17,7 +17,7 @@ export default function Header() {
     <>
       <TopBar />
       <header className="border-b border-primary-60">
-        <div className="relative mx-auto flex h-[var(--header-height)] max-w-lg items-center justify-between gap-6 p-12 sm:h-[var(--desktop-header-height)]">
+        <div className="relative flex h-[var(--header-height)] items-center justify-between gap-6 px-16 py-12 sm:h-[var(--desktop-header-height)] md:px-24 lg:px-80 xl:px-128">
           <Link to={Routes.NETWORK.ROOT}>
             <QubicExplorerWhiteLogo />
           </Link>

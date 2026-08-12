@@ -33,7 +33,7 @@ export default function TopBar() {
 
   return (
     <section className="sticky top-0 z-99 border-b border-primary-60 bg-primary-80">
-      <div className="relative mx-auto flex max-w-lg items-center justify-between px-12 py-4">
+      <div className="relative flex items-center justify-between px-16 py-4 md:px-24 lg:px-80 xl:px-128">
         <p className="flex items-center gap-4 text-xs text-gray-50">
           QUBIC {t('price')}: {renderQubicPrice()}
         </p>
