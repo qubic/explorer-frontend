@@ -2,7 +2,8 @@ import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Alert, Skeleton } from '@app/components/ui'
-import { OVERVIEW_DATA_POLLING_INTERVAL_MS } from '@app/constants'
+import { OVERVIEW_DATA_POLLING_INTERVAL_MS, POLLING_QUERY_OPTIONS } from '@app/constants'
+import { usePollingInterval } from '@app/hooks'
 import { useGetLatestStatsQuery } from '@app/store/apis/rpc-stats'
 import { formatQubicPrice } from '@app/utils'
 import LanguagePicker from './LanguagePicker'
@@ -12,8 +13,11 @@ import SearchBar from './SearchBar/SearchBar'
 export default function TopBar() {
   const { t } = useTranslation('network-page')
 
+  const pollingInterval = usePollingInterval(OVERVIEW_DATA_POLLING_INTERVAL_MS)
+
   const { data, isLoading, isError } = useGetLatestStatsQuery(undefined, {
-    pollingInterval: OVERVIEW_DATA_POLLING_INTERVAL_MS
+    pollingInterval,
+    ...POLLING_QUERY_OPTIONS
   })
 
   const renderQubicPrice = useCallback(() => {

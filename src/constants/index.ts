@@ -3,6 +3,15 @@ import { TransactionOptionEnum } from '@app/types'
 
 export const OVERVIEW_DATA_POLLING_INTERVAL_MS = 60_000
 
+// Shared options for every query that polls. Polling itself is paused while the
+// tab is hidden via `usePollingInterval` (see that hook for why we don't use
+// RTK's `skipPollingIfUnfocused`); this makes the data refetch immediately when
+// the tab regains focus, since resuming the poll alone would otherwise leave
+// stale data on screen for a full interval.
+export const POLLING_QUERY_OPTIONS = {
+  refetchOnFocus: true
+} as const
+
 // Cache time for transaction and event queries (in seconds)
 export const QUERY_CACHE_TIME = 30
 
