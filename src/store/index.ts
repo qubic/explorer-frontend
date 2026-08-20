@@ -1,4 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit'
+import { setupListeners } from '@reduxjs/toolkit/query'
 
 import { aggregationApi } from './apis/aggregation'
 import { eventsApi } from './apis/events'
@@ -36,6 +37,10 @@ export const store = configureStore({
       .concat(eventsApi.middleware)
       .concat(aggregationApi.middleware)
 })
+
+// Tracks window focus / tab visibility and network connectivity so RTK Query can
+// pause polling while the tab is hidden and refetch when the user comes back.
+setupListeners(store.dispatch)
 
 export type RootState = ReturnType<typeof store.getState>
 export type AppDispatch = typeof store.dispatch

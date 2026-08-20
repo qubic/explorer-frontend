@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 
+import { usePollingOptions } from '@app/hooks'
 import { useGetLastProcessedTickQuery } from '@app/store/apis/query-service'
 
 const MAX_TICK_RANGE = 800
@@ -55,8 +56,10 @@ export default function useTickWatcher(opts: {
     setHasGivenUp(false)
   }, [targetTick])
 
+  const pollingOptions = usePollingOptions(shouldFetchTick ? pollingInterval : 0)
+
   const lastProcessedTick = useGetLastProcessedTickQuery(undefined, {
-    pollingInterval: shouldFetchTick ? pollingInterval : 0,
+    ...pollingOptions,
     skip: !shouldFetchTick
   })
 
