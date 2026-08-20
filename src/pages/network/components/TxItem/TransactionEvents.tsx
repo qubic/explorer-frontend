@@ -29,6 +29,7 @@ const SKELETON_CELLS = [
 ]
 
 const SKELETON_TICK_TIMESTAMP_CELLS = [
+  { id: 'epoch', className: 'h-16 w-32' },
   { id: 'tick', className: 'h-16 w-64' },
   { id: 'timestamp', className: 'h-16 w-80' }
 ]
@@ -60,6 +61,9 @@ const EventRow = memo(function EventRow({
       </td>
       {showTickAndTimestamp && (
         <>
+          <td className="whitespace-nowrap px-10 py-14 font-space text-sm text-gray-50">
+            {formatString(event.epoch)}
+          </td>
           <td className="px-10 py-14">
             {event.tickNumber > 0 && (
               <TickLink className="text-sm text-primary-30" value={event.tickNumber} />
@@ -173,7 +177,7 @@ export default function TransactionEvents({
   const displayEvents =
     paginated && total === undefined ? events.slice((page - 1) * pageSize, page * pageSize) : events
 
-  const columnCount = 5 + (showTickAndTimestamp ? 2 : 0) + (showTxId ? 1 : 0)
+  const columnCount = 5 + (showTickAndTimestamp ? 3 : 0) + (showTxId ? 1 : 0)
 
   const skeletonCells = [
     SKELETON_CELLS[0],
@@ -235,6 +239,7 @@ export default function TransactionEvents({
                 <th className="whitespace-nowrap px-10 py-12 font-400">{t('id')}</th>
                 {showTickAndTimestamp && (
                   <>
+                    <th className="whitespace-nowrap px-10 py-12 font-400">{t('epoch')}</th>
                     <th className="whitespace-nowrap px-10 py-12 font-400">{t('tick')}</th>
                     <th className="whitespace-nowrap px-10 py-12 font-400">{t('timestamp')}</th>
                   </>
