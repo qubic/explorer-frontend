@@ -3,8 +3,8 @@ import { useSearchParams } from 'react-router-dom'
 
 import { withHelmet } from '@app/components/hocs'
 import { PageLayout } from '@app/components/ui/layouts'
-import { OVERVIEW_DATA_POLLING_INTERVAL_MS, POLLING_QUERY_OPTIONS } from '@app/constants'
-import { usePollingInterval } from '@app/hooks'
+import { OVERVIEW_DATA_POLLING_INTERVAL_MS } from '@app/constants'
+import { usePollingOptions } from '@app/hooks'
 import { useGetLatestStatsQuery } from '@app/store/apis/rpc-stats'
 import { useGetAddressBalancesQuery, useGetTickInfoQuery } from '@app/store/apis/rpc-live'
 import { useGetEpochTicksQuery } from '@app/store/apis/archiver-v2'
@@ -16,12 +16,9 @@ import { TICKS_PAGE_SIZE } from './constants'
 function OverviewPage() {
   const [searchParams, setSearchParams] = useSearchParams()
   const page = Number.parseInt(searchParams.get('ticksPage') || '1', 10)
-  const pollingInterval = usePollingInterval(OVERVIEW_DATA_POLLING_INTERVAL_MS)
+  const pollingOptions = usePollingOptions(OVERVIEW_DATA_POLLING_INTERVAL_MS)
 
-  const latestStats = useGetLatestStatsQuery(undefined, {
-    pollingInterval,
-    ...POLLING_QUERY_OPTIONS
-  })
+  const latestStats = useGetLatestStatsQuery(undefined, pollingOptions)
 
   const { data: smartContracts } = useGetSmartContractsQuery()
 
@@ -32,21 +29,11 @@ function OverviewPage() {
 
   const qEarnBalance = useGetAddressBalancesQuery(
     { address: qEarnAddress ?? '' },
-    {
-      pollingInterval,
-      skip: !qEarnAddress,
-      ...POLLING_QUERY_OPTIONS
-    }
+    { ...pollingOptions, skip: !qEarnAddress }
   )
-  const tickQuality = useGetTickQualityQuery(undefined, {
-    pollingInterval,
-    ...POLLING_QUERY_OPTIONS
-  })
+  const tickQuality = useGetTickQualityQuery(undefined, pollingOptions)
 
-  const tickInfo = useGetTickInfoQuery(undefined, {
-    pollingInterval,
-    ...POLLING_QUERY_OPTIONS
-  })
+  const tickInfo = useGetTickInfoQuery(undefined, pollingOptions)
 
   const epochTicks = useGetEpochTicksQuery(
     {
@@ -54,11 +41,7 @@ function OverviewPage() {
       pageSize: TICKS_PAGE_SIZE,
       page
     },
-    {
-      skip: !latestStats.data,
-      pollingInterval,
-      ...POLLING_QUERY_OPTIONS
-    }
+    { ...pollingOptions, skip: !latestStats.data }
   )
 
   const handlePageChange = useCallback(
