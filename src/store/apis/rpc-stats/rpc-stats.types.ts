@@ -29,6 +29,9 @@ export interface GetLatestStatsResponse {
     emptyTicksInCurrentEpoch: number
     epochTickQuality: number
     burnedQus: string
+    ticksInLast10000?: number
+    emptyTicksInLast10000?: number
+    last10000TickQuality?: number
   }
 }
 
