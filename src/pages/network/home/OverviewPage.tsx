@@ -7,7 +7,6 @@ import { OVERVIEW_DATA_POLLING_INTERVAL_MS } from '@app/constants'
 import { useGetLatestStatsQuery } from '@app/store/apis/rpc-stats'
 import { useGetAddressBalancesQuery, useGetTickInfoQuery } from '@app/store/apis/rpc-live'
 import { useGetEpochTicksQuery } from '@app/store/apis/archiver-v2'
-import { useGetTickQualityQuery } from '@app/store/apis/qli'
 import { useGetSmartContractsQuery } from '@app/store/apis/qubic-static'
 import { LatestStats, TickList } from './components'
 import { TICKS_PAGE_SIZE } from './constants'
@@ -31,10 +30,6 @@ function OverviewPage() {
     { address: qEarnAddress ?? '' },
     { pollingInterval: OVERVIEW_DATA_POLLING_INTERVAL_MS, skip: !qEarnAddress }
   )
-  const tickQuality = useGetTickQualityQuery(undefined, {
-    pollingInterval: OVERVIEW_DATA_POLLING_INTERVAL_MS
-  })
-
   const tickInfo = useGetTickInfoQuery(undefined, {
     pollingInterval: OVERVIEW_DATA_POLLING_INTERVAL_MS
   })
@@ -59,15 +54,9 @@ function OverviewPage() {
     <PageLayout className="flex flex-1 flex-col gap-16">
       <LatestStats
         latestStats={latestStats.data}
-        tickQuality={tickQuality.data}
         tickInfo={tickInfo.data}
         totalValueLocked={qEarnBalance.data?.balance ?? ''}
-        isLoading={
-          latestStats.isLoading ||
-          qEarnBalance.isLoading ||
-          tickQuality.isLoading ||
-          tickInfo.isLoading
-        }
+        isLoading={latestStats.isLoading || qEarnBalance.isLoading || tickInfo.isLoading}
         isError={latestStats.isError}
       />
       <TickList

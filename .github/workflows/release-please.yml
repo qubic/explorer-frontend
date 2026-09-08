@@ -111,7 +111,6 @@ jobs:
       - name: 🏗️ Build app
         env:
           VITE_NETWORK: mainnet
-          VITE_QLI_API_URL: ${{ secrets.QLI_API_URL }}
           VITE_QUBIC_RPC_URL: ${{ secrets.QUBIC_RPC_URL }}
           VITE_STATIC_API_URL: ${{ secrets.STATIC_API_URL }}
         run: pnpm run build

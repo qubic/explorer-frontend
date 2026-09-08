@@ -17,27 +17,17 @@ import {
 import { Alert, Skeleton, Tooltip } from '@app/components/ui'
 import type { GetLatestStatsResponse } from '@app/store/apis/rpc-stats'
 import type { GetTickInfoResponse } from '@app/store/apis/rpc-live'
-import type { TickQualityResponse } from '@app/store/apis/qli'
 import { formatQubicPrice, formatString } from '@app/utils'
 import OverviewCardItem from './OverviewCardItem'
 
 function getTickQuality(tickQuality: number | undefined) {
+  if (tickQuality === undefined) {
+    return '-'
+  }
   if (!tickQuality) {
     return '0%'
   }
   return `${formatString(tickQuality)}%`
-}
-
-function calculateTickQuality(
-  nonEmpty: number | undefined,
-  empty: number | undefined
-): number | undefined {
-  if (nonEmpty !== undefined && empty !== undefined) {
-    const total = empty + nonEmpty
-    if (total === 0) return undefined // avoid division by 0
-    return (nonEmpty / total) * 100
-  }
-  return undefined
 }
 
 const LatestStatsSkeleton = memo(() => (
@@ -63,7 +53,6 @@ const LatestStatsSkeleton = memo(() => (
 type Props = Readonly<{
   latestStats: GetLatestStatsResponse['data'] | undefined
   totalValueLocked: string
-  tickQuality: TickQualityResponse | undefined
   tickInfo: GetTickInfoResponse['tickInfo'] | undefined
   isLoading: boolean
   isError: boolean
@@ -72,7 +61,6 @@ type Props = Readonly<{
 export default function LatestStats({
   latestStats,
   totalValueLocked,
-  tickQuality,
   tickInfo,
   isLoading,
   isError
@@ -166,12 +154,10 @@ export default function LatestStats({
             </Tooltip>
           </span>
         ),
-        value: getTickQuality(
-          calculateTickQuality(tickQuality?.last10000NonEmpty, tickQuality?.last10000Empty)
-        )
+        value: getTickQuality(latestStats?.last10000TickQuality)
       }
     ],
-    [t, totalValueLocked, latestStats, tickQuality, tickInfo]
+    [t, totalValueLocked, latestStats, tickInfo]
   )
 
   if (isLoading) {

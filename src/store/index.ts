@@ -3,7 +3,6 @@ import { configureStore } from '@reduxjs/toolkit'
 import { aggregationApi } from './apis/aggregation'
 import { eventsApi } from './apis/events'
 import { archiverV2Api } from './apis/archiver-v2'
-import { qliApi } from './apis/qli'
 import { rpcQueryServiceApi } from './apis/query-service'
 import { qubicStaticApi } from './apis/qubic-static'
 import { rpcLiveApi } from './apis/rpc-live'
@@ -15,7 +14,6 @@ export const store = configureStore({
   reducer: {
     locale: localeReducer,
     search: searchReducer,
-    [qliApi.reducerPath]: qliApi.reducer,
     [archiverV2Api.reducerPath]: archiverV2Api.reducer,
     [rpcQueryServiceApi.reducerPath]: rpcQueryServiceApi.reducer,
     [rpcLiveApi.reducerPath]: rpcLiveApi.reducer,
@@ -27,7 +25,6 @@ export const store = configureStore({
 
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware()
-      .concat(qliApi.middleware)
       .concat(archiverV2Api.middleware)
       .concat(rpcQueryServiceApi.middleware)
       .concat(rpcLiveApi.middleware)
