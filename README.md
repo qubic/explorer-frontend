@@ -31,7 +31,6 @@ Before running the project, you must configure environment-specific variables fo
   ```
   VITE_ENABLE_PROXY=true
   VITE_NETWORK=mainnet
-  VITE_QLI_API_URL=/dev-proxy-qli-api
   VITE_QUBIC_RPC_URL=/dev-proxy-rpc-api
   VITE_STATIC_API_URL=/dev-proxy-static-api
   ```
@@ -40,7 +39,6 @@ Before running the project, you must configure environment-specific variables fo
 
   - `VITE_ENABLE_PROXY`: Enable local development proxy (set to `true` for development)
   - `VITE_NETWORK`: Network mode (`mainnet` or `testnet`)
-  - `VITE_QLI_API_URL`: Qubic Li API URL for transactions and address history
   - `VITE_QUBIC_RPC_URL`: Qubic RPC/Archiver URL for network stats and blockchain data
   - `VITE_STATIC_API_URL`: Qubic Static API URL for smart contracts, tokens, and exchange data
 
@@ -55,7 +53,6 @@ The following secrets must be configured in GitHub for deployment:
 | `STATIC_API_URL`         | Production static data URL  | `main`, `testnet`    |
 | `STATIC_API_URL_STAGING` | Staging static data URL     | `staging`            |
 | `STATIC_API_URL_DEV`     | Development static data URL | `dev`                |
-| `QLI_API_URL`            | Qubic Li API URL            | all                  |
 | `QUBIC_RPC_URL`          | Qubic RPC URL (mainnet)     | all except `testnet` |
 | `QUBIC_RPC_URL_TESTNET`  | Qubic RPC URL (testnet)     | `testnet`            |
 

@@ -3,7 +3,7 @@ import { formatBase64 } from '@app/utils'
 import type { QueryServiceTransaction } from './query-service.types'
 
 /**
- * Converts archiver/qli transaction format to query-service format.
+ * Converts archiver transaction format to query-service format.
  * Works with both archiver-v2 Transaction and TransactionWithType.
  * Note: inputHex and signatureHex are converted from hex to base64 to match query-service format.
  */
