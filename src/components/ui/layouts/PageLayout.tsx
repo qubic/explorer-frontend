@@ -7,5 +7,9 @@ type Props = Readonly<{
 }>
 
 export default function PageLayout({ children, className }: Props) {
-  return <div className={clsxTwMerge('mx-auto max-w-lg px-12 py-32', className)}>{children}</div>
+  return (
+    <div className={clsxTwMerge('px-16 py-32 md:px-24 lg:px-80 xl:px-128', className)}>
+      {children}
+    </div>
+  )
 }
